@@ -1,0 +1,76 @@
+<style>
+    .form-inline .control-label { width: 140px; }
+</style>
+
+<h2><% if @purchase_order.id.nil? %>
+	New Purchase Order
+	<% else %>
+	Purchase Order #<%= @purchase_order.id %>
+	<% end %>
+	</h2>
+
+<% unless @purchase_order.id.nil? %>
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#">Summary</a></li>
+  <li><%= link_to "Items", items_admin_inventory_purchase_order_path(@purchase_order) %></a></li>
+</ul>
+<% else %>
+    <hr/>
+<% end %>
+
+<%= simple_form_for([:admin, :inventory, @purchase_order], html: { class: 'form-inline' }) do |f| %>
+
+  <%= render 'admin/shared/error_messages', object: f.object %>
+
+  <%= f.input :status, collection: ['new', 'open', 'partially_received', 'received', 'cancelled']%>
+  <%= f.association :supplier, collection: Cache.affiliate_list('suppliers') %>
+  <%= f.input :issue_date %>
+  <%= f.input :due_date %>
+  <%= f.input :ship_method %>
+  <%= f.input :payment_terms %>
+  
+  <div class="form-group string optional brand_website">
+	  <label class="string optional control-label" for="shipping_address">Shipping Address</label>
+	  <div class="controls" style="display: inline;">
+		  <select id="sel-shipping-address">
+			<option value="">-- select warehouse --</option>
+		  <% Cache.location_list('warehouses').each do |loc| %>
+		  	<option value="<%= loc.to_text %>"><%= loc.name %></option>
+		  <% end %>
+		  <select>
+	  </div>
+  </div>
+  <%= f.input :ship_to, as: :text, input_html: { class: 'span6', rows: 6 }%>
+  
+  
+  <div class="form-actions">
+  	<%= f.button :submit %>
+  </div>
+<% end %>
+
+
+
+<%= content_for :title do %>
+	Purchase Orders
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">Inventory</a></li>
+	<li><%= link_to "Purchase Orders", admin_inventory_purchase_orders_path %></li>
+	<li><%= link_to "##{@purchase_order.id}", admin_inventory_purchase_order_path(@purchase_order) %></li>
+	<li class="active">edit</li>
+<% end %>
+
+
+<% content_for :head do %>
+	<script>
+	$(document).ready(function() {
+
+		$('#sel-shipping-address').change(function() {
+			$('#purchase_order_ship_to').val($(this).val());
+		});
+	
+	});
+	</script>
+<% end %>

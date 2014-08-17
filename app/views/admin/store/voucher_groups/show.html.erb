@@ -1,0 +1,49 @@
+<h2><%= @voucher_group.name %></h2>
+<p>Value: <%= number_to_currency(@voucher_group.value) %>,  &nbsp; Expires: <%= systime @voucher_group.expires %>
+<hr/>
+
+<form action="/admin/store/voucher_groups/<%= @voucher_group.id %>/vouchers" method="post">
+	<%= token_tag %>
+	<input type="hidden" name="id" value="<%= @voucher_group.id %>">
+	<input type="text" name="num" class="col-md-2" placeholder="num vouchers"/ >
+	<input type="text" name="len" class="col-md-2" placeholder="length of code" />
+	<button class="btn btn-small">Create</button>
+</form>
+
+<table class="table table-condensed table-striped">
+	<tr>
+		<th>Voucher code</th>
+		<th>Claim time</th>
+		<th>User</th>
+		<th>&nbsp;</th>
+	</tr>
+	<% @voucher_group.vouchers.each do |voucher| %>
+	<tr>
+		<td><%= voucher.code %></td>
+		<td><%= systime(voucher.claim_time) unless voucher.claim_time.nil? %></td>
+		<td><%= voucher.user %></td>
+		<td><% if voucher.claimed_by.nil? %>
+			<%= link_to "delete", 
+						  { action: "destroy", controller: "vouchers", id: voucher.id }, 
+						  method: :delete, 
+						  data: { confirm: "Are you sure?" } %>
+			<% end %>
+		</td>
+	<% end %>
+</table>
+
+
+
+<%= content_for :title do %>
+	Vouchers: <%= @voucher_group.name %>
+<% end %>
+
+
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Vouchers", admin_store_voucher_groups_path %></li>
+	<li class="active"><%= @voucher_group.name %></li>
+<% end %>

@@ -1,0 +1,37 @@
+<h2><%= @shipping_option.name%></h2>
+<hr/>
+
+<%= simple_form_for [:admin, :store, @shipping_option], html: { class: 'form-inline' } do |f| %>
+
+	<%= render 'admin/shared/error_messages', object: f.object %>
+	
+	<%= f.input :active %>
+	<%= f.input :name %>
+	<%= f.input :base_cost, input_html: { class: 'span2' }  %>
+	<%= f.input :min_order_amount, input_html: { class: 'span2' } %>
+	<%= f.input :max_order_amount, input_html: { class: 'span2' } %>
+	<%= f.input :add_product_attribute %>
+	<%= f.input :international_surcharge, input_html: { class: 'span2' } %>
+	<%= f.input :description, input_html: { class: 'span6', rows: 3 }  %>
+	
+	<div class="form-actions">
+		<%= f.button :submit %>
+	</div>
+
+<% end %>
+
+
+
+<%= content_for :title do %>
+	Shipping Options: <%= @shipping_option.name %>
+<% end %>
+
+
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Shipping Options", admin_store_shipping_options_path %></li>
+	<li class="active"><%= @shipping_option.name %></li>
+<% end %>

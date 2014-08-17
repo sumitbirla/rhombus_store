@@ -1,0 +1,31 @@
+<h2><%= @voucher_group.name %></h2>
+<hr/>
+
+<%= simple_form_for [:admin, :store, @voucher_group ], html: { class: 'form-inline' } do |f| %>
+
+	<%= render 'admin/shared/error_messages', object: f.object %>
+	
+	<%= f.input :name %>
+	<%= f.input :value %>
+	<%= f.input :expires %>
+	
+	<div class="form-actions">
+		<%= f.button :submit %>
+	</div>
+
+<% end %>
+
+
+<%= content_for :title do %>
+	Vouchers: <%= @voucher_group.name %>
+<% end %>
+
+
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Voucher Groups", admin_store_voucher_groups_path %></li>
+	<li class="active"><%= @voucher_group.name %></li>
+<% end %>

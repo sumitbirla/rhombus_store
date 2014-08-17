@@ -1,0 +1,84 @@
+<h2>Order #<%= @order.id %></h2>
+
+<div>
+  <b>Submitted: </b> <%= time_ago_in_words(@order.submitted) %> ago
+  <% unless @order.user_id.nil? %>
+      &nbsp; &nbsp; <i class="icon-user"></i> <%= link_to @order.user.name, admin_system_user_path(@order.user) %>
+  <% end %>
+
+  <% unless @order.affiliate_campaign_id.nil? %>
+      &nbsp; &nbsp; <i class="icon-building"></i> <%= link_to @order.affiliate_campaign.affiliate.name, admin_system_affiliate_path(@order.affiliate_campaign.affiliate) %>
+  <% end %>
+
+  <% unless @order.external_order_id.blank? %>
+      &nbsp; &nbsp; <i class="icon-link"></i> <%= @order.external_order_id %>
+  <% end %>
+
+  &nbsp; <%= order_status(@order, 'large') %> <%= "<i class='icon-gift'></i>".html_safe if @order.gift %>
+</div>
+<hr style="margin: 15px 0 20px 0;"/>
+
+
+<style>
+    .table>tbody>tr>td { vertical-align: middle; }
+</style>
+
+
+<h3>Items:</h3>
+<table class="table table-condensed table-striped items">
+  <tr>
+    <th>Item:</th>
+    <th class="calign">Quantity:</th>
+    <th>Preview:</th>
+    <td>PDF:</td>
+  </tr>
+  <% @order.items.each do |item|
+        dir = item.item_id.split('-')[1]
+        image_path = "/userfiles/images/thumbnails/#{dir}/#{item.item_id}.jpg"
+        pdf_path = "/userfiles/images/labels/#{dir}/#{item.item_id}.pdf"
+  %>
+      <tr>
+        <td><%= item.item_id.upcase %></td>
+        <td class="calign"><%= item.quantity %></td>
+        <td><img src="<%= cdn_image_url image_path, 400, 200, 0 %>" class="img-polaroid"/></a>
+        </td>
+        <td>
+          <%= link_to Cache.setting('System', 'Static Files Url') + pdf_path, class: 'btn btn-default', target: '_blank' do %>
+              <i class="icon-download-alt fa-o"></i> <%= item.item_id + ".pdf" %>
+          <% end %>
+        </td>
+      </tr>
+  <% end %>
+
+</table>
+
+<% unless @order.customer_note.blank? %>
+    <div style="margin-bottom: 20px;">
+      <i class="icon-comment-alt" style="font-size: 1.8em; float: left; margin-right: 10px;"></i> <b>Customer note: </b></br>
+      <%= @order.customer_note %>
+    </div>
+<% end %>
+
+<br/>
+
+<%= link_to admin_store_order_path(@order), class: 'btn btn-primary' do %>
+    <i class="fa fa-shopping-cart fa-fw"></i> Return to order
+<% end %>
+
+
+
+<%= content_for :title do %>
+    Orders: <%= @order.id %>
+<% end %>
+
+<% content_for :menu do
+  render "admin/shared/store_menu"
+end %>
+
+<% content_for :breadcrumbs do %>
+    <li><a href="#">eCommerce</a></li>
+    <li><%= link_to 'Orders', admin_store_orders_path %></li>
+    <li><%= link_to '#' + @order.id.to_s, admin_store_order_path(@order) %></li>
+    <li class="active">Print Labels</li>
+<% end %>
+

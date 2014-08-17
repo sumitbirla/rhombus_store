@@ -1,0 +1,33 @@
+<h2>Choose Order</h2>
+<hr/>
+
+<%= render 'admin/shared/error_messages', object: nil %>
+
+<form action="/admin/store/shipments/new" method="get">
+  <input type="text" name="order_id" value="" />
+  <button class="btn btn-primary">Go</button>
+</form>
+
+<%= link_to "View recent orders", admin_store_orders_path %>
+
+
+<%= content_for :title do %>
+    Shipments
+<% end %>
+
+<%= content_for :head do %>
+    <script>
+        $(document).ready(function() {
+
+            $("input[name='order_id']").focus();
+
+        })
+    </script>
+<% end %>
+
+
+
+<% content_for :breadcrumbs do %>
+    <li><a href="#">eCommerce</a></li>
+    <li class="active">Shipments</li>
+<% end %>

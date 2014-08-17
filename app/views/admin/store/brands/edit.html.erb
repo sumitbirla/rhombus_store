@@ -1,0 +1,63 @@
+<h2>
+	<% unless @brand.logo.blank? %>
+	<img src="<%= cdn_image_url @brand.logo, 150, 50, 0 %>" alt="logo" class="pull-right"/>
+	<% end %>
+	<%= @brand.name %>
+</h2>
+<hr/>
+
+<%= simple_form_for([:admin, :store, @brand], html: { class: 'form-inline' }) do |f| %>
+
+  <%= render 'admin/shared/error_messages', object: f.object %>
+
+  <%= f.input :name %>
+  <%= f.input :website %>
+  <div class="form-group string optional brand_website">
+	  <label class="string optional control-label" for="brand_website">Logo</label>
+	  <%= f.input_field :logo, style: 'width: 50%' %> <input type="button" value="Browse Server" class="btn btn-default btn-sm" onclick="javascript:BrowseServer();">
+  </div>
+  <%= f.input :about, as: :text, input_html: { style: 'width: 500px; height: 200px;' } %>
+  
+  <div class="form-actions">
+  	<%= f.button :submit %>
+  </div>
+<% end %>
+
+
+<% content_for :head do %>
+	<script type="text/javascript" src="/ckfinder/ckfinder.js"></script>
+	<script>
+	function BrowseServer()
+	{
+		// You can use the "CKFinder" class to render CKFinder in a page:
+		var finder = new CKFinder( { connectorPath : '<%= Cache.setting('System', 'Static Files Url') %>/ckfinder/core/connector/php/connector.php' });
+		//finder.basePath = '../';	// The path for the installation of CKFinder (default = "/ckfinder/").
+		finder.selectActionFunction = SetFileField;
+		finder.popup();
+	}
+
+	// This is a sample function which is called when a file is selected in CKFinder.
+	function SetFileField( fileUrl )
+	{
+		document.getElementById( 'brand_logo' ).value = fileUrl.substring(<%= Cache.setting('System', 'Static Files Url').length %>);
+	}
+	</script>
+<% end %>
+
+
+
+<%= content_for :title do %>
+	Brands: <%= @brand.name %>
+<% end %>
+
+
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Brands", admin_store_brands_path %></li>
+	<li class="active"><%= @brand.name %></li>
+<% end %>
+
+

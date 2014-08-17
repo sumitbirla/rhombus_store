@@ -1,0 +1,249 @@
+<style>
+  .panel-body { text-align: center; font-size: 1.8em; }
+</style>
+
+<%= link_to "edit", edit_admin_store_daily_deal_path(@daily_deal), class: "btn btn-sm btn-default pull-right" %>
+
+<h3><i class="fa fa-star-o"></i>&nbsp; <%= @daily_deal.title %></h3>
+<hr/>
+
+
+<div class="col-md-8" style="margin-top: 12px;">
+
+    <div class="col-md-4">
+        <div class="panel panel-success">
+          <div class="panel-heading">Value:</div>
+          <div class="panel-body">
+            $<%= @daily_deal.original_price %>
+          </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="panel panel-success">
+        <div class="panel-heading">Offer:</div>
+        <div class="panel-body">
+          $<%= @daily_deal.deal_price %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="panel panel-success">
+        <div class="panel-heading">Discount:</div>
+        <div class="panel-body">
+          <%= @daily_deal.discount_percent %>%
+        </div>
+      </div>
+    </div>
+
+
+	
+<h4>Flags</h4>
+<% if @daily_deal.number_sold > @daily_deal.max_sales-1 %>
+	<span class="label label-important">sold out</span> &nbsp; 
+<% end %>
+
+<% if @daily_deal.start_time < DateTime.now && @daily_deal.end_time > DateTime.now %>
+	<span class="label label-success">active</span> &nbsp; 
+<% elsif @daily_deal.end_time < DateTime.now %>
+	<span class="label label-warning">expired</span> &nbsp; 
+<% else %>
+	<span class="label label-information">pending</span> &nbsp; 
+<% end %>	
+
+<% if @daily_deal.featured %>
+	<span class="label label-warning">featured</span> &nbsp; 
+<% end %>
+
+<% if @daily_deal.active %>
+	<span class="label label-success">approved</span> &nbsp; 
+<% end %>
+
+<% if @daily_deal.allow_photo_upload %>
+	<span class="label label-info">image upload</span> &nbsp; 
+<% end %>
+
+<% if @daily_deal.countdown_mode %>
+	<span class="label label-info">countdown</span> &nbsp; 
+<% end %>
+
+<% if  @daily_deal.affiliate_remittance && @daily_deal.affiliate_remittance > 0.0 && @daily_deal.affiliate_paid == false %>
+	<span class="label label-important">affiliate unpaid</span> &nbsp; 
+<% end %>
+<br/><br/>
+<hr/>
+
+	
+<h4>Summary</h4>
+<table class="table table-condensed table-bordered summary">
+	<tr>
+		<td>Region</td>
+		<td><%= @daily_deal.region %></td>
+	</tr>
+	<tr>
+		<td>Start time</td>
+		<td><%= systime @daily_deal.start_time %></td>
+	</tr>
+	<tr>
+		<td>End time</td>
+		<td><%= systime @daily_deal.end_time %></td>
+	</tr>
+	<tr>
+		<td>Type</td>
+		<td><%= @daily_deal.deal_type.titlecase %></td>
+	</tr>
+	<tr>
+		<td>Short tag line</td>
+		<td><%= @daily_deal.short_tag_line %></td>
+	</tr>
+	<tr>
+		<td>Type</td>
+		<td><%= @daily_deal.deal_type.titlecase %></td>
+	</tr>
+	<tr>
+		<td>Slug</td>
+		<td><%= @daily_deal.slug %></td>
+	</tr>
+	<tr>
+		<td>Theme</td>
+		<td><%= @daily_deal.theme %></td>
+	</tr>
+	<% unless @daily_deal.shipping_cost.blank? %>
+	<tr>
+		<td>Shipping cost</td>
+		<td>$<%= @daily_deal.shipping_cost %></td>
+	</tr>
+	<% end %>
+	<tr>
+		<td>Max sales</td>
+		<td><%= @daily_deal.max_sales %></td>
+	</tr>
+	<% unless @daily_deal.max_per_user.blank? %>
+	<tr>
+		<td>Max per user</td>
+		<td><%= @daily_deal.max_per_user %></td>
+	</tr>
+	<% end %>
+	<tr>
+		<td>Number sold</td>
+		<td><%= @daily_deal.number_sold %></td>
+	</tr>
+	<% unless @daily_deal.affiliate_id.nil? %>
+	<tr>
+		<td>Affiliate</td>
+		<td><%= link_to @daily_deal.affiliate, admin_system_affiliate_path(@daily_deal.affiliate) %></td>
+	</tr>
+	<tr>
+		<td>Remittance</td>
+		<td>$<%= @daily_deal.affiliate_remittance %></td>
+	</tr>
+	<tr>
+		<td>Paid</td>
+		<td><%= @daily_deal.affiliate_paid %></td>
+	</tr>
+	<% end %>
+</table>
+
+<hr/>
+
+<% if @daily_deal.coupons.length > 0 %>
+<h4>Coupons</h4>
+<table class="table table-condensed">
+	<tr>
+		<th>Code</th>
+		<th>Discount</th>
+		<th>Max uses</th>
+		<th>Per user</th>
+		<th>Times used</th>
+		<th>Status</th>
+	</tr>
+	<% @daily_deal.coupons.each do |coupon| %>
+	<tr>
+		<td><%= link_to coupon.code, edit_admin_store_coupon_path(coupon, redirect: request.fullpath) %></td>
+		<td>
+			<% if !coupon.discount_percent.nil? %>
+			<%= coupon.discount_percent.to_i %>%
+			<% else %>
+			<%= number_to_currency(coupon.discount_amount) %>
+			<% end %>
+		</td>
+		<td><%= coupon.max_uses %></td>
+		<td><%= coupon.max_per_user %></td>
+		<td><%= coupon.times_used %></td>
+		<td>
+			<% if Time.now > coupon.start_time && Time.now < coupon.expire_time %>
+			<span class="label label-success">active</span>
+			<% elsif Time.now > coupon.expire_time %>
+			<span class="label label-important">expired</span>
+			<% else %>
+			<span class="label label-warning">pending</span>
+			<% end %>
+		</td>
+	</tr>
+	<% end %>
+</table>
+
+<hr/>
+<% end %>
+
+
+<h4>Description</h4>
+<%= raw @daily_deal.description %>
+
+<hr/>
+
+<% unless @daily_deal.conditions.blank? %>
+<h4>Conditions</h4>
+<%= raw @daily_deal.conditions %>
+<hr/>
+<% end %>
+
+<% unless @daily_deal.redemption_instructions.blank? %>
+<h4>Redemption instructions</h4>
+<%= raw @daily_deal.redemption_instructions %>
+<hr/>
+<% end %>
+
+<% unless @daily_deal.order_specifications.blank? %>
+<h4>Order specifications</h4>
+<%= raw @daily_deal.order_specifications %>
+<hr/>
+<% end %>
+
+</div>
+
+
+<div class="col-md-3">
+	<h4>Pictures</h4>
+	<% @daily_deal.pictures.each do |pic| %>
+	<a href="<%= cdn_image_url pic, 700, 600, 0 %>" class="fancybox" rel="gallery">
+		<img src="<%= cdn_image_url pic, 60, 60, 2 %>" class="img-polaroid" style="margin: 4px" title="<%= pic.caption %>"/>
+	</a>
+	<% end %>
+	<hr/>
+	
+	<h4>Categories</h4>
+	<ul>
+	<% @daily_deal.categories.each do |cat| %>
+	<li><%= cat.name %></li>
+	<% end %>
+	</ul>
+	<hr/>
+	
+	<h4>Locations</h4>
+</div>
+
+
+<% content_for :title do %>
+	Daily Deals: <%= @daily_deal.short_tag_line %>
+<% end %>
+
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
+	<li class="active"><%= @daily_deal.short_tag_line %></li>
+<% end %>

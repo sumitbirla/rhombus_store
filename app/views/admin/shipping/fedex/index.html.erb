@@ -1,0 +1,145 @@
+<%
+   pkg_types = %w(YOUR_PACKAGING FEDEX_10KG_BOX FEDEX_25KG_BOX FEDEX_BOX FEDEX_ENVELOPE FEDEX_PAK FEDEX_TUBE)
+   drop_off_types =  %w(REGULAR_PICKUP BUSINESS_SERVICE_CENTER DROP_BOX REQUEST_COURIER STATION)
+%>
+
+<%= link_to "Modify Shipment", edit_admin_store_shipment_path(@shipment), class: "btn btn-sm btn-default pull-right" %>
+<h2>
+  <img src="http://admin.barkingdeals.com/Areas/Admin/Content/Images/fedex.gif"/> &nbsp; #<%= @shipment %>
+  <span class="label <%= 'label-warning' if @shipment.status == 'pending' %>  <%= 'label-success' if @shipment.status == 'shipped' %>"><%= @shipment.status %></span>
+</h2>
+<hr/>
+
+ <div class="row" style="margin-left: 0;">
+
+   <div class="col-md-6">
+
+     <%= simple_form_for @shipment, url: '', html: { class: 'form-inline' } do |f| %>
+
+         <%= f.input :drop_off_type, collection: drop_off_types, label: 'Drop Off' %>
+         <%= f.input :packaging_type, collection: pkg_types, label: 'Packaging' %>
+         <%= f.input :package_weight, label: 'Weight (lbs)' %>
+
+         <div class="form-group string optional shipment_dimensions">
+           <label class="string optional control-label" for="shipment_dimensions">Size (in.)</label>
+           <div class="dimensions" style="display: inline;">
+             <%= f.input_field :package_length %> &nbsp;x&nbsp;
+             <%= f.input_field :package_width  %> &nbsp;x&nbsp;
+             <%= f.input_field :package_height  %>
+           </div>
+         </div>
+         <%= f.input :ship_date %>
+
+         <%= f.submit 'Get Rates', class: 'btn btn-success' %>
+     <% end %>
+   </div>
+
+
+   <div class="col-md-6">
+
+     <div class="panel panel-primary">
+       <div class="panel-heading">From:</div>
+       <div class="panel-body">
+           <b><%= @shipment.ship_from_company %></b><br/>
+           <%= @shipment.ship_from_street1 %><br/>
+           <%= raw @shipment.ship_from_street2 + '<br/>' unless @shipment.ship_from_street2.blank? %>
+           <%= @shipment.ship_from_city %>, <%= @shipment.ship_from_state %> <%= @shipment.ship_from_zip %> <br/>
+           <%= @shipment.ship_from_country %>
+       </div>
+     </div>
+
+     <div class="panel panel-primary">
+       <div class="panel-heading">To:</div>
+       <div class="panel-body">
+           <b><%= @shipment.recipient_name %></b><br/>
+           <%= raw @shipment.recipient_company + '<br/>' unless @shipment.recipient_company.blank? %>
+           <%= @shipment.recipient_street1 %><br/>
+           <%= raw @shipment.recipient_street2 + '<br/>' unless @shipment.recipient_street2.blank? %>
+           <%= @shipment.recipient_city %>, <%= @shipment.recipient_state %> <%= @shipment.recipient_zip %> <br/>
+           <%= @shipment.recipient_country %>
+         </div>
+     </div>
+   </div>
+
+ </div>
+
+
+
+<hr/>
+
+<%= render partial: 'admin/shared/error_messages', locals: {object: @shipment} %>
+
+<% if @rates %>
+
+    <% unless @response.nil? || @response[:rate_reply].nil? || @response[:rate_reply][:notifications].nil?  || @response[:rate_reply][:notifications][:severity] == 'SUCCESS' %>
+    <div class="alert alert-info">
+      <b><%= @response[:rate_reply][:notifications][:severity] %></b>
+      <%= @response[:rate_reply][:notifications][:localized_message] %>
+    </div>
+    <% end %>
+
+<h4>Rates</h4>
+<table class="table table-striped table-condensed">
+    <tr>
+      <th>Service</th>
+      <th class="calign">Rate Zone</th>
+      <th class="calign">Base Charge</th>
+      <th class="calign">Billing Weight</th>
+      <th class="calign">Taxes</th>
+      <th class="calign">Surcharges</th>
+      <th class="calign">Net Charge</th>
+      <th></th>
+    </tr>
+    <% @rates.each do |rate| %>
+    <tr>
+      <td><%= rate.service_type %></td>
+      <td class="calign"><%= rate.rate_zone %></td>
+      <td class="calign">$<%= rate.total_base_charge %></td>
+      <td class="calign"><%= rate.total_billing_weight %></td>
+      <td class="calign">$<%= rate.total_taxes %></td>
+      <td class="calign">$<%= rate.total_surcharges %></td>
+      <td class="calign">$<%= rate.total_net_charge %></td>
+      <td class="ralign">
+        <%= link_to "EPL2", admin_shipping_fedex_label_path(shipment_id: @shipment.id, service_type: rate.service_type, format: 'EPL2'), class: 'btn btn-sm btn-default'  %> &nbsp;
+        <%= link_to "PDF", admin_shipping_fedex_label_path(shipment_id: @shipment.id, service_type: rate.service_type, format: 'PDF'), class: 'btn btn-sm btn-default'  %> &nbsp;
+      </td>
+    </tr>
+    <% end %>
+</table>
+<% end %>
+
+
+<% content_for :title do %>
+    Fedex Shipment #<%= @shipment %>
+<% end %>
+
+
+<% content_for :head do %>
+    <style>
+        .dimensions .numeric { width: 45px; text-align: center;}
+        .form-inline .control-label { width: 100px; paddin: 0; }
+        .add-on { background-color: #dfeaef; color: #666; text-shadow: none; font-weight: normal; display: inline-block; width: 120px; margin-bottom: 4px; }
+        th { background-color: #ddd; padding: 0; }
+
+    </style>
+    <link href="/css/datepicker.css" rel="stylesheet">
+    <script src="/js/bootstrap-datepicker.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            $('.input-append.date').datepicker({
+                format: "yyyy-mm-dd"
+            });
+
+        });
+    </script>
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+    <li><a href="#">eCommerce</a></li>
+    <li><%= link_to 'Shipments', admin_store_shipments_path %></li>
+    <li><%= link_to @shipment, admin_store_shipment_path(@shipment)%></li>
+    <li class="active">Fedex</li>
+<% end %>
+

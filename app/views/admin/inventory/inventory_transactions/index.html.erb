@@ -1,0 +1,40 @@
+<h2>Inventory Transactions</h2>
+
+<%= will_paginate @transactions %>
+<table class="table table-condensed">
+  <tr>
+    <th>ID</th>
+    <th>Time</th>
+    <th>User</th>
+    <th>Type</th>
+    <th>Items</th>
+  </tr>
+  <% @transactions.each do |tran| %>
+    <tr>
+      <td><%= tran.id %></td>
+      <td><%= systime tran.timestamp %></td>
+      <td><%= link_to tran.user.name, admin_system_user_path(tran.user) %></td>
+      <td>
+        <% unless tran.purchase_order_id.nil?  %>
+            <%= link_to "PO ##{tran.purchase_order_id}", admin_inventory_purchase_order_path(tran.purchase_order_id) %>
+        <% end %>
+        <% unless tran.shipment_id.nil?  %>
+            <%= link_to "Shipment #{tran.purchase_order_id}", admin_store_shipment_path(tran.shipment_id) %>
+        <% end %>
+      </td>
+      <td><%= tran.num_items %></td>
+    </tr>
+
+  <% end %>
+</table>
+
+
+<%= content_for :title do %>
+    Inventory Transactions
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+    <li><a href="#">Inventory</a></li>
+    <li class="active">Transactions</li>
+<% end %>

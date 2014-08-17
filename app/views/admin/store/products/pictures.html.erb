@@ -1,0 +1,27 @@
+<h2><%= @product.title %></h2>
+
+<ul class="nav nav-tabs">
+  <li><%= link_to "Summary", edit_admin_store_product_path(@product) %></li>
+  <li class="active"><a href="#">Pictures</a></li>
+  <li><%= link_to "Categories", categories_admin_store_product_path(@product) %></li>
+  <li><%= link_to "Attributes", attributes_admin_store_product_path(@product) %></li>
+  <li><%= link_to "Coupons", coupons_admin_store_product_path(@product) %></li>
+</ul>
+
+
+<%= render partial: 'admin/shared/image_list', locals: { object: @product } %>
+
+
+
+<% content_for :title do %>
+    <%= @product.title %>
+<% end %>
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Products", admin_store_products_path %></li>
+	<li><%= link_to @product.title, admin_store_product_path(@product)%> </li>
+	<li class="active">edit</li>
+<% end %>

@@ -1,0 +1,3 @@
+module RhombusStore
+  VERSION = "0.0.1"
+end

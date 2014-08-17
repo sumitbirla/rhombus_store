@@ -1,0 +1,72 @@
+<style>
+    .form-inline .control-label { width: 120px; }
+</style>
+
+<h2><%= @daily_deal.short_tag_line %></h2>
+
+<% unless @daily_deal.id.nil? %>
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#">Summary</a></li>
+  <li><%= link_to "Pictures", pictures_admin_store_daily_deal_path(@daily_deal) %></a></li>
+  <li><%= link_to "Categories", categories_admin_store_daily_deal_path(@daily_deal) %></li>
+  <li><%= link_to "Coupons", coupons_admin_store_daily_deal_path(@daily_deal) %></li>
+  <li><%= link_to "Deal Items", items_admin_store_daily_deal_path(@daily_deal) %></li>
+  <li><%= link_to "Locations", locations_admin_store_daily_deal_path(@daily_deal) %></li>
+  <li><%= link_to "External Coupons", external_coupons_admin_store_daily_deal_path(@daily_deal) %></li>
+</ul>
+<% end %>
+
+<%= simple_form_for [:admin, :store, @daily_deal], html:  { class: 'form-inline' } do |f| %>
+
+  <%= render 'admin/shared/error_messages', object: f.object %>
+  
+  <%= f.input :facebook_posts, as: :hidden %>
+  <%= f.input :facebook_clicks, as: :hidden %>
+  
+  <%= f.input :deal_type, as: :select, collection: ['product', 'voucher', 'coupon code'] %>
+  <%= f.association :region %>
+  <%= f.input :slug %>
+  <%= f.input :short_tag_line %>
+  <%= f.input :title, as: :text, input_html: { rows: 2, class: 'span6' } %>
+  <%= f.input :theme, as: :select, collection: ['default']%>
+  <%= f.input :active %>
+  <%= f.association :affiliate %>
+  <%= f.input :affiliate_remittance %>
+  <%= f.input :affiliate_paid %>
+  <%= f.input :start_time %>
+  <%= f.input :end_time %>
+  <%= f.input :voucher_expiration %>
+  <%= f.input :original_price %>
+  <%= f.input :deal_price %>
+  <%= f.input :shipping_cost %>
+  <%= f.input :max_sales %>
+  <%= f.input :max_per_user %>
+  <%= f.input :number_sold %>
+  <%= f.input :countdown_mode %>
+  <%= f.input :sales_before_showing_count %>
+  <%= f.input :allow_photo_upload %>
+  <%= f.input :featured %>
+  <%= f.input :description, as: :text, input_html: { class: 'span8', rows: 12 } %>
+  <%= f.input :conditions, as: :text, input_html: { class: 'span8', rows: 6 } %>
+  <%= f.input :redemption_instructions, as: :text, input_html: { class: 'span8', rows: 6 } %>
+  <%= f.input :order_specifications, as: :text, input_html: { class: 'span8', rows: 6 } %>
+  
+  <div class="form-actions">
+  	<%= f.button :submit %>
+  </div>
+  
+<% end %>
+
+
+<% content_for :title do %>
+	Daily Deals: <%= @daily_deal.short_tag_line %>
+<% end %>
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
+	<li><%= link_to @daily_deal.short_tag_line, admin_store_daily_deal_path(@daily_deal) %></li>
+	<li class="active">edit</li>
+<% end %>

@@ -1,0 +1,33 @@
+<h2><%= @upc.item %></h2>
+<hr/>
+
+<%= simple_form_for @upc, url: '/admin/store/upc', method: 'post', html: { class: 'form-inline' } do |f| %>
+
+    <%= render 'admin/shared/error_messages', object: f.object %>
+
+    <%= f.input :code %>
+    <%= f.input :item %>
+
+    <div class="form-actions">
+      <%= f.button :submit %>
+    </div>
+
+<% end %>
+
+
+
+<%= content_for :title do %>
+    UPC Codes: <%= @upc.item %>
+<% end %>
+
+
+<% content_for :menu do
+  render "admin/shared/store_menu"
+end %>
+
+
+<% content_for :breadcrumbs do %>
+    <li><a href="#">eCommerce</a></li>
+    <li><%= link_to "UPC Codes", admin_store_upc_index_path %></li>
+    <li class="active"><%= @upc.item %></li>
+<% end %>

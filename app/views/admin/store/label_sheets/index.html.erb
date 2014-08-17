@@ -1,0 +1,41 @@
+<%= link_to "new label sheet", new_admin_store_label_sheet_path, class: 'btn btn-sm btn-default pull-right' %>
+
+<h2>Label Sheets</h2>
+
+<table class="table table-striped table-condensed">
+	<tr>
+		<th>Name</th>
+		<th>Size</th>
+		<th>Resolution</th>
+		<th>Areas</th>
+		<th>&nbsp;</th>
+	</tr>
+	<% @label_sheets.each do |sheet| %>
+	<tr>
+		<td><%= link_to sheet.name, edit_admin_store_label_sheet_path(sheet) %></td>
+		<td><%= sheet.width %> in. x. <%= sheet.height %> in.</td>
+		<td><%= sheet.dpi %> dpi</td>
+		<td><%= sheet.areas.length %></td>
+		<td>
+			<%= link_to "edit", edit_admin_store_label_sheet_path(sheet) %> &nbsp;
+			<%= link_to "delete", 
+						  { action: "destroy", id: sheet.id }, 
+						  method: :delete, 
+						  data: { confirm: "Are you sure?" } %>
+		</td>
+	</tr>
+	<% end %>
+</table>
+
+
+
+
+<% content_for :title do
+  "Label Sheets"
+end %>
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li class="active">Label Sheets</li>
+<% end %>

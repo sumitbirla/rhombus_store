@@ -1,0 +1,48 @@
+<style>
+    .form-inline .control-label { width: 140px; }
+</style>
+
+<h2><%= @coupon.code %></h2>
+<hr/>
+
+<%= simple_form_for [:admin, :store, @coupon], html: { class: 'form-inline' } do |f| %>
+
+	<input type="hidden" name="redirect" value="<%= @redirect %>" />
+	<%= render 'admin/shared/error_messages', object: f.object %>
+	
+	
+	<%= f.input :code, input_html: { class: 'span2' } %>
+	<%= f.input :start_time %>
+	<%= f.input :expire_time %>
+	<%= f.input :description, input_html: { class: 'span6', rows: 3 }  %>
+	<%= f.association :product %>
+	<%= f.association :daily_deal %>
+	<%= f.input :free_shipping %>
+	<%= f.input :discount_amount %>
+	<%= f.input :discount_percent %>
+	<%= f.input :min_order_amount %>
+	<%= f.input :max_uses %>
+	<%= f.input :max_per_user %>
+	<%= f.input :times_used %>
+	
+	<div class="form-actions">
+		<%= f.button :submit %>
+	</div>
+
+<% end %>
+
+
+
+<%= content_for :title do %>
+	Coupons: <%= @coupon.code %>
+<% end %>
+
+
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Coupons", admin_store_coupons_path %></li>
+	<li class="active"><%= @coupon.code %></li>
+<% end %>

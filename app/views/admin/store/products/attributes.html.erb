@@ -1,0 +1,67 @@
+<h2><%= @product.title %></h2>
+
+<ul class="nav nav-tabs">
+  <li><%= link_to "Summary", edit_admin_store_product_path(@product) %></li>
+  <li><%= link_to "Pictures", pictures_admin_store_product_path(@product) %></a></li>
+  <li><%= link_to "Categories", categories_admin_store_product_path(@product) %></li>
+  <li class="active"><a href="#">Attributes</a></li>
+  <li><%= link_to "Coupons", coupons_admin_store_product_path(@product) %></li>
+</ul>
+
+
+<form action="/admin/store/products/<%= params[:id] %>/attributes" method="post" class="form-inline">
+	<%= token_tag %>
+	<input type="hidden" name="id" value="<%= params[:id] %>">
+
+  <table class="table table-striped">
+    <tr>
+        <th>Attribute:</th>
+        <th>Value:</th>
+        <th>Description</th>
+    </tr>
+	<% all_attributes = Attribute.where(entity_type: :product).order(:sort) %>
+	<% all_attributes.each do |attr| 
+		prod_attr = @product.pattributes.find { |pa| pa.attribute_id == attr.id } 
+		prod_attr = ProductAttribute.new if prod_attr.nil? %>
+	<tr>
+		<td><b><%= attr.name %></b></td>
+		<td width="60%">
+			<% if attr.data_type == 'text' %>
+			<textarea rows="4" name="attr-<%= attr.id %>"><%= prod_attr %></textarea>
+			<% elsif attr.data_type == 'numeric' %>
+			<input type="number" class="string" name="attr-<%= attr.id %>" value="<%= prod_attr %>" />
+			<% elsif attr.data_type == 'boolean' %>
+			<input type="checkbox" class="check" name="attr-<%= attr.id %>" value="on" <%= 'checked' if prod_attr.value == 'on' %> />
+			<% elsif attr.data_type == 'selection' %>
+			<select name="attr-<%= attr.id %>">
+				<% attr.metadata.split('|').each do |opt| %>
+				<option <%= 'selected' if opt == prod_attr.value %>><%= opt %></option>
+				<% end %>
+			</select>
+			<% end %>
+		</td>
+        <td><i>(<%= attr.notes %>)</i></td>
+	</tr>
+	<%end%>
+    </table>
+	<div class="form-actions">
+		<button class="btn btn-primary">Update</button>
+	</div>
+</form>
+
+
+
+<% content_for :title do %>
+    <%= @product.title %>
+<% end %>
+
+
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Products", admin_store_products_path %></li>
+	<li><%= link_to @product.title, admin_store_product_path(@product)%> </li>
+	<li class="active">edit</li>
+<% end %>

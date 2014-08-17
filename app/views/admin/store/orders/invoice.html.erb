@@ -1,0 +1,211 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title><%= @order.id %> - Invoice</title>
+  <style>
+      body {
+          background:white !important;
+          color:black!important;
+          width: 95%!important;
+          margin: 0 auto!important;
+          font-family:Arial, Helvetica, sans-serif!important;
+          font-size:12px!important;
+      }
+      table {
+          width: 100%!important;
+          border-collapse:collapse;
+      }
+      table td{
+          border: 1px solid #333;
+          padding: 5px!important;
+      }
+      article {
+          padding: 20px 0!important;
+      }
+      p {
+          font-weight:normal !important;
+          line-height:18px !important;
+          margin-top: 0;
+      }
+      h2 {
+          font-size:20px !important;
+          margin-bottom: 4px;
+      }
+      .boxleft {
+          float:left!important;
+          width: 32%!important;
+          margin-top:0px !important;
+      }
+      .boxcenter {
+          float:left!important;
+          width: 32%!important;
+          margin-top:0px !important;
+      }
+      .boxright {
+          float:left!important;
+          width: 32%!important;
+          margin-top:0px !important;
+      }
+      .textright{
+          text-align:right !important;
+      }
+  </style>
+</head>
+<body onload="window.print()">
+<section>
+  <article>
+    <header>
+      <table class="no-border" cellspacing="0" cellpadding="0" border="0">
+        <thead>
+        <tr valign="top">
+          <th scope="col" style="text-align:left;">
+            <h2><img src="/img/logo.png" alt="HealthyBreeds.com"/></h2>
+            <p>
+              Healthy Breeds, Inc.<br/>
+              180 Douglas Rd E.<br/>
+              Oldsmar, FL 34677
+            </p>
+            <p>
+              <strong>Web:</strong> http://www.healthybreeds.com<br/>
+              <strong>Phone:</strong> 855-727-3337<br/>
+              <strong>Email:</strong> help@healthybreeds.com
+            </p>
+          </th>
+          <th scope="col" style="text-align:right;"> <h2>INVOICE</h2>
+            <p>
+              <strong>Order Date: </strong><%= @order.submitted.strftime("%d-%^b-%Y") %><br>
+              <strong>Order ID: </strong> <%= @order.id %><br/>
+              <img src="/barcode?code=<%= @order.id %>" />
+            </p>
+          </th>
+        </tr>
+        </thead>
+      </table>
+
+
+      <div class="boxleft">
+        <h2>Ship to:</h2>
+        <p><%= raw @order.shipping_company + '<br/>' unless @order.shipping_company.blank? %>
+          <%= @order.shipping_name %><br/>
+          <%= @order.shipping_street1 %><br/>
+          <%= raw @order.shipping_street2 + '<br/>' unless @order.shipping_street2.blank? %>
+          <%= @order.shipping_city %>, <%= @order.shipping_state %> <%= @order.shipping_zip %></p>
+
+      </div>
+      <div class="boxcenter">
+        <h2>Bill to:</h2>
+        <p><%= @order.billing_name %><br/>
+          <%= raw @order.billing_company + '<br/>' unless @order.billing_company.blank? %>
+          <%= @order.billing_street1 %><br/>
+          <%= raw @order.billing_street2 + '<br/>' unless @order.billing_street2.blank? %>
+          <%= @order.billing_city %>, <%= @order.billing_state %> <%= @order.billing_zip %></p>
+      </div>
+      <div class="boxright">
+        <h2>Payment method:</h2>
+        <p><%= @order.payment_method %><br/>
+            <% if @order.payment_method == "CREDIT_CARD" %>
+          <%= @order.cc_type %>: <%= @order.cc_number %>
+            <% end %>
+        </p>
+      </div>
+      <div style="clear:both;"></div>
+    </header>
+    <br/>
+    <table width="100%" cellspacing="0" cellpadding="0">
+      <thead>
+      <tr>
+        <th scope="col" style="text-align:left;"><strong>Order Date</strong></th>
+        <th scope="col" style="text-align:left;"><strong>Order #</strong></th>
+        <th scope="col" style="text-align:left;"><strong>Status</strong></th>
+        <th scope="col" style="text-align:left;"><strong>Purchase Order #</strong></th>
+        <th scope="col" style="text-align:left;"><strong>Customer Contact</strong></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td><%= @order.submitted.strftime("%d-%^b-%Y") %></td>
+        <td><%= @order.id %></td>
+        <td>PAID</td>
+        <td>n/a</td>
+        <td><%= @order.user ? @order.user.name : @order.shipping_name %></td>
+      </tr>
+      </tbody>
+    </table>
+    <br/><br/>
+    <table width="100%" cellspacing="0" cellpadding="0">
+      <thead>
+      <tr>
+        <th scope="col" style="text-align:left;"><strong>Item</strong></th>
+        <th scope="col" style="text-align:left;"><strong>Description</strong></th>
+        <th scope="col" style="text-align:right;"><strong>Unit Price</strong></th>
+        <th scope="col" style="text-align:right;"><strong>Quantity</strong></th>
+        <th scope="col" style="text-align:right;"><strong>Subtotal</strong></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @order.items.each do |item| %>
+          <tr>
+            <td><%= item.item_id.upcase %></td>
+            <td>
+              <%= item.item_description %>
+              <% if item.affiliate_id %>
+                  <br/><small>For <%= item.affiliate.name %></small>
+              <% end %>
+            </td>
+            <td align="right" class="textright"><%= number_to_currency(item.unit_price) %></td>
+            <td align="right" class="textright"><%= item.quantity %></td>
+            <td align="right" class="textright"><%= number_to_currency(item.unit_price * item.quantity) %></td>
+          </tr>
+      <% end %>
+      <tr>
+        <td colspan="4"  align="right" class="textright">Subtotal:</td>
+        <td align="right" class="textright"><%= number_to_currency(@order.subtotal)%></td>
+      </tr>
+      <% if !@order.shipping_method.blank? || @order.shipping_cost > 0.0 %>
+          <tr>
+            <td colspan="4"  align="right" class="textright"><%= @order.shipping_method %>:</td>
+            <td  align="right" class="textright"><%= number_to_currency(@order.shipping_cost) %></td>
+          </tr>
+      <% end %>
+      <% if @order.tax_amount > 0.0 %>
+          <tr>
+            <td colspan="4"  align="right" class="textright">Tax:</td>
+            <td  align="right" class="textright"><%= number_to_currency(@order.tax_amount)%></td>
+          </tr>
+      <% end %>
+      <% if @order.discount_amount > 0.0 %>
+          <tr>
+            <td colspan="4"  align="right" class="textright">
+              <% unless @order.coupon_id.nil? %>
+                  <i>Coupon: <%= @order.coupon.code %></i> &nbsp; &raquo; &nbsp;
+              <% end %>
+              Discount:
+            </td>
+            <td  align="right" class="textright"><%= number_to_currency(@order.discount_amount * -1.0)%></td>
+          </tr>
+      <% end %>
+      <% if @order.credit_applied > 0.0 %>
+          <tr>
+            <td colspan="4"  align="right" class="textright">
+              <% unless @order.voucher_id.nil? %>
+                  <i>Voucher: <%= @order.voucher.code %></i> &nbsp; &raquo; &nbsp;
+              <% end %>
+              Credit:</td>
+            <td  align="right" class="textright"><%= number_to_currency(@order.credit_applied * -1.0)%></td>
+          </tr>
+      <% end %>
+      <tr>
+        <td align="right" class="textright" colspan="4"><b>Total:</b></td>
+        <td align="right" class="textright"><b><%= number_to_currency(@order.total) %></b></td>
+      </tr>
+      </tbody>
+    </table>
+  </article>
+
+
+  <div style="margin-top: 100px; text-align: center; font-style: italic;">Thank you for your business!</div>
+
+</section>
+</body>
+</html>

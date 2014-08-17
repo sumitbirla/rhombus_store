@@ -1,0 +1,30 @@
+<h2><%= @sublocation.name %></h2>
+<hr/>
+
+
+<%= simple_form_for [:admin, :inventory, @sublocation], html: { class: 'form-inline' } do |f| %>
+
+	<%= render 'admin/shared/error_messages', object: f.object %>
+	
+	<%= f.input :location_id, as: :hidden %>
+	<%= f.input :name %>
+	<%= f.input :description, as: :text, input_html: { class: 'span6', rows: 4 }  %>
+	
+	<div class="form-actions">
+		<%= f.button :submit %>
+	</div>
+
+<% end %>
+
+<% content_for :menu do
+    render "admin/shared/web_menu"
+end %>
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">Web Content</a></li>
+	<li><%= link_to "Locations", admin_cms_locations_path %></li>
+	<li><%= link_to @sublocation.location.name, admin_cms_location_path(@sublocation.location) %></li>
+	<li class="active">edit</li>
+<% end %>
+

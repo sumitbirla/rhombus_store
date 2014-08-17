@@ -1,0 +1,52 @@
+<%= link_to "new order", new_admin_store_order_path, class: 'btn btn-sm btn-default pull-right' %>
+<h2><i class="fa fa-shopping-cart"></i>&nbsp; Orders</h2>
+
+<% unless params[:q].nil? %>
+    <div class="alert alert-info">Found <%= @orders.total_entries %> records matching '<%= params[:q] %>'</div>
+<% end %>
+
+<%= will_paginate @orders %>
+<table class="table table-striped table-condensed">
+	<tr>
+		<th>Order #</th>
+        <th>Sales Channel</th>
+		<th>Date</th>
+		<th>Customer</th>
+		<th>Amount</th>
+		<th>Status</th>
+        <th>&nbsp;</th>
+	</tr>
+	<% @orders.each do |order| %>
+	<tr>
+		<td><%= link_to order.id, admin_store_order_path(order) %></td>
+        <td><%= order.sales_channel %></td>
+		<td><%= systime order.submitted if order.submitted%></td>
+		<td>
+			<% if order.user_id.nil? %>
+				<%= order.shipping_name || order.billing_name %>
+			<% else %>
+			<%= link_to order.user, admin_system_user_path(order.user_id) %>
+			<% end %>
+		</td>
+		<td><%= number_to_currency(order.total) %></td>
+		<td><%= order_status(order) %></td>
+        <td>
+          <% if order.shipments.length == 0 %>
+            <%= link_to "create shipment", new_admin_store_shipment_path(order_id: order.id) %>
+          <% end %>
+        </td>
+	</tr>
+	<% end %>
+</table>
+
+
+<%= content_for :title do %>
+	Orders
+<% end %>
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li class="active">Orders</li>
+<% end %>

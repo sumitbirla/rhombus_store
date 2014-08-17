@@ -1,0 +1,72 @@
+<h2><%= @daily_deal.short_tag_line %></h2>
+
+<%= link_to 'new coupon', new_admin_store_coupon_path(daily_deal_id: @daily_deal.id, redirect: request.fullpath), class: 'pull-right btn btn-small'%>
+
+<ul class="nav nav-tabs">
+  <li><%= link_to "Summary", edit_admin_store_daily_deal_path(@daily_deal) %></a></li>
+  <li><%= link_to "Pictures", pictures_admin_store_daily_deal_path(@daily_deal) %></a></li>
+  <li><%= link_to "Categories", categories_admin_store_daily_deal_path(@daily_deal) %></li>
+  <li class="active"><a href="#">Coupons</a></li>
+  <li><%= link_to "Deal Items", items_admin_store_daily_deal_path(@daily_deal) %></li>
+  <li><%= link_to "Locations", locations_admin_store_daily_deal_path(@daily_deal) %></li>
+  <li><%= link_to "External Coupons", external_coupons_admin_store_daily_deal_path(@daily_deal) %></li>
+</ul>
+
+
+<table class="table table-striped table-condensed">
+	<tr>
+		<th>Code</th>
+		<th>Discount</th>
+		<th>Max uses</th>
+		<th>Per user</th>
+		<th>Times used</th>
+		<th>Status</th>
+		<th>&nbsp;</th>
+	</tr>
+	<% @daily_deal.coupons.each do |coupon| %>
+	<tr>
+		<td><%= link_to coupon.code, edit_admin_store_coupon_path(coupon, redirect: request.fullpath) %></td>
+		<td>
+			<% if !coupon.discount_percent.nil? %>
+			<%= coupon.discount_percent.to_i %>%
+			<% else %>
+			<%= number_to_currency(coupon.discount_amount) %>
+			<% end %>
+		</td>
+		<td><%= coupon.max_uses %></td>
+		<td><%= coupon.max_per_user %></td>
+		<td><%= coupon.times_used %></td>
+		<td>
+			<% if Time.now > coupon.start_time && Time.now < coupon.expire_time %>
+			<span class="label label-success">active</span>
+			<% elsif Time.now > coupon.expire_time %>
+			<span class="label label-important">expired</span>
+			<% else %>
+			<span class="label label-warning">pending</span>
+			<% end %>
+		</td>
+		<td>
+			<%= link_to "edit", edit_admin_store_coupon_path(coupon, redirect: request.fullpath) %> &nbsp;
+			<%= link_to "delete", 
+						  { controller: "coupons", action: "destroy", id: coupon.id }, 
+						  method: :delete, 
+						  data: { confirm: "Are you sure?" } %>
+		</td>
+	</tr>
+	<% end %>
+</table>
+
+
+<% content_for :title do %>
+	Daily Deals: <%= @daily_deal.short_tag_line %>
+<% end %>
+
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
+	<li><%= link_to @daily_deal.short_tag_line, admin_store_daily_deal_path(@daily_deal) %></li>
+	<li class="active">edit</li>
+<% end %>

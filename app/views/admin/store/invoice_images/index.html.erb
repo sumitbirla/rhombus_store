@@ -1,0 +1,17 @@
+<h2>Invoice Images</h2>
+
+<%= render partial: 'admin/shared/image_list', locals: { object: @invoice_image } %>
+
+
+<%= content_for :title do %>
+	Invoice Images
+<% end %>
+
+
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li class="active">Invoice Images</li>
+<% end %>

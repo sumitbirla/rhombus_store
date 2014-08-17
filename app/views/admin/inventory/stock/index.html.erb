@@ -1,0 +1,44 @@
+<h2>Current Stock</h2>
+
+<table class="table table-striped table-condensed">
+	<tr>
+		<th>SKU</th>
+		<th>Name</th>
+		<th>In stock</th>
+		<th>Committed</th>
+		<th>Low threshold</th>
+        <th class="calign">Supplier</th>
+	</tr>
+	<% @products.each do |p|
+		stock = InventoryTransactionItem.where(sku: p.sku).sum(:quantity) %>
+	<tr>
+		<td><%= link_to p.sku, admin_store_product_path(p) %></td>
+		<td>
+          <%= p.name %>
+          <% if !p.low_threshold.nil?  and stock <= p.low_threshold %>
+              &nbsp; <label class="label label-danger">Low</label>
+          <% end %>
+        </td>
+		<td class="calign"><%= stock %></td>
+		<td class="calign"><%= p.committed %></td>
+		<td class="calign"><%= p.low_threshold %></td>
+        <td class="calign">
+          <% unless p.primary_supplier_id.nil? %>
+              <%= link_to p.supplier, admin_system_affiliate_path(p.primary_supplier_id) %>
+          <% end %>
+        </td>
+	</tr>
+	<% end %>
+</table>
+
+
+
+<%= content_for :title do %>
+	Current Stock
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li class="active">Current Stock</li>
+<% end %>

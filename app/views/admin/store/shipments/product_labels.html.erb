@@ -1,0 +1,73 @@
+<h2>Shipment #<%= @shipment %></h2>
+
+<div>
+  <b>Submitted: </b> <%= time_ago_in_words(@shipment.order.submitted) %> ago
+  <% unless @shipment.order.user_id.nil? %>
+      &nbsp; &nbsp; <i class="icon-user"></i> <%= link_to @shipment.order.user.name, admin_system_user_path(@shipment.order.user) %>
+  <% end %>
+
+  &nbsp; <%= order_status(@shipment.order, 'large') %> <%= "<i class='icon-gift'></i>".html_safe if @shipment.order.gift %>
+</div>
+<hr style="margin: 15px 0 20px 0;"/>
+
+
+<style>
+    .table>tbody>tr>td { vertical-align: middle; }
+</style>
+
+
+<h3>Items:</h3>
+<table class="table table-condensed table-striped items">
+  <tr>
+    <th>Item:</th>
+    <th class="calign">Quantity:</th>
+    <th>Preview:</th>
+    <td>PDF:</td>
+  </tr>
+  <% @shipment.items.each do |item|
+        dir = item.order_item.item_id.split('-')[1]
+        image_path = "/userfiles/images/thumbnails/#{dir}/#{item.order_item.item_id}.jpg"
+        pdf_path = "/userfiles/images/labels/#{dir}/#{item.order_item.item_id}.pdf"
+  %>
+      <tr>
+        <td><%= item.order_item.item_id.upcase %></td>
+        <td class="calign"><%= item.order_item.quantity %></td>
+        <td><img src="<%= cdn_image_url image_path, 400, 200, 0 %>" class="img-polaroid"/></a>
+        </td>
+        <td>
+          <%= link_to Cache.setting('System', 'Static Files Url') + pdf_path, class: 'btn btn-default', target: '_blank' do %>
+              <i class="icon-download-alt fa-o"></i> <%= item.order_item.item_id + ".pdf" %>
+          <% end %>
+        </td>
+      </tr>
+  <% end %>
+
+</table>
+
+<% unless @shipment.order.customer_note.blank? %>
+    <div style="margin-bottom: 20px;">
+      <i class="icon-comment-alt" style="font-size: 1.8em; float: left; margin-right: 10px;"></i> <b>Customer note: </b></br>
+      <%= @order.order.customer_note %>
+    </div>
+<% end %>
+
+<br/>
+
+<%= link_to admin_store_shipment_path(@shipment), class: 'btn btn-primary' do %>
+    <i class="fa fa-truck fa-fw"></i> Return to shipment
+<% end %>
+
+
+<%= content_for :title do %>
+    Shipment: <%= @shipment %>
+<% end %>
+
+
+
+<% content_for :breadcrumbs do %>
+    <li><a href="#">eCommerce</a></li>
+    <li><%= link_to 'Shipments', admin_store_shipments_path %></li>
+    <li><%= link_to '#' + @shipment.to_s, admin_store_shipment_path(@shipment) %></li>
+    <li class="active">Item Labels</li>
+<% end %>
+

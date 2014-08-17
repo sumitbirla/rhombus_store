@@ -1,0 +1,52 @@
+<h2><%= @product.title %></h2>
+
+<ul class="nav nav-tabs">
+  <li><%= link_to "Summary", edit_admin_store_product_path(@product) %></li>
+  <li><%= link_to "Pictures", pictures_admin_store_product_path(@product) %></a></li>
+  <li class="active"><a href="#">Categories</a></li>
+  <li><%= link_to "Attributes", attributes_admin_store_product_path(@product) %></li>
+  <li><%= link_to "Coupons", coupons_admin_store_product_path(@product) %></li>
+</ul>
+
+<br/>
+<form action="/admin/store/products/<%= params[:id] %>/categories" method="post" class="categories">
+	<%= token_tag %>
+	<input type="hidden" name="id" value="<%= params[:id] %>">
+<% 	categories = Category.select("id, name, parent_id").where(entity_type: :product).order(:sort)
+	pcats = @product.categories
+	top_levels = categories.select { |c| c.parent_id == nil } %>
+	<ul>
+	<% top_levels.each do |cat| 
+		children = categories.select { |c| c.parent_id == cat.id } 
+		selected = pcats.find { |c| c.id == cat.id } %>
+		
+		<li><input type="checkbox" name="category_ids[]" value="<%= cat.id %>" <%= "checked='checked'" if selected %>/> &nbsp; <%= cat.name %>
+		<ul>
+		<% children.each do |child| %>
+			<li><input type="checkbox" name="category_ids[]" value="<%= child.id %>" <%= "checked='checked'" if pcats.include?(child) %>/> &nbsp; <%= child.name %></li>
+		<% end %>
+		</ul>
+		</li>
+	<% end %>
+</ul>
+<div class="form-actions">
+	<button class="btn btn-primary">Update</button>
+</div>
+</form>
+
+
+
+<% content_for :title do %>
+    <%= @product.title %>
+<% end %>
+
+
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Products", admin_store_products_path %></li>
+	<li><%= link_to @product.title, admin_store_product_path(@product)%> </li>
+	<li class="active">edit</li>
+<% end %>

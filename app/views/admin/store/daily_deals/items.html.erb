@@ -1,0 +1,27 @@
+<h2><%= @daily_deal.short_tag_line %></h2>
+
+<ul class="nav nav-tabs">
+  <li><%= link_to "Summary", edit_admin_store_daily_deal_path(@daily_deal) %></a></li>
+  <li><%= link_to "Pictures", pictures_admin_store_daily_deal_path(@daily_deal) %></a></li>
+  <li><%= link_to "Categories", categories_admin_store_daily_deal_path(@daily_deal) %></li>
+  <li><%= link_to "Coupons", coupons_admin_store_daily_deal_path(@daily_deal) %></li>
+  <li class="active"><a href="#">Deal Items</a></li>
+  <li><%= link_to "Locations", locations_admin_store_daily_deal_path(@daily_deal) %></li>
+  <li><%= link_to "External Coupons", external_coupons_admin_store_daily_deal_path(@daily_deal) %></li>
+</ul>
+
+
+
+<% content_for :title do %>
+	Daily Deals: <%= @daily_deal.short_tag_line %>
+<% end %>
+
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
+	<li><%= link_to @daily_deal.short_tag_line, admin_store_daily_deal_path(@daily_deal) %></li>
+	<li class="active">edit</li>
+<% end %>

@@ -1,0 +1,34 @@
+<h2><%= @label_area.name %></h2>
+<hr/>
+
+<%= simple_form_for [:admin, :store, @label_area], html: { class: 'form-inline'} do |f| %>
+	<%= render 'admin/shared/error_messages', object: f.object %>
+
+	<%= f.input :label_sheet_id, as: :hidden %>
+
+	<%= f.input :name, input_html: { class: 'span5' }  %>
+	<%= f.input :top, input_html: { class: 'span2' } %>
+	<%= f.input :left, input_html: { class: 'span2' } %>
+	<%= f.input :width, input_html: { class: 'span2' } %>
+	<%= f.input :height, input_html: { class: 'span2' } %>
+
+	<div class="form-actions">
+		<%= f.button :submit %>
+	</div>
+<% end %>
+
+
+<% content_for :title do
+  "Label Area"
+end %>
+
+
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Label Sheets", admin_store_label_sheets_path %></li>
+	<li><%= link_to @label_area.label_sheet.name, edit_admin_store_label_sheet_path(@label_area.label_sheet) %></li>
+	<li class="active">Areas</li>
+<% end %>

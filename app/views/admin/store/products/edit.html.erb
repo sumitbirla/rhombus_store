@@ -1,0 +1,137 @@
+<style>
+    .form-inline .control-label { width: 110px; }
+    .panel .control-label { width: 130px; }
+    .panel .form-group { margin: 5px; }
+    .dimensions .numeric { width: 17%; }
+    .help-block { display: none; }
+</style>
+
+<%
+   dropship_category = Category.find_by(slug: 'dropshippers')
+   dropshippers = Affiliate.where(id: AffiliateCategory.select(:affiliate_id).where(category_id: dropship_category.id)) unless dropship_category.nil?
+
+   supplier_category = Category.find_by(slug: 'suppliers')
+   suppliers = Affiliate.where(id: AffiliateCategory.select(:affiliate_id).where(category_id: supplier_category.id)) unless supplier_category.nil?
+%>
+
+<h2><%= @product.name %></h2>
+
+<% unless @product.id.nil? %>
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#">Summary</a></li>
+  <li><%= link_to "Pictures", pictures_admin_store_product_path(@product) %></a></li>
+  <li><%= link_to "Categories", categories_admin_store_product_path(@product) %></li>
+  <li><%= link_to "Attributes", attributes_admin_store_product_path(@product) %></li>
+  <li><%= link_to "Coupons", coupons_admin_store_product_path(@product) %></li>
+</ul>
+<% end %>
+
+
+<%= simple_form_for [:admin, :store, @product], html: { class: 'form-inline' } do |f| %>
+	
+	<%= render 'admin/shared/error_messages', object: f.object %>
+	
+	<div class="row" style="margin-left: 0;">
+		<div class="col-md-7">
+          <%= f.input :name %>
+		  <%= f.input :title %>
+		  <%= f.input :slug %>
+		  <%= f.association :brand %>
+		  <%= f.input :product_type, as: :select, collection: ['warehoused', 'dropshipped', 'electronic'] %>
+		  <%= f.input :sku, label: 'SKU' %>
+		  <%= f.input :price %>
+		  <%= f.input :special_price %>
+		  <%= f.input :dealer_price %>
+          <%= f.input :retail_map, label: 'Retail MAP' %>
+          <%= f.input :msrp, label: 'MSRP' %>
+          <%= f.input :sku, label: 'SKU' %>
+		  <%= f.input :group %>
+		  <%= f.input :option_title, input_html: { class: 'span8' } %>
+		  <%= f.input :option_sort %>
+          <%= f.input :keywords %>
+          <%= f.input :warranty %>
+          <%= f.input :minimum_order_quantity, label: "Min order qty."  %>
+		</div>
+		
+		<div class="col-md-5">
+          <div class="panel panel-default">
+            <div class="panel-heading">Options</div>
+            <div class="panel-body">
+                <%= f.input :free_shipping %>
+                <%= f.input :tax_exempt %>
+                <%= f.input :hidden %>
+                <%= f.input :featured %>
+                <%= f.input :require_image_upload %>
+            </div>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-heading">Inventory</div>
+            <div class="panel-body">
+              <%= f.association :supplier, collection: suppliers %>
+              <%= f.association :fulfiller, collection: dropshippers %>
+              <%= f.input :low_threshold %>
+              <%= f.input :committed %>
+              <%= f.input :country_of_origin, label: "Origin" %>
+              <%= f.input :shipping_lead_time %>
+              <%= f.input :item_availability, as: :date, label: "Date avail." %>
+            </div>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-heading">Dimensions</div>
+            <div class="panel-body">
+              <div class="form-group string optional dimensions">
+                <label class="string optional control-label" for="item_dimensions">Item Size (in.)</label>
+                <div class="dimensions" style="display: inline;">
+                  <%= f.input_field :item_length %>
+                  <%= f.input_field :item_width  %>
+                  <%= f.input_field :item_height  %>
+                </div>
+              </div>
+              <%= f.input :item_weight, label: 'Weight' %>
+
+              <hr/>
+              <div class="form-group string optional dimensions">
+                <label class="string optional control-label" for="case_dimensions">Case Size (in.)</label>
+                <div class="dimensions" style="display: inline;">
+                  <%= f.input_field :case_length %>
+                  <%= f.input_field :case_width  %>
+                  <%= f.input_field :case_height  %>
+                </div>
+              </div>
+              <%= f.input :case_weight, label: 'Weight' %>
+              <%= f.input :case_quantity %>
+            </div>
+          </div>
+		</div>
+	</div>
+	
+	<%= f.input :short_description, input_html: { rows: 4 }  %>
+	<%= f.input :long_description, input_html: { rows: 20 }  %>
+	
+	<div class="form-actions">
+		<%= f.button :submit %>
+	</div>
+
+<% end %>
+
+
+
+<% content_for :title do %>
+    <%= @product.title %>
+<% end %>
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Products", admin_store_products_path %></li>
+    <% if @product.id.nil? %>
+        <li class="active"><%= @product.name %></li>
+    <% else %>
+        <li><%= link_to @product.title, admin_store_product_path(@product)%> </li>
+        <li class="active">edit</li>
+    <% end %>
+
+<% end %>

@@ -1,0 +1,310 @@
+<style>
+    .summary .label { font-weight: normal; margin-right: 6px; }
+</style>
+
+<% stock = InventoryTransactionItem.where(sku: @product.sku).sum(:quantity) %>
+<%= link_to "edit", edit_admin_store_product_path(@product), class: "btn btn-sm btn-default pull-right" %>
+<h2><i class="icon-tags"></i>&nbsp; <%= @product.name %></h2>
+<hr/>
+
+<div class="arow">
+	<div class="col-md-8">
+
+	<table class="table table-condensed table-bordered summary">
+      <tr>
+        <td width="160">SKU</td>
+        <td><%= @product.sku %></td>
+      </tr>
+		<tr>
+			<td>Slug</td>
+			<td><%= @product.slug %></td>
+		</tr>
+		<tr>
+			<td>Brand</td>
+			<td><%= link_to @product.brand, edit_admin_store_brand_path(@product.brand_id) %></td>
+		</tr>
+
+		<% unless @product.group.blank? %>
+		<tr>
+			<td>Group</td>
+			<td><%= @product.group %></td>
+		</tr>
+		<% end %>
+		<tr>
+			<td>Price</td>
+			<td>
+              <span class="label label-default price">Retail: $<%= @product.price %></span>
+              <% unless @product.special_price.nil? %>
+                <span class="label label-default price">Promo: $<%= @product.special_price %></span>
+              <% end %>
+              <% unless @product.dealer_price.nil? %>
+                  <span class="label label-default price">Dealer: $<%= @product.dealer_price %></span>
+              <% end %>
+              <% unless @product.retail_map.nil? %>
+                  <span class="label label-default price">MAP: $<%= @product.retail_map %></span>
+              <% end %>
+              <% unless @product.msrp.nil? %>
+                  <span class="label label-default price">MSRP: $<%= @product.msrp %></span>
+              <% end %>
+            </td>
+		</tr>
+
+      <tr>
+        <td>Product type</td>
+        <td><%= @product.product_type.titlecase %></td>
+      </tr>
+      <% unless @product.fulfiller_id.nil? %>
+          <tr>
+            <td>Fulfilled by</td>
+            <td><%= link_to @product.fulfiller, admin_system_affiliate_path(@product.fulfiller_id) %></td>
+          </tr>
+      <% end %>
+        <% unless @product.country_of_origin.blank? %>
+          <tr>
+            <td>Country of origin</td>
+            <td><%= @product.country_of_origin %></td>
+          </tr>
+        <% end %>
+        <% unless @product.shipping_lead_time.nil? %>
+          <tr>
+            <td>Shipping lead time</td>
+            <td><%= @product.shipping_lead_time %> days</td>
+          </tr>
+        <% end %>
+        <% unless @product.item_availability.nil? %>
+          <tr>
+            <td>Item availability</td>
+            <td><%= @product.item_availability.to_date %></td>
+          </tr>
+        <% end %>
+        <% unless @product.minimum_order_quantity.nil? %>
+          <tr>
+            <td>Min. order quantity</td>
+            <td><%= @product.minimum_order_quantity %></td>
+          </tr>
+        <% end %>
+        <% unless @product.item_weight.nil? %>
+          <tr>
+            <td>Item size</td>
+            <td>
+              <% unless @product.item_length.nil? %>
+                <%= @product.item_length %>" x
+                <%= @product.item_width %>" x
+                <%= @product.item_height %>"
+              <% end %>
+              <b>&nbsp; (<%= @product.item_weight %> lbs.)</b>
+            </td>
+          </tr>
+        <% end %>
+        <% unless @product.case_weight.nil? %>
+          <tr>
+            <td>Case size</td>
+            <td>
+              <% unless @product.case_length.nil? %>
+                  <%= @product.case_length %>" x
+                  <%= @product.case_width %>" x
+                  <%= @product.case_height %>"
+              <% end %>
+              <b>&nbsp; (<%= @product.case_weight %> lbs.)</b>
+              <i>&nbsp; &nbsp; <%= @product.case_quantity %> in a case</i>
+            </td>
+          </tr>
+        <% end %>
+        <% unless @product.keywords.blank? %>
+          <tr>
+            <td>Keywords</td>
+            <td><%= @product.keywords %></td>
+          </tr>
+        <% end %>
+        <% unless @product.warranty.blank? %>
+          <tr>
+            <td>Warranty</td>
+            <td><%= @product.warranty %></td>
+          </tr>
+        <% end %>
+        <tr>
+          <td>Flags</td>
+          <td>
+            <% if @product.hidden %>
+                <span class="label label-warning">hidden</span>
+            <% else %>
+                <span class="label label-success">active</span>
+            <% end %>
+
+            <% if @product.free_shipping %>
+                <span class="label label-info">free shipping</span>
+            <% end %>
+
+            <% if @product.tax_exempt %>
+                <span class="label label-info">tax exempt</span>
+            <% end %>
+
+            <% if @product.require_image_upload %>
+                <span class="label label-info">personalized</span>
+            <% end %>
+
+            <% if @product.featured %>
+                <span class="label label-info">featured</span>
+            <% end %>
+
+            <% if !@product.low_threshold.nil? && stock <= @product.low_threshold %>
+                <span class="label label-danger">low inventory</span>
+            <% end %>
+          </td>
+        </tr>
+	</table>
+
+
+
+	<% if @product.coupons.length > 0 %>
+	<h4>Coupons</h4>
+	<table class="table table-condensed">
+		<tr>
+			<th>Code</th>
+			<th>Discount</th>
+			<th>Max uses</th>
+			<th>Per user</th>
+			<th>Times used</th>
+			<th>Status</th>
+		</tr>
+		<% @product.coupons.each do |coupon| %>
+		<tr>
+			<td><%= link_to coupon.code, edit_admin_store_coupon_path(coupon, redirect: request.fullpath) %></td>
+			<td>
+				<% if !coupon.discount_percent.nil? %>
+				<%= coupon.discount_percent.to_i %>%
+				<% else %>
+				<%= number_to_currency(coupon.discount_amount) %>
+				<% end %>
+			</td>
+			<td><%= coupon.max_uses %></td>
+			<td><%= coupon.max_per_user %></td>
+			<td><%= coupon.times_used %></td>
+			<td>
+				<% if Time.now > coupon.start_time && Time.now < coupon.expire_time %>
+				<span class="label label-success">active</span>
+				<% elsif Time.now > coupon.expire_time %>
+				<span class="label label-important">expired</span>
+				<% else %>
+				<span class="label label-warning">pending</span>
+				<% end %>
+			</td>
+		</tr>
+		<% end %>
+	</table>
+    <br/>
+	<% end %>
+
+    <h3 style="margin-top: 30px;"><%= @product.title %></h3>
+
+	<% unless @product.short_description.blank? %>
+		<h4 style="margin-top: 15px;">Short Description</h4>
+		<%= @product.short_description %>
+		<hr/>
+	<% end %>
+
+
+	<% unless @product.long_description.blank? %>
+		<h4 style="margin-top: 15px;">Long Description</h4>
+		<%= @product.long_description.gsub("\n", "<br/>").html_safe %>
+	<% end %>
+
+      <% if @product.pattributes.length > 0 %>
+          <h4 style="margin-top: 30px;">Attributes</h4>
+          <table class="table table-condensed table-bordered summary">
+            <% @product.pattributes.each do |pattr| %>
+                <tr>
+                  <td><%= pattr.attribute.name %></td>
+                  <td><%= pattr.value.gsub("\n", "<br/>").html_safe %></td>
+                </tr>
+            <% end %>
+          </table>
+      <% end %>
+
+
+      <br/><br/>
+</div>
+
+
+<div class="col-md-4">
+	<% if @product.pictures.length > 0 %>
+      <h4>Pictures</h4>
+      <a href="<%= cdn_image_url @product.pictures[0], 700, 600, 0 %>" class="fancybox" rel="gallery">
+          <img src="<%= cdn_image_url @product.pictures[0], 200, 200, 2 %>" class="img-polaroid" title="<%= @product.pictures[0].caption %>"/>
+      </a>
+      <% if @product.pictures.length > 1 %>
+          <br/>
+          <% @product.pictures[1..-1].each do |pic| %>
+              <a href="<%= cdn_image_url pic, 700, 600, 0 %>" class="fancybox" rel="gallery">
+                <img src="<%= cdn_image_url pic, 240, 240, 2 %>" class="img-polaroid" style="margin: 4px" title="<%= pic.caption %>"/>
+              </a>
+          <% end %>
+      <% end %>
+    <hr/>
+	<% end %>
+
+
+
+  <% unless @product.group.blank?  %>
+      <h4>Products in group:</h4>
+      <table class="table table-condensed">
+        <% Product.where(group: @product.group).order(:option_sort).each do |v| %>
+            <tr>
+              <td><%= link_to v.sku, admin_store_product_path(v) %></td>
+              <td><%= v.option_title %></td>
+              <td class="ralign">$<%= v.price %></td>
+            </tr>
+        <% end %>
+      </table>
+      <hr/>
+  <% end %>
+	
+	<h4>Categories</h4>
+	<ul>
+	<% @product.categories.each do |cat| %>
+	    <li><%= cat.name %></li>
+	<% end %>
+	</ul>
+
+
+    <% if @product.product_type == 'warehoused' %>
+      <hr/>
+      <h4>Inventory</h4>
+
+      <table class="table table-condensed summary">
+        <tr>
+          <td>Committed</td>
+          <td><%= @product.committed %></td>
+        </tr>
+        <tr>
+          <td>In stock</td>
+          <td><%= stock %></td>
+        </tr>
+        <tr>
+          <td>Low threshold</td>
+          <td><%= @product.low_threshold || "- not set -" %></td>
+        </tr>
+        <% unless @product.primary_supplier_id.nil? %>
+            <tr>
+              <td>Supplier</td>
+              <td><%= link_to @product.supplier, admin_system_affiliate_path(@product.primary_supplier_id) %></td>
+            </tr>
+        <% end %>
+      </table>
+    <% end %>
+
+</div>
+
+</div>  <!-- row -->
+
+
+<%= content_for :title do %>
+	Products: <%= @product.title %>
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Products", admin_store_products_path %></li>
+	<li class="active"><%= @product.title %></li>
+<% end %>
