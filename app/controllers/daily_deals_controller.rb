@@ -1,4 +1,4 @@
-class DailyDealsController < ApplicationController
+class DailyDealsController < ActionController::Base
 
   def new_submission
     @deal_submission = DealSubmission.new

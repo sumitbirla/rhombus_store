@@ -20,7 +20,7 @@ class Admin::Store::ProductsController < Admin::BaseController
   end
 
   def show
-    @product = Product.includes(:pictures, pattributes: :attribute).find(params[:id])
+    @product = Product.includes(:pictures, pattributes: :cms_attribute).find(params[:id])
   end
 
   def edit

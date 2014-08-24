@@ -10,6 +10,24 @@ Rails.application.routes.draw do
   post 'cart/checkout' => 'cart#checkout_update'
   get 'cart/submitted'
   get 'cart' => 'cart#index'
+  get "products/:slug" => 'products#show'
+  get 'resize' => 'images#resize'
+  get 'images/resize'
+  get "paypal_express/checkout"
+  get "paypal_express/review"
+  
+  get '/daily_deals/:slug' => 'daily_deals#show'
+  
+  
+  namespace :account do
+    resources :orders
+    resources :payment_methods do
+      member do
+        get 'primary' => 'payment_methods#primary'
+      end
+    end
+    resources :vouchers
+  end
   
   namespace :admin do 
   

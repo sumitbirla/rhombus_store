@@ -1,4 +1,4 @@
-class CartController < ApplicationController
+class CartController < ActionController::Base
 
   include CartHelper
   include PaypalExpressHelper

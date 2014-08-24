@@ -214,7 +214,7 @@
           <table class="table table-condensed table-bordered summary">
             <% @product.pattributes.each do |pattr| %>
                 <tr>
-                  <td><%= pattr.attribute.name %></td>
+                  <td><%= pattr.cms_attribute.name %></td>
                   <td><%= pattr.value.gsub("\n", "<br/>").html_safe %></td>
                 </tr>
             <% end %>
