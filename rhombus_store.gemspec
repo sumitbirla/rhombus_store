@@ -7,8 +7,8 @@ require "rhombus_store/version"
 Gem::Specification.new do |s|
   s.name        = "rhombus_store"
   s.version     = RhombusStore::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
+  s.authors     = ["Sumit Birla"]
+  s.email       = ["sbirla@tampahost.net"]
   s.homepage    = "TODO"
   s.summary     = "TODO: Summary of RhombusStore."
   s.description = "TODO: Description of RhombusStore."
