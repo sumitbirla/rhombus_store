@@ -34,7 +34,7 @@
 	  <div class="controls" style="display: inline;">
 		  <select id="sel-shipping-address">
 			<option value="">-- select warehouse --</option>
-		  <% Cache.location_list('warehouses').each do |loc| %>
+		  <% CmsCache.location_list('warehouses').each do |loc| %>
 		  	<option value="<%= loc.to_text %>"><%= loc.name %></option>
 		  <% end %>
 		  <select>
