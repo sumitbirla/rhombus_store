@@ -29,8 +29,20 @@ Rails.application.routes.draw do
     resources :vouchers
   end
   
-  namespace :admin do 
   
+  
+  namespace :admin do 
+    
+    namespace :system do 
+      resources :affiliates do
+        member do
+          get 'products' => 'affiliates#products'
+          post 'products_remove' => 'affiliates#remove_products'
+          post 'products' => 'affiliates#create_products'
+        end
+      end
+    end
+    
     namespace :inventory do
       resources :sublocations
       resources :stock

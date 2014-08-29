@@ -16,15 +16,22 @@
 	<tr>
 		<th>Item</th>
 		<th>Title</th>
-		<th>Group</th>
-		<th>Price</th>
+		<th>Status</th>
+		<th class="ralign">Price</th>
 		<th>&nbsp;</th>
 	</tr>
 	<% @products.each do |product|  %>
 	<tr>
 		<td><%= link_to product.sku, admin_store_product_path(product) %></td>
 		<td><%= product.title %> <span class="light"><%= " (#{product.option_title})" unless product.option_title.blank? %></span></td>
-        <td class="small"><%= product.group %></td>
+        <td>
+			<% unless product.hidden %>
+				<span class="label label-success">active</span>
+			<% end %>
+			<% if product.featured %>
+				<span class="label label-info">featured</span>
+			<% end %>
+        </td>
 		<td class="ralign">$<%= product.price %>
 		<td class="ralign">
 			<%= link_to "edit", edit_admin_store_product_path(product) %> &nbsp;
