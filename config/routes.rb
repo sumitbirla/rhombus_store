@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   
-  get "cart/remove/:id" => 'cart#remove'
+  get 'cart/remove/:id' => 'cart#remove'
   post 'cart/update'
   post 'cart/add'
   post 'cart/applycode'
@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get 'images/resize'
   get "paypal_express/checkout"
   get "paypal_express/review"
+  get 'barcode' => 'barcode#generate'
   
   get '/daily_deals/:slug' => 'daily_deals#show'
   
@@ -67,6 +68,10 @@ Rails.application.routes.draw do
       get 'ups' => 'ups#index'
       post 'ups' => 'ups#rates'
       get 'ups_label' => 'ups#label'
+      
+      get 'easy_post' => 'easy_post#index'
+      patch 'easy_post' => 'easy_post#rates'
+      get 'easy_post_label' => 'easy_post#label'
 
       get 'stamps/label' => 'stamps#label'
       get 'stamps/void' => 'stamps#void'

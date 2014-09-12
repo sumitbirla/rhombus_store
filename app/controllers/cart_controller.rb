@@ -235,8 +235,8 @@ class CartController < ActionController::Base
           :signature => Cache.setting('eCommerce', 'PayPal Signature'),
       )
 
-      total_as_cents, purchase_params = get_purchase_params @order, request
-      response = gateway.purchase total_as_cents, purchase_params
+      total_as_cents, purchase_params = get_purchase_params(@order, request)
+      response = gateway.purchase(total_as_cents, purchase_params)
 
       unless response.success?
         flash[:error] = "PayPal processing failed: #{response.message}"
@@ -253,21 +253,40 @@ class CartController < ActionController::Base
                           comment: "Successfully payment #{@order.notify_email}"
 
     elsif @order.payment_method == "CREDIT_CARD"
+      
+      active_gw = Cache.setting('eCommerce', 'Payment Gateway')
 
-      gateway = ActiveMerchant::Billing::AuthorizeNetGateway.new(
-          :login => Cache.setting('eCommerce', 'Authorize.Net Login ID'),
-          :password => Cache.setting('eCommerce', 'Authorize.Net Transaction Key'),
-          :test => false
-      )
+      if active_gw == 'Authorize.net'
+        gateway = ActiveMerchant::Billing::AuthorizeNetGateway.new(
+            :login => Cache.setting('eCommerce', 'Authorize.Net Login ID'),
+            :password => Cache.setting('eCommerce', 'Authorize.Net Transaction Key'),
+            :test => false
+        )
+      elsif active_gw == 'Stripe'
+        gateway = ActiveMerchant::Billing::StripeGateway.new(
+            :login => Cache.setting('eCommerce', 'Stripe Secret Key')
+        )  
+      else
+        flash[:error] = "Payment gateway is not set up."
+        return render 'review'
+      end 
 
       customer_name = @order.billing_name
       customer_name = @order.user.name unless @order.user_id.nil?
+      
+      purchase_options = {
+        :ip => request.remote_ip,
+        :order_id => @order.id,
+        :customer => customer_name,
+        :billing_address => {
+          :name     => @order.billing_name,
+          :address1 => @order.billing_street1,
+          :city     => @order.billing_street2,
+          :state    => @order.billing_state,
+          :zip      => @order.billing_zip
+      }}
 
-      response = gateway.authorize(@order.total_cents, @order.credit_card, {
-          :ip => request.remote_ip,
-          :order_id => @order.id,
-          :customer => customer_name
-      })
+      response = gateway.purchase(@order.total_cents, @order.credit_card, purchase_options)
 
       # credit cart authorization failed?
       unless response.success?
@@ -332,7 +351,7 @@ class CartController < ActionController::Base
     # inventory update?
     sql = ""
     @order.items.each do |item|
-      sql = sql + "UPDATE products SET committed = committed + #{item.quantity} WHERE product_id = #{item.product_id};\n"
+      sql = sql + "UPDATE store_products SET committed = committed + #{item.quantity} WHERE id = #{item.product_id};\n"
     end
     ActiveRecord::Base.connection.execute(sql) unless sql.blank?
 

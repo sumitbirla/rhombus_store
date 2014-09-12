@@ -183,7 +183,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
   def label
     shipment = Shipment.find(params[:id])
-    send_data shipment.label_data, filename: shipment.to_s + "." + shipment.label_format.downcase
+    send_data Base64.decode64(shipment.label_data), filename: shipment.to_s + "." + shipment.label_format.downcase
   end
 
 

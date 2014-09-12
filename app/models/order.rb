@@ -54,6 +54,8 @@
 #  updated_at            :datetime
 #
 
+require 'activemerchant'
+
 class Order < ActiveRecord::Base
   self.table_name = "store_orders"
   attr_accessor :same_as_shipping

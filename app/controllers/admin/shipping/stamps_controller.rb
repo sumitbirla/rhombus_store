@@ -1,4 +1,5 @@
 require 'securerandom'
+require 'savon'
 
 
 class Admin::Shipping::StampsController < Admin::BaseController

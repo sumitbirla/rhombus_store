@@ -34,7 +34,7 @@ class Admin::Shipping::FedexController < Admin::BaseController
                   :city => @shipment.recipient_city,
                   :state => @shipment.recipient_state,
                   :postal_code => @shipment.recipient_zip,
-                  :country_code => Country.find_country_by_name(@shipment.recipient_country).alpha2,
+                  :country_code => @shipment.recipient_country,
                   :residential => "true" }
 
     package = {}
