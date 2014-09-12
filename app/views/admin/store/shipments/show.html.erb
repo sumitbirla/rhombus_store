@@ -26,7 +26,7 @@
     </li>
 	<% unless @shipment.courier_data.nil? %>
     <li>
-      <%= link_to admin_shipping_easy_post_path(shipment_id: @shipment.id) do %>
+      <%= link_to admin_store_easy_post_path(shipment_id: @shipment.id) do %>
           <i class="icon-file-alt"></i> Reship
       <% end %>
     </li>
@@ -147,19 +147,11 @@
       </tr>
     </table>
     <% if @shipment.status == "shipped" %>
-        <%= link_to "Void Shipment", admin_shipping_stamps_void_path(shipment_id: @shipment.id), class: "btn btn-sm btn-danger" %>
+        <%= link_to "Void Shipment", '#', class: "btn btn-sm btn-danger" %>
     <% end %>
     <br/>
 <% else %>
-    <h4 class="hide">Click on a shipping service below to ship:</h4>
-
-    <ul style="list-style-type: none; display: none;">
-      <li style="float: left; margin: 27px 60px 0 0;"><a href="<%= admin_shipping_stamps_path(shipment_id: @shipment.id) %>"><img src="http://admin.barkingdeals.com/Areas/Admin/Content/Images/usps.gif" alt="USPS"></a></li>
-      <li style="float: left; margin: 18px 65px 0 0;"><a href="<%= admin_shipping_fedex_path(shipment_id: @shipment.id) %>"><img src="http://admin.barkingdeals.com/Areas/Admin/Content/Images/fedex.gif" alt="FedEx"></a></li>
-      <li style="float: left; margin: 0 60px 0 0;"><a href="<%= admin_shipping_ups_path(shipment_id: @shipment.id) %>"><img src="http://admin.barkingdeals.com/Areas/Admin/Content/Images/ups.jpg" alt="UPS" width="64" height="76"></a></li>
-    </ul>
-	
-	<%= link_to "Get Rates and Ship", admin_shipping_easy_post_path(shipment_id: @shipment.id), class: 'btn btn-lg btn-block btn-warning' %>
+	<%= link_to "Get Rates and Ship", admin_store_easy_post_path(shipment_id: @shipment.id), class: 'btn btn-lg btn-block btn-warning' %>
 <% end %>
 
 

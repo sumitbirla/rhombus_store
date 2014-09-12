@@ -60,32 +60,16 @@ Rails.application.routes.draw do
       resources :inventory_transactions
     end
 
-    namespace :shipping do
-      get 'fedex' => 'fedex#index'
-      patch 'fedex' => 'fedex#rates'
-      get 'fedex_label' => 'fedex#label'
-
-      get 'ups' => 'ups#index'
-      post 'ups' => 'ups#rates'
-      get 'ups_label' => 'ups#label'
-      
-      get 'easy_post' => 'easy_post#index'
-      patch 'easy_post' => 'easy_post#rates'
-      get 'easy_post_label' => 'easy_post#label'
-
-      get 'stamps/label' => 'stamps#label'
-      get 'stamps/void' => 'stamps#void'
-      get 'stamps' => 'stamps#index'
-      patch 'stamps' => 'stamps#rates'
-
-    end
-
     # Store Routes
     namespace :store do
 
       get 'shipments/choose_order'
       get 'products/adjust_prices'
       post 'products/adjust_prices' => 'products#update_prices'
+
+			get 'easy_post' => 'easy_post#index'
+      patch 'easy_post' => 'easy_post#rates'
+      get 'easy_post_label' => 'easy_post#label'
 
       resources :brands
       resources :products do

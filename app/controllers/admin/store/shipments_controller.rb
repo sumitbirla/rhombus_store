@@ -1,4 +1,3 @@
-require 'fedex'
 require 'countries'
 require 'base64'
 require 'socket'
