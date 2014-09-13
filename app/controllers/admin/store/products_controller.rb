@@ -1,4 +1,5 @@
 class Admin::Store::ProductsController < Admin::BaseController
+  
   def index
     @products = Product.includes(:brand).order(:title).page(params[:page])
     @products = @products.where("title LIKE '%#{params[:q]}%' OR sku = '#{params[:q]}'") unless params[:q].nil?

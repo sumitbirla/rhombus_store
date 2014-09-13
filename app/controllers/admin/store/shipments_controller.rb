@@ -188,6 +188,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     courier_data = JSON.parse(shipment.courier_data)
     
     begin
+      EasyPost.api_key = Cache.setting('Shipping', 'EasyPost API Key')
       ep_shipment = EasyPost::Shipment.retrieve(courier_data['id'])
       response = ep_shipment.label({'file_format' => params[:format]})
       
@@ -217,6 +218,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
 
   def void_label
+    EasyPost.api_key = Cache.setting('Shipping', 'EasyPost API Key')
     shipment = Shipment.find(params[:id])
     courier_data = JSON.parse(shipment.courier_data)
     

@@ -2,6 +2,10 @@ Setting.create(section: 'store', key: 'Order Copy Recipient', value: 'admin@exam
 Setting.create(section: 'store', key: 'Checkout Require Login', value: 'true', value_type: 'boolean')
 Setting.create(section: 'store', key: 'Enable PayPal', value: 'true', value_type: 'boolean')
 
+SearchPath.create(short_code: 'o', url: '/admin/store/orders', description: 'Search for an order by order ID')
+SearchPath.create(short_code: 'p', url: '/admin/store/products', description: 'Search for a product by title or SKU')
+SearchPath.create(short_code: 'po', url: '/admin/inventory/purchase_orders', description: 'Search for a purchase order by PO number')
+SearchPath.create(short_code: 'upc', url: '/admin/store/upc', description: 'Search for a UPC code')
 
 Permission.create(section: 'store', resource: 'admin', action: 'login')
 

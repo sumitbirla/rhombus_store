@@ -2,6 +2,7 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
   
   def index
     @purchase_orders = PurchaseOrder.includes(:items).page(params[:page]).order('id DESC')
+    @purchase_orders = @purchase_orders.where(id: params[:q]) unless params[:q].nil?
   end
 
   def new

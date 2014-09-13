@@ -8,7 +8,7 @@ class Admin::Store::OrdersController < Admin::BaseController
       if q.to_i == 0
         @orders = @orders.where("billing_name LIKE '%#{q}%' OR shipping_name LIKE '%#{q}%'")
       else
-        @orders = @orders.where(id: q.to_i)
+        @orders = @orders.where(id: q)
       end
     end
 

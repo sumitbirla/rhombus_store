@@ -13,7 +13,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
     @shipment.assign_attributes(shipment_params)
 		
      
-    EasyPost.api_key = 'kB3ozMJpvdkpWxvT3eAnBw'
+    EasyPost.api_key = Cache.setting('Shipping', 'EasyPost API Key')
 
 		if @shipment.packaging_type == 'YOUR PACKAGING'
 			parcel = {
