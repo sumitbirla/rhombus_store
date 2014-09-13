@@ -55,20 +55,22 @@ packaging_types = [
 
      <%= simple_form_for @shipment, url: '', html: { class: 'form-inline' } do |f| %>
 
-				<%= f.input :packaging_type, collection: packaging_types, label: 'Packaging' %>
+		<%= f.input :packaging_type, collection: packaging_types, label: 'Packaging' %>
         <%= f.input :package_weight, label: 'Weight (lbs)' %>
 
-         <div class="form-group string optional shipment_dimensions" style="<%= 'display: none' unless @shipment.packaging_type == 'YOUR PACKAGING' %>">
+        <div class="form-group string optional shipment_dimensions" style="<%= 'display: none' unless @shipment.packaging_type == 'YOUR PACKAGING' %>">
            <label class="string optional control-label" for="shipment_dimensions">Size (in.)</label>
            <div class="dimensions" style="display: inline;">
              <%= f.input_field :package_length %> &nbsp;x&nbsp;
              <%= f.input_field :package_width %> &nbsp;x&nbsp;
              <%= f.input_field :package_height %>
            </div>
-         </div>
-         <%= f.input :ship_date %>
-
-         <%= f.submit 'Get Rates', class: 'btn btn-success' %>
+        </div>
+        <%= f.input :ship_date %>
+		<%= f.input :insurance %>
+		<%= f.input :require_signature, label: 'Signature?' %>
+		 
+        <%= f.submit 'Get Rates', class: 'btn btn-success' %>
      <% end %>
    </div>
 
@@ -101,7 +103,7 @@ packaging_types = [
 
  </div>
 
-
+<hr/>
 
 <%= render partial: 'admin/shared/error_messages', locals: {object: @shipment} %>
 
@@ -114,43 +116,33 @@ packaging_types = [
 <% end %>
 
 
+
 <% unless @response.nil? || @response[:rates].nil?
 		carriers = @response[:rates].map { |x| x[:carrier] }.uniq 
 		carriers.each do |carrier| %>
 
 	<div class="col-md-6">
-		<% if carrier == 'USPS' %>
-			<img src="https://easypost-static.s3.amazonaws.com/assets/usps-logo-ca-ab840464727a0e5cb99f646e3a3d6df4.png"/>
-		<% elsif carrier == 'FedEx' %>
-			<img src="https://easypost-static.s3.amazonaws.com/assets/fedex-logo-ca-134505425edf2e97be7f5f2463307e12.png"/>
-		<% elsif carrier == 'UPS' %>
-			<img src="https://easypost-static.s3.amazonaws.com/assets/ups-logo-ca-05b6a55f022078a4a12ec7e58e897c6b.png"/>
-		<% else %>
-			<h4><%= carrier %></h4>
-		<% end %>
-
+		<%= carrier_image carrier %>
+			
 		<table class="table table-striped table-condensed">
-				<tr>
-				  <th>Service</th>
-				  <th class="calign">Est. Days</th>
-				  <th class="calign">Rate</th>
-				  <th></th>
-				</tr>
-				<% @response[:rates].select { |x| x[:carrier] == carrier }.each do |rate| %>
-				<tr>
-				  <td><%= rate[:service] %></td>
-				  <td class="calign"><%= rate[:est_delivery_days] || "<span class='light'> - n/a - </span>".html_safe %></td>
-				  <td class="calign"><%= number_to_currency(rate[:rate]) %></td>
-				  <td class="ralign" nowrap>
-				    <%= link_to "EPL2", admin_store_easy_post_label_path(shipment_id: @shipment.id, rate_id: rate[:id], format: 'epl2'), class: 'btn btn-sm btn-default'  %> &nbsp;
-				    <%= link_to "PDF", admin_store_easy_post_label_path(shipment_id: @shipment.id, rate_id: rate[:id], format: 'pdf'), class: 'btn btn-sm btn-default'  %> &nbsp;
-				  </td>
-				</tr>
-				<% end %>
+			<tr>
+			  <th>Service</th>
+			  <th class="calign">Est. Days</th>
+			  <th class="calign">Rate</th>
+			  <th></th>
+			</tr>
+			<% @response[:rates].select { |x| x[:carrier] == carrier }.each do |rate| %>
+			<tr>
+			  <td><%= rate[:service] %></td>
+			  <td class="calign"><%= rate[:est_delivery_days] || "<span class='light'> - n/a - </span>".html_safe %></td>
+			  <td class="calign"><%= number_to_currency(rate[:rate]) %></td>
+			  <td class="ralign">
+			    <%= link_to "purchase", admin_store_easy_post_label_path(shipment_id: @shipment.id, rate_id: rate[:id], ep_shipment_id: @response[:id]), class: 'btn btn-sm btn-default'  %>
+			</tr>
+			<% end %>
 		</table>
 	</div>
 	<% end %>
-
 
 <% end %>
 

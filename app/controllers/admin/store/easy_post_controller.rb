@@ -1,6 +1,4 @@
 require 'easypost'
-require 'net/http'
-require 'uri'
 
 
 class Admin::Store::EasyPostController < Admin::BaseController
@@ -31,60 +29,49 @@ class Admin::Store::EasyPostController < Admin::BaseController
 			}
 		end
     
-    @response = EasyPost::Shipment.create(
-        :to_address => {
-          :name => @shipment.recipient_name,
-          :company => @shipment.recipient_company,
-          :street1 => @shipment.recipient_street1,
-          :street2 => @shipment.recipient_street2,
-          :city => @shipment.recipient_city,
-          :state => @shipment.recipient_state,
-          :zip => @shipment.recipient_zip,
-          :country => 'US',
-          :phone => @shipment.order.contact_phone,
-          :email => @shipment.order.notify_email 
-        },
-        :from_address => {
-          :company => @shipment.ship_from_company,
-          :street1 => @shipment.ship_from_street1,
-          :city => @shipment.ship_from_city,
-          :state => @shipment.ship_from_state,
-          :zip => @shipment.ship_from_zip,
-          :country => 'US',
-          :phone => '8557273337',
-          :email => 'sumit@healthybreeds.com' 
-        },
-        :parcel => parcel,
-        :options => {
-          :print_custom_1 => @shipment.to_s
-        }
+    options = { :print_custom_1 => @shipment.to_s }
+    options[:delivery_confirmation] = 'SIGNATURE' if @shipment.require_signature
+    
+    begin
+      @response = EasyPost::Shipment.create(
+          :to_address => {
+            :name => @shipment.recipient_name,
+            :company => @shipment.recipient_company,
+            :street1 => @shipment.recipient_street1,
+            :street2 => @shipment.recipient_street2,
+            :city => @shipment.recipient_city,
+            :state => @shipment.recipient_state,
+            :zip => @shipment.recipient_zip,
+            :country => 'US',
+            :phone => @shipment.order.contact_phone,
+            :email => @shipment.order.notify_email,
+            :residential => 1
+          },
+          :from_address => {
+            :company => @shipment.ship_from_company,
+            :street1 => @shipment.ship_from_street1,
+            :city => @shipment.ship_from_city,
+            :state => @shipment.ship_from_state,
+            :zip => @shipment.ship_from_zip,
+            :country => 'US',
+            :phone => '8557273337',
+            :email => 'sumit@healthybreeds.com' 
+          },
+          :parcel => parcel,
+          :options => options
       ) 
-      
-      Rails.cache.write("#{@shipment.id}-response", @response, expires_in: 30.minutes) 
-      render 'index'
+    rescue => e
+      flash[:error] = e.message
+    end
+    #@response.insure(:amount => @shipment.insurance) if @shipment.insurance > 0.0 
+    render 'index'
   end
   
   def label
     @shipment = Shipment.find(params[:shipment_id])
-    
-    ep_shipment = Rails.cache.read("#{@shipment.id}-response")
-    chosen_rate = ep_shipment[:rates].find { |x| x[:id] == params[:rate_id]}
+    ep_shipment = EasyPost::Shipment.retrieve(params[:ep_shipment_id])
     
     response = ep_shipment.buy(:rate => {:id => params[:rate_id]})
-    response = ep_shipment.label({'file_format' => params[:format]})
-    
-    if params[:format] == 'epl2'
-      label_url = response[:postage_label][:label_epl2_url]
-    elsif params[:format] == 'pdf'
-      label_url = response[:postage_label][:label_pdf_url]
-    end
-    
-    # download the label
-    begin
-      label_data = Base64.encode64(Net::HTTP.get(URI.parse(label_url)))
-    rescue => e
-      flash[:error] = "Error downloading shipping label: " + e.message
-    end
     
     parcel = response[:parcel]
 		from = response[:from_address]
@@ -119,12 +106,23 @@ class Admin::Store::EasyPostController < Admin::BaseController
 
     	ship_date: DateTime.now,
     	ship_method: response[:selected_rate][:carrier] + ' ' + response[:selected_rate][:service],
+      require_signature: response[:options][:delivery_confirmation] == 'SIGNATURE',
     	ship_cost: response[:selected_rate][:rate],
     	tracking_number: response[:tracking_code],
-    	label_format: params[:format].upcase,
-    	label_data: label_data,
+    	label_format: response[:postage_label][:label_file_type],
+    	label_data: response[:postage_label][:label_url],
     	courier_data: response.to_json    	
     )
+    
+    OrderHistory.create order_id: @shipment.order_id,
+                              user_id: current_user.id,
+                              event_type: 'package_shipped',
+                              amount: @shipment.ship_cost,
+                              system_name: response[:selected_rate][:carrier],
+                              identifier: @shipment.tracking_number,
+                              comment:  response[:selected_rate][:service]
+
+    @shipment.order.update_attribute(:status, 'shipped')
     
     redirect_to admin_store_shipment_path(@shipment)
   end
@@ -133,7 +131,8 @@ class Admin::Store::EasyPostController < Admin::BaseController
   private
 
     def shipment_params
-      params.require(:shipment).permit(:ship_date, :package_weight, :package_length, :package_width, :package_height, :packaging_type)
+      params.require(:shipment).permit(:ship_date, :package_weight, :package_length, :package_width, :package_height, :packaging_type,
+        :require_signature, :insurance)
     end
 
 end

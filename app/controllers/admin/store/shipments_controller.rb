@@ -1,6 +1,9 @@
 require 'countries'
 require 'base64'
 require 'socket'
+require 'easypost'
+require 'net/http'
+require 'uri'
 
 
 class Admin::Store::ShipmentsController < Admin::BaseController
@@ -182,31 +185,52 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
   def label
     shipment = Shipment.find(params[:id])
-    send_data Base64.decode64(shipment.label_data), filename: shipment.to_s + "." + shipment.label_format.downcase
-  end
-
-
-  def print
-    shipment = Shipment.find(params[:id])
-    unless shipment.label_format == "EPL"
-      flash[:info] = "Label is not in EPL format.  It cannot be sent to thermal printer."
+    courier_data = JSON.parse(shipment.courier_data)
+    
+    begin
+      ep_shipment = EasyPost::Shipment.retrieve(courier_data['id'])
+      response = ep_shipment.label({'file_format' => params[:format]})
+      
+      # download label
+      label_url = response[:postage_label]["label_#{params[:format]}_url"]
+      label_data = Net::HTTP.get(URI.parse(label_url))
+      
+      # send to thermal printer
+      if ['epl2','zpl'].include?(params[:format])
+        
+        ip_addr = Cache.setting('Shipping', 'Thermal Printer IP')
+        s = TCPSocket.new(ip_addr, 9100)
+        s.send label_data, 0
+        s.close
+        flash[:info] = "Shipping label sent to #{ip_addr}."
+        
+        return redirect_to :back
+      end
+      
+    rescue => e
+      flash[:error] = "Error downloading shipping label: " + e.message
       return redirect_to :back
     end
-
-    # try to send to printer
-    begin
-      ip_addr = Cache.setting('Shipping', 'Thermal Printer IP')
-      s = TCPSocket.new(ip_addr, 9100)
-      s.send shipment.label_data, 0
-      s.close
-      flash[:info] = "Shipping label sent to #{ip_addr}."
-    rescue Exception => e
-      flash[:error] = e.message
-    end
-
-    redirect_to :back
+    
+    send_data label_data, filename: shipment.to_s + "." + params[:format]
   end
 
+
+  def void_label
+    shipment = Shipment.find(params[:id])
+    courier_data = JSON.parse(shipment.courier_data)
+    
+    begin
+      ep_shipment = EasyPost::Shipment.retrieve(courier_data['id'])
+      response = ep_shipment.refund
+      flash[:info] = "Refund status: #{response[:status]} - / - Tracking: #{response[:tracking_code]} - / - Confirmation: #{response[:confirmation_number] || "n/a"}"
+      shipment.update_attribute(:status, 'void') if response[:status] == 'submitted'
+    rescue => e
+      flash[:error] = e.message
+    end
+    
+    redirect_to :back
+  end
 
   def product_labels
     @shipment = Shipment.find(params[:id])

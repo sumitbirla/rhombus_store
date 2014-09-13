@@ -144,7 +144,7 @@
       <% end %>
       <tr>
         <td align="right" class="textright" colspan="3"><b>Total Items</b></td>
-        <td align="right" class="textright"><b><%= @shipment.items.sum { |x| x.quantity } %></b></td>
+        <td align="right" class="textright"><b><%= @shipment.items.sum(:quantity) %></b></td>
       </tr>
       </tbody>
     </table>

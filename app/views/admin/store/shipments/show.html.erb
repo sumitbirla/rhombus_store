@@ -103,53 +103,61 @@
 </table>
 
 <br/>
-<hr/>
-<br/>
+
 
 <% unless @shipment.courier_data.nil? %>
-    <% if @shipment.ship_method.start_with?('US-') %>
-        <img src="http://admin.barkingdeals.com/Areas/Admin/Content/Images/usps.gif" alt="USPS" class="pull-right">
-    <% end %>
-    <h4>Shipping Information</h4>
-    <table class="table table-condensed table-bordered summary" style="margin-bottom: 10px;">
-      <tr>
-        <td class="key" width="160">Service Type:</td>
-        <td>USPS: <%= @shipment.ship_method %></td>
-      </tr>
-      <tr>
-        <td class="key">Ship Cost:</td>
-        <td><%= number_to_currency(@shipment.ship_cost) %></td>
-      </tr>
-      <tr>
-        <td class="key">Ship Date:</td>
-        <td><%= @shipment.ship_date.strftime("%Y-%m-%d") %></td>
-      </tr>
-      <tr>
-        <td class="key">Tracking:</td>
-        <td><%= @shipment.tracking_number || "n/a" %></td>
-      </tr>
-      <tr>
-        <td class="key">Package Type:</td>
-        <td><%= @shipment.packaging_type %></td>
-      </tr>
-      <tr>
-        <td class="key">Package Weight:</td>
-        <td><%= @shipment.package_weight %> lb.</td>
-      </tr>
-      <tr>
-        <td class="key">Label:</td>
-        <td>
-          <%= link_to @shipment.to_s + "." + @shipment.label_format.downcase, label_admin_store_shipment_path(@shipment) %> &nbsp; &nbsp;
-          <% if @shipment.label_format == "EPL" %>
-            <%= link_to "print", print_admin_store_shipment_path(@shipment), class: "btn btn-sm btn-default" %>
-          <% end %>
-       </td>
-      </tr>
-    </table>
-    <% if @shipment.status == "shipped" %>
-        <%= link_to "Void Shipment", '#', class: "btn btn-sm btn-danger" %>
-    <% end %>
-    <br/>
+	<div class="col-md-4">
+		<img width="100%" src="<%= @shipment.label_data %>" alt="label image"/>
+	</div>
+	
+	<div class="col-md-8">
+	    <%= carrier_image @shipment.ship_method.split[0] %>
+	    <table class="table table-condensed table-bordered summary" style="margin-bottom: 10px;">
+	      <tr>
+	        <td class="key" width="160">Service Type:</td>
+	        <td><%= @shipment.ship_method %></td>
+	      </tr>
+	      <tr>
+	        <td class="key">Ship Cost:</td>
+	        <td><%= number_to_currency(@shipment.ship_cost) %></td>
+	      </tr>
+	      <tr>
+	        <td class="key">Ship Date:</td>
+	        <td><%= @shipment.ship_date.strftime("%Y-%m-%d") %></td>
+	      </tr>
+	      <tr>
+	        <td class="key">Tracking:</td>
+	        <td><%= @shipment.tracking_number || "n/a" %></td>
+	      </tr>
+	      <tr>
+	        <td class="key">Package Type:</td>
+	        <td><%= @shipment.packaging_type %></td>
+	      </tr>
+	      <tr>
+	        <td class="key">Weight:</td>
+	        <td><%= @shipment.package_weight %> lb.</td>
+	      </tr>
+		  <% if @shipment.packaging_type == 'YOUR PACKAGING'%>
+	      <tr>
+	        <td class="key">Dimensions:</td>
+	        <td><%= @shipment.package_width %>" x <%= @shipment.package_length %>" x <%= @shipment.package_height %>" </td>
+	      </tr>
+		  <% end %>
+	      <tr>
+	        <td class="key">Label Format:</td>
+	        <td><%= @shipment.label_format %></td>
+	      </tr>
+	    </table>
+
+    	<% if @shipment.status == "shipped" %>
+			<%= link_to "PDF",  label_admin_store_shipment_path(@shipment, format: 'pdf'), class: "btn btn-sm btn-default" %>
+			<%= link_to "EPL2", label_admin_store_shipment_path(@shipment, format: 'epl2'), class: "btn btn-sm btn-default" %>
+			<%= link_to "ZPL", label_admin_store_shipment_path(@shipment, format: 'zpl'), class: "btn btn-sm btn-default" %>
+			<% if @shipment.ship_method.split[0] == 'USPS' %>
+        		<%= link_to "Void Shipment", void_label_admin_store_shipment_path(@shipment), class: "btn btn-sm btn-danger pull-right" %>
+			<% end %>
+    	<% end %>
+    </div>
 <% else %>
 	<%= link_to "Get Rates and Ship", admin_store_easy_post_path(shipment_id: @shipment.id), class: 'btn btn-lg btn-block btn-warning' %>
 <% end %>

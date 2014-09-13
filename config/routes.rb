@@ -95,10 +95,11 @@ Rails.application.routes.draw do
       resources :coupons
       resources :shipments do
         member do
-          get 'product_labels' => 'shipments#product_labels'
-          get 'label' => 'shipments#label'
-          get 'print' => 'shipments#print'
-          get 'packing_slip' => 'shipments#packing_slip'
+          get 'product_labels'
+          get 'label'
+          get 'print'
+          get 'packing_slip'
+          get 'void_label' 
         end
       end
       resources :tax_rates
