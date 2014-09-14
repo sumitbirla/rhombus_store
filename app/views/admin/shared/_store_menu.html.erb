@@ -1,19 +1,32 @@
+<% new_orders = Order.where("submitted > ?", DateTime.now - 2.weeks).where(status: ['unshipped', 'submitted']).count %>
 
             <li class="<%= 'active' if request.original_url.include? 'admin/store' %>">
-              <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> eCommerce  <span class="fa arrow"></span></a>
+              <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> eCommerce  
+				<% if new_orders > 0 %>
+					&nbsp; &nbsp; <span class="badge"><%= new_orders %></span>
+				<% end %>
+				<span class="fa arrow"></span>
+			  </a>
               <ul class="nav nav-second-level">
                 <li><%= link_to "Brands", admin_store_brands_path %></li>
+				<li><%= link_to "Coupons", admin_store_coupons_path %></li>
+				<li><%= link_to "Custom Labels", admin_store_label_sheets_path %></li>
+				<li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
+				<li><%= link_to "Invoice Images", admin_store_invoice_images_path %></li>
+				<li>
+					<%= link_to admin_store_orders_path do %>
+						Orders
+						<% if new_orders > 0 %>
+							<span class="badge pull-right"><%= new_orders %></span>
+						<% end %>
+					<% end %>
+				</li>
                 <li><%= link_to "Products", admin_store_products_path %></li>
                 <li><%= link_to "Shipping Options", admin_store_shipping_options_path %></li>
-                <li><%= link_to "Invoice Images", admin_store_invoice_images_path %></li>
-                <li><%= link_to "Coupons", admin_store_coupons_path %></li>
-                <li><%= link_to "Vouchers", admin_store_voucher_groups_path %></li>
-                <li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
-                <li><%= link_to "Orders", admin_store_orders_path %></li>
-                <li><%= link_to "Shipments", admin_store_shipments_path %></li>
-                <li><%= link_to "Custom Labels", admin_store_label_sheets_path %></li>
+                <li><%= link_to "Shipments", admin_store_shipments_path %></li>         
                 <li><%= link_to "Tax Rates", admin_store_tax_rates_path %></li>
                 <li><%= link_to "UPC Codes", admin_store_upc_index_path %></li>
+				<li><%= link_to "Vouchers", admin_store_voucher_groups_path %></li>
               </ul>
             </li>
 
