@@ -67,7 +67,6 @@ packaging_types = [
            </div>
         </div>
         <%= f.input :ship_date %>
-		<%= f.input :insurance %>
 		<%= f.input :require_signature, label: 'Signature?' %>
 		 
         <%= f.submit 'Get Rates', class: 'btn btn-success' %>
@@ -78,25 +77,23 @@ packaging_types = [
    <div class="col-md-6">
 
      <div class="panel panel-primary">
-       <div class="panel-heading">From:</div>
+       <div class="panel-heading"><%= @shipment.ship_from_company %></div>
        <div class="panel-body">
-           <b><%= @shipment.ship_from_company %></b><br/>
            <%= @shipment.ship_from_street1 %><br/>
            <%= raw @shipment.ship_from_street2 + '<br/>' unless @shipment.ship_from_street2.blank? %>
            <%= @shipment.ship_from_city %>, <%= @shipment.ship_from_state %> <%= @shipment.ship_from_zip %> <br/>
-           <%= @shipment.ship_from_country %>
+           <%= Country.find_country_by_alpha2(@shipment.ship_from_country) %>
        </div>
      </div>
 
      <div class="panel panel-primary">
-       <div class="panel-heading">To:</div>
+       <div class="panel-heading"><%= @shipment.recipient_name %></div>
        <div class="panel-body">
-           <b><%= @shipment.recipient_name %></b><br/>
            <%= raw @shipment.recipient_company + '<br/>' unless @shipment.recipient_company.blank? %>
            <%= @shipment.recipient_street1 %><br/>
            <%= raw @shipment.recipient_street2 + '<br/>' unless @shipment.recipient_street2.blank? %>
            <%= @shipment.recipient_city %>, <%= @shipment.recipient_state %> <%= @shipment.recipient_zip %> <br/>
-           <%= @shipment.recipient_country %>
+           <%= Country.find_country_by_alpha2(@shipment.recipient_country) %>
          </div>
      </div>
    </div>

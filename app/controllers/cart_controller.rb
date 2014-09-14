@@ -302,7 +302,7 @@ class CartController < ActionController::Base
 
       # add order history row
       OrderHistory.create order_id: @order.id, user_id: @order.user_id, amount: @order.total,
-                          event_type: 'cc_authorization', system_name: 'Authorize.Net', identifier: response.authorization,
+                          event_type: 'cc_authorization', system_name: active_gw, identifier: response.authorization,
                           comment: "Successfully authorized #{@order.cc_number}"
 
     else # NO_BILLING

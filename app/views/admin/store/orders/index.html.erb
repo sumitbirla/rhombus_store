@@ -12,6 +12,7 @@
         <th>Sales Channel</th>
 		<th>Date</th>
 		<th>Customer</th>
+		<th>Location</th>
 		<th>Amount</th>
 		<th>Status</th>
         <th>&nbsp;</th>
@@ -28,6 +29,7 @@
 			<%= link_to order.user, admin_system_user_path(order.user_id) %>
 			<% end %>
 		</td>
+		<td><%= order.shipping_city %>, <%= order.shipping_state %>
 		<td><%= number_to_currency(order.total) %></td>
 		<td><%= order_status(order) %></td>
         <td>

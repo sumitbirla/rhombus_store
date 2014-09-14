@@ -1,6 +1,5 @@
 require 'easypost'
 
-
 class Admin::Store::EasyPostController < Admin::BaseController
 
   def index
@@ -12,9 +11,6 @@ class Admin::Store::EasyPostController < Admin::BaseController
     @shipment = Shipment.find(params[:shipment_id])
     @shipment.assign_attributes(shipment_params)
 		
-     
-    EasyPost.api_key = Cache.setting('Shipping', 'EasyPost API Key')
-
 		if @shipment.packaging_type == 'YOUR PACKAGING'
 			parcel = {
           :length => @shipment.package_length, 
@@ -29,10 +25,14 @@ class Admin::Store::EasyPostController < Admin::BaseController
 			}
 		end
     
-    options = { :print_custom_1 => @shipment.to_s }
+    options = { 
+      :print_custom_1 => @shipment.to_s,
+      :date_advance => (@shipment.ship_date - Date.today).to_i
+    }
     options[:delivery_confirmation] = 'SIGNATURE' if @shipment.require_signature
     
     begin
+      EasyPost.api_key = Cache.setting('Shipping', 'EasyPost API Key')
       @response = EasyPost::Shipment.create(
           :to_address => {
             :name => @shipment.recipient_name,
@@ -42,10 +42,9 @@ class Admin::Store::EasyPostController < Admin::BaseController
             :city => @shipment.recipient_city,
             :state => @shipment.recipient_state,
             :zip => @shipment.recipient_zip,
-            :country => 'US',
+            :country => @shipment.recipient_country,
             :phone => @shipment.order.contact_phone,
-            :email => @shipment.order.notify_email,
-            :residential => 1
+            :email => @shipment.order.notify_email
           },
           :from_address => {
             :company => @shipment.ship_from_company,
@@ -53,66 +52,32 @@ class Admin::Store::EasyPostController < Admin::BaseController
             :city => @shipment.ship_from_city,
             :state => @shipment.ship_from_state,
             :zip => @shipment.ship_from_zip,
-            :country => 'US',
-            :phone => '8557273337',
-            :email => 'sumit@healthybreeds.com' 
+            :country => @shipment.ship_from_country,
+            :phone => @shipment.ship_from_phone,
+            :email => @shipment.ship_from_email
           },
           :parcel => parcel,
           :options => options
       ) 
+      
+      @shipment.copy_easy_post(@response)
     rescue => e
       flash[:error] = e.message
     end
-    #@response.insure(:amount => @shipment.insurance) if @shipment.insurance > 0.0 
+
     render 'index'
   end
   
   def label
     @shipment = Shipment.find(params[:shipment_id])
-    ep_shipment = EasyPost::Shipment.retrieve(params[:ep_shipment_id])
     
+    ep_shipment = EasyPost::Shipment.retrieve(params[:ep_shipment_id])
     response = ep_shipment.buy(:rate => {:id => params[:rate_id]})
     
-    parcel = response[:parcel]
-		from = response[:from_address]
-		to = response[:to_address]
-
-    @shipment.update_attributes(
-
-			ship_from_company: from[:company],
-    	ship_from_street1: from[:street1],
-    	ship_from_street2: from[:street2],
-    	ship_from_city: from[:city],
-    	ship_from_state: from[:state],
-    	ship_from_zip: from[:zip],
-    	ship_from_country: from[:country],
-
-    	recipient_name: to[:name],
-    	recipient_company: to[:company],
-    	recipient_street1: to[:street1],
-    	recipient_street2: to[:street2],
-    	recipient_city: to[:city],
-    	recipient_state: to[:state],
-    	recipient_zip: to[:zip],
-    	recipient_country: to[:country],
-
-			status: "shipped",
-
-			packaging_type: parcel[:predefined_package] || 'YOUR PACKAGING',
-    	package_width: parcel[:width],
-    	package_length: parcel[:length],
-    	package_height: parcel[:height],
-    	package_weight: parcel[:weight] / 16.0,
-
-    	ship_date: DateTime.now,
-    	ship_method: response[:selected_rate][:carrier] + ' ' + response[:selected_rate][:service],
-      require_signature: response[:options][:delivery_confirmation] == 'SIGNATURE',
-    	ship_cost: response[:selected_rate][:rate],
-    	tracking_number: response[:tracking_code],
-    	label_format: response[:postage_label][:label_file_type],
-    	label_data: response[:postage_label][:label_url],
-    	courier_data: response.to_json    	
-    )
+    @shipment.copy_easy_post(response)
+    @shipment.status = 'shipped'
+    @shipment.fulfilled_by_id = session[:user_id]
+    @shipment.save
     
     OrderHistory.create order_id: @shipment.order_id,
                               user_id: current_user.id,

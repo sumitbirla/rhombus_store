@@ -69,7 +69,7 @@
             <%= @order.shipping_street1 %><br/>
             <%= raw @order.shipping_street2 + '<br/>' unless @order.shipping_street2.blank? %>
             <%= @order.shipping_city %>, <%= @order.shipping_state %> <%= @order.shipping_zip %><br/>
-            <%= @order.shipping_country %>
+            <%= Country.find_country_by_alpha2(@order.shipping_country) %>
           <% else %>
               N/A
           <% end %>
@@ -88,7 +88,7 @@
             <%= @order.billing_street1 %><br/>
             <%= raw @order.billing_street2 + '<br/>' unless @order.billing_street2.blank? %>
             <%= @order.billing_city %>, <%= @order.billing_state %> <%= @order.billing_zip %><br/>
-            <%= @order.billing_country %>
+            <%= Country.find_country_by_alpha2(@order.billing_country) %>
           <% else %>
             N/A
           <% end %>

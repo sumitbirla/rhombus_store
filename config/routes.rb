@@ -96,6 +96,7 @@ Rails.application.routes.draw do
       resources :shipments do
         member do
           get 'product_labels'
+          get 'label_image'
           get 'label'
           get 'print'
           get 'packing_slip'

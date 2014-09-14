@@ -29,7 +29,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     max_seq = @order.shipments.maximum(:sequence)
     seq = max_seq + 1 unless max_seq.nil?
 
-    last_shipment = Shipment.order("created_at DESC").take(1)[0]
+    last_shipment = Shipment.order("created_at DESC").first
 
     @shipment = Shipment.new order_id: @order.id,
                              sequence: seq,
@@ -53,7 +53,9 @@ class Admin::Store::ShipmentsController < Admin::BaseController
                                   ship_from_city: last_shipment.ship_from_city,
                                   ship_from_state: last_shipment.ship_from_state,
                                   ship_from_zip: last_shipment.ship_from_zip,
-                                  ship_from_country: last_shipment.ship_from_country
+                                  ship_from_country: last_shipment.ship_from_country,
+                                  ship_from_email: last_shipment.ship_from_email,
+                                  ship_from_phone: last_shipment.ship_from_phone
 
       if @shipment.save
         @order.items.each do |item|
@@ -181,6 +183,11 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
   def choose_order
   end
+  
+  def label_image
+    shipment = Shipment.find(params[:id])
+    send_data shipment.label_data, type: shipment.label_format
+  end
 
 
   def label
@@ -244,7 +251,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   def shipment_params
     params.require(:shipment).permit(:order_id, :sequence, :status, :recipient_company, :recipient_name, :recipient_street1,
                  :recipient_street2, :recipient_city, :recipient_state, :recipient_zip, :recipient_country,
-                 :ship_from_company, :ship_from_street1,
+                 :ship_from_company, :ship_from_email, :ship_from_phone, :ship_from_street1,
                  :ship_from_street2, :ship_from_city, :ship_from_state, :ship_from_zip, :ship_from_country,
                  :status, :ship_method, :tracking_number, :ship_date, :package_weight, :package_length, :package_width,
                  :package_height, :ship_cost, :notes, :packaging_type, :drop_off_type, :delivery_confirmation, :signature_confirmation)

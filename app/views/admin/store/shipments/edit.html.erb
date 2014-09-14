@@ -49,16 +49,19 @@
           </div>
         </div>
 
-        <div class="panel panel-success">
+        <div class="panel panel-primary">
+          <div class="panel-heading">Shipper Contact:</div>
           <div class="panel-body">
-            <%= f.input :status, collection: ['pending', 'shipped', 'void', 'cancelled', 'delivered'] %>
-            <%= f.input :notes, input_html: { class: '', rows: 2 } %>
+            <%= f.input :ship_from_email, label: 'Email' %>
+            <%= f.input :ship_from_phone, label: 'Phone' %>
           </div>
         </div>
+
       </div>
 
       <div class="col-md-6">
-        <div class="panel panel-primary">
+        
+		<div class="panel panel-primary">
           <div class="panel-heading">Recipient Address:</div>
           <div class="panel-body">
             <%= f.input :recipient_name, label: 'Recipient' %>
@@ -71,7 +74,15 @@
             <%= f.input :recipient_country, label: 'Country' %>
           </div>
         </div>
-      </div>
+      	
+        <div class="panel panel-success">
+          <div class="panel-body">
+            <%= f.input :status, collection: ['pending', 'shipped', 'void', 'cancelled', 'delivered'] %>
+            <%= f.input :notes, input_html: { class: '', rows: 2 } %>
+          </div>
+        </div>
+	  
+	  </div>
 
     </div>
 

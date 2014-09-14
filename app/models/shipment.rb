@@ -33,6 +33,8 @@
 #  label_data        :binary(16777215)
 #  label_format      :string(255)
 #
+require 'net/http'
+require 'uri'
 
 class Shipment < ActiveRecord::Base
   self.table_name = "store_shipments"
@@ -49,5 +51,63 @@ class Shipment < ActiveRecord::Base
 
   def to_s
     "#{order_id}-#{sequence}"
+  end
+  
+  def copy_easy_post(response)
+    # save shipment object
+    parcel = response[:parcel]
+		from = response[:from_address]
+		to = response[:to_address]
+    plabel = response[:postage_label]
+    rate = response[:selected_rate]
+    
+    self.assign_attributes(
+      courier_name: 'EasyPost',
+
+			ship_from_company: from[:company],
+    	ship_from_street1: from[:street1],
+    	ship_from_street2: from[:street2],
+    	ship_from_city: from[:city],
+    	ship_from_state: from[:state],
+    	ship_from_zip: from[:zip],
+    	ship_from_country: from[:country],
+
+    	recipient_name: to[:name],
+    	recipient_company: to[:company],
+    	recipient_street1: to[:street1],
+    	recipient_street2: to[:street2],
+    	recipient_city: to[:city],
+    	recipient_state: to[:state],
+    	recipient_zip: to[:zip],
+    	recipient_country: to[:country],
+      
+			packaging_type: parcel[:predefined_package] || 'YOUR PACKAGING',
+    	package_width: parcel[:width],
+    	package_length: parcel[:length],
+    	package_height: parcel[:height],
+    	package_weight: parcel[:weight] / 16.0
+    )
+    
+    unless plabel.nil?
+      # try to download label PNG
+      label_url = plabel[:label_url]
+      label_data = label_url
+      begin
+        label_data = Net::HTTP.get(URI.parse(label_url))
+      rescue => e
+      end
+      
+      self.assign_attributes(
+        ship_date: DateTime.iso8601(plabel[:label_date]).to_date,
+      	ship_method: rate[:carrier] + ' ' + rate[:service],
+        ship_cost: rate[:rate],
+        require_signature: response[:options][:delivery_confirmation] == 'SIGNATURE',
+      	tracking_number: response[:tracking_code],
+      	label_format: plabel[:label_file_type],
+      	label_data: label_data,
+      	courier_data: response.to_json    	
+      )
+    end
+    
   end
 end
