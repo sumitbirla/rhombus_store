@@ -29,9 +29,9 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     max_seq = @order.shipments.maximum(:sequence)
     seq = max_seq + 1 unless max_seq.nil?
 
-    last_shipment = Shipment.order("created_at DESC").first
+    last_shipment = Shipment.order(created_at: :desc).first
 
-    @shipment = Shipment.new order_id: @order.id,
+    @shipment = Shipment.new(order_id: @order.id,
                              sequence: seq,
                              recipient_company: @order.shipping_company,
                              recipient_name: @order.shipping_name,
@@ -41,22 +41,22 @@ class Admin::Store::ShipmentsController < Admin::BaseController
                              recipient_state: @order.shipping_state,
                              recipient_zip: @order.shipping_zip,
                              recipient_country: @order.shipping_country,
-                             status: 'pending'
+                             status: 'pending')
 
-
+     unless last_shipment.nil?
+       @shipment.assign_attributes(ship_from_company: last_shipment.ship_from_company,
+                                   ship_from_street1: last_shipment.ship_from_street1,
+                                   ship_from_street2: last_shipment.ship_from_street2,
+                                   ship_from_city: last_shipment.ship_from_city,
+                                   ship_from_state: last_shipment.ship_from_state,
+                                   ship_from_zip: last_shipment.ship_from_zip,
+                                   ship_from_country: last_shipment.ship_from_country,
+                                   ship_from_email: last_shipment.ship_from_email,
+                                   ship_from_phone: last_shipment.ship_from_phone)
+    end 
+                    
     # if this is the first shipment for this order, auto-create the shipment in database with all items included.do
     if seq == 1 && last_shipment
-
-      @shipment.assign_attributes ship_from_company: last_shipment.ship_from_company,
-                                  ship_from_street1: last_shipment.ship_from_street1,
-                                  ship_from_street2: last_shipment.ship_from_street2,
-                                  ship_from_city: last_shipment.ship_from_city,
-                                  ship_from_state: last_shipment.ship_from_state,
-                                  ship_from_zip: last_shipment.ship_from_zip,
-                                  ship_from_country: last_shipment.ship_from_country,
-                                  ship_from_email: last_shipment.ship_from_email,
-                                  ship_from_phone: last_shipment.ship_from_phone
-
       if @shipment.save
         @order.items.each do |item|
           @shipment.items << ShipmentItem.new(shipment_id: @shipment.id, order_item_id: item.id, quantity: item.quantity)

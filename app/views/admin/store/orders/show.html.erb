@@ -216,7 +216,7 @@
           <% if item.event_type == 'shipment_created' %>
               <%= link_to "view", admin_store_shipment_path(item.identifier) %>
           <% elsif item.event_type == 'package_shipped' %>
-              <%= link_to "print label", print_shipping_label_admin_store_order_path(order_history_id: item.id) %>
+              
           <% end %>
         </td>
         <td>
