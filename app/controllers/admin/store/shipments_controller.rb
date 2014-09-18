@@ -29,7 +29,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     max_seq = @order.shipments.maximum(:sequence)
     seq = max_seq + 1 unless max_seq.nil?
 
-    last_shipment = Shipment.order(created_at: :desc).first
+    last_shipment = Shipment.order(updated_at: :desc).first
 
     @shipment = Shipment.new(order_id: @order.id,
                              sequence: seq,
@@ -41,6 +41,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
                              recipient_state: @order.shipping_state,
                              recipient_zip: @order.shipping_zip,
                              recipient_country: @order.shipping_country,
+                             package_weight: 1.0,
                              status: 'pending')
 
      unless last_shipment.nil?
@@ -52,7 +53,8 @@ class Admin::Store::ShipmentsController < Admin::BaseController
                                    ship_from_zip: last_shipment.ship_from_zip,
                                    ship_from_country: last_shipment.ship_from_country,
                                    ship_from_email: last_shipment.ship_from_email,
-                                   ship_from_phone: last_shipment.ship_from_phone)
+                                   ship_from_phone: last_shipment.ship_from_phone,
+                                   package_weight: last_shipment.package_weight)
     end 
                     
     # if this is the first shipment for this order, auto-create the shipment in database with all items included.do

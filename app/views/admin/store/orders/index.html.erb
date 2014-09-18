@@ -33,7 +33,7 @@
 		<td><%= number_to_currency(order.total) %></td>
 		<td><%= order_status(order) %></td>
         <td>
-          <% if order.shipments.length == 0 %>
+          <% if order.shipments.length == 0 && ['submitted', 'unshipped'].include?(order.status) %>
             <%= link_to "create shipment", new_admin_store_shipment_path(order_id: order.id) %>
           <% end %>
         </td>

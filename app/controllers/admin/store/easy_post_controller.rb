@@ -10,6 +10,8 @@ class Admin::Store::EasyPostController < Admin::BaseController
   def rates
     @shipment = Shipment.find(params[:shipment_id])
     @shipment.assign_attributes(shipment_params)
+    
+    return render 'index' unless @shipment.valid?
 		
 		if @shipment.packaging_type == 'YOUR PACKAGING'
 			parcel = {
