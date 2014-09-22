@@ -22,11 +22,6 @@ Rails.application.routes.draw do
   
   namespace :account do
     resources :orders
-    resources :payment_methods do
-      member do
-        get 'primary' => 'payment_methods#primary'
-      end
-    end
     resources :vouchers
   end
   
@@ -74,10 +69,10 @@ Rails.application.routes.draw do
       resources :brands
       resources :products do
         member do
-          get 'pictures' => 'products#pictures'
-          get 'categories' => 'products#categories'
-          get 'attributes' => 'products#attributes'
-          get 'coupons' => 'products#coupons'
+          get 'pictures' 
+          get 'categories'
+          get 'attributes'
+          get 'coupons'
           post 'categories' => 'products#create_categories'
           post 'attributes' => 'products#create_attributes'
         end
