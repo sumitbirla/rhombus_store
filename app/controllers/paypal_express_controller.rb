@@ -51,8 +51,6 @@ class PaypalExpressController < ActionController::Base
     @cart.paypal_payer_id = gateway_response.payer_id
     @cart.sales_channel = 'PayPal'
 
-    apply_shipping(@cart)
-    apply_tax(@cart)
     update_totals(@cart)
 
     # check if there is a user associated with this email address

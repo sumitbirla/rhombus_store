@@ -73,7 +73,6 @@ class CartController < ActionController::Base
       end
     end
     
-    apply_shipping order
     update_totals order
     order.save validate: false
     
@@ -92,7 +91,6 @@ class CartController < ActionController::Base
 
         # update order or delete altogether if no items left
         if order.items.length > 0
-          apply_shipping order
           update_totals order
           order.save validate: false
         else
@@ -128,7 +126,6 @@ class CartController < ActionController::Base
 
     # update order or delete altogether if no items left
     if order.items.length > 0
-      apply_shipping order
       update_totals order
       order.save validate: false
     else
@@ -188,10 +185,7 @@ class CartController < ActionController::Base
     end
     
     if @order.valid?
-      apply_tax(@order)
-      apply_shipping(@order)
       update_totals(@order)
-
       @order.save(validate: false)
       return redirect_to action: 'review'
     end

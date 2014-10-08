@@ -1,7 +1,7 @@
 class Admin::Store::OrdersController < Admin::BaseController
   
   def index
-    @orders = Order.where(status: Order.valid_statuses).includes(:user, :shipments).page(params[:page]).order('id DESC')
+    @orders = Order.where(status: Order.valid_statuses).includes(:user, :shipments).order(submitted: :desc).page(params[:page])
 
     q = params[:q]
     unless q.nil?

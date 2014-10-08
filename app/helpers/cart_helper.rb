@@ -2,10 +2,6 @@ module CartHelper
 
   def apply_shipping(order)
 
-    # order subtotal needs to be upto-date in order to see which bracket shipping falls in
-    order.subtotal = 0.0
-    order.items.each { |i| order.subtotal += i.quantity.to_d * i.unit_price }
-
     options = ShippingOption.where("max_order_amount >= ? and min_order_amount <= ? and active = ?", order.subtotal, order.subtotal, true)
     if options.length > 0
       selected_option = options.min_by { |x| x.base_cost }
@@ -22,16 +18,12 @@ module CartHelper
     zip = ZipCode.find_by(code: order.shipping_zip)
 
     unless zip.nil?
-      # calculate subtotal first
-      order.subtotal = 0.0
-      order.items.each { |i| order.subtotal += i.quantity.to_d * i.unit_price }
-
       # determine tax
       order.tax_rate = zip.tax_rate
-      order.tax_amount = order.subtotal * zip.tax_rate / 100.0
+      order.tax_amount = (order.subtotal - order.discount_amount - order.credit_applied) * zip.tax_rate / 100.0
 
       # order total needs to be > $0.0 to apply tax
-      order.tax_amount = 0.0 if order.subtotal - order.discount_amount - order.credit_applied <= 0.0
+      order.tax_amount = 0.0 if order.tax_amount <= 0.0
 
     else
       order.tax_rate = 0.0
@@ -46,12 +38,15 @@ module CartHelper
     order.credit_applied = 0.0
     order.subtotal = 0.0
     order.items.each { |i| order.subtotal += i.quantity.to_d * i.unit_price }
+    
+    apply_shipping(order)
 
     # any coupon
     if order.coupon_id
       coupon = order.coupon
       order.discount_amount = coupon.discount_amount if coupon.discount_amount
       order.discount_amount = (coupon.discount_percent * order.subtotal / 100.0).round(2) if coupon.discount_percent
+      order.shipping_cost = 0.0 if coupon.free_shipping
     end
 
     # any voucher
@@ -59,8 +54,10 @@ module CartHelper
       voucher = order.voucher
       order.credit_applied = voucher.voucher_group.value
     end
+    
+    apply_tax(order)
 
-    # grant total
+    # grand total
     order.total = order.subtotal + order.tax_amount + order.shipping_cost - order.discount_amount - order.credit_applied
     order.total = 0.0 if order.total < 0.0
   end
