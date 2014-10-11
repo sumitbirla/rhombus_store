@@ -131,7 +131,7 @@ class Admin::Store::OrdersController < Admin::BaseController
       urls += " " + website_url + invoice_admin_store_order_path(o, digest: digest) 
     end
     
-    system "wkhtmltopdf #{urls} /tmp/invoices.pdf"
+    system "wkhtmltopdf -q #{urls} /tmp/invoices.pdf"
     send_file "/tmp/invoices.pdf"
   end
   
