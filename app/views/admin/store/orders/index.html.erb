@@ -1,13 +1,39 @@
-<%= link_to "new order", new_admin_store_order_path, class: 'btn btn-sm btn-default pull-right' %>
 <h2><i class="fa fa-shopping-cart"></i>&nbsp; Orders</h2>
 
 <% unless params[:q].nil? %>
     <div class="alert alert-info">Found <%= @orders.total_entries %> records matching '<%= params[:q] %>'</div>
 <% end %>
+	
+<div class="pull-right">
+
+  <select id="selAction" class="form-control" style="display: inline; width: 80%">
+      <option> - - Select Action - - </option>
+      <option method="post" value="/admin/store/orders_create_invoice">Create Invoices (PDF)</option>
+      <option method="post" value="/admin/store/orders/notify_shipped">Notify Shipped</option>
+      <option method="get" value="/admin/store/orders/address_labels">Print Address Labels (4x3)</option>
+      <optgroup label="Change order status to ">
+          <option method="post" value="/admin/store/orders_update_status?status=submitted">Submitted</option>
+          <option method="post" value="/admin/store/orders_update_status?status=completed">Completed</option>
+          <option method="post" value="/admin/store/orders_update_status?status=processing">Processing</option>
+          <option method="post" value="/admin/store/orders_update_status?status=shipped">Shipped</option>
+          <option method="post" value="/admin/store/orders_update_status?status=shipped_by_vendor">Shipped by Vendor</option>
+          <option method="post" value="/admin/store/orders_update_status?status=refunded">Refunded</option>
+          <option method="post" value="/admin/store/orders_update_status?status=cancelled">Cancelled</option>
+      </optgroup>
+      <optgroup label="Export orders ">
+          <option method="post" value="/admin/store/orders/exportcsv">CSV</option>
+      </optgroup>
+  </select>
+  <input type="button" class="btn btn-default btn-small" id="btnAction" value="Go" />	  
+</div>
+
+<form id="frmBatch" action="" method="post">
+	<%= token_tag %>
 
 <%= will_paginate @orders %>
 <table class="table table-striped table-condensed">
 	<tr>
+		<th><input type="checkbox" id="chkAll" /></th>
 		<th>Order #</th>
         <th>Sales Channel</th>
 		<th>Date</th>
@@ -15,10 +41,10 @@
 		<th>Location</th>
 		<th>Amount</th>
 		<th>Status</th>
-        <th>&nbsp;</th>
 	</tr>
 	<% @orders.each do |order| %>
 	<tr>
+		<td><input type="checkbox" name="order_id[]" value="<%= order.id %>"/></td>
 		<td><%= link_to order.id, admin_store_order_path(order) %></td>
         <td><%= order.sales_channel %></td>
 		<td><%= systime order.submitted if order.submitted%></td>
@@ -26,23 +52,19 @@
 			<% if order.user_id.nil? %>
 				<%= order.shipping_name || order.billing_name %>
 			<% else %>
-			<%= link_to order.user, admin_system_user_path(order.user_id) %>
+				<%= link_to order.user, admin_system_user_path(order.user_id) %>
 			<% end %>
 		</td>
 		<td><%= order.shipping_city %>, <%= order.shipping_state %>
 		<td><%= number_to_currency(order.total) %></td>
 		<td><%= order_status(order) %></td>
-        <td>
-          <% if order.shipments.length == 0 && ['submitted', 'unshipped'].include?(order.status) %>
-            <%= link_to "create shipment", new_admin_store_shipment_path(order_id: order.id) %>
-          <% end %>
-        </td>
 	</tr>
 	<% end %>
 </table>
 
+</form>
 
-<%= content_for :title do %>
+<% content_for :title do %>
 	Orders
 <% end %>
 
@@ -51,4 +73,25 @@
 <% content_for :breadcrumbs do %>
 	<li><a href="#">eCommerce</a></li>
 	<li class="active">Orders</li>
+<% end %>
+
+
+<% content_for :head do %>
+
+	<script type="text/javascript">
+	    $(document).ready(function () {
+
+	        $("#btnAction").click(function () {
+	            $("#frmBatch").attr("action", $("#selAction").val());
+	            $("#frmBatch").attr("method", $("#selAction option:selected").attr("method"));
+	            $("#frmBatch").submit();
+	        });
+
+	        $("#chkAll").change(function () {
+	            $("input[name='orderId']").attr("checked", $(this).is(":checked"));
+	        });
+
+	    });
+    </script>
+
 <% end %>

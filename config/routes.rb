@@ -65,6 +65,9 @@ Rails.application.routes.draw do
 			get 'easy_post' => 'easy_post#index'
       patch 'easy_post' => 'easy_post#rates'
       get 'easy_post_label' => 'easy_post#label'
+      
+      post 'orders_update_status' => 'orders#update_status'
+      post 'orders_create_invoice' => 'orders#create_invoice'
 
       resources :brands
       resources :products do

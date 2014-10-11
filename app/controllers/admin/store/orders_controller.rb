@@ -99,6 +99,43 @@ class Admin::Store::OrdersController < Admin::BaseController
     @order = Order.find(params[:id])
   end
   
+  def update_status
+    
+    orders = Order.where(id: params[:order_id]).where.not(status: params[:status])
+    orders.each do |o|
+      
+      if o.status != params[:status]
+        
+        o.update_attribute(:status, params[:status])
+        OrderHistory.create(order_id: o.id, 
+                            user_id: session[:user_id], 
+                            event_type: :status_update,
+                            system_name: 'Rhombus',
+                            data1: params[:status],
+                            comment: "Status updated to '#{params[:status]}'")
+      end
+      
+    end
+    
+    flash[:info] = "Status of #{orders.length} order(s) updated to '#{params[:status]}'"
+    redirect_to :back
+  end
+  
+  def create_invoice
+    orders = Order.where(id: params[:order_id])
+    token = Cache.setting('System', 'Security Token')
+    website_url = Cache.setting('System', 'Website URL') + "/"
+    dir = '/tmp/' + SecureRandom.hex(6)
+    
+    orders.each do |o|
+      digest = Digest::MD5.hexdigest(o.id.to_s + token) 
+      url = webssite_url + invoice_admin_store_order_path(o, digest: digest)
+      system "wkhtmltopdf #{url} #{dir}/#{o.id}-invoice.pdf"
+    end
+    
+    send_file "#{dir}/#{orders[0].id}-invoice.pdf"
+  end
+  
   
   private
   
