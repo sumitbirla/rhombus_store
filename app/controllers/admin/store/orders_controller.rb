@@ -134,8 +134,8 @@ class Admin::Store::OrdersController < Admin::BaseController
       system "wkhtmltopdf #{url} #{dir}/#{o.id}-invoice.pdf"
     end
     
-    system "pdftk -o #{dir}/* cat output /tmp/invoices.pdf"
-    send_file "/tmp/invoices.pdf"
+    system "pdftk -o #{dir}/* cat output #{dir}/invoices.pdf"
+    send_file "#{dir}/invoices.pdf"
     #system("rm -rf #{dir}")
   end
   
