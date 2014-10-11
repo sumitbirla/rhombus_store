@@ -122,21 +122,17 @@ class Admin::Store::OrdersController < Admin::BaseController
   end
   
   def create_invoice
-    orders = Order.where(id: params[:order_id])
+    urls = ''
     token = Cache.setting('System', 'Security Token')
     website_url = Cache.setting('System', 'Website URL') + "/"
-    dir = '/tmp/' + SecureRandom.hex(6)
-    Dir.mkdir(dir)
     
-    orders.each do |o|
+    Order.where(id: params[:order_id]).each do |o|
       digest = Digest::MD5.hexdigest(o.id.to_s + token) 
-      url = website_url + invoice_admin_store_order_path(o, digest: digest)
-      system "wkhtmltopdf #{url} #{dir}/#{o.id}-invoice.pdf"
+      urls += " " + website_url + invoice_admin_store_order_path(o, digest: digest) 
     end
     
-    system "pdftk #{dir}/* cat output #{dir}/invoices.pdf"
-    send_file "#{dir}/invoices.pdf"
-    #system("rm -rf #{dir}")
+    system "wkhtmltopdf #{urls} /tmp/invoices.pdf"
+    send_file "/tmp/invoices.pdf"
   end
   
   
