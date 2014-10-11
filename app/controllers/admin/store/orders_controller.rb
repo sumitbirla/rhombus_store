@@ -124,7 +124,7 @@ class Admin::Store::OrdersController < Admin::BaseController
   def create_invoice
     urls = ''
     token = Cache.setting('System', 'Security Token')
-    website_url = Cache.setting('System', 'Website URL') + "/"
+    website_url = Cache.setting('System', 'Website URL')
     
     Order.where(id: params[:order_id]).each do |o|
       digest = Digest::MD5.hexdigest(o.id.to_s + token) 
