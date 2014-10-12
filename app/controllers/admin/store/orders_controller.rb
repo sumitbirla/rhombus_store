@@ -99,8 +99,8 @@ class Admin::Store::OrdersController < Admin::BaseController
     @order = Order.find(params[:id])
   end
   
+  
   def update_status
-    
     orders = Order.where(id: params[:order_id]).where.not(status: params[:status])
     orders.each do |o|
       
@@ -121,6 +121,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     redirect_to :back
   end
   
+  
   def create_invoice
     urls = ''
     token = Cache.setting('System', 'Security Token')
@@ -129,10 +130,102 @@ class Admin::Store::OrdersController < Admin::BaseController
     Order.where(id: params[:order_id]).each do |o|
       digest = Digest::MD5.hexdigest(o.id.to_s + token) 
       urls += " " + website_url + invoice_admin_store_order_path(o, digest: digest) 
+      
+      OrderHistory.create(order_id: o.id, 
+                          user_id: session[:user_id], 
+                          event_type: :invoice_print,
+                          system_name: 'Rhombus',
+                          comment: "Printed invoice")
     end
     
     system "wkhtmltopdf -q #{urls} /tmp/invoices.pdf"
     send_file "/tmp/invoices.pdf"
+  end
+  
+  
+  def address_label
+    ip_address = Cache.setting('Shipping', 'Thermal Printer IP')
+    website_url = Cache.setting('System', 'Website URL')
+    orders = Order.where(id: params[:order_id]).where.not(status: params[:status])
+  
+    begin
+      orders.each do |o|
+        data = <<-EOF
+
+N
+q812
+Q609,26
+A30,46,0,3,1,1,N,"HEALTHY BREEDS"
+A30,72,0,3,1,1,N,"180 DOUGLAS RD E."
+A30,98,0,3,1,1,N,"OLDSMAR FL 34677"
+B540,46,0,3,2,5,50,B,"#{o.id}"
+LO0,170,812,2
+A100,250,0,4,1,1,N,"SHIP"
+A100,285,0,4,1,1,N,"TO:"
+A220,250,0,4,1,1,N,"#{o.shipping_name.upcase}"
+A220,290,0,4,1,1,N,"#{o.shipping_street1.upcase}#{"," + o.shipping_street2 unless o.shipping_street2.blank?}"
+A220,330,0,4,1,1,N,"#{o.shipping_city.upcase}, #{o.shipping_state} #{o.shipping_zip}"
+B220,400,0,P,,N,10,N,"#{o.shipping_zip}"
+LO0,480,812,2
+A30,500,0,2,1,1,N,"#{website_url}"
+A580,500,0,2,1,1,N,""
+P1,1
+EOF
+
+        s = TCPSocket.new(ip_address, 9100)
+        s.send data, 0
+        s.close
+        
+        OrderHistory.create(order_id: o.id, 
+                            user_id: session[:user_id], 
+                            event_type: :address_label_print,
+                            system_name: 'Rhombus',
+                            comment: "Address label printed at #{ip_address}")
+      end
+      
+      flash[:info] = "#{orders.length} labels sent to thermal printer at #{ip_address}"
+    rescue => e
+      flash[:error] = e.message
+    end
+    
+    redirect_to :back
+  end
+  
+  
+  def send_confirmation
+      orders = Order.includes(:items).where(id: params[:order_id])
+
+      begin
+        orders.each do |o| 
+          unless o.notify_email.blank?
+            OrderMailer.order_submitted_email(o).deliver 
+            OrderHistory.create(order_id: o.id, 
+                                user_id: session[:user_id], 
+                                event_type: :confirmation_email,
+                                system_name: 'Rhombus',
+                                comment: "Confirmation email sent to '#{o.notify_email}'")
+          end
+        end
+        flash[:info] = "#{orders.length} notifications sent."
+      rescue => e
+        flash[:error] = e.message
+      end
+
+      redirect_to :back
+  end
+  
+  def create_shipment
+    
+    orders = Order.includes(:items).where(id: params[:order_id])
+    orders.each do |o|
+      shipment = o.create_shipment
+      OrderHistory.create order_id: o.id, user_id: current_user.id, event_type: :shipment_created,
+                      system_name: 'Rhombus', identifier: shipment.id, comment: "shipment created: #{shipment}"
+    end
+    
+    flash[:info] = "#{orders.length} new shipments created"
+    redirect_to controller: 'admin/store/shipments'
+                    
   end
   
   

@@ -59,6 +59,8 @@ Rails.application.routes.draw do
     namespace :store do
 
       get 'shipments/choose_order'
+      post 'shipments_packing_slip_batch' => 'shipments#packing_slip_batch'
+      
       get 'products/adjust_prices'
       post 'products/adjust_prices' => 'products#update_prices'
 
@@ -68,7 +70,10 @@ Rails.application.routes.draw do
       
       post 'orders_update_status' => 'orders#update_status'
       post 'orders_create_invoice' => 'orders#create_invoice'
-
+      post 'orders_address_label' => 'orders#address_label'
+      post 'orders_send_confirmation' => 'orders#send_confirmation'
+      post 'orders_create_shipment' => 'orders#create_shipment'
+      
       resources :brands
       resources :products do
         member do

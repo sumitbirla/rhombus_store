@@ -6,11 +6,12 @@
 	
 <div class="pull-right">
 
-  <select id="selAction" class="form-control" style="display: inline; width: 80%">
+  <select id="selAction" class="form-control" style="display: inline; width: 70%">
       <option> - - Select Action - - </option>
+	  <option method="post" value="/admin/store/orders_create_shipment">Create Shipments</option>
       <option method="post" value="/admin/store/orders_create_invoice">Create Invoices (PDF)</option>
-      <option method="post" value="/admin/store/orders/notify_shipped">Notify Shipped</option>
-      <option method="get" value="/admin/store/orders/address_labels">Print Address Labels (4x3)</option>
+      <option method="post" value="/admin/store/orders_send_confirmation">Send Confirmation Email</option>
+      <option method="post" value="/admin/store/orders_address_label">Print Address Labels</option>
       <optgroup label="Change order status to ">
           <option method="post" value="/admin/store/orders_update_status?status=submitted">Submitted</option>
           <option method="post" value="/admin/store/orders_update_status?status=completed">Completed</option>

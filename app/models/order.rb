@@ -120,4 +120,52 @@ class Order < ActiveRecord::Base
   def self.valid_statuses
     [ 'submitted', 'completed', 'unshipped', 'shipped', 'refunded', 'cancelled', 'backordered' ]
   end
+  
+  def create_shipment
+    seq = 1
+    max_seq = shipments.maximum(:sequence)
+    seq = max_seq + 1 unless max_seq.nil?
+
+    last_shipment = Shipment.order(updated_at: :desc).first
+
+    shipment = Shipment.new(order_id: id,
+                             sequence: seq,
+                             recipient_company: shipping_company,
+                             recipient_name: shipping_name,
+                             recipient_street1: shipping_street1,
+                             recipient_street2: shipping_street2,
+                             recipient_city: shipping_city,
+                             recipient_state: shipping_state,
+                             recipient_zip: shipping_zip,
+                             recipient_country: shipping_country,
+                             package_weight: 1.0,
+                             status: 'pending')
+
+     unless last_shipment.nil?
+       shipment.assign_attributes(ship_from_company: last_shipment.ship_from_company,
+                                   ship_from_street1: last_shipment.ship_from_street1,
+                                   ship_from_street2: last_shipment.ship_from_street2,
+                                   ship_from_city: last_shipment.ship_from_city,
+                                   ship_from_state: last_shipment.ship_from_state,
+                                   ship_from_zip: last_shipment.ship_from_zip,
+                                   ship_from_country: last_shipment.ship_from_country,
+                                   ship_from_email: last_shipment.ship_from_email,
+                                   ship_from_phone: last_shipment.ship_from_phone,
+                                   package_weight: last_shipment.package_weight)
+    end 
+                    
+    if shipment.save
+      weight = 0.3
+      
+      items.each do |item|
+        shipment.items << ShipmentItem.new(shipment_id: shipment.id, order_item_id: item.id, quantity: item.quantity)
+        weight += item.quantity * item.product.item_weight unless item.product.item_weight.nil?
+      end
+      
+      shipment.update_attribute(:package_weight, weight) unless weight == 0.3
+    end
+    
+    shipment
+  end
+  
 end

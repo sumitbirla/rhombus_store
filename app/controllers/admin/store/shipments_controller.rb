@@ -246,6 +246,27 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   def product_labels
     @shipment = Shipment.find(params[:id])
   end
+  
+  
+  def packing_slip_batch
+    urls = ''
+    token = Cache.setting('System', 'Security Token')
+    website_url = Cache.setting('System', 'Website URL')
+    
+    Shipment.where(id: params[:shipment_id]).each do |s|
+      digest = Digest::MD5.hexdigest(s.id.to_s + token) 
+      urls += " " + website_url + packing_slip_admin_store_shipment_path(s, digest: digest) 
+      
+      OrderHistory.create(order_id: s.order_id, 
+                          user_id: session[:user_id], 
+                          event_type: :packing_slip_print,
+                          system_name: 'Rhombus',
+                          comment: "Packing slip printed")
+    end
+    
+    system "wkhtmltopdf -q #{urls} /tmp/packing_slips.pdf"
+    send_file "/tmp/packing_slips.pdf"
+  end
 
 
   private

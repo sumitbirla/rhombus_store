@@ -1,4 +1,7 @@
-<% new_orders = Order.where("submitted > ?", DateTime.now - 2.weeks).where(status: ['unshipped', 'submitted']).count %>
+<% 
+	new_orders = Order.where("submitted > ?", DateTime.now - 2.weeks).where(status: ['unshipped', 'submitted']).count 
+	new_shipments = Shipment.where("created_at > ?", DateTime.now - 2.weeks).where(status: 'pending').count 
+%>
 
             <li class="<%= 'active' if request.original_url.include? 'admin/store' %>">
               <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> eCommerce  
@@ -23,7 +26,14 @@
 				</li>
                 <li><%= link_to "Products", admin_store_products_path %></li>
                 <li><%= link_to "Shipping Options", admin_store_shipping_options_path %></li>
-                <li><%= link_to "Shipments", admin_store_shipments_path %></li>         
+                <li>
+					<%= link_to admin_store_shipments_path do %>
+						Shipments
+						<% if new_shipments > 0 %>
+							<span class="badge pull-right"><%= new_shipments %></span>
+						<% end %>
+					<% end %>
+				</li>         
                 <li><%= link_to "Tax Rates", admin_store_tax_rates_path %></li>
                 <li><%= link_to "UPC Codes", admin_store_upc_index_path %></li>
 				<li><%= link_to "Vouchers", admin_store_voucher_groups_path %></li>
