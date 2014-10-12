@@ -9,7 +9,12 @@ require 'uri'
 class Admin::Store::ShipmentsController < Admin::BaseController
 
   def index
-    @shipments = Shipment.all.order('created_at DESC').page(params[:page])
+    @shipments = Shipment.all.order('created_at DESC')
+    
+    respond_to do |format|
+      format.html { @shipments = @shipments.page(params[:page]) }
+      format.csv { send_data @shipments.to_csv }
+    end
   end
 
 

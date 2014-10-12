@@ -1,8 +1,13 @@
 class Admin::Store::UpcController < Admin::BaseController
   
   def index
-    @upcs = Upc.paginate(page: params[:page])
+    @upcs = Upc.page(params[:page])
     @upcs = @upcs.where("code LIKE '%#{params[:q]}%' OR item LIKE '%#{params[:q]}%'") unless params[:q].nil?
+    
+    respond_to do |format|
+      format.html
+      format.csv { send_data Upc.to_csv }
+    end
   end
 
   def new

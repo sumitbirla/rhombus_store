@@ -54,6 +54,10 @@
 </table>
 </form>
 
+<div class="table-summary">
+	<%= number_with_delimiter(@shipments.total_entries) %> records | <%= link_to 'CSV', admin_store_shipments_path(format: :csv) %>
+</div>
+
 
 <%= content_for :title do %>
     Shipments

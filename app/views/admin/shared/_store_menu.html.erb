@@ -1,12 +1,13 @@
 <% 
 	new_orders = Order.where("submitted > ?", DateTime.now - 2.weeks).where(status: ['unshipped', 'submitted']).count 
 	new_shipments = Shipment.where("created_at > ?", DateTime.now - 2.weeks).where(status: 'pending').count 
+	max = [new_orders, new_shipments].max
 %>
 
             <li class="<%= 'active' if request.original_url.include? 'admin/store' %>">
               <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> eCommerce  
-				<% if new_orders > 0 %>
-					&nbsp; &nbsp; <span class="badge"><%= new_orders %></span>
+				<% if max > 0 %>
+					&nbsp; &nbsp; <span class="badge"><%= max %></span>
 				<% end %>
 				<span class="fa arrow"></span>
 			  </a>

@@ -21,9 +21,6 @@
           <option method="post" value="/admin/store/orders_update_status?status=refunded">Refunded</option>
           <option method="post" value="/admin/store/orders_update_status?status=cancelled">Cancelled</option>
       </optgroup>
-      <optgroup label="Export orders ">
-          <option method="post" value="/admin/store/orders/exportcsv">CSV</option>
-      </optgroup>
   </select>
   <input type="button" class="btn btn-default btn-small" id="btnAction" value="Go" />	  
 </div>
@@ -64,6 +61,12 @@
 </table>
 
 </form>
+
+<div class="table-summary">
+	<%= number_with_delimiter(@orders.total_entries) %> records | <%= link_to 'CSV', admin_store_orders_path(format: :csv) %>
+</div>
+
+
 
 <% content_for :title do %>
 	Orders

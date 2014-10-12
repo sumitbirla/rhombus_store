@@ -45,6 +45,16 @@ class Shipment < ActiveRecord::Base
   validates_presence_of :ship_from_company, :ship_from_street1, :ship_from_city, :ship_from_state, :ship_from_zip, :ship_from_country
   validates_presence_of :recipient_name, :recipient_street1, :recipient_city, :recipient_state, :recipient_zip, :recipient_country
   validates_presence_of :package_weight
+  
+  def self.to_csv
+    CSV.generate do |csv|
+      cols = column_names - ['label_data']
+      csv << cols
+      all.each do |shipment|
+        csv << shipment.attributes.values_at(*cols)
+      end
+    end
+  end
 
   def dimensions_available?
     !(package_length.nil? || package_width.nil? || package_height.nil?)

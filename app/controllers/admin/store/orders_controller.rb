@@ -1,7 +1,7 @@
 class Admin::Store::OrdersController < Admin::BaseController
   
   def index
-    @orders = Order.where(status: Order.valid_statuses).includes(:user, :shipments).order(submitted: :desc).page(params[:page])
+    @orders = Order.where(status: Order.valid_statuses).order(submitted: :desc)
 
     q = params[:q]
     unless q.nil?
@@ -10,6 +10,11 @@ class Admin::Store::OrdersController < Admin::BaseController
       else
         @orders = @orders.where(id: q)
       end
+    end
+    
+    respond_to do |format|
+      format.html { @orders = @orders.includes(:user).page(params[:page]) }
+      format.csv { send_data @orders.to_csv }
     end
 
   end
@@ -91,6 +96,12 @@ class Admin::Store::OrdersController < Admin::BaseController
 
   def invoice
     @order = Order.find(params[:id])
+    OrderHistory.create(order_id: @order.id, 
+                        user_id: session[:user_id], 
+                        event_type: :invoice_print,
+                        system_name: 'Rhombus',
+                        comment: "Printed invoice")
+                        
     render 'invoice', layout: false
   end
 

@@ -76,6 +76,16 @@ class Order < ActiveRecord::Base
   validates_presence_of :cc_type, :cc_number, :cc_expiration_month, :cc_expiration_year, :cc_code, if: :paid_with_card?
   validate :credit_card, if: :paid_with_card?
   
+  def self.to_csv
+    CSV.generate do |csv|
+      cols = column_names - ['paypal_token', 'cart_key']
+      csv << cols
+      all.each do |product|
+        csv << product.attributes.values_at(*cols)
+      end
+    end
+  end
+  
   def paid_with_card?
     payment_method == "CREDIT_CARD"
   end
