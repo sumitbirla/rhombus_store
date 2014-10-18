@@ -113,7 +113,7 @@
       <tr>
         <td><%= @shipment.order.submitted.strftime("%d-%^b-%Y") %></td>
         <td><%= @shipment %></td>
-        <td>n/a</td>
+        <td><%= @shipment.order.external_order_id %></td>
         <td><%= @shipment.recipient_name %></td>
       </tr>
       </tbody>

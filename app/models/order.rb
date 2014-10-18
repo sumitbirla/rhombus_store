@@ -69,6 +69,8 @@ class Order < ActiveRecord::Base
   has_many :history, class_name: 'OrderHistory'
   has_many :shipments
   has_many :payments, as: :payable
+  
+  accepts_nested_attributes_for :items, allow_destroy: true, reject_if: lambda { |attributes| attributes['product_id'].blank?}
    
   validates_presence_of :shipping_name, :shipping_street1, :shipping_city, :shipping_state, :shipping_zip, :shipping_country
   validates_presence_of :contact_phone, :notify_email

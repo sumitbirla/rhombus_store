@@ -20,7 +20,7 @@ class Admin::Store::OrdersController < Admin::BaseController
   end
 
   def new
-    @order = Order.new name: 'New order'
+    @order = Order.new
     render 'edit'
   end
 
