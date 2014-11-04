@@ -40,6 +40,7 @@ class Admin::Store::OrdersController < Admin::BaseController
 
   def edit
     @order = Order.find(params[:id])
+    5.times { @order.items.build }
   end
 
   def update
@@ -47,7 +48,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     @order.attributes = order_params
 
     if @order.save(validate: false)
-      redirect_to action: 'index', notice: 'Order was successfully updated.'
+      redirect_to action: 'show', id: @order.id, notice: 'Order was successfully updated.'
     else
       render 'edit'
     end

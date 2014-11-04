@@ -135,6 +135,24 @@ class Admin::Store::ProductsController < Admin::BaseController
   end
   
   
+  def item_info
+    p = Product.find_by(sku: params[:sku])
+    if p
+      return render json: { status: 'ok', product_id: p.id, description: p.title, price: p.price, dealer_price: p.dealer_price }
+    else
+      sku, affiliate_code, variant = params[:sku].split('-')
+      p = Product.find_by(sku: sku)
+      aff = Affiliate.find_by(code: affiliate_code)
+      
+      unless p.nil? || aff.nil?
+        return render json: { status: 'ok', product_id: p.id, affiliate_id: aff.id, variation: variant, description: p.title, price: p.price, dealer_price: p.dealer_price }
+      end
+    end
+    
+    render json: { status: 'not found' }
+  end
+  
+  
   private
   
     def product_params

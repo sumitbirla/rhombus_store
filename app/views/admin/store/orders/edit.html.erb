@@ -1,5 +1,4 @@
 <h2>Order #<%= @order.id %></h2>
-<hr/>
 
 <%= simple_form_for [:admin, :store, @order], html: { class: 'form-inline' } do |f| %>
 
@@ -36,7 +35,7 @@
 		<div class="col-md-6">
 			<h4>Shipping address:</h4>
 			<%= f.input :shipping_name, label: 'Name' %>
-            <%= f.input :shipping_company, label: 'Company'  %>
+      <%= f.input :shipping_company, label: 'Company'  %>
 			<%= f.input :shipping_street1, label: 'Street1'  %>
 			<%= f.input :shipping_street2, label: 'Street2'  %>
 			<%= f.input :shipping_city, label: 'City'  %>
@@ -47,7 +46,7 @@
 		<div class="col-md-6">
 			<h4>Billing address:</h4>
 			<%= f.input :billing_name, label: 'Name' %>
-            <%= f.input :billing_company, label: 'Company' %>
+      <%= f.input :billing_company, label: 'Company' %>
 			<%= f.input :billing_street1, label: 'Street1' %>
 			<%= f.input :billing_street2, label: 'Street2' %>
 			<%= f.input :billing_city, label: 'City' %>
@@ -64,8 +63,8 @@
       <div class="panel-body">
 		<div class="col-md-6">
 			<%= f.input :payment_method, as: :select, collection: ['CREDIT_CARD', 'PAYPAL'], label: 'Method' %>
-            <%= f.input :contact_phone, label: 'Phone' %>
-            <%= f.input :notify_email, label: 'Email' %>
+      <%= f.input :contact_phone, label: 'Phone' %>
+      <%= f.input :notify_email, label: 'Email' %>
 		</div>
 		<div class="col-md-6">
 			<%= f.input :cc_type, as: :select, collection: ['Visa', 'MasterCard', 'Discover', 'American Express', "Diner's Club", 'JCB'], label: 'Type' %>
@@ -76,6 +75,36 @@
 		</div>
       </div>
 	</div>
+  
+  <div class="panel panel-info">
+    <div class="panel-heading">Items</div>
+  
+      <table class="table">
+        <tr>
+          <th>Item</th>
+          <th>Description</th>
+          <th>Unit Price</th>
+          <th>Quantity</th>
+          <th></th>
+        </tr>
+      <%= f.fields_for :items do |itemf| %>
+        <tr>
+          <td><%= itemf.input_field :item_id, class: 'item-id' %></td>
+          <td><%= itemf.input_field :item_description, style: 'width: 400px', class: 'item-desc' %></td>
+          <td><%= itemf.input_field :unit_price, class: 'unit-price' %></td>
+          <td><%= itemf.input_field :quantity, class: 'qty' %></td>
+          <td><i class="fa fa-times"></i>
+            <%= itemf.hidden_field :_destroy, class: 'destroy' %>
+            <%= itemf.hidden_field :product_id, class: 'product-id' %>
+            <%= itemf.hidden_field :affiliate_id, class: 'affiliate-id' %>
+            <%= itemf.hidden_field :variation, class: 'variation' %>
+          </td>
+        </tr>
+      <% end %>
+      </table>
+      
+    </div>
+  </div>
 	
 	<div class="form-actions">
 		<%= f.button :submit %>
@@ -91,7 +120,37 @@
 <% content_for :head do %>
     <style>
         .form-inline .form-group { margin: 10px 0; }
+        .fa-times { cursor: pointer; }
     </style>
+    
+    <script>
+    $(document).ready(function() {
+      
+      $(".fa-times").click(function () {
+        $(this).parent().parent().hide("slow");
+        $(this).siblings(".destroy").val("true");
+        return false;
+      });
+      
+      $(".item-id").change(function() {
+        var item = $(this);
+        
+        $.get('/admin/store/products/item_info?sku=' + $(this).val(), function(data) {
+          if (data.status == 'ok') {
+            
+            item.parent().parent().find('.product-id').val(data.product_id);
+            item.parent().parent().find('.affiliate-id').val(data.affiliate_id);
+            item.parent().parent().find('.variation').val(data.variation);
+            item.parent().parent().find('.item-desc').val(data.description);
+            item.parent().parent().find('.unit-price').val(data.dealer_price);
+            item.parent().parent().find('.qty').focus();
+            
+          }
+        });
+      });
+      
+    });
+    </script>
 <% end %>
 
 

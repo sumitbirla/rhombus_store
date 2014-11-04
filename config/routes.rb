@@ -78,6 +78,8 @@ Rails.application.routes.draw do
       post 'orders_send_confirmation' => 'orders#send_confirmation'
       post 'orders_create_shipment' => 'orders#create_shipment'
       
+      get 'products/item_info' => 'products#item_info'
+      
       resources :brands
       resources :products do
         member do
