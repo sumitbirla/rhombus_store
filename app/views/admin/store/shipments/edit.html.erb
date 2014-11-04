@@ -1,10 +1,5 @@
 <h2>Shipment #<%= @shipment.order_id %>-<%= @shipment.sequence %></h2>
 <hr/>
-<%
-   pkg_types = %w(YOUR_PACKAGING FEDEX_10KG_BOX FEDEX_25KG_BOX FEDEX_BOX FEDEX_ENVELOPE FEDEX_PAK FEDEX_TUBE)
-   drop_off_types =  %w(REGULAR_PICKUP BUSINESS_SERVICE_CENTER DROP_BOX REQUEST_COURIER STATION)
-%>
-
 
 <%= simple_form_for [:admin, :store, @shipment], html: { class: 'form-inline' } do |f| %>
     <%= f.hidden_field :order_id %>
@@ -16,18 +11,20 @@
         <th>Item</th>
         <th>Description</th>
         <th class="calign">Ordered</th>
-        <th class="calign">Shipped</th>
-        <th class="calign">Quantity</th>
+        <th class="calign">Ship Qty</th>
+        <th class="calign">Special Status</th>
       </tr>
-      <% @shipment.order.items.each do |item|
-        shipment_item = @shipment_items.find { |si| si.order_item_id == item.id }
-        previously_shipped = ShipmentItem.where("order_item_id = ?", item.id).sum(:quantity) %>
+      <%= f.fields_for :items do |itemf| %>
+        <% 
+          sitem = @shipment.items[itemf.index] 
+          oitem = OrderItem.find(sitem.order_item_id)
+        %>
           <tr>
-            <td nowrap><%= item.item_id.upcase %></td>
-            <td><%= link_to item.item_description, admin_store_product_path(item.product_id) %></td>
-            <td class="calign"><%= item.quantity %></td>
-            <td class="calign"><%= previously_shipped %></td>
-            <td class="calign"><input type="textbox" style="text-align: center;" name="qty-<%= item.id %>" value="<%= shipment_item.quantity || item.quantity - previously_shipped %>" /></td>
+            <td nowrap><%= oitem.item_id.upcase %></td>
+            <td><%= link_to oitem.item_description, admin_store_product_path(oitem.product_id) %></td>
+            <td class="calign"><%= sitem.quantity %></td>
+            <td class="calign"><%= itemf.number_field :quantity, style: 'width: 80px; text-align: center;' %></td>
+            <td class="calign"><%= itemf.text_field :special_status %></td>
           </tr>
       <% end %>
     </table>

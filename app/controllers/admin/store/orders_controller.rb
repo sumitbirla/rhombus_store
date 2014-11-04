@@ -40,12 +40,18 @@ class Admin::Store::OrdersController < Admin::BaseController
 
   def edit
     @order = Order.find(params[:id])
-    5.times { @order.items.build }
+    2.times { @order.items.build }
   end
 
   def update
     @order = Order.find(params[:id])
     @order.attributes = order_params
+    
+    unless params[:add_more_items].blank?
+      count = params[:add_more_items].to_i + 5
+      count.times { @order.items.build }
+      return render 'edit'
+    end
 
     if @order.save(validate: false)
       redirect_to action: 'show', id: @order.id, notice: 'Order was successfully updated.'

@@ -91,13 +91,15 @@
     <tr>
         <th>Item</th>
         <th>Description</th>
-        <th class="calign">Quantity</th>
+        <th class="calign">Ship Qty.</th>
+        <th class="calign">Status</th>
     </tr>
     <% @shipment.items.each do |item| %>
         <tr>
             <td nowrap><%= item.order_item.item_id.upcase %></td>
             <td><%= link_to item.order_item.item_description, admin_store_product_path(item.order_item.product_id) %></td>
-            <td class="calign"><%= item.quantity%></td>
+            <td class="calign"><%= item.quantity %></td>
+            <td class="calign"><%= item.special_status %></td>
         </tr>
     <% end %>
 </table>

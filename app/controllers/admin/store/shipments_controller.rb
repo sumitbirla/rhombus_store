@@ -96,27 +96,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipment = Shipment.new(shipment_params)
     @shipment.fulfilled_by_id = current_user.id
 
-    # check if any items specified
-    unless params.any? { |k,v| k.include?('qty-') && !v.blank? }
-
-      flash[:error] = "Please pick at least one item to ship."
-
-      @shipment_items = []
-      @shipment.order.items.each do |item|
-        @shipment_items << ShipmentItem.new(order_item_id: item.id)
-      end
-
-      return render 'edit'
-    end
-
     if @shipment.save
-
-      params.each do |key, qty|
-        if key.include?('qty-') && !qty.blank? && qty != '0'
-          ShipmentItem.create(shipment_id: @shipment.id, order_item_id: key[4..-1], quantity: qty)
-        end
-      end
-
       # create order history item
       OrderHistory.create order_id: @shipment.order_id, user_id: current_user.id, event_type: :shipment_created,
                           system_name: 'Rhombus', identifier: @shipment.id, comment: "shipment created: #{@shipment}"
@@ -146,7 +126,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
   def edit
     @shipment = Shipment.find(params[:id])
-    @shipment_items = ShipmentItem.where(shipment_id: params[:id])
   end
 
 
@@ -155,25 +134,9 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipment.fulfilled_by_id = current_user.id
 
     if @shipment.update(shipment_params)
-
-      params.each do |key, qty|
-        next if !key.include?('qty-')
-
-        order_item_id =  key[4..-1].to_i
-        shipment_item = @shipment.items.find { |si| si.order_item_id == order_item_id }
-
-        if shipment_item.nil?
-          ShipmentItem.create(shipment_id: @shipment.id, order_item_id: order_item_id, quantity: qty)
-        else
-          shipment_item.update_attribute(:quantity, qty)
-        end
-
-      end
-
       flash[:notice] = "Shipment #{@shipment.order_id}-#{@shipment.sequence} was updated."
       redirect_to action: 'show', id: @shipment.id
     else
-      @shipment_items = ShipmentItem.where(shipment_id: params[:id])
       render 'edit'
     end
 
@@ -277,12 +240,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   private
 
   def shipment_params
-    params.require(:shipment).permit(:order_id, :sequence, :status, :recipient_company, :recipient_name, :recipient_street1,
-                 :recipient_street2, :recipient_city, :recipient_state, :recipient_zip, :recipient_country,
-                 :ship_from_company, :ship_from_email, :ship_from_phone, :ship_from_street1,
-                 :ship_from_street2, :ship_from_city, :ship_from_state, :ship_from_zip, :ship_from_country,
-                 :status, :ship_method, :tracking_number, :ship_date, :package_weight, :package_length, :package_width,
-                 :package_height, :ship_cost, :notes, :packaging_type, :drop_off_type, :delivery_confirmation, :signature_confirmation)
+    params.require(:shipment).permit!
   end
 
 end

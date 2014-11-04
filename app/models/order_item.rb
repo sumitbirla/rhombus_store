@@ -25,4 +25,6 @@ class OrderItem < ActiveRecord::Base
   belongs_to :order
   belongs_to :product
   belongs_to :affiliate
+  
+  validates_presence_of :quantity, :order_id, :product_id, :unit_price
 end

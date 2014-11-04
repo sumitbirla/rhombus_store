@@ -409,6 +409,7 @@ class CreateStoreTables < ActiveRecord::Migration
       t.integer  "shipment_id",   null: false
       t.integer  "order_item_id", null: false
       t.integer  "quantity",      null: false
+      t.string   "special_status"
       t.datetime "created_at"
       t.datetime "updated_at"
     end

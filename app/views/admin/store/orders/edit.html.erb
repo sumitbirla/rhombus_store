@@ -1,84 +1,16 @@
 <h2>Order #<%= @order.id %></h2>
 
-<%= simple_form_for [:admin, :store, @order], html: { class: 'form-inline' } do |f| %>
-
+<%= simple_form_for [:admin, :store, @order], html: { class: 'form-inline', style: 'margin-left: 0;' } do |f| %>
+  <input type="hidden" name="add_more_items" value=""/>
+  
 	<%= render 'admin/shared/error_messages', object: f.object %>
 	
-	<div class="panel panel-info">
-	    <div class="panel-heading">Order Information</div>
-        <div class="panel-body">
-            <div class="col-md-6">
-                <%= f.input :status, as: :select, collection: Order.valid_statuses %>
-                <%= f.input :sales_channel %>
-                <%= f.input :external_order_id %>
-                <%= f.association :user %>
-                <%= f.input :shipping_method %>
-                <%= f.input :affiliate_campaign_id %>
-                <%= f.input :gift %>
-                <%= f.input :customer_note, as: :text, input_html: { class: 'span10', rows: 3}%>
-            </div>
-            <div class="col-md-6">
-                <%= f.input :subtotal %>
-                <%= f.input :tax_amount %>
-                <%= f.input :tax_rate %>
-                <%= f.input :shipping_cost %>
-                <%= f.input :discount_amount %>
-                <%= f.input :credit_applied %>
-                <%= f.input :total %>
-            </div>
-        </div>
-	</div>
-
-    <div class="panel panel-info">
-      <div class="panel-heading">Shipping & Billing</div>
-      <div class="panel-body">
-		<div class="col-md-6">
-			<h4>Shipping address:</h4>
-			<%= f.input :shipping_name, label: 'Name' %>
-      <%= f.input :shipping_company, label: 'Company'  %>
-			<%= f.input :shipping_street1, label: 'Street1'  %>
-			<%= f.input :shipping_street2, label: 'Street2'  %>
-			<%= f.input :shipping_city, label: 'City'  %>
-			<%= f.input :shipping_state, label: 'State'  %>
-			<%= f.input :shipping_zip, label: 'Zip'  %>
-			<%= f.input :shipping_country, label: 'Country'  %>
-		</div>
-		<div class="col-md-6">
-			<h4>Billing address:</h4>
-			<%= f.input :billing_name, label: 'Name' %>
-      <%= f.input :billing_company, label: 'Company' %>
-			<%= f.input :billing_street1, label: 'Street1' %>
-			<%= f.input :billing_street2, label: 'Street2' %>
-			<%= f.input :billing_city, label: 'City' %>
-			<%= f.input :billing_state, label: 'State' %>
-			<%= f.input :billing_zip, label: 'Zip' %>
-			<%= f.input :billing_country, label: 'Country' %>
-		</div>
-      </div>
-	</div>
-
-
-    <div class="panel panel-success">
-      <div class="panel-heading">Payment Information</div>
-      <div class="panel-body">
-		<div class="col-md-6">
-			<%= f.input :payment_method, as: :select, collection: ['CREDIT_CARD', 'PAYPAL'], label: 'Method' %>
-      <%= f.input :contact_phone, label: 'Phone' %>
-      <%= f.input :notify_email, label: 'Email' %>
-		</div>
-		<div class="col-md-6">
-			<%= f.input :cc_type, as: :select, collection: ['Visa', 'MasterCard', 'Discover', 'American Express', "Diner's Club", 'JCB'], label: 'Type' %>
-			<%= f.input :cc_number, label: 'Number' %>
-			<%= f.input :cc_expiration_month, as: :select, collection: (1..12), input_html: { class: 'span3' }, label: 'Exp Month' %>
-			<%= f.input :cc_expiration_year, as: :select, collection: (2013..2023), input_html: { class: 'span3' }, label: 'Exp Year' %>
-			<%= f.input :cc_code, input_html: { class: 'span2', maxlength: 4}, label: 'CCV2' %>
-		</div>
-      </div>
-	</div>
-  
-  <div class="panel panel-info">
-    <div class="panel-heading">Items</div>
-  
+	 <div class="panel panel-info">
+    <div class="panel-heading">
+      <%= link_to '+ add more items', '#', class: 'add-more-items pull-right' %>
+      Items
+    </div>
+    <div class="panel-body">
       <table class="table">
         <tr>
           <th>Item</th>
@@ -102,9 +34,69 @@
         </tr>
       <% end %>
       </table>
-      
     </div>
   </div>
+  
+  
+  <div class="panel panel-info">
+    <div class="panel-heading">Shipping & Billing</div>
+    <div class="panel-body">
+		  <div class="col-md-6">
+			  <h4>Shipping address:</h4>
+			  <%= f.input :shipping_name, label: 'Name' %>
+        <%= f.input :shipping_company, label: 'Company'  %>
+			  <%= f.input :shipping_street1, label: 'Street1'  %>
+			  <%= f.input :shipping_street2, label: 'Street2'  %>
+			  <%= f.input :shipping_city, label: 'City'  %>
+			  <%= f.input :shipping_state, label: 'State'  %>
+			  <%= f.input :shipping_zip, label: 'Zip'  %>
+			  <%= f.input :shipping_country, label: 'Country'  %>
+		  </div>
+		  <div class="col-md-6">
+			  <h4>Billing address:</h4>
+			  <%= f.input :billing_name, label: 'Name' %>
+        <%= f.input :billing_company, label: 'Company' %>
+			  <%= f.input :billing_street1, label: 'Street1' %>
+			  <%= f.input :billing_street2, label: 'Street2' %>
+			  <%= f.input :billing_city, label: 'City' %>
+			  <%= f.input :billing_state, label: 'State' %>
+			  <%= f.input :billing_zip, label: 'Zip' %>
+			  <%= f.input :billing_country, label: 'Country' %>
+		  </div>
+    </div>
+	</div>
+	
+	
+	<div class="panel panel-info">
+	  <div class="panel-heading">Order Information</div>
+    <div class="panel-body">
+      <div class="col-md-6">
+        <%= f.input :status, as: :select, collection: Order.valid_statuses %>
+        <%= f.input :sales_channel %>
+        <%= f.input :external_order_id %>
+        <%= f.association :user %>
+        <%= f.input :shipping_method %>
+        <%= f.input :affiliate_campaign_id %>
+        <%= f.input :gift %>
+        <%= f.input :contact_phone, label: 'Phone' %>
+        <%= f.input :notify_email, label: 'Email' %>  
+      </div>
+      <div class="col-md-6">
+        <div class="form-group decimal optional order_subtotal">
+          <label class="decimal optional control-label" for="order_subtotal">Subtotal</label>
+          <%= f.input_field :subtotal %>  <%= link_to "update", "#" %>
+        </div>
+        <%= f.input :tax_amount %>
+        <%= f.input :tax_rate %>
+        <%= f.input :shipping_cost %>
+        <%= f.input :discount_amount %>
+        <%= f.input :credit_applied %>
+        <%= f.input :total %>
+        <%= f.input :customer_note, as: :text, input_html: { class: 'span10', rows: 3}%>
+      </div>
+    </div>
+  </div>
+
 	
 	<div class="form-actions">
 		<%= f.button :submit %>
@@ -132,20 +124,29 @@
         return false;
       });
       
+      $(".add-more-items").click(function() {
+        $("input[name='add_more_items']").val(<%= @order.items.length %>);
+        $("form.form-inline").submit();
+      });
+      
       $(".item-id").change(function() {
         var item = $(this);
         
         $.get('/admin/store/products/item_info?sku=' + $(this).val(), function(data) {
-          if (data.status == 'ok') {
+          
+          item.parent().parent().find('.product-id').val(data.product_id);
+          item.parent().parent().find('.affiliate-id').val(data.affiliate_id);
+          item.parent().parent().find('.variation').val(data.variation);
+          item.parent().parent().find('.item-desc').val(data.description);
+          item.parent().parent().find('.unit-price').val(data.dealer_price);
             
-            item.parent().parent().find('.product-id').val(data.product_id);
-            item.parent().parent().find('.affiliate-id').val(data.affiliate_id);
-            item.parent().parent().find('.variation').val(data.variation);
-            item.parent().parent().find('.item-desc').val(data.description);
-            item.parent().parent().find('.unit-price').val(data.dealer_price);
+          if (data.status == 'ok') { 
             item.parent().parent().find('.qty').focus();
-            
+          } else {
+            item.parent().parent().find('.item-desc').val('ITEM NOT FOUND!');
+            item.parent().parent().find('.item-id').select();
           }
+          
         });
       });
       
