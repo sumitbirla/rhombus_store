@@ -58,6 +58,10 @@ Rails.application.routes.draw do
     # Store Routes
     namespace :store do
 
+      get 'reports/product_sales'
+      get 'reports/order_volume'
+      get 'reports' => 'reports#index'
+
       get 'shipments/choose_order'
       post 'shipments_packing_slip_batch' => 'shipments#packing_slip_batch'
       

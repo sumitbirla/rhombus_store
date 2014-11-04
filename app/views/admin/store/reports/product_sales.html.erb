@@ -1,0 +1,51 @@
+<form action="" method="get" class="pull-right well">
+  <%= token_tag %>
+  Date range:  &nbsp; <input type="text" name="start_date" value="<%= @start_date %>" style="width: 120px;"/> &nbsp; to &nbsp;
+              <input type="text" name="end_date" value="<%= @end_date %>" style="width: 120px;"/>
+  <button class="btn btn-success btn-sm">Filter</button>
+</form>
+
+<h2>Product Sales</h2>
+
+<%
+qty_total = 0
+amount_total = 0.0
+%>
+
+<table class="table table-striped">
+	<tr>
+		<th>Sales Channel</th>
+		<th>Item</th>
+    <th>Title</th>
+    <th class="ralign">Qty Sold</th>
+    <th class="ralign">Revenue</th>
+	</tr>
+  <% @data.each do |row| 
+    qty_total += row[3] 
+    amount_total += row[5] %>
+	<tr>
+		<td><%= row[0] %></td>
+		<td><%= row[1] %></td>
+    <td><%= row[2] %></td>
+    <td class="ralign"><%= number_to_human row[3] %></td>
+    <td class="ralign"><%= number_to_currency row[5] %></td>
+	</tr>
+  <% end %>
+  <tr>
+    <td colspan="3"></td>
+    <td class="ralign"><b><%= number_to_human qty_total %></b></td>
+    <td class="ralign"><b><%= number_to_currency amount_total %></b></td>
+  </tr>
+</table>
+
+
+<%= content_for :title do %>
+	Product Sales
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Reports", admin_store_reports_path %></li>
+	<li class="active">Product Sales</li>
+<% end %>

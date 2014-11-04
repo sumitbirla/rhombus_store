@@ -1,0 +1,28 @@
+<h2>Reports</h2>
+
+
+<table class="table table-striped">
+	<tr>
+		<th>Report</th>
+		<th>Description</th>
+	</tr>
+	<tr>
+		<td><%= link_to 'Product Sales', admin_store_reports_product_sales_path %></td>
+		<td>Quanity of each product sold</td>
+	</tr>
+	<tr>
+		<td>Order Volume</td>
+		<td>Number of orders per day</td>
+	</tr>
+</table>
+
+
+<%= content_for :title do %>
+	Reports
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li class="active">Reports</li>
+<% end %>
