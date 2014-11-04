@@ -22,7 +22,7 @@
           <tr>
             <td nowrap><%= oitem.item_id.upcase %></td>
             <td><%= link_to oitem.item_description, admin_store_product_path(oitem.product_id) %></td>
-            <td class="calign"><%= sitem.quantity %></td>
+            <td class="calign"><%= oitem.quantity %></td>
             <td class="calign"><%= itemf.number_field :quantity, style: 'width: 80px; text-align: center;' %></td>
             <td class="calign"><%= itemf.text_field :special_status %></td>
           </tr>
