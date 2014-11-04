@@ -139,7 +139,7 @@
           <% end %>
         </td>
         <td align="right" class="textright"><%= item.order_item.quantity %></td>
-        <td align="right" class="textright"><%= item.quantity %></td>
+        <td align="right" class="textright"><%= item.quantity unless item.quantity == 0 %> <%= item.special_status %></td>
       </tr>
       <% end %>
       <tr>

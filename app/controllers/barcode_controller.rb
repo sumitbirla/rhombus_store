@@ -7,7 +7,7 @@ class BarcodeController < ActionController::Base
   def generate
 
     barcode = Barby::Code39.new(params[:code])
-    blob = Barby::PngOutputter.new(barcode).to_png(height: 40, xdim: 2)
+    blob = Barby::PngOutputter.new(barcode).to_png(height: 30, xdim: 2)
 
     send_data blob,  filename: "#{params[:code]}.png", type: 'image/png', disposition: 'inline'
 
