@@ -145,7 +145,14 @@ class Admin::Store::ProductsController < Admin::BaseController
       aff = Affiliate.find_by(code: affiliate_code)
       
       unless p.nil? || aff.nil?
-        return render json: { status: 'ok', product_id: p.id, affiliate_id: aff.id, variation: variant, description: p.title, price: p.price, dealer_price: p.dealer_price }
+        return render json: { status: 'ok', 
+                              product_id: p.id, 
+                              affiliate_id: aff.id, 
+                              affiliate_name: aff.name, 
+                              variation: variant, 
+                              description: p.title, 
+                              price: p.price, 
+                              dealer_price: p.dealer_price }
       end
     end
     

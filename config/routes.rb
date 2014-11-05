@@ -99,6 +99,7 @@ Rails.application.routes.draw do
           get 'product_labels' => 'orders#product_labels'
           get 'print_shipping_label' => 'orders#print_shipping_label'
           get 'invoice' => 'orders#invoice'
+          get 'clone' => 'orders#clone'
         end
       end
       resources :coupons

@@ -29,6 +29,11 @@
           <i class="icon-print"></i> Print Labels
       <% end %>
     </li>
+    <li>
+      <%= link_to clone_admin_store_order_path(@order) do %>
+          <i class="icon-copy"></i> Clone
+      <% end %>
+    </li>
   </ul>
 </div>
 
@@ -137,7 +142,12 @@
   <% @order.items.each do |item| %>
       <tr>
         <td><%= item.item_id.upcase %></td>
-        <td><%= link_to item.item_description, admin_store_product_path(item.product) %></td>
+        <td>
+          <% unless item.affiliate_id.nil? %>
+            <span><%= item.affiliate %>: &nbsp;</span>
+          <% end %>
+          <%= link_to item.item_description, admin_store_product_path(item.product) %>
+        </td>
         <td class="ralign"><%= number_to_currency(item.unit_price)%></td>
         <td class="calign"><%= item.quantity %></td>
         <td class="ralign" class="ralign"><%= number_to_currency(item.quantity * item.unit_price) %></td>

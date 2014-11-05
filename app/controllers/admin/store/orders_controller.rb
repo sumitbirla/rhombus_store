@@ -246,6 +246,27 @@ EOF
                     
   end
   
+  def clone
+    order = Order.find(params[:id])
+    new_order = order.dup
+    
+    new_order.assign_attributes({
+      submitted: DateTime.now,
+      status: 'submitted',
+      payment_method: '',
+      cc_type: nil,
+      cc_number: nil,
+      cc_code: nil,
+      cc_expiration_month: nil,
+      cc_expiration_year: nil,
+      paypal_token: nil
+    })
+    new_order.save
+    
+    order.items.each { |x| new_order.items << x.dup }
+    redirect_to action: 'show', id: new_order.id
+  end
+  
   
   private
   
