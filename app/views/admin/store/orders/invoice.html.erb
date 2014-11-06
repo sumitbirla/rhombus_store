@@ -102,12 +102,17 @@
           <%= @order.billing_city %>, <%= @order.billing_state %> <%= @order.billing_zip %></p>
       </div>
       <div class="boxright">
+      <% unless @order.sales_channel == 'Purchase Order' %>
         <h2>Payment method:</h2>
         <p><%= @order.payment_method %><br/>
         <% if @order.payment_method == "CREDIT_CARD" %>
           <%= @order.cc_type %>: <%= @order.cc_number %>
         <% end %>
         </p>
+      <% else %>
+        <h2>Payment terms:</h2>
+        <p>Net 60</p>
+      <% end %>
       </div>
       <div style="clear:both;"></div>
     </header>
@@ -126,7 +131,7 @@
       <tr>
         <td><%= @order.submitted.strftime("%d-%^b-%Y") %></td>
         <td><%= @order.id %></td>
-        <td>-</td>
+        <td><%= @order.status %></td>
         <td><%= @order.external_order_id if @order.sales_channel = 'Purchase Order' %></td>
         <td><%= @order.user ? @order.user.name : @order.shipping_name %></td>
       </tr>
