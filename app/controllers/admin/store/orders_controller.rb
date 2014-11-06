@@ -45,10 +45,12 @@ class Admin::Store::OrdersController < Admin::BaseController
 
   def update
     @order = Order.find(params[:id])
+    item_count = @order.items.length
+
     @order.attributes = order_params
     
     unless params[:add_more_items].blank?
-      count = params[:add_more_items].to_i + 5
+      count = params[:add_more_items].to_i - item_count + 5 
       count.times { @order.items.build }
       return render 'edit'
     end

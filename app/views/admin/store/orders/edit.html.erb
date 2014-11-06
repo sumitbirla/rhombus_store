@@ -88,7 +88,7 @@
       <div class="col-md-6">
         <div class="form-group decimal optional order_subtotal">
           <label class="decimal optional control-label" for="order_subtotal">Subtotal</label>
-          <%= f.input_field :subtotal %>  <%= link_to "update", "#" %>
+          <%= f.input_field :subtotal %>  <%= link_to "update", "#", class: 'update-subtotal' %>
         </div>
         <%= f.input :tax_amount %>
         <%= f.input :tax_rate %>
@@ -132,6 +132,27 @@
         $("input[name='add_more_items']").val(<%= @order.items.length %>);
         $("form.form-inline").submit();
       });
+      
+      $(".update-subtotal").click(function(e) {
+        
+        var subtotal = 0.0;
+        
+        $(".unit-price").each(function() {  
+          if ($(this).is(":visible")) {
+            var unit_price = parseFloat($(this).val());
+            var quantity = parseFloat($(this).parent().parent().find(".qty").val());
+          
+            if (!isNaN(unit_price) && !isNaN(quantity))
+              subtotal += unit_price * quantity; 
+          }
+        });
+        
+        $("#order_subtotal").val(subtotal);
+        e.preventDefault();
+        
+      });
+      
+      
       
       $(".item-id").change(function() {
         var item = $(this);

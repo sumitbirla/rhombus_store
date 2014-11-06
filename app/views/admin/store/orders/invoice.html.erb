@@ -104,9 +104,9 @@
       <div class="boxright">
         <h2>Payment method:</h2>
         <p><%= @order.payment_method %><br/>
-            <% if @order.payment_method == "CREDIT_CARD" %>
+        <% if @order.payment_method == "CREDIT_CARD" %>
           <%= @order.cc_type %>: <%= @order.cc_number %>
-            <% end %>
+        <% end %>
         </p>
       </div>
       <div style="clear:both;"></div>
@@ -126,8 +126,8 @@
       <tr>
         <td><%= @order.submitted.strftime("%d-%^b-%Y") %></td>
         <td><%= @order.id %></td>
-        <td>PAID</td>
-        <td>n/a</td>
+        <td>-</td>
+        <td><%= @order.external_order_id if @order.sales_channel = 'Purchase Order' %></td>
         <td><%= @order.user ? @order.user.name : @order.shipping_name %></td>
       </tr>
       </tbody>
