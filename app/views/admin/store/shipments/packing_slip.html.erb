@@ -10,36 +10,48 @@
           width: 95%!important;
           margin: 0 auto!important;
           font-family:Arial, Helvetica, sans-serif!important;
-          font-size:12px!important;
+          font-size:10px!important;
       }
       table {
           width: 100%!important;
           border-collapse:collapse;
       }
       table td{
-          border: 1px solid #333;
+          aborder: 1px solid #ccc;
           padding: 5px!important;
       }
+      table.bordered {
+        border: solid 1px black;
+      }
+      table.bordered th {
+        padding: 4px;
+        border-bottom: solid 1px black;    
+      }
       article {
-          padding: 20px 0!important;
+          padding: 0px 0!important;
       }
       p {
           font-weight:normal !important;
-          line-height:18px !important;
+          line-height:16px !important;
           margin-top: 0;
       }
       h2 {
           font-size:20px !important;
-          margin-bottom: 4px;
+          margin-bottom: 0px;
       }
       .boxleft {
           float:left!important;
-          width: 49%!important;
+          width: 32%!important;
+          margin-top:0px !important;
+      }
+      .boxcenter {
+          float:left!important;
+          width: 32%!important;
           margin-top:0px !important;
       }
       .boxright {
-          float:right!important;
-          width: 49%!important;
+          float:left!important;
+          width: 32%!important;
           margin-top:0px !important;
       }
       .textright{
@@ -100,7 +112,7 @@
       <div style="clear:both;"></div>
     </header>
     <br/>
-    <table width="100%" cellspacing="0" cellpadding="0">
+    <table class="bordered" width="100%" cellspacing="0" cellpadding="0">
       <thead>
       <tr>
         <th scope="col" style="text-align:left;"><strong>Order Date</strong></th>
@@ -119,7 +131,7 @@
       </tbody>
     </table>
     <br/><br/>
-    <table width="100%" cellspacing="0" cellpadding="0">
+    <table class="bordered" width="100%" cellspacing="0" cellpadding="0">
       <thead>
       <tr>
         <th scope="col" style="text-align:left;"><strong>Item</strong></th>
@@ -135,14 +147,15 @@
         <td>
           <%= item.order_item.item_description %>
           <% if item.order_item.affiliate_id %>
-              <br/><small>For <%= item.order_item.affiliate.name %></small>
+              : <%= item.order_item.affiliate.name %>
           <% end %>
         </td>
         <td align="right" class="textright"><%= item.order_item.quantity %></td>
         <td align="right" class="textright"><%= item.quantity unless item.quantity == 0 %> <%= item.special_status %></td>
       </tr>
       <% end %>
-      <tr>
+      <tr style="height: 20<%= "0" if @shipment.items.length < 9 %>px;"><td colspan="4"></td></tr>
+      <tr style="border-top: solid 1px black;">
         <td align="right" class="textright" colspan="3"><b>Total Items</b></td>
         <td align="right" class="textright"><b><%= @shipment.items.sum(:quantity) %></b></td>
       </tr>
