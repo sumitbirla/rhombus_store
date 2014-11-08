@@ -254,10 +254,10 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     website_url = Cache.setting('System', 'Website URL')
     
     Shipment.where(id: params[:shipment_id]).each do |s|
-      digest = Digest::MD5.hexdigest(o.id.to_s + token) 
+      digest = Digest::MD5.hexdigest(s.id.to_s + token) 
       urls += " " + website_url + invoice_admin_store_shipment_path(s, digest: digest) 
       
-      OrderHistory.create(order_id: s.o.id, 
+      OrderHistory.create(order_id: s.order.id, 
                           user_id: session[:user_id], 
                           event_type: :invoice_print,
                           system_name: 'Rhombus',
