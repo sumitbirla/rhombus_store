@@ -20,6 +20,11 @@
       <% end %>
     </li>
     <li>
+      <%= link_to invoice_admin_store_shipment_path(@shipment), target: "_blank" do %>
+          <i class="icon-file-alt"></i> Print Invoice
+      <% end %>
+    </li>
+    <li>
       <%= link_to packing_slip_admin_store_shipment_path(@shipment), target: "_blank" do %>
           <i class="icon-file-alt"></i> Print Packing Slip
       <% end %>
@@ -83,7 +88,6 @@
 
 </div>
 
-<hr/>
 
 <h4>Items:</h4>
 
@@ -97,7 +101,7 @@
     <% @shipment.items.each do |item| %>
         <tr>
             <td nowrap><%= item.order_item.item_id.upcase %></td>
-            <td><%= link_to item.order_item.item_description, admin_store_product_path(item.order_item.product_id) %></td>
+            <td><%= render item.order_item %></td>
             <td class="calign"><%= item.quantity %></td>
             <td class="calign"><%= item.special_status %></td>
         </tr>

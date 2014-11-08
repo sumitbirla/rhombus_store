@@ -138,7 +138,7 @@ class Admin::Store::ProductsController < Admin::BaseController
   def item_info
     p = Product.find_by(sku: params[:sku])
     if p
-      return render json: { status: 'ok', product_id: p.id, description: p.title, price: p.price, dealer_price: p.dealer_price }
+      return render json: { status: 'ok', product_id: p.id, description: p.name_with_option, price: p.price, dealer_price: p.dealer_price }
     else
       sku, affiliate_code, variant = params[:sku].split('-')
       p = Product.find_by(sku: sku)
@@ -150,7 +150,7 @@ class Admin::Store::ProductsController < Admin::BaseController
                               affiliate_id: aff.id, 
                               affiliate_name: aff.name, 
                               variation: variant, 
-                              description: p.title, 
+                              description: p.name_with_option, 
                               price: p.price, 
                               dealer_price: p.dealer_price }
       end

@@ -1,11 +1,16 @@
 <form action="" method="get" class="pull-right well">
-  <%= token_tag %>
+  Sales channel:  &nbsp; <select name="sales_channel">
+    <option value="">-- all channels --</option>
+    <% @sales_channels.each do |ch| %>
+      <option <%= "selected" if @selected_channel == ch %>><%= ch %></option>
+    <% end %> 
+  </select> &nbsp; 
   Date range:  &nbsp; <input type="text" name="start_date" value="<%= @start_date %>" style="width: 120px;"/> &nbsp; to &nbsp;
               <input type="text" name="end_date" value="<%= @end_date %>" style="width: 120px;"/>
   <button class="btn btn-success btn-sm">Filter</button>
 </form>
 
-<h2>Product Sales</h2>
+<h2>Product Leaderboard</h2>
 
 <%
 qty_total = 0

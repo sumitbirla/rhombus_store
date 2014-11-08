@@ -1,8 +1,9 @@
 <div class="pull-right">
   <select id="selAction" class="form-control" style="display: inline; width: 75%">
-      <option> - - Select Action - - </option>
+    <option> - - Select Action - - </option>
 	  <option method="get" value="<%= admin_store_shipments_choose_order_path %>">New Shipment</option>
-      <option method="post" value="/admin/store/shipments_packing_slip_batch">Packing Slips (PDF)</option>
+    <option method="post" value="/admin/store/shipments_packing_slip_batch">Packing Slips (PDF)</option>
+    <option method="post" value="/admin/store/shipments_invoice_batch">Invoices (PDF)</option>
   </select>
   <input type="button" class="btn btn-default btn-small" id="btnAction" value="Go" />	  
 </div>

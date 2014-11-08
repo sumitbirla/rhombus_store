@@ -47,6 +47,12 @@ class Product < ActiveRecord::Base
     "#{sku}: #{title}"
   end
   
+  def name_with_option
+    str = name
+    str += ', ' + option_title unless option_title.blank?
+    str
+  end
+  
   def cache_key
     "product:#{slug}"
   end

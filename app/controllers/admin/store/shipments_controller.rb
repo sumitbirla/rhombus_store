@@ -122,6 +122,18 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipment = Shipment.find(params[:id])
     render 'packing_slip', layout: false
   end
+  
+  def invoice
+    @shipment = Shipment.find(params[:id])
+    OrderHistory.create(order_id: @shipment.order.id, 
+                        user_id: session[:user_id], 
+                        event_type: :invoice_print,
+                        system_name: 'Rhombus',
+                        identifier: @shipment.to_s,
+                        comment: "Printed invoice " + @shipment.to_s)
+                        
+    render 'invoice', layout: false
+  end
 
 
   def edit
@@ -234,6 +246,27 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     
     system "wkhtmltopdf -q #{urls} /tmp/packing_slips.pdf"
     send_file "/tmp/packing_slips.pdf"
+  end
+  
+  def invoice_batch
+    urls = ''
+    token = Cache.setting('System', 'Security Token')
+    website_url = Cache.setting('System', 'Website URL')
+    
+    Shipment.where(id: params[:shipment_id]).each do |s|
+      digest = Digest::MD5.hexdigest(o.id.to_s + token) 
+      urls += " " + website_url + invoice_admin_store_shipment_path(s, digest: digest) 
+      
+      OrderHistory.create(order_id: s.o.id, 
+                          user_id: session[:user_id], 
+                          event_type: :invoice_print,
+                          system_name: 'Rhombus',
+                          identifier: s.id,
+                          comment: "Printed invoice " + s.to_s)
+    end
+    
+    system "wkhtmltopdf -q #{urls} /tmp/receipts.pdf"
+    send_file "/tmp/receipts.pdf"
   end
 
 

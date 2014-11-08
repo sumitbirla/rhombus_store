@@ -1,7 +1,6 @@
 <h2>Shipment #<%= @shipment.order_id %>-<%= @shipment.sequence %></h2>
-<hr/>
 
-<%= simple_form_for [:admin, :store, @shipment], html: { class: 'form-inline' } do |f| %>
+<%= simple_form_for [:admin, :store, @shipment], html: { class: 'form-inline', style: 'margin-left: 0' } do |f| %>
     <%= f.hidden_field :order_id %>
     <%= f.hidden_field :sequence %>
     <%= f.hidden_field :status %>
@@ -21,7 +20,7 @@
         %>
           <tr>
             <td nowrap><%= oitem.item_id.upcase %></td>
-            <td><%= link_to oitem.item_description, admin_store_product_path(oitem.product_id) %></td>
+            <td><%= render oitem %></td>
             <td class="calign"><%= oitem.quantity %></td>
             <td class="calign"><%= itemf.number_field :quantity, style: 'width: 80px; text-align: center;' %></td>
             <td class="calign"><%= itemf.text_field :special_status %></td>
@@ -106,8 +105,8 @@
     <li><%= link_to 'Orders', admin_store_orders_path %></li>
     <li><%= link_to '#' + @shipment.order_id.to_s, admin_store_order_path(@shipment.order_id)%></li>
 	<% unless @shipment.id.nil? %>
-    	<li><%= link_to "Shipment " + @shipment.to_s, admin_store_shipment_path(@shipment.id)%></li>
-    	<li class="active">edit</li>
+    <li><%= link_to "Shipment " + @shipment.to_s, admin_store_shipment_path(@shipment.id)%></li>
+    <li class="active">edit</li>
 	<% else %>
 		<li class="active">new</li>
 	<% end %>

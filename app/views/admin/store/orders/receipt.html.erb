@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <title><%= @order.id %> - Invoice</title>
+  <title><%= @order.id %> - Receipt</title>
   <style>
       body {
           background:white !important;
@@ -79,7 +79,7 @@
               <strong>Email:</strong> help@healthybreeds.com
             </p>
           </th>
-          <th scope="col" style="text-align:right;"> <h2>INVOICE</h2>
+          <th scope="col" style="text-align:right;"> <h2>RECEIPT</h2>
             <p>
               <strong>Order Date: </strong><%= @order.submitted.strftime("%d-%^b-%Y") %><br>
               <strong>Order ID: </strong> <%= @order.id %><br/>

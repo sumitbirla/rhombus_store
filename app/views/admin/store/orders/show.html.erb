@@ -15,12 +15,12 @@
       <% end %>
     </li>
     <li>
-      <%= link_to invoice_admin_store_order_path(@order), target: "_blank" do %>
-          <i class="icon-file-alt"></i> Print Invoice
+      <%= link_to receipt_admin_store_order_path(@order), target: "_blank" do %>
+          <i class="icon-file-alt"></i> Print Sales Order
       <% end %>
     </li>
     <li>
-      <%= link_to invoice_admin_store_order_path(@order), target: "_blank", class: 'hide' do %>
+      <%= link_to receipt_admin_store_order_path(@order), target: "_blank", class: 'hide' do %>
           <i class="icon-dollar"></i> Add Payment
       <% end %>
     </li>
@@ -142,12 +142,7 @@
   <% @order.items.each do |item| %>
       <tr>
         <td><%= item.item_id.upcase %></td>
-        <td>
-          <% unless item.affiliate_id.nil? %>
-            <span><%= item.affiliate %>: &nbsp;</span>
-          <% end %>
-          <%= link_to item.item_description, admin_store_product_path(item.product) %>
-        </td>
+        <td><%= render item %></td>
         <td class="ralign"><%= number_to_currency(item.unit_price)%></td>
         <td class="calign"><%= item.quantity %></td>
         <td class="ralign" class="ralign"><%= number_to_currency(item.quantity * item.unit_price) %></td>

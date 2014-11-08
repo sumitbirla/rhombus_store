@@ -64,6 +64,7 @@ Rails.application.routes.draw do
 
       get 'shipments/choose_order'
       post 'shipments_packing_slip_batch' => 'shipments#packing_slip_batch'
+      post 'shipments_invoice_batch' => 'shipments#invoice_batch'
       
       get 'products/adjust_prices'
       post 'products/adjust_prices' => 'products#update_prices'
@@ -73,7 +74,7 @@ Rails.application.routes.draw do
       get 'easy_post_label' => 'easy_post#label'
       
       post 'orders_update_status' => 'orders#update_status'
-      post 'orders_create_invoice' => 'orders#create_invoice'
+      post 'orders_print_receipts' => 'orders#print_receipts'
       post 'orders_address_label' => 'orders#address_label'
       post 'orders_send_confirmation' => 'orders#send_confirmation'
       post 'orders_create_shipment' => 'orders#create_shipment'
@@ -95,11 +96,11 @@ Rails.application.routes.draw do
         member do
           resources :items
           resources :deal_items
-          get 'resend_email' => 'orders#resend_email'
-          get 'product_labels' => 'orders#product_labels'
-          get 'print_shipping_label' => 'orders#print_shipping_label'
-          get 'invoice' => 'orders#invoice'
-          get 'clone' => 'orders#clone'
+          get 'resend_email'
+          get 'product_labels'
+          get 'print_shipping_label'
+          get 'receipt'
+          get 'clone'
         end
       end
       resources :coupons
@@ -110,6 +111,7 @@ Rails.application.routes.draw do
           get 'label'
           get 'print'
           get 'packing_slip'
+          get 'invoice'
           get 'void_label' 
         end
       end

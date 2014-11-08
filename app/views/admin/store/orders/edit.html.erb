@@ -13,18 +13,18 @@
     <div class="panel-body">
       <table class="table">
         <tr>
-          <th>Item</th>
+          <th style="width: 200px;">Item</th>
           <th>Description</th>
-          <th>Unit Price</th>
-          <th>Quantity</th>
-          <th></th>
+          <th style="width: 130px;">Unit Price</th>
+          <th style="width: 120px;">Quantity</th>
+          <th style="width: 50px;"></th>
         </tr>
       <%= f.fields_for :items do |itemf| %>
         <% item = @order.items[itemf.index] %>
         <tr>
           <td><%= itemf.input_field :item_id, class: 'item-id' %></td>
           <td>
-            <%= itemf.input_field :item_description, style: 'width: 400px', class: 'item-desc' %>&nbsp; 
+            <%= itemf.input_field :item_description, style: 'width: 70%', class: 'item-desc' %>&nbsp; 
             <span class="light affiliate-name"><%= item.affiliate %></span>
           </td>
           <td><%= itemf.input_field :unit_price, class: 'unit-price' %></td>
@@ -161,7 +161,7 @@
           
           item.parent().parent().find('.product-id').val(data.product_id);
           item.parent().parent().find('.affiliate-id').val(data.affiliate_id);
-          item.parent().parent().find('.affiliate-name').html(data.affiliate_name);
+          item.parent().parent().find('.affiliate-name').html(data.affiliate_name || '');
           item.parent().parent().find('.variation').val(data.variation);
           item.parent().parent().find('.item-desc').val(data.description);
           item.parent().parent().find('.unit-price').val(data.dealer_price);

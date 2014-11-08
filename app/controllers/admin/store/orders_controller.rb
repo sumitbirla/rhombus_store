@@ -103,17 +103,17 @@ class Admin::Store::OrdersController < Admin::BaseController
   end
 
 
-  def invoice
+  def receipt
     @order = Order.find(params[:id])
     OrderHistory.create(order_id: @order.id, 
                         user_id: session[:user_id], 
-                        event_type: :invoice_print,
+                        event_type: :receipt_print,
                         system_name: 'Rhombus',
-                        comment: "Printed invoice")
+                        comment: "Printed receipt")
                         
-    render 'invoice', layout: false
+    render 'receipt', layout: false
   end
-
+  
 
   def product_labels
     @order = Order.find(params[:id])
@@ -142,14 +142,14 @@ class Admin::Store::OrdersController < Admin::BaseController
   end
   
   
-  def create_invoice
+  def print_receipts
     urls = ''
     token = Cache.setting('System', 'Security Token')
     website_url = Cache.setting('System', 'Website URL')
     
     Order.where(id: params[:order_id]).each do |o|
       digest = Digest::MD5.hexdigest(o.id.to_s + token) 
-      urls += " " + website_url + invoice_admin_store_order_path(o, digest: digest) 
+      urls += " " + website_url + receipt_admin_store_order_path(o, digest: digest) 
       
       OrderHistory.create(order_id: o.id, 
                           user_id: session[:user_id], 
@@ -158,8 +158,8 @@ class Admin::Store::OrdersController < Admin::BaseController
                           comment: "Printed invoice")
     end
     
-    system "wkhtmltopdf -q #{urls} /tmp/invoices.pdf"
-    send_file "/tmp/invoices.pdf"
+    system "wkhtmltopdf -q #{urls} /tmp/receipts.pdf"
+    send_file "/tmp/receipts.pdf"
   end
   
   
