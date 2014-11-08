@@ -268,6 +268,17 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     system "wkhtmltopdf -q #{urls} /tmp/receipts.pdf"
     send_file "/tmp/receipts.pdf"
   end
+  
+  
+  def update_status
+    shipments = Shipment.where(id: params[:shipment_id]).where.not(status: params[:status])
+    shipments.each do |s|
+        s.update_attribute(:status, params[:status])
+    end
+    
+    flash[:info] = "Status of #{shipments.length} shipment(s) updated to '#{params[:status]}'"
+    redirect_to :back
+  end
 
 
   private

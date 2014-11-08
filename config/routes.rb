@@ -63,8 +63,10 @@ Rails.application.routes.draw do
       get 'reports' => 'reports#index'
 
       get 'shipments/choose_order'
+      post 'shipments_update_status' => 'shipments#update_status'
       post 'shipments_packing_slip_batch' => 'shipments#packing_slip_batch'
       post 'shipments_invoice_batch' => 'shipments#invoice_batch'
+      
       
       get 'products/adjust_prices'
       post 'products/adjust_prices' => 'products#update_prices'

@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <title><%= @shipment %> - Invoice</title>
+  <title><%= @shipment %> Invoice</title>
   <style>
       body {
           background:white !important;
@@ -59,7 +59,7 @@
       }
   </style>
 </head>
-<body sonload="window.print()">
+<body onload="window.print()">
 <section>
   <article>
     <header>
@@ -181,7 +181,7 @@
           <% end %>
         </td>
         <td align="right" class="textright"><%= item.order_item.quantity %></td>
-        <td align="right" class="textright"><%= item.quantity unless item.quantity == 0 %> <%= item.special_status %></td>
+        <td align="right" class="textright"><%= item.quantity unless item.quantity == 0 && !item.special_status.blank? %> <%= item.special_status %></td>
         <td align="right" class="textright"><%= number_to_currency(item.order_item.unit_price) %></td>
         <td align="right" class="textright"><%= number_to_currency(item.order_item.unit_price * item.quantity) %></td>
       </tr>

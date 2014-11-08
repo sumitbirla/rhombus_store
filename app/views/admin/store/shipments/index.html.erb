@@ -4,6 +4,11 @@
 	  <option method="get" value="<%= admin_store_shipments_choose_order_path %>">New Shipment</option>
     <option method="post" value="/admin/store/shipments_packing_slip_batch">Packing Slips (PDF)</option>
     <option method="post" value="/admin/store/shipments_invoice_batch">Invoices (PDF)</option>
+    <optgroup label="Change order status to ">
+        <option method="post" value="/admin/store/shipments_update_status?status=shipped">Shipped</option>
+        <option method="post" value="/admin/store/shipments_update_status?status=pending">Pending</option>
+        <option method="post" value="/admin/store/shipments_update_status?status=void">Void</option>
+    </optgroup>
   </select>
   <input type="button" class="btn btn-default btn-small" id="btnAction" value="Go" />	  
 </div>
