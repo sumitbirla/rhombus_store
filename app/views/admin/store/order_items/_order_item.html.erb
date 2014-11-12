@@ -1,4 +1,4 @@
 <%= link_to order_item.product.name_with_option, admin_store_product_path(order_item.product) %>
 <% unless order_item.affiliate_id.nil? %>
-  : &nbsp;<span><%= order_item.affiliate %></span>
+  &nbsp; (<span><%= order_item.affiliate %></span>)
 <% end %>

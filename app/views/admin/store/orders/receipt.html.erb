@@ -139,7 +139,7 @@
         <td><%= @order.submitted.strftime("%d-%^b-%Y") %></td>
         <td><%= @order.id %></td>
         <td><%= @order.status %></td>
-        <td><%= @order.external_order_id if @order.sales_channel = 'Purchase Order' %></td>
+        <td><%= @order.sales_channel == 'Purchase Order' ? @order.external_order_id : 'n/a'  %></td>
         <td><%= @order.user ? @order.user.name : @order.shipping_name %></td>
       </tr>
       </tbody>
@@ -160,9 +160,9 @@
           <tr>
             <td><%= item.item_id.upcase %></td>
             <td>
-              <%= item.item_description %>
-              <% if item.affiliate_id %>
-                  : <%= item.affiliate.name %>
+              <%= item.product.name_with_option %>
+              <% unless item.affiliate.nil? %>
+                &nbsp; (<span><%= item.affiliate %></span>)
               <% end %>
             </td>
             <td align="right" class="textright"><%= number_to_currency(item.unit_price) %></td>
