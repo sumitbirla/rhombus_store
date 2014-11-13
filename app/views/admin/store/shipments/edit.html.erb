@@ -50,6 +50,7 @@
           <div class="panel-body">
             <%= f.input :ship_from_email, label: 'Email' %>
             <%= f.input :ship_from_phone, label: 'Phone' %>
+            <%= f.input :notes, input_html: { class: '', rows: 2 } %>
           </div>
         </div>
 
@@ -72,9 +73,13 @@
         </div>
       	
         <div class="panel panel-success">
+          <div class="panel-heading">Shipment Details:</div>
           <div class="panel-body">
+            <%= f.input :ship_method %>
+            <%= f.input :ship_date %>
+            <%= f.input :ship_cost %>
+            <%= f.input :tracking_number %>
             <%= f.input :status, collection: ['pending', 'shipped', 'void', 'cancelled', 'delivered'] %>
-            <%= f.input :notes, input_html: { class: '', rows: 2 } %>
           </div>
         </div>
 	  

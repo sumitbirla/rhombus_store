@@ -40,9 +40,6 @@
 
 <h2>Order #<%= @order.id %></h2>
 
-<%= render 'admin/shared/error_messages', object: @order %>
-
-
 <div>
   <b>Submitted: </b> <%= time_ago_in_words(@order.submitted) %> ago
   <% unless @order.user_id.nil? %>
@@ -240,7 +237,7 @@
       <% end %></td>
     <td><b>Rhombus</b> &nbsp; order_created</td>
     <td><%= number_to_currency(@order.total) %></td>
-    <td><%= link_to "email invoice", resend_email_admin_store_order_path(@order) %></td>
+    <td><%= link_to "email receipt", resend_email_admin_store_order_path(@order) %></td>
     <td>Order created</td>
   </tr>
 </table>

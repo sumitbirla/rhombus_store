@@ -114,7 +114,8 @@ Rails.application.routes.draw do
           get 'print'
           get 'packing_slip'
           get 'invoice'
-          get 'void_label' 
+          get 'void_label'
+          get 'email_confirmation'
         end
       end
       resources :tax_rates

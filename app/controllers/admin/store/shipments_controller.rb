@@ -279,6 +279,26 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     flash[:info] = "Status of #{shipments.length} shipment(s) updated to '#{params[:status]}'"
     redirect_to :back
   end
+  
+  def email_confirmation
+    @shipment = Shipment.find(params[:id])
+    
+    begin
+      OrderMailer.order_shipped_email(@shipment).deliver
+      flash[:info] = 'Shipment conformation mailed to ' + @shipment.order.notify_email
+      
+      OrderHistory.create(order_id: @shipment.order.id, 
+                          user_id: session[:user_id], 
+                          event_type: :email_shipping_confirmation,
+                          system_name: 'Rhombus',
+                          identifier: @shipment.id,
+                          comment: "Emailed shipping confirmation to " + @shipment.order.notify_email)
+    rescue => e
+      flash[:info] = e.message
+    end
+    
+    redirect_to :back
+  end
 
 
   private

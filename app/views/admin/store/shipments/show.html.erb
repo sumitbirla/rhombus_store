@@ -29,13 +29,11 @@
           <i class="icon-file-alt"></i> Print Packing Slip
       <% end %>
     </li>
-	<% unless @shipment.courier_data.nil? %>
     <li>
       <%= link_to admin_store_easy_post_path(shipment_id: @shipment.id) do %>
-          <i class="icon-file-alt"></i> Reship
-      <% end %>
+        Get Rates and Ship
+	    <% end %>
     </li>
-	<% end %>
   </ul>
 </div>
 
@@ -111,9 +109,18 @@
 <br/>
 
 
-<% unless @shipment.courier_data.nil? %>
-	<div class="col-md-4">
-		<img width="100%" src="<%= label_image_admin_store_shipment_path(@shipment) %>" alt="label image"/>
+<% if @shipment.status == 'shipped' %>
+	<div class="col-md-4" style="padding-left: 0;">
+    <% unless @shipment.courier_data.nil? %>
+		  <img width="100%" src="<%= label_image_admin_store_shipment_path(@shipment) %>" alt="label image"/>
+    <% else %>
+    <div style="color: #ccc; font-size: 24px; text-align: center; line-height: 300px; border: solid 1px #ccc;">
+      Shipping Label not available
+    </div>
+    <% end %>
+    <%= link_to email_confirmation_admin_store_shipment_path(@shipment) do %>
+      <i class="fa fa-envelope"></i> Email confirmation to <%= @shipment.order.notify_email %>
+    <% end %>
 	</div>
 	
 	<div class="col-md-8">
@@ -137,10 +144,12 @@
 	        <td class="key">Ship Cost:</td>
 	        <td><%= number_to_currency(@shipment.ship_cost) %></td>
 	      </tr>
+        <% unless @shipment.ship_date.nil? %>
 	      <tr>
 	        <td class="key">Ship Date:</td>
 	        <td><%= @shipment.ship_date.strftime("%Y-%m-%d") %></td>
 	      </tr>
+        <% end %>
 	      <tr>
 	        <td class="key">Tracking:</td>
 	        <td><%= @shipment.tracking_number || "n/a" %></td>
@@ -165,17 +174,15 @@
 	      </tr>
 	    </table>
 
-    	<% if @shipment.status == "shipped" %>
-			<%= link_to "PDF",  label_admin_store_shipment_path(@shipment, format: 'pdf'), class: "btn btn-sm btn-default" %>
-			<%= link_to "EPL2", label_admin_store_shipment_path(@shipment, format: 'epl2'), class: "btn btn-sm btn-default" %>
-			<%= link_to "ZPL", label_admin_store_shipment_path(@shipment, format: 'zpl'), class: "btn btn-sm btn-default" %>
-			<% if @shipment.ship_method.split[0] == 'USPS' %>
-        		<%= link_to "Void Shipment", void_label_admin_store_shipment_path(@shipment), class: "btn btn-sm btn-danger pull-right" %>
-			<% end %>
+    	<% unless @shipment.courier_data.nil? %>
+  			<%= link_to "PDF",  label_admin_store_shipment_path(@shipment, format: 'pdf'), class: "btn btn-sm btn-default" %>
+  			<%= link_to "EPL2", label_admin_store_shipment_path(@shipment, format: 'epl2'), class: "btn btn-sm btn-default" %>
+  			<%= link_to "ZPL", label_admin_store_shipment_path(@shipment, format: 'zpl'), class: "btn btn-sm btn-default" %>
+  			<% if @shipment.ship_method.split[0] == 'USPS' %>
+          		<%= link_to "Void Shipment", void_label_admin_store_shipment_path(@shipment), class: "btn btn-sm btn-danger pull-right" %>
+  			<% end %>
     	<% end %>
     </div>
-<% else %>
-	<%= link_to "Get Rates and Ship", admin_store_easy_post_path(shipment_id: @shipment.id), class: 'btn btn-lg btn-block btn-warning' %>
 <% end %>
 
 
