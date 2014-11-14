@@ -128,7 +128,7 @@
 
 
 <h3>Items:</h3>
-<table class="table table-condensed table-striped items">
+<table class="table table-condensed table-bordered table-striped items">
   <tr>
     <th>Item:</th>
     <th>Description:</th>
@@ -197,50 +197,38 @@
 
 <br/>
 
-<h3>History</h3>
-<table class="table table-condensed">
-  <tr>
-    <th width="150">Timestamp</th>
-    <th>User</th>
-    <th>System / Event</th>
-    <th>Amount</th>
-    <th>Actions</th>
-    <th>Comment</th>
-  </tr>
-  <% @order.history.each do |item| %>
-      <tr>
-        <td><%= systime item.created_at %></td>
-        <td><% unless item.user_id.nil? %>
-              <%= link_to item.user.name, admin_system_user_path(item.user), class: 'small' %>
-          <% end %></td>
-        <td><b><%= item.system_name %></b> &nbsp; <%= item.event_type %></td>
-        <td><%= number_to_currency(item.amount) unless item.amount.nil? %></td>
-        <td>
-          <% if item.event_type == 'shipment_created' %>
-              <%= link_to "view", admin_store_shipment_path(item.identifier) %>
-          <% elsif item.event_type == 'package_shipped' %>
-              
-          <% end %>
-        </td>
-        <td>
-          <%= item.comment %>
-          <% if item.event_type == 'package_shipped' %>
-              : <%= item.identifier %>
-          <% end %>
-        </td>
-      </tr>
-  <% end %>
-  <tr>
-    <td><%= systime @order.created_at %></td>
-    <td><% unless @order.user_id.nil? %>
-          <%= link_to @order.user.name, admin_system_user_path(@order.user), class: 'small' %>
-      <% end %></td>
-    <td><b>Rhombus</b> &nbsp; order_created</td>
-    <td><%= number_to_currency(@order.total) %></td>
-    <td><%= link_to "email receipt", resend_email_admin_store_order_path(@order) %></td>
-    <td>Order created</td>
-  </tr>
-</table>
+<div class="row">
+  
+  <div class="col-md-6">
+    <div class="panel panel-success">
+      <div class="panel-heading">Payments</div>
+      <div class="panel-body">
+        
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-6">
+    <div class="panel panel-info">
+      <div class="panel-heading">Shipments</div>
+      <div class="panel-body">
+        
+        <table class="table table-condensed">
+        <% @order.shipments.each do |shipment| %>
+          <tr>
+            <td><%= link_to shipment.to_s, admin_store_shipment_path(shipment) %></td>
+            <td><%= shipment.ship_method %></td>
+            <td><%= shipment.tracking_number %></td>
+            <td><%= systime shipment.created_at %></td>
+          </tr>
+        <% end %>
+        </table>
+        
+      </div>
+    </div>
+    
+  </div>
+</div>
 
 
 

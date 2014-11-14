@@ -343,11 +343,11 @@ class CartController < ActionController::Base
     end
     
     # inventory update?
-    sql = ""
-    @order.items.each do |item|
-      sql = sql + "UPDATE store_products SET committed = committed + #{item.quantity} WHERE id = #{item.product_id};\n"
-    end
-    ActiveRecord::Base.connection.execute(sql) unless sql.blank?
+    #sql = ""
+    #@order.items.each do |item|
+    #  sql = sql + "UPDATE store_products SET committed = committed + #{item.quantity} WHERE id = #{item.product_id}; "
+    #end
+    #ActiveRecord::Base.connection.execute(sql) unless sql.blank?
 
 
     # email order confirmation to customer
