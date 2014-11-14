@@ -209,7 +209,7 @@
         <table class="table table-condensed">
         <% @order.payments.each do |pmt| %>
           <tr>
-            <td><%= link_to payment.id.to_s, admin_billing_payment_path(pmt) %></td>
+            <td><%= link_to pmt.id.to_s, admin_billing_payment_path(pmt) %></td>
             <td><%= number_to_currency(pmt.amount) %></td>
             <td><%= pmt.payment_method %></td>
             <td><%= systime pmt.created_at %></td>
