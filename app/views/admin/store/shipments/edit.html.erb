@@ -1,5 +1,7 @@
 <h2>Shipment #<%= @shipment.order_id %>-<%= @shipment.sequence %></h2>
 
+<%= render 'admin/shared/error_messages', object: @shipment %>
+
 <%= simple_form_for [:admin, :store, @shipment], html: { class: 'form-inline', style: 'margin-left: 0' } do |f| %>
     <%= f.hidden_field :order_id %>
     <%= f.hidden_field :sequence %>
@@ -19,7 +21,7 @@
           oitem = OrderItem.find(sitem.order_item_id)
         %>
           <tr>
-            <td nowrap><%= oitem.item_id.upcase %></td>
+            <td nowrap><%= itemf.hidden_field :order_item_id %><%= oitem.item_id.upcase %></td>
             <td><%= render oitem %></td>
             <td class="calign"><%= oitem.quantity %></td>
             <td class="calign"><%= itemf.number_field :quantity, style: 'width: 80px; text-align: center;' %></td>

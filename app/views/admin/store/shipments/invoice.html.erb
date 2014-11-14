@@ -84,9 +84,9 @@
               
               <strong>Invoice Date: </strong>
               <% unless @shipment.ship_date.nil? %>
-                <%= @shipment.ship_date.strftime("%d-%^b-%Y") %>
+                <%= sysdate @shipment.ship_date %>
               <% else %>
-              <%= Date.today.strftime("%d-%^b-%Y") %>
+                <%= sysdate DateTime.now %>
               <% end %><br/>
               <strong>Invoice ID: </strong> <%= @shipment %><br/>
               <img src="/barcode?code=<%= @shipment %>" />

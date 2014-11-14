@@ -81,7 +81,7 @@
           </th>
           <th scope="col" style="text-align:right;"> <h2>RECEIPT</h2>
             <p>
-              <strong>Order Date: </strong><%= @order.submitted.strftime("%d-%^b-%Y") %><br>
+              <strong>Order Date: </strong><%= sysdate @order.submitted %><br>
               <strong>Order ID: </strong> <%= @order.id %><br/>
               <img src="/barcode?code=<%= @order.id %>" />
             </p>
@@ -136,7 +136,7 @@
       </thead>
       <tbody>
       <tr>
-        <td><%= @order.submitted.strftime("%d-%^b-%Y") %></td>
+        <td><%= sysdate @order.submitted %></td>
         <td><%= @order.id %></td>
         <td><%= @order.status %></td>
         <td><%= @order.sales_channel == 'Purchase Order' ? @order.external_order_id : 'n/a'  %></td>

@@ -81,7 +81,7 @@
           </th>
           <th scope="col" style="text-align:right;"> <h2>PACKING SLIP</h2>
             <p>
-              <strong>Order Date: </strong><%= @shipment.order.submitted.strftime("%d-%^b-%Y") %><br>
+              <strong>Order Date: </strong><%= sysdate @shipment.order.submitted %><br>
               <strong>Order ID: </strong> <%= @shipment %><br/>
               <img src="/barcode?code=<%= @shipment %>" />
             </p>

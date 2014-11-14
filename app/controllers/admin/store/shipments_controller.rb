@@ -61,38 +61,17 @@ class Admin::Store::ShipmentsController < Admin::BaseController
                                    ship_from_phone: last_shipment.ship_from_phone,
                                    package_weight: last_shipment.package_weight)
     end 
-                    
-    # if this is the first shipment for this order, auto-create the shipment in database with all items included.do
-    if seq == 1 && last_shipment
-      if @shipment.save
-        @order.items.each do |item|
-          @shipment.items << ShipmentItem.new(shipment_id: @shipment.id, order_item_id: item.id, quantity: item.quantity)
-        end
-
-        OrderHistory.create order_id: @shipment.order_id, user_id: current_user.id, event_type: :shipment_created,
-                          system_name: 'Rhombus', identifier: @shipment.id, comment: "shipment created: #{@shipment}"
-
-        flash[:info] = "New shipment created."
-        return redirect_to admin_store_shipment_path(@shipment)
-      end
-
-      flash[:info] = "Shipment could not be created"
-      return redirect_to :back
-    else
-
-      @shipment_items = []
-      @order.items.each do |item|
-        @shipment_items << ShipmentItem.new(order_item_id: item.id)
-      end
-
+    
+    # prepopulate with items to ship
+    @order.items.each do |item|
+      @shipment.items.build(order_item_id: item.id, quantity: item.quantity)
     end
-
+                    
     render 'edit'
   end
 
 
   def create
-
     @shipment = Shipment.new(shipment_params)
     @shipment.fulfilled_by_id = current_user.id
 
@@ -104,11 +83,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       flash[:notice] = "Shipment #{@shipment.order_id}-#{@shipment.sequence} was successfully created."
       redirect_to action: 'show', id: @shipment.id
     else
-      @shipment_items = []
-      @order = Order.find(@shipment.order_id)
-      @order.items.each do |item|
-        @shipment_items << ShipmentItem.new(order_item_id: item.id)
-      end
       render 'edit'
     end
   end

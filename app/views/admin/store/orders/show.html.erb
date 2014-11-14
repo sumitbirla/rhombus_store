@@ -201,9 +201,23 @@
   
   <div class="col-md-6">
     <div class="panel panel-success">
-      <div class="panel-heading">Payments</div>
+      <div class="panel-heading">
+        <b class="pull-right">Balance: <%= number_to_currency(@order.payments.sum(:amount))%></b>
+        Payments
+      </div>
       <div class="panel-body">
+        <table class="table table-condensed">
+        <% @order.payments.each do |pmt| %>
+          <tr>
+            <td><%= link_to payment.id.to_s, admin_billing_payment_path(pmt) %></td>
+            <td><%= number_to_currency(pmt.amount) %></td>
+            <td><%= pmt.payment_method %></td>
+            <td><%= systime pmt.created_at %></td>
+          </tr>
+        <% end %>
+        </table>
         
+        <%= link_to "New payment", new_admin_billing_payment_path(order_id: @order.id), class: 'btn btn-sm btn-default' %>
       </div>
     </div>
   </div>
@@ -217,12 +231,15 @@
         <% @order.shipments.each do |shipment| %>
           <tr>
             <td><%= link_to shipment.to_s, admin_store_shipment_path(shipment) %></td>
-            <td><%= shipment.ship_method %></td>
+            <td><%= shipment.ship_method.blank? ? '- unavl -' : shipment.ship_method %></td>
             <td><%= shipment.tracking_number %></td>
-            <td><%= systime shipment.created_at %></td>
+            <td class="light"><%= systime shipment.created_at %></td>
+            <td><span class="label <%= 'label-warning' if shipment.status == 'pending' %>  <%= 'label-success' if shipment.status == 'shipped' %>"><%= shipment.status %></span></td>
           </tr>
         <% end %>
         </table>
+        
+        <%= link_to "New shipment", new_admin_store_shipment_path(order_id: @order.id), class: 'btn btn-sm btn-default' %>
         
       </div>
     </div>
@@ -231,6 +248,50 @@
 </div>
 
 
+<h3>History</h3>
+<table class="table table-condensed">
+  <tr>
+    <th width="150">Timestamp</th>
+    <th>User</th>
+    <th>System / Event</th>
+    <th>Amount</th>
+    <th>Actions</th>
+    <th>Comment</th>
+  </tr>
+  <% @order.history.each do |item| %>
+      <tr>
+        <td><%= systime item.created_at %></td>
+        <td><% unless item.user_id.nil? %>
+              <%= link_to item.user.name, admin_system_user_path(item.user), class: 'small' %>
+          <% end %></td>
+        <td><b><%= item.system_name %></b> &nbsp; <%= item.event_type %></td>
+        <td><%= number_to_currency(item.amount) unless item.amount.nil? %></td>
+        <td>
+          <% if item.event_type == 'shipment_created' %>
+              <%= link_to "view", admin_store_shipment_path(item.identifier) %>
+          <% elsif item.event_type == 'package_shipped' %>
+              
+          <% end %>
+        </td>
+        <td>
+          <%= item.comment %>
+          <% if item.event_type == 'package_shipped' %>
+              : <%= item.identifier %>
+          <% end %>
+        </td>
+      </tr>
+  <% end %>
+  <tr>
+    <td><%= systime @order.created_at %></td>
+    <td><% unless @order.user_id.nil? %>
+          <%= link_to @order.user.name, admin_system_user_path(@order.user), class: 'small' %>
+      <% end %></td>
+    <td><b>Rhombus</b> &nbsp; order_created</td>
+    <td><%= number_to_currency(@order.total) %></td>
+    <td><%= link_to "email receipt", resend_email_admin_store_order_path(@order) %></td>
+    <td>Order created</td>
+  </tr>
+</table>
 
 
 
