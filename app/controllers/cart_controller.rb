@@ -240,11 +240,15 @@ class CartController < ActionController::Base
       @order.status = 'submitted'
       @order.submitted = Time.now
       @order.save validate: false
+      
+      # create payment entries
+      Payment.create(payable_id: @order.id, payable_type: :order, amount: @order.total * -1.0, memo: 'invoice')
+      Payment.create(payable_id: @order.id, payable_type: :order, amount: @order.total, memo: 'PayPal Payment', transaction_id: response.authorization)
 
       # add order history row
       OrderHistory.create order_id: @order.id, user_id: @order.user_id, amount: @order.total,
                           event_type: 'paypal_payment', system_name: 'PayPal', identifier: response.authorization,
-                          comment: "Successfully payment #{@order.notify_email}"
+                          comment: @order.notify_email
 
     elsif @order.payment_method == "CREDIT_CARD"
       
@@ -294,10 +298,14 @@ class CartController < ActionController::Base
       @order.cc_number = @order.credit_card.display_number
       @order.save validate: false
 
+      # create payment entries
+      Payment.create(payable_id: @order.id, payable_type: :order, amount: @order.total * -1.0, memo: 'invoice')
+      Payment.create(payable_id: @order.id, payable_type: :order, amount: @order.total, memo: @order.cc_number, transaction_id: response.authorization)
+      
       # add order history row
       OrderHistory.create order_id: @order.id, user_id: @order.user_id, amount: @order.total,
                           event_type: 'cc_authorization', system_name: active_gw, identifier: response.authorization,
-                          comment: "Successfully authorized #{@order.cc_number}"
+                          comment: "Successfully charged #{@order.cc_number}"
 
     else # NO_BILLING
       @order.status = 'submitted'
