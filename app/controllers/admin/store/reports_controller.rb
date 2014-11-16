@@ -1,34 +1,88 @@
 class Admin::Store::ReportsController < Admin::BaseController
   skip_before_filter :verify_authenticity
+  before_filter :set_report_params
   
   def index
   end
   
   def product_sales
-    @sales_channels = Order.uniq(:sales_channel).pluck(:sales_channel)
-    @selected_channel = '%'
-    @selected_channel = params[:sales_channel] unless params[:sales_channel].blank?
-    @start_date = params[:start_date] || '2014-1-1'
-    @end_date = params[:end_date] || '2018-1-1'
-        
+    
     sql = <<-EOF
       select o.sales_channel, item_id, CONCAT(p.name, ' ', p.option_title), sum(quantity), unit_price, sum(quantity) * unit_price 
       from store_order_items i 
       join store_orders o on o.id = i.order_id
       join store_products p on i.product_id = p.id
-      where o.status in ('submitted', 'completed', 'shipped')
+      where o.status in ('submitted', 'completed', 'shipped', 'unshipped')
       and o.submitted > '#{@start_date}' and o.submitted < '#{@end_date}'
       and o.sales_channel LIKE '#{@selected_channel}'
       group by o.sales_channel, item_id
       order by sum(quantity) desc;
     EOF
     
-    conn = ActiveRecord::Base.connection
+    @data = []
+    ActiveRecord::Base.connection.execute(sql).each { |row| @data << row }
+    
+  end
+  
+  def daily_sales
+    
+    sql = <<-EOF
+      select date(submitted), count(*), sum(total)
+      from store_orders
+      where submitted IS NOT NULL and status in ('shipped', 'completed', 'unshipped', 'submitted')
+      and submitted > '#{@start_date}' and submitted < '#{@end_date}'
+      and sales_channel LIKE '#{@selected_channel}'
+      group by date(submitted)
+      order by date(submitted) desc;
+    EOF
+  
+    @data = []
+    ActiveRecord::Base.connection.execute(sql).each { |row| @data << row } 
+  end
+  
+  
+  def monthly_sales
+    
+    sql = <<-EOF
+      select submitted, count(*), sum(total)
+      from store_orders
+      where submitted IS NOT NULL and status in ('shipped', 'completed', 'unshipped', 'submitted')
+      and submitted > '#{@start_date}' and submitted < '#{@end_date}'
+      and sales_channel LIKE '#{@selected_channel}'
+      group by year(submitted), month(submitted)
+      order by date(submitted) desc;
+    EOF
+  
+    @data = []
+    ActiveRecord::Base.connection.execute(sql).each { |row| @data << row } 
+  end
+  
+  
+  def pending_fulfillment
+    
+    sql = <<-EOF
+      select oi.item_id, p.id, p.name, p.option_title, a.name, sum(quantity)
+      from store_order_items oi
+      join store_orders o on oi.order_id = o.id
+      join store_products p on oi.product_id = p.id
+      join core_affiliates a on a.id = oi.affiliate_id
+      where o.status in ('unshipped', 'submitted')
+      group by oi.item_id;
+    EOF
     
     @data = []
-    conn.execute(sql).each do |row|
-      @data << row 
-    end
+    ActiveRecord::Base.connection.execute(sql).each { |row| @data << row } 
+  end
+  
+  
+  def set_report_params
+    
+    @sales_channels = Order.uniq(:sales_channel).pluck(:sales_channel)
+    @selected_channel = '%'
+    @selected_channel = params[:sales_channel] unless params[:sales_channel].blank?
+    @start_date = params[:start_date] || 2.months.ago.strftime("%Y-%m-%d")
+    @end_date = params[:end_date] || '2018-1-1'
+    
   end
   
 end

@@ -59,7 +59,9 @@ Rails.application.routes.draw do
     namespace :store do
 
       get 'reports/product_sales'
-      get 'reports/order_volume'
+      get 'reports/daily_sales'
+      get 'reports/monthly_sales'
+      get 'reports/pending_fulfillment'
       get 'reports' => 'reports#index'
 
       get 'shipments/choose_order'

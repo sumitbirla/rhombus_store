@@ -11,8 +11,15 @@
 		<td>Quanity of each product sold</td>
 	</tr>
 	<tr>
-		<td>Order Volume</td>
+		<td>Order Volume - 
+      <%= link_to "daily", admin_store_reports_daily_sales_path %>, 
+      <%= link_to "monthly", admin_store_reports_monthly_sales_path %>
+    </td>
 		<td>Number of orders per day</td>
+	</tr>
+	<tr>
+		<td><%= link_to "Pending Fulfillment", admin_store_reports_pending_fulfillment_path %> </td>
+		<td>Items that need to be fulfilled currently</td>
 	</tr>
 </table>
 
