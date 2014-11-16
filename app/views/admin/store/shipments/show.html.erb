@@ -124,7 +124,7 @@
 	</div>
 	
 	<div class="col-md-8">
-	    <%= carrier_image @shipment.ship_method.split[0] %>
+	    <%= carrier_image @shipment.ship_method.split[0] unless @shipment.ship_method.blank? %>
 	    <table class="table table-condensed table-bordered summary" style="margin-bottom: 10px;">
 		  <% unless @shipment.fulfilled_by_id.nil? %>
 	      <tr>
