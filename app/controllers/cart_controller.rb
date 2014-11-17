@@ -2,8 +2,10 @@ class CartController < ActionController::Base
 
   include CartHelper
   include PaypalExpressHelper
-
+  
+  force_ssl  if Rails.env.production?
   layout 'single_column'
+  
   
   # GET /cart
   
