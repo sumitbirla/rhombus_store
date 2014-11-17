@@ -15,7 +15,7 @@ class CartController < ActionController::Base
   end
 
 
-  # POST /cart/add
+  # GET /cart/add
 
   def add
     
