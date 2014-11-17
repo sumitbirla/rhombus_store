@@ -21,6 +21,15 @@
           <option method="post" value="/admin/store/orders_update_status?status=refunded">Refunded</option>
           <option method="post" value="/admin/store/orders_update_status?status=cancelled">Cancelled</option>
       </optgroup>
+      <optgroup label="Show orders in status ">
+          <option method="get" value="/admin/store/orders?status=submitted">Submitted</option>
+          <option method="get" value="/admin/store/orders?status=unshipped">Unshipped</option>
+          <option method="get" value="/admin/store/orders?status=shipped">Shipped</option>
+          <option method="get" value="/admin/store/orders?status=cancelled">Cancelled</option>
+          <option method="get" value="/admin/store/orders?status=refunded">Refunded</option>
+          <option method="get" value="/admin/store/orders?status=backordered">Backordered</option>
+          <option method="get" value="/admin/store/orders">All Orders</option>
+      </optgroup>
   </select>
   <input type="button" class="btn btn-default btn-small" id="btnAction" value="Go" />	  
 </div>
@@ -86,9 +95,16 @@
 	    $(document).ready(function () {
 
 	        $("#btnAction").click(function () {
-	            $("#frmBatch").attr("action", $("#selAction").val());
-	            $("#frmBatch").attr("method", $("#selAction option:selected").attr("method"));
+            var url = $("#selAction").val();
+            var method = $("#selAction option:selected").attr("method");
+            
+            if (method == "post") {
+	            $("#frmBatch").attr("action", url);
+	            $("#frmBatch").attr("method", method);
 	            $("#frmBatch").submit();
+            } else {
+              window.location = url;
+            }
 	        });
 
 	        $("#chkAll").change(function () {

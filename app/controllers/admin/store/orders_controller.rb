@@ -1,8 +1,8 @@
 class Admin::Store::OrdersController < Admin::BaseController
   
   def index
-    @orders = Order.where(status: Order.valid_statuses).order(submitted: :desc)
-
+    @orders = Order.where(status: params[:status] || Order.valid_statuses).order(submitted: :desc)
+    
     q = params[:q]
     unless q.nil?
       if q.to_i == 0
