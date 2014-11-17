@@ -5,8 +5,8 @@
       <option <%= "selected" if @selected_channel == ch %>><%= ch %></option>
     <% end %> 
   </select> &nbsp; 
-  Date range:  &nbsp; <input type="text" name="start_date" value="<%= @start_date %>" style="width: 120px;"/> &nbsp; to &nbsp;
-              <input type="text" name="end_date" value="<%= @end_date %>" style="width: 120px;"/>
+  Date range:  &nbsp; <input type="text" class="date" name="start_date" value="<%= @start_date %>" style="width: 120px;"/> &nbsp; to &nbsp;
+              <input type="text" class="date" name="end_date" value="<%= @end_date %>" style="width: 120px;"/>
   <button class="btn btn-success btn-sm">Filter</button>
 </form>
 
@@ -71,6 +71,7 @@ amount_total = 0.0
     }
 
     $(document).ready(function() {
+
       $.plot("#graph", [
       				{ data: orders, label: "Orders", lines: { show: true, fill: true }, points: { show: true } },
       				{ data: revenue, label: "Revenue $", yaxis: 2, lines: { show: true, fill: true }, points: { show: true } }
