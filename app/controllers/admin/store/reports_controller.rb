@@ -43,6 +43,8 @@ class Admin::Store::ReportsController < Admin::BaseController
   
   def monthly_sales
     
+    @start_date = params[:start_date] || 6.months.ago.strftime("%Y-%m-%d")
+    
     sql = <<-EOF
       select submitted, count(*), sum(total)
       from store_orders

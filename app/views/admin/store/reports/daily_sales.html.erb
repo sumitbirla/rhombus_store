@@ -73,16 +73,13 @@ amount_total = 0.0
     $(document).ready(function() {
 
       $.plot("#graph", [
-              { data: revenue, label: "Revenue $", yaxis: 2, lines: { show: true, fill: true }, points: { show: true } },
-              { data: orders, label: "Orders", lines: { show: true, fill: true }, points: { show: true } }
-      				
+              { data: orders, label: "Orders", lines: { show: true, fill: true }, points: { show: true } },
+              { data: revenue, label: "Revenue $", yaxis: 2, lines: { show: true, fill: true }, points: { show: true } }
       			], {
       				xaxes: [ { mode: "time" } ],
       				yaxes: [ {
-      					// align if we are to the right
       					alignTicksWithAxis: 1,
-      					position: "right",
-                max: 50			
+      					position: "right"
       				}, { tickFormatter: dollarFormatter } ],
       				legend: { position: "nw" }
       			});
