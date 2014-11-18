@@ -52,23 +52,38 @@ amount_total = 0.0
   <script src="/rhombus_core/sb-admin-2/js/plugins/flot/jquery.flot.min.js"></script>
   <script src="/rhombus_core/sb-admin-2/js/plugins/flot/jquery.flot.time.min.js"></script>
   <script>
-    var d = [
+    var orders = [
     <% @data.each do |row| %>
-      [<%= row[0].to_f * 1000 %>, <%= row[1] %>],
+      [<%= row[0].to_datetime.to_f * 1000 %>, <%= row[1] %>],
     <% end %>
     ];
+
+    var revenue = [
+    <% @data.each do |row| %>
+      [<%= row[0].to_datetime.to_f * 1000 %>, <%= row[2] %>],
+    <% end %>
+    ];
+    
+    function dollarFormatter(v, axis) {
+    		return "$" + v.toFixed(axis.tickDecimals);
+    }
+    
     $(document).ready(function() {
       $.plot("#graph", 
       [
-        { data: d, label: "Orders", lines: { show: true }, points: { show: true } }
-      ], 
+        { data: revenue, label: "Revenue $", yaxis: 2, lines: { show: true, fill: true }, points: { show: true } },
+        { data: orders, label: "Orders", lines: { show: true, fill: true }, points: { show: true } }
+			], 
       {
-      		xaxis: { mode: "time" },
-          bars: {
-              align: "center",
-              barWidth: 0.5
-          }
-      });
+				xaxes: [ { mode: "time" } ],
+				yaxes: [ {
+					// align if we are to the right
+					alignTicksWithAxis: 1,
+					position: "right",
+          max: 500			
+				}, { tickFormatter: dollarFormatter } ],
+				legend: { position: "nw" }
+			});
     })
   </script>
   <style>

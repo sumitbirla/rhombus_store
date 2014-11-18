@@ -82,7 +82,7 @@
           <th scope="col" style="text-align:right;"> <h2>PACKING SLIP</h2>
             <p>
               <strong>Order Date: </strong><%= sysdate @shipment.order.submitted %><br>
-              <strong>Order ID: </strong> <%= @shipment %><br/>
+              <strong>Shipment ID: </strong> <%= @shipment %><br/>
               <img src="/barcode?code=<%= @shipment %>" />
             </p>
           </th>
@@ -124,7 +124,7 @@
       <tbody>
       <tr>
         <td><%= @shipment.order.submitted.strftime("%d-%^b-%Y") %></td>
-        <td><%= @shipment %></td>
+        <td><%= @shipment.order_id %></td>
         <td><%= @shipment.order.external_order_id %></td>
         <td><%= @shipment.recipient_name %></td>
       </tr>
