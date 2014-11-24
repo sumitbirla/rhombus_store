@@ -1,4 +1,4 @@
-<h2><%= @product.title %></h2>
+<h2><%= @product.name_with_option %></h2>
 
 <%= link_to 'new coupon', new_admin_store_coupon_path(product_id: @product.id, redirect: request.fullpath), class: 'pull-right btn btn-small'%>
 
@@ -66,6 +66,6 @@
 <% content_for :breadcrumbs do %>
 	<li><a href="#">eCommerce</a></li>
 	<li><%= link_to "Products", admin_store_products_path %></li>
-	<li><%= link_to @product.title, admin_store_product_path(@product)%> </li>
+	<li><%= link_to @product.name_with_option, admin_store_product_path(@product)%> </li>
 	<li class="active">edit</li>
 <% end %>

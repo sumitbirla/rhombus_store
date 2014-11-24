@@ -1,4 +1,4 @@
-<h2><%= @product.title %></h2>
+<h2><%= @product.name_with_option %></h2>
 
 <ul class="nav nav-tabs">
   <li><%= link_to "Summary", edit_admin_store_product_path(@product) %></li>
@@ -22,6 +22,6 @@
 <% content_for :breadcrumbs do %>
 	<li><a href="#">eCommerce</a></li>
 	<li><%= link_to "Products", admin_store_products_path %></li>
-	<li><%= link_to @product.title, admin_store_product_path(@product)%> </li>
+	<li><%= link_to @product.name_with_option, admin_store_product_path(@product)%> </li>
 	<li class="active">edit</li>
 <% end %>

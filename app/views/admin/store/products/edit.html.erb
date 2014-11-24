@@ -14,7 +14,7 @@
    suppliers = Affiliate.where(id: AffiliateCategory.select(:affiliate_id).where(category_id: supplier_category.id)) unless supplier_category.nil?
 %>
 
-<h2><%= @product.name %></h2>
+<h2><%= @product.name_with_option %></h2>
 
 <% unless @product.id.nil? %>
 <ul class="nav nav-tabs">
@@ -129,7 +129,7 @@
     <% if @product.id.nil? %>
         <li class="active"><%= @product.name %></li>
     <% else %>
-        <li><%= link_to @product.title, admin_store_product_path(@product)%> </li>
+        <li><%= link_to @product.name_with_option, admin_store_product_path(@product)%> </li>
         <li class="active">edit</li>
     <% end %>
 

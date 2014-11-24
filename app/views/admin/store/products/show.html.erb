@@ -4,7 +4,7 @@
 
 <% stock = InventoryTransactionItem.where(sku: @product.sku).sum(:quantity) %>
 <%= link_to "edit", edit_admin_store_product_path(@product), class: "btn btn-sm btn-default pull-right" %>
-<h2><i class="icon-tags"></i>&nbsp; <%= @product.name %></h2>
+<h2><i class="icon-tags"></i>&nbsp; <%= @product.name_with_option %></h2>
 <hr/>
 
 <div class="arow">
@@ -306,5 +306,5 @@
 <% content_for :breadcrumbs do %>
 	<li><a href="#">eCommerce</a></li>
 	<li><%= link_to "Products", admin_store_products_path %></li>
-	<li class="active"><%= @product.title %></li>
+	<li class="active"><%= @product.name_with_option %></li>
 <% end %>
