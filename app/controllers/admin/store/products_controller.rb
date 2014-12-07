@@ -2,6 +2,7 @@ class Admin::Store::ProductsController < Admin::BaseController
   
   def index
     @products = Product.includes(:brand).order(:title).page(params[:page])
+    @products = @products.where("active = #{params[:active]}") unless params[:active].nil?
     @products = @products.where("title LIKE '%#{params[:q]}%' OR sku = '#{params[:q]}'") unless params[:q].nil?
   end
 
@@ -108,7 +109,7 @@ class Admin::Store::ProductsController < Admin::BaseController
   
   
   def adjust_prices
-    @products = Product.all
+    @products = Product.where(active: true)
   end
   
   
@@ -119,19 +120,22 @@ class Admin::Store::ProductsController < Admin::BaseController
     params.each do |key, val|
       
       tokens = key.split('-')
-      next unless ['retail', 'dealer'].include?(tokens[0])
+      next unless [ 'web', 'distributor', 'retailer', 'msrp', 'map'].include?(tokens[0])
       
-      value = val.to_d
+      value = val.blank? ? nil : val.to_d
       product_id = tokens[1].to_i
       product = @products.find { |p| p.id == product_id }
       
-      product.update_attribute(:price, value) if tokens[0] == 'retail' && product.price != value
-      product.update_attribute(:dealer_price, value) if tokens[0] == 'dealer'&& product.dealer_price != value
+      product.update_attribute(:price, value) if tokens[0] == 'web' unless product.price == value
+      product.update_attribute(:distributor_price, value) if tokens[0] == 'distributor' unless product.distributor_price == value
+      product.update_attribute(:retailer_price, value) if tokens[0] == 'retailer' unless product.retailer_price == value
+      product.update_attribute(:retail_map, value) if tokens[0] == 'map' unless product.retail_map == value
+      product.update_attribute(:msrp, value) if tokens[0] == 'msrp' unless product.msrp == value
       
     end
     
     flash[:notice] = "Prices have been updated"
-    redirect_to action: 'index'
+    redirect_to :back
   end
   
   
@@ -152,7 +156,7 @@ class Admin::Store::ProductsController < Admin::BaseController
                               variation: variant, 
                               description: p.name_with_option, 
                               price: p.price, 
-                              dealer_price: p.dealer_price }
+                              dealer_price: p.distributor_price }
       end
     end
     
@@ -163,12 +167,7 @@ class Admin::Store::ProductsController < Admin::BaseController
   private
   
     def product_params
-      params.require(:product).permit(:name, :group, :type, :title, :brand_id, :product_type,
-      :slug, :price, :msrp, :retail_map, :special_price, :dealer_price, :free_shipping, :tax_exempt, :hidden, :featured,
-      :require_image_upload, :option_title, :option_sort, :short_description, :long_description,
-      :sku, :fulfiller_id, :primary_supplier_id, :warranty, :keywords, :country_of_origin, :minimum_order_quantity,
-      :shipping_lead_time, :item_availability, :item_length, :item_width, :item_height, :item_weight, :case_length,
-      :case_width, :case_height, :case_weight, :case_quantity, :committed, :low_threshold)
+      params.require(:product).permit!
     end
   
 end

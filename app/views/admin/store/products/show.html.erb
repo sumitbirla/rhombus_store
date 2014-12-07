@@ -33,12 +33,15 @@
 		<tr>
 			<td>Price</td>
 			<td>
-              <span class="label label-default price">Retail: $<%= @product.price %></span>
+              <span class="label label-default price">Web: $<%= @product.price %></span>
               <% unless @product.special_price.nil? %>
                 <span class="label label-default price">Promo: $<%= @product.special_price %></span>
               <% end %>
-              <% unless @product.dealer_price.nil? %>
-                  <span class="label label-default price">Dealer: $<%= @product.dealer_price %></span>
+              <% unless @product.distributor_price.nil? %>
+                  <span class="label label-default price">Distributor: $<%= @product.distributor_price %></span>
+              <% end %>
+              <% unless @product.retailer_price.nil? %>
+                  <span class="label label-default price">Retailer: $<%= @product.retailer_price %></span>
               <% end %>
               <% unless @product.retail_map.nil? %>
                   <span class="label label-default price">MAP: $<%= @product.retail_map %></span>

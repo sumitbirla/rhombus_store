@@ -41,7 +41,8 @@
 		  <%= f.input :sku, label: 'SKU' %>
 		  <%= f.input :price %>
 		  <%= f.input :special_price %>
-		  <%= f.input :dealer_price %>
+		  <%= f.input :distributor_price %>
+      <%= f.input :retailer_price %>
       <%= f.input :retail_map, label: 'Retail MAP' %>
       <%= f.input :msrp, label: 'MSRP' %>
       <%= f.input :group %>
@@ -56,11 +57,12 @@
           <div class="panel panel-default">
             <div class="panel-heading">Options</div>
             <div class="panel-body">
-                <%= f.input :free_shipping %>
-                <%= f.input :tax_exempt %>
-                <%= f.input :hidden %>
-                <%= f.input :featured %>
-                <%= f.input :require_image_upload %>
+              <%= f.input :active %>
+              <%= f.input :free_shipping %>
+              <%= f.input :tax_exempt %>
+              <%= f.input :hidden %>
+              <%= f.input :featured %>
+              <%= f.input :require_image_upload %>
             </div>
           </div>
 
