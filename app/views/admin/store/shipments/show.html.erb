@@ -19,6 +19,13 @@
           <i class="icon-print"></i> Product Labels
       <% end %>
     </li>
+    <% if @shipment.invoice_id.nil? %>
+    <li>
+      <%= link_to create_payment_admin_store_shipment_path(@shipment) do %>
+          <i class="icon-file-alt"></i> Create Invoice
+      <% end %>
+    </li>
+    <% end %>
     <li>
       <%= link_to invoice_admin_store_shipment_path(@shipment), target: "_blank" do %>
           <i class="icon-file-alt"></i> Print Invoice
@@ -87,7 +94,12 @@
 </div>
 
 
-<h4>Items:</h4>
+
+<h4>
+  <% unless @shipment.invoice_id.nil? %>
+    <span class="label label-success pull-right">invoiced: <%= number_to_currency(@shipment.invoice.amount * -1.0) %></span>
+  <% end %>
+  Items:</h4>
 
 <table class="table table-striped table-condensed table-bordered">
     <tr>
@@ -126,7 +138,7 @@
 	<div class="col-md-8">
 	    <%= carrier_image @shipment.ship_method.split[0] unless @shipment.ship_method.blank? %>
 	    <table class="table table-condensed table-bordered summary" style="margin-bottom: 10px;">
-		  <% unless @shipment.fulfilled_by_id.nil? %>
+      <% unless @shipment.fulfilled_by_id.nil? %>
 	      <tr>
 	        <td class="key">Fulfilled by:</td>
 	        <td><%= link_to @shipment.fulfiller, admin_system_user_path(@shipment.fulfiller) %></td>

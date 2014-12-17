@@ -98,15 +98,31 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   end
   
   def invoice
+    @shipment = Shipment.find(params[:id])                       
+    render 'invoice', layout: false
+  end
+  
+  def create_payment
     @shipment = Shipment.find(params[:id])
+    
+    pmt = Payment.create(payable_id: @shipment.id,
+                         payable_type: 'shipment',
+                         user_id: @shipment.order.user_id,
+                         amount: @shipment.invoice_amount * -1.0,
+                         transaction_id: @shipment.to_s,
+                         memo: 'Invoice')
+                         
+    @shipment.update_attribute(:invoice_id, pmt.id)
+                         
     OrderHistory.create(order_id: @shipment.order.id, 
                         user_id: session[:user_id], 
-                        event_type: :invoice_print,
+                        event_type: :invoice,
                         system_name: 'Rhombus',
                         identifier: @shipment.to_s,
-                        comment: "Printed invoice " + @shipment.to_s)
+                        comment: "Invoiced $#{pmt.amount * -1.0}" )
                         
-    render 'invoice', layout: false
+    flash[:info] = 'Invoice created'
+    redirect_to :back                    
   end
 
 
@@ -230,13 +246,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     Shipment.where(id: params[:shipment_id]).each do |s|
       digest = Digest::MD5.hexdigest(s.id.to_s + token) 
       urls += " " + website_url + invoice_admin_store_shipment_path(s, digest: digest) 
-      
-      OrderHistory.create(order_id: s.order.id, 
-                          user_id: session[:user_id], 
-                          event_type: :invoice_print,
-                          system_name: 'Rhombus',
-                          identifier: s.id,
-                          comment: "Printed invoice " + s.to_s)
     end
     
     system "wkhtmltopdf -q #{urls} /tmp/receipts.pdf"

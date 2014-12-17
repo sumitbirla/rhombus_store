@@ -118,6 +118,7 @@ Rails.application.routes.draw do
           get 'invoice'
           get 'void_label'
           get 'email_confirmation'
+          get 'create_payment'
         end
       end
       resources :tax_rates

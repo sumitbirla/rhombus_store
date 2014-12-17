@@ -25,7 +25,7 @@
 		<td><%= link_to product.sku, admin_store_product_path(product) %></td>
 		<td><%= product.name_with_option %></td>
     <td>
-			<% unless product.hidden %>
+			<% if product.active %>
 				<span class="label label-success">active</span>
 			<% end %>
 			<% if product.featured %>

@@ -40,6 +40,7 @@ class Shipment < ActiveRecord::Base
   self.table_name = "store_shipments"
   belongs_to :order
   belongs_to :fulfiller, class_name: 'User', foreign_key: 'fulfilled_by_id'
+  belongs_to :invoice, class_name: 'Payment', foreign_key: 'invoice_id'
   has_many :items, class_name: 'ShipmentItem', dependent: :destroy
   
   accepts_nested_attributes_for :items, allow_destroy: true
@@ -64,6 +65,12 @@ class Shipment < ActiveRecord::Base
 
   def to_s
     "#{order_id}-#{sequence}"
+  end
+  
+  def invoice_amount
+    subtotal = 0
+    items.each { |item| subtotal += item.quantity * item.order_item.unit_price }
+    subtotal 
   end
   
   def copy_easy_post(response)

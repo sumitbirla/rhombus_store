@@ -128,10 +128,11 @@
         <tr>
           <td>Flags</td>
           <td>
+            <% if @product.active %>
+                <span class="label label-success">active</span>
+            <% end %>
             <% if @product.hidden %>
                 <span class="label label-warning">hidden</span>
-            <% else %>
-                <span class="label label-success">active</span>
             <% end %>
 
             <% if @product.free_shipping %>
