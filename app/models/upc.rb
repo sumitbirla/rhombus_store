@@ -21,4 +21,8 @@ class Upc < ActiveRecord::Base
     end
   end
   
+  def to_s
+    code
+  end
+  
 end
