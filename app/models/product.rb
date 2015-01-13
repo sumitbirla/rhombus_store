@@ -26,6 +26,8 @@
 #  updated_at           :datetime
 #
 
+require 'rhombus_cms'
+
 class Product < ActiveRecord::Base
   self.table_name = "store_products"
   belongs_to :brand
@@ -57,7 +59,4 @@ class Product < ActiveRecord::Base
     "product:#{slug}"
   end
   
-  def attribute(key)
-    attributes.find { |attr| attr.key == key }
-  end
 end

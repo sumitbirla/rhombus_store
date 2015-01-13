@@ -266,7 +266,7 @@ EOF
     new_order.save
     
     order.items.each { |x| new_order.items << x.dup }
-    redirect_to action: 'show', id: new_order.id
+    redirect_to action: 'edit', id: new_order.id
   end
   
   
