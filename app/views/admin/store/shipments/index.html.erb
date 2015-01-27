@@ -23,6 +23,7 @@
   <tr>
 	<th><input type="checkbox" id="chkAll" /></th>
     <th>ID</th>
+    <th>Time</th>
     <th>Ship to</th>
     <th>Destination</th>
     <th>Method</th>
@@ -34,6 +35,7 @@
       <tr>
 		<td><input type="checkbox" name="shipment_id[]" value="<%= shipment.id %>"/></td>
         <td><%= link_to shipment, admin_store_shipment_path(shipment) %></td>
+        <td><%= sysdate shipment.ship_date %></td>
         <td><%= shipment.recipient_name %></td>
         <td><%= shipment.recipient_city %>, <%= shipment.recipient_state %></td>
         <td><%= shipment.ship_method || '- not shipped -' %></td>

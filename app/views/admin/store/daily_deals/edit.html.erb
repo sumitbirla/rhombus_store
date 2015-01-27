@@ -67,6 +67,10 @@
 <% content_for :breadcrumbs do %>
 	<li><a href="#">eCommerce</a></li>
 	<li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
-	<li><%= link_to @daily_deal.short_tag_line, admin_store_daily_deal_path(@daily_deal) %></li>
-	<li class="active">edit</li>
+  <% if @daily_deal.persisted? %>
+	  <li><%= link_to @daily_deal.short_tag_line, admin_store_daily_deal_path(@daily_deal) %></li>
+	  <li class="active">edit</li>
+  <% else %>
+    <li class="active"><%= @daily_deal.short_tag_line %></li>
+  <% end %>
 <% end %>
