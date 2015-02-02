@@ -31,7 +31,7 @@ class Admin::Store::DailyDealsController < Admin::BaseController
     @daily_deal = DailyDeal.find(params[:id])
     
     if @daily_deal.update(daily_deal_params)
-      redirect_to admin_daily_deal_path(@daily_deal), notice: 'Daily Deal was successfully updated.'
+      redirect_to admin_store_daily_deal_path(@daily_deal), notice: 'Daily Deal was successfully updated.'
     else
       render 'edit'
     end
@@ -115,11 +115,7 @@ class Admin::Store::DailyDealsController < Admin::BaseController
   private
   
     def daily_deal_params
-      params.require(:daily_deal).permit(:affiliate_id, :affiliate_remittance, :affiliate_paid, :deal_type, :slug, :region_id, :title, 
-                                         :start_time, :end_time, :voucher_expiration, :original_price, :deal_price, :shipping_cost,
-                                         :conditions, :description, :short_tag_line, :redemption_instructions, :order_specifications,
-                                         :theme, :max_sales, :max_per_user, :number_sold, :countdown_mode, :sales_before_showing_count,
-                                         :active, :featured, :allow_photo_upload, :facebook_posts, :facebook_clicks)
+      params.require(:daily_deal).permit!
     end
   
 end

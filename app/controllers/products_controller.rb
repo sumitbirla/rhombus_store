@@ -1,5 +1,5 @@
-class ProductsController < ActionController::Base
+class ProductsController < ApplicationController
   def show
-    @product = Cache.product(params[:slug])
+    @product = StoreCache.product(params[:slug])
   end
 end
