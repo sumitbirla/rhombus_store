@@ -1,7 +1,7 @@
 class Admin::Store::ProductsController < Admin::BaseController
   
   def index
-    @products = Product.includes(:brand).order(:title).page(params[:page])
+    @products = Product.includes(:brand).order(:sku).page(params[:page])
     @products = @products.where("active = #{params[:active]}") unless params[:active].nil?
     @products = @products.where("title LIKE '%#{params[:q]}%' OR sku = '#{params[:q]}'") unless params[:q].nil?
   end
@@ -15,7 +15,7 @@ class Admin::Store::ProductsController < Admin::BaseController
     @product = Product.new(product_params)
     
     if @product.save
-      redirect_to action: 'index', notice: 'Product was successfully created.'
+      redirect_to action: 'show', id: @product.id, notice: 'Product was successfully created.'
     else
       render 'edit'
     end
