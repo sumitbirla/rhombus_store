@@ -11,6 +11,7 @@ class Admin::Store::DailyDealsController < Admin::BaseController
 
   def create
     @daily_deal = DailyDeal.new(daily_deal_params)
+    @daily_deal.uuid = SecureRandom.uuid
     
     if @daily_deal.save
       redirect_to action: 'show', id: @daily_deal.id, notice: 'Daily Deal was successfully created.'

@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   get "paypal_express/review"
   get 'barcode' => 'barcode#generate'
   
+  get '/daily_deals/email' =>'daily_deals#email'
   get '/daily_deals/:slug' => 'daily_deals#show'
   
   
@@ -135,12 +136,12 @@ Rails.application.routes.draw do
 
       resources :daily_deals do
         member do
-          get 'pictures' => 'daily_deals#pictures'
-          get 'categories' => 'daily_deals#categories'
-          get 'coupons' => 'daily_deals#coupons'
-          get 'items' => 'daily_deals#items'
-          get 'locations' => 'daily_deals#locations'
-          get 'external_coupons' => 'daily_deals#external_coupons'
+          get 'pictures' 
+          get 'categories' 
+          get 'coupons' 
+          get 'items' 
+          get 'locations'
+          get 'external_coupons'
           post 'categories' => 'daily_deals#create_categories'
           post 'coupons' => 'daily_deals#create_coupon'
           post 'create_external_coupons' => 'daily_deals#create_external_coupons'

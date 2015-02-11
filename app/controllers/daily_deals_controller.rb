@@ -24,9 +24,18 @@ class DailyDealsController < ActionController::Base
     render 'show', layout: nil
   end
   
+  def email
+    @daily_deal = DailyDeal.find(params[:id])
+    
+    respond_to do |format|
+      format.html { render 'email', layout: nil }
+      format.text
+    end
+  end
+  
   private
   
     def deal_submission_params
-      params.require(:deal_submission).permit(:company, :website, :contact_person, :contact_info, :title, :deal_type, :start_time, :end_time, :voucher_expiration, :original_price, :deal_price, :shipping_cost, :max_count, :max_per_shopper, :description)
+      params.require(:deal_submission).permit!
     end
 end

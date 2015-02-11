@@ -20,4 +20,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'barby'
   s.add_dependency 'easypost'
   s.add_dependency 'chunky_png'
+  s.add_dependency 'rails'
 end
