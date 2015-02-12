@@ -7,18 +7,7 @@ class CartController < ApplicationController
   layout 'single_column'
   
   
-  # GET /cart
-  
-  def index
-    key = cookies[:cart]
-    @order = Order.includes(:items, [items: [:product, :affiliate]]).find_by(cart_key: key) unless key.nil?
-  end
-
-
-  # GET /cart/add
-
-  def add
-    
+  def load_or_create_order
     key = cookies[:cart]
     
     # create new order if necessary
@@ -32,8 +21,25 @@ class CartController < ApplicationController
     if order.nil?
       order = Order.new(cart_key: key, status: 'in cart', payment_method: 'CREDIT_CARD')
       order.save validate: false
-      order.items = []
     end
+    
+    order
+  end
+  
+  
+  # GET /cart
+  
+  def index
+    key = cookies[:cart]
+    @order = Order.includes(:items, [items: [:product, :affiliate]]).find_by(cart_key: key) unless key.nil?
+  end
+
+
+  # GET /cart/add
+
+  def add
+    
+    order = load_or_create_order
     
     # iterate through multiple items being added to cart
     # key = {product-id}-{affiliate-id}-{variation}
@@ -80,7 +86,52 @@ class CartController < ApplicationController
     
     redirect_to action: 'index'
   end
+  
+  
+  # GET /cart/add_deal
+  def add_deal
+    dd = DailyDeal.find(params[:daily_deal_id])
+    
+    unless dd.active && dd.start_time < DateTime.now && dd.end_time > DateTime.now
+      flash[:error] = "This deal is not currently active."
+      return redirect_to action: 'index'
+    end
+    
+    if dd.number_sold >= dd.max_sales
+      flash[:error] = "Sorry, this deal is sold out."
+      return redirect_to action: 'index'
+    end
+    
+    order = load_or_create_order
+    
+    # add item to cart
+    item = order.items.find { |i| i.daily_deal_id == dd.id }
+    if item.nil?
 
+      item = OrderItem.new order_id: order.id,
+              daily_deal_id: dd.id,
+              quantity: params[:qty],
+              unit_price: dd.deal_price,
+              item_description: dd.short_tag_line,
+              item_id: "DEAL#{dd.id}"
+
+      order.items << item
+    else
+      item.quantity += params[:qty].to_i
+      item.save
+    end
+    
+    if dd.max_per_user && (item.quantity > dd.max_per_user)
+      flash[:error] = "Sorry, this deal is limited to #{dd.max_per_user} per customer."
+      item.update_attribute(:quantity, dd.max_per_user)
+    end
+    
+    update_totals order
+    order.save validate: false
+    
+    return redirect_to action: 'index'
+  end
+  
 
   def remove
     id = params[:id].to_i
@@ -120,6 +171,13 @@ class CartController < ApplicationController
       
       if quantity > 0
         item.quantity = quantity
+        
+        # special check for daily deals
+        if item.daily_deal && item.daily_deal.max_per_user && (item.quantity > item.daily_deal.max_per_user)
+          flash[:error] = "Sorry, #{item.item_id} is limited to #{item.daily_deal.max_per_user} per customer."
+          item.quantity = item.daily_deal.max_per_user
+        end
+        
         item.save
       else
         order.items.destroy(item)

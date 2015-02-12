@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   
   get 'cart/remove/:id' => 'cart#remove'
   post 'cart/update'
+  get 'cart/add_deal'
   get 'cart/add'
   post 'cart/applycode'
   get 'cart/checkout'

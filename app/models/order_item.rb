@@ -25,6 +25,9 @@ class OrderItem < ActiveRecord::Base
   belongs_to :order
   belongs_to :product
   belongs_to :affiliate
+  belongs_to :daily_deal
   
-  validates_presence_of :quantity, :order_id, :product_id, :unit_price
+  validates_presence_of :quantity, :order_id, :unit_price
+  #validates :product_id, presence: true, if: daily_deal_id.nil?
+  #validates :daily_deal_id, presence: true, if: product_id.nil?
 end
