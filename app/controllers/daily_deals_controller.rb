@@ -1,4 +1,4 @@
-class DailyDealsController < ActionController::Base
+class DailyDealsController < ApplicationController
 
   def new_submission
     @deal_submission = DealSubmission.new
@@ -21,7 +21,7 @@ class DailyDealsController < ActionController::Base
 
   def show
     @daily_deal = DailyDeal.find_by(slug: params[:slug])
-    render 'show', layout: nil
+    render 'show'
   end
   
   def email
