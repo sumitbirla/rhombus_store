@@ -42,13 +42,16 @@ class DailyDeal < ActiveRecord::Base
   belongs_to :affiliate
   belongs_to :region
   has_many :pictures, as: :imageable
-  has_many :daily_deal_items
+  has_many :items, class_name: 'DailyDealItem'
   has_many :daily_deal_locations
   has_many :locations, through: :daily_deal_locations
   has_many :coupons, -> { order 'created_at desc' }
   has_many :external_coupons
   has_many :daily_deal_categories
   has_many :categories, through: :daily_deal_categories
+  
+  accepts_nested_attributes_for :items, allow_destroy: true, reject_if: lambda { |attrs| attrs['product_id'].blank? }
+  accepts_nested_attributes_for :locations
   
   validates_presence_of :deal_type, :slug, :title, :start_time, :end_time, :original_price, :deal_price, :description
   validates_presence_of :short_tag_line, :max_sales, :number_sold, :region_id

@@ -31,7 +31,7 @@ class Admin::Store::DailyDealsController < Admin::BaseController
   def update
     @daily_deal = DailyDeal.find(params[:id])
     
-    if @daily_deal.update(daily_deal_params)
+    if @daily_deal.update_attributes(daily_deal_params)
       redirect_to admin_store_daily_deal_path(@daily_deal), notice: 'Daily Deal was successfully updated.'
     else
       render 'edit'
@@ -54,6 +54,26 @@ class Admin::Store::DailyDealsController < Admin::BaseController
   
   def items
     @daily_deal = DailyDeal.find(params[:id])
+    2.times { @daily_deal.items.build }
+  end
+  
+  def update_items
+    @daily_deal = DailyDeal.find(params[:id])
+    item_count = @daily_deal.items.length
+
+    @daily_deal.attributes = daily_deal_params
+    
+    unless params[:add_more_items].blank?
+      count = params[:add_more_items].to_i
+      count.times { @daily_deal.items.build }
+      return render 'items'
+    end
+
+    if @daily_deal.save(validate: false)
+      redirect_to action: 'show', id: @daily_deal.id, notice: 'Deal was successfully updated.'
+    else
+      render 'items'
+    end
   end
   
   def locations

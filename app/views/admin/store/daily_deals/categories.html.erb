@@ -13,7 +13,7 @@
 
 <br/>
 
-<form action="/admin/daily_deals/<%= params[:id] %>/categories" method="post" class="categories">
+<form action="/admin/store/daily_deals/<%= params[:id] %>/categories" method="post" class="categories">
 	<%= token_tag %>
 	<input type="hidden" name="id" value="<%= params[:id] %>">
 <% 	categories = Category.where(entity_type: :daily_deal)

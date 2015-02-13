@@ -18,8 +18,8 @@ Rails.application.routes.draw do
   get "paypal_express/review"
   get 'barcode' => 'barcode#generate'
   
-  get '/daily_deals/email' =>'daily_deals#email'
-  get '/daily_deals/:slug' => 'daily_deals#show'
+  get '/deals/email' =>'daily_deals#email'
+  get '/deals/:slug' => 'daily_deals#show'
   
   
   namespace :account do
@@ -141,6 +141,7 @@ Rails.application.routes.draw do
           get 'categories' 
           get 'coupons' 
           get 'items' 
+          post 'items' => 'daily_deals#update_items'
           get 'locations'
           get 'external_coupons'
           post 'categories' => 'daily_deals#create_categories'

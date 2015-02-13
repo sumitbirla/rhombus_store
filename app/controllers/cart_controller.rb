@@ -389,6 +389,8 @@ class CartController < ApplicationController
       unless ac.nil?
         ac.increment!(:orders)
         @order.affiliate_campaign_id = ac.id
+        
+        # add commission to payments table?
       end
     end
     
@@ -404,10 +406,18 @@ class CartController < ApplicationController
     
     @order.save validate: false
     
+    sql = ""
+    
     # order result of email blast?
-    unless cookies[:ebkey].nil?
-      eb = EmailBlast.find_by(key: cookies[:ebkey])
-      eb.increment!(:sales) unless eb.nil?
+    unless cookies[:ebuuid].nil?
+      sql += "UPDATE mktg_email_blasts SET sales=sales+1 WHERE uuid='#{cookies[:ebuuid]}'; "
+    end
+    
+    # update daily_deal counts
+    @order.items.each do |item|
+      unless item.daily_deal_id.nil?
+        sql += "UPDATE store_daily_deals SET number_sold=number_sold+#{item.quantity} WHERE id=#{item.daily_deal_id}; "
+      end
     end
     
     # inventory update?
@@ -415,7 +425,8 @@ class CartController < ApplicationController
     #@order.items.each do |item|
     #  sql = sql + "UPDATE store_products SET committed = committed + #{item.quantity} WHERE id = #{item.product_id}; "
     #end
-    #ActiveRecord::Base.connection.execute(sql) unless sql.blank?
+    
+    ActiveRecord::Base.connection.execute(sql) unless sql.blank?
 
 
     # email order confirmation to customer

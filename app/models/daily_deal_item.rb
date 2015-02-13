@@ -15,4 +15,13 @@ class DailyDealItem < ActiveRecord::Base
   self.table_name = "store_daily_deal_items"
   belongs_to :daily_deal
   belongs_to :product
+  belongs_to :affiliate
+  
+  def item_id
+    str = ""
+    str += product.sku unless product_id.nil?
+    str += "-" + affiliate.code unless affiliate_id.nil?
+    str += "-" + variation unless variation.blank?
+    str
+  end
 end

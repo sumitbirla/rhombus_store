@@ -25,7 +25,7 @@ class DailyDealsController < ApplicationController
   end
   
   def email
-    @daily_deal = DailyDeal.find(params[:id])
+    @daily_deal = DailyDeal.find_by(uuid: params[:uuid])
     
     respond_to do |format|
       format.html { render 'email', layout: nil }
