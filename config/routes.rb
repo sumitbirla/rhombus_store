@@ -51,6 +51,7 @@ Rails.application.routes.draw do
           get 'receiving' => 'purchase_orders#receiving'
           post 'items' => 'purchase_orders#update_items'
           post 'receiving' => 'purchase_orders#update_receiving'
+          get 'print'
         end
       end
       resources :purchase_order_items
@@ -124,7 +125,11 @@ Rails.application.routes.draw do
         end
       end
       resources :tax_rates
-      resources :vouchers
+      resources :vouchers do 
+        member do
+         get 'issue' 
+        end
+      end
       resources :voucher_groups do
         post 'vouchers' => 'voucher_groups#create_vouchers'
       end

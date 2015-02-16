@@ -1,5 +1,11 @@
+<div class="pull-right">
+  
+  <%= link_to "print", print_admin_inventory_purchase_order_path(@purchase_order), class: "btn btn-sm btn-default" %>
+  <%= link_to edit_admin_inventory_purchase_order_path(@purchase_order), class: "btn btn-sm btn-default" do %>
+    <i class="fa fa-edit"></i> edit
+  <% end %>
+</div>
 <h2>
-	<%= link_to "edit", edit_admin_inventory_purchase_order_path(@purchase_order), class: "btn btn-sm btn-default pull-right" %>
 	Purchase Order #<%= @purchase_order.id %> &nbsp; 
 	<%= po_status @purchase_order, 'large' %>
 </h2>

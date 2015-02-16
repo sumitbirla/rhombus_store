@@ -60,7 +60,7 @@ class Admin::Store::VoucherGroupsController < Admin::BaseController
   private
   
     def voucher_group_params
-      params.require(:voucher_group).permit(:name, :value, :expires)
+      params.require(:voucher_group).permit!
     end
   
 end

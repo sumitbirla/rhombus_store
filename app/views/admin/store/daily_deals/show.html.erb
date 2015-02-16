@@ -212,7 +212,7 @@
 <div class="col-md-3">
   <h4>Flags</h4>
   <% if @daily_deal.number_sold > @daily_deal.max_sales-1 %>
-  	<span class="label label-important">sold out</span> &nbsp; 
+  	<span class="label label-danger">sold out</span> &nbsp; 
   <% end %>
 
   <% if @daily_deal.start_time < DateTime.now && @daily_deal.end_time > DateTime.now %>
@@ -220,7 +220,7 @@
   <% elsif @daily_deal.end_time < DateTime.now %>
   	<span class="label label-warning">expired</span> &nbsp; 
   <% else %>
-  	<span class="label label-information">pending</span> &nbsp; 
+  	<span class="label label-info">waiting</span> &nbsp; 
   <% end %>	
 
   <% if @daily_deal.featured %>
@@ -240,7 +240,7 @@
   <% end %>
 
   <% if  @daily_deal.affiliate_remittance && @daily_deal.affiliate_remittance > 0.0 && @daily_deal.affiliate_paid == false %>
-  	<span class="label label-important">affiliate unpaid</span> &nbsp; 
+  	<span class="label label-warning">affiliate unpaid</span> &nbsp; 
   <% end %>
   <hr/>
   

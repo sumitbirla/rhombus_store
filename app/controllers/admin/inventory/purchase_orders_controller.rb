@@ -133,6 +133,10 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
     redirect_to admin_inventory_purchase_order_path(@purchase_order)
   end
   
+  def print
+    @purchase_order = PurchaseOrder.find(params[:id])
+  end
+  
   private
   
     def purchase_order_params

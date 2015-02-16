@@ -14,5 +14,5 @@
 class Voucher < ActiveRecord::Base
   self.table_name = "store_vouchers"
   belongs_to :voucher_group
-  belongs_to :user, foreign_key: :claimed_by
+  validates_presence_of :code, :voucher_group_id
 end

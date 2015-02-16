@@ -18,12 +18,13 @@
 		<td><%= systime vg.expires %></td>
 		<td><%= vg.vouchers.length %></td>
 		<td><% if vg.expires < DateTime.now %>
-			<span class="label label-important">expired</span>
+			<span class="label label-danger">expired</span>
 			<% else %>
 			<span class="label label-success">active</span>
 			<% end %>
 		</td>
 		<td>
+      <%= link_to "vouchers", admin_store_voucher_group_path(vg) %> &nbsp;
 			<%= link_to "edit", edit_admin_store_voucher_group_path(vg) %> &nbsp;
 			<%= link_to "delete", 
 						  { action: "destroy", id: vg.id }, 

@@ -269,7 +269,7 @@ class CartController < ApplicationController
     # voucher hasn't been marked as claimed yet.
     unless @order.voucher_id.nil?
       voucher = Voucher.find(@order.voucher_id)
-      unless voucher.claim_time.nil?
+      if voucher.amount_used + @order.credit_applied > voucher.voucher_group.value
         @order.errors.add :base, "Voucher has already been used.  Please review changed to your order."
         @order.voucher_id = nil
         
@@ -379,8 +379,8 @@ class CartController < ApplicationController
     Coupon.increment_counter(:times_used, @order.coupon_id) unless @order.coupon_id.nil?
     
     unless @order.voucher_id.nil?
-      @order.voucher.update_attributes(claim_time: Time.now, claimed_by: @order.user_id)
-      # update user voucher history
+      voucher = @order.voucher
+      voucher.update_attribute(:amount_used, voucher.amount_used + @order.credit_applied)
     end
     
     # affiliate credit
@@ -481,7 +481,7 @@ class CartController < ApplicationController
     else
       voucher = Voucher.find_by(code: params[:code])
       unless voucher.nil?
-        if voucher.claimed_by
+        if voucher.amount_used >= voucher.voucher_group.value
           flash[:notice] = 'This voucher has already been claimed.'
         elsif voucher.voucher_group.expires < Time.now
           flash[:notice] = 'This voucher has expired.'
