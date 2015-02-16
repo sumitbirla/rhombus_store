@@ -71,6 +71,7 @@ Rails.application.routes.draw do
       post 'shipments_update_status' => 'shipments#update_status'
       post 'shipments_packing_slip_batch' => 'shipments#packing_slip_batch'
       post 'shipments_invoice_batch' => 'shipments#invoice_batch'
+      get 'shipments/product_labels'
       
       
       get 'products/adjust_prices'
@@ -113,7 +114,6 @@ Rails.application.routes.draw do
       resources :coupons
       resources :shipments do
         member do
-          get 'product_labels'
           get 'label_image'
           get 'label'
           get 'print'

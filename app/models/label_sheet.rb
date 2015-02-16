@@ -18,6 +18,6 @@ class LabelSheet < ActiveRecord::Base
   validates_presence_of :name, :width, :height, :dpi
   
   def to_s
-    "#{name} #{width}\" x #{height}\""
+    name
   end
 end
