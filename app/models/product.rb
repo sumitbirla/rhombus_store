@@ -34,6 +34,7 @@ class Product < ActiveRecord::Base
   belongs_to :affiliate
   belongs_to :fulfiller, class_name: 'Affiliate', foreign_key: 'fulfiller_id'
   belongs_to :supplier, class_name: 'Affiliate', foreign_key: 'primary_supplier_id'
+  belongs_to :label_sheet
 
   has_many :pictures, -> { order :sort }, as: :imageable
   has_many :comments, as: :commentable

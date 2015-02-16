@@ -113,6 +113,12 @@
             </td>
           </tr>
         <% end %>
+        <% unless @product.label_sheet.nil? %>
+          <tr>
+            <td>Label Template</td>
+            <td><%= link_to @product.label_sheet.name, edit_admin_store_label_sheet_path(@product.label_sheet) %></td>
+          </tr>
+        <% end %>
         <% unless @product.keywords.blank? %>
           <tr>
             <td>Keywords</td>

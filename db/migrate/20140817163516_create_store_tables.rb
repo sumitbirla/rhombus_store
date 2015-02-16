@@ -174,10 +174,10 @@ class CreateStoreTables < ActiveRecord::Migration
     create_table "store_label_areas", force: true do |t|
       t.integer  "label_sheet_id"
       t.string   "name",                                   null: false
-      t.decimal  "top",            precision: 6, scale: 2, null: false
-      t.decimal  "left",           precision: 6, scale: 2, null: false
-      t.decimal  "width",          precision: 6, scale: 2, null: false
-      t.decimal  "height",         precision: 6, scale: 2, null: false
+      t.decimal  "top",            precision: 6, scale: 3, null: false
+      t.decimal  "left",           precision: 6, scale: 3, null: false
+      t.decimal  "width",          precision: 6, scale: 3, null: false
+      t.decimal  "height",         precision: 6, scale: 3, null: false
       t.datetime "created_at"
       t.datetime "updated_at"
     end
@@ -189,10 +189,10 @@ class CreateStoreTables < ActiveRecord::Migration
       t.string   "name",                                          null: false
       t.string   "type",                                          null: false
       t.string   "use",                                           null: false
-      t.decimal  "top",                  precision: 6,  scale: 2
-      t.decimal  "left",                 precision: 6,  scale: 2
-      t.decimal  "width",                precision: 6,  scale: 2
-      t.decimal  "height",               precision: 6,  scale: 2
+      t.decimal  "top",                  precision: 6,  scale: 3
+      t.decimal  "left",                 precision: 6,  scale: 3
+      t.decimal  "width",                precision: 6,  scale: 3
+      t.decimal  "height",               precision: 6,  scale: 3
       t.string   "background_color"
       t.string   "horizontal_alignment"
       t.string   "vertical_alignment"
@@ -207,8 +207,8 @@ class CreateStoreTables < ActiveRecord::Migration
 
     create_table "store_label_sheets", force: true do |t|
       t.string   "name",                               null: false
-      t.decimal  "width",      precision: 6, scale: 2, null: false
-      t.decimal  "height",     precision: 6, scale: 2, null: false
+      t.decimal  "width",      precision: 6, scale: 3, null: false
+      t.decimal  "height",     precision: 6, scale: 3, null: false
       t.integer  "dpi",                                null: false
       t.datetime "created_at"
       t.datetime "updated_at"
