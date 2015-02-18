@@ -4,6 +4,7 @@
     .panel .form-group { margin: 5px; }
     .dimensions .numeric { width: 17%; }
     .help-block { display: none; }
+    .options-panel .form-group { margin: 0; }
 </style>
 
 <%
@@ -51,10 +52,11 @@
       <%= f.input :keywords %>
       <%= f.input :warranty %>
       <%= f.input :minimum_order_quantity, label: "Min order qty."  %>
+      <%= f.association :label_sheet %>
 		</div>
 		
 		<div class="col-md-5">
-          <div class="panel panel-default">
+          <div class="panel panel-default options-panel">
             <div class="panel-heading">Options</div>
             <div class="panel-body">
               <%= f.input :active %>

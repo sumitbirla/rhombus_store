@@ -10,6 +10,7 @@
 	<tr>
     <th>SKU</th>
     <th>Item</th>
+    <th>Label</th>
     <th class="calign">Quantity</th>
     <th></th>
 	</tr>
@@ -21,16 +22,23 @@
 	<tr>
 		<td><%= row[0] %></td>
     <td><%= link_to row[2] + ", " + row[3], admin_store_product_path(row[1]) %> &nbsp;(<%= row[4]%>)</td>
+    <td>
+      <% unless row[7].nil? %>
+        <%= link_to row[6], edit_admin_store_label_sheet_path(row[7]) %>
+      <% else %>
+        <span class="light">- not set -</span>
+      <% end %>
+    </td>
     <td class="calign"><%= number_to_human row[5] %></td>
     <td>
       <%= link_to Cache.setting('System', 'Static Files Url') + pdf_path, target: '_blank' do %>
-          <i class="fa fa-download"></i> label
+          <i class="fa fa-download"></i> pdf
       <% end %>
     </td>
 	</tr>
   <% end %>
   <tr>
-    <td colspan="2"></td>
+    <td colspan="3"></td>
     <td class="calign"><b><%= number_to_human total %></b></td> 
     <td></td>
   </tr>

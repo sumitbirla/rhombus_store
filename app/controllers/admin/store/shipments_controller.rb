@@ -214,7 +214,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   end
 
   def product_labels
-    @shipment = Shipment.find(params[:id])
+    @shipment_items = ShipmentItem.includes(:order_item, [order_item: :product]).where(shipment_id: params[:shipment_id])
   end
   
   

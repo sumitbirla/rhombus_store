@@ -15,7 +15,7 @@
       <% end %>
     </li>
     <li>
-      <%= link_to product_labels_admin_store_shipment_path(@shipment) do %>
+      <%= link_to admin_store_shipments_product_labels_path(shipment_id: [@shipment.id]) do %>
           <i class="icon-print"></i> Product Labels
       <% end %>
     </li>

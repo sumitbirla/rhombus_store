@@ -16,4 +16,8 @@ class LabelSheet < ActiveRecord::Base
   has_many :areas, class_name: 'LabelArea'
   
   validates_presence_of :name, :width, :height, :dpi
+  
+  def to_s
+    name
+  end
 end

@@ -63,11 +63,12 @@ class Admin::Store::ReportsController < Admin::BaseController
   def pending_fulfillment
     
     sql = <<-EOF
-      select oi.item_id, p.id, p.name, p.option_title, a.name, sum(quantity)
+      select oi.item_id, p.id, p.name, p.option_title, a.name, sum(quantity), s.name, s.id
       from store_order_items oi
       join store_orders o on oi.order_id = o.id
       join store_products p on oi.product_id = p.id
       join core_affiliates a on a.id = oi.affiliate_id
+      left join store_label_sheets s on p.label_sheet_id = s.id
       where o.status in ('unshipped', 'submitted')
       group by oi.item_id;
     EOF
