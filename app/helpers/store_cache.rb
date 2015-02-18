@@ -51,25 +51,12 @@ module StoreCache
   
   # Daily deals
   
-  def self.deal_list(region, category)
-    Rails.cache.fetch("deals:#{region}:#{category}") do 
-      
-      region = Region.find_by(slug: region)
-
-      list = DailyDeal.include(:pictures)
-              .where(active: true, region_id: region.id)
-              .where("start_time < NOW()")
-              .where("end_time > NOW()")
-              .order("start_time DESC")
-              
-      unless category.nil?
-        cat = Category.where(slug: category, entity_type: :daily_deal)
-        deal_ids = DailyDealCategory.select("daily_deal_id").where(category_id: cat.id)
-        
-        if deal_ids.length > 0
-          list = list.where(:id => deal_ids)
-        end
-      end
+  def self.featured_deal
+    Rails.cache.fetch("featured-deal") do 
+      DailyDeal.where(active: true)
+                    .where("start_time < NOW()")
+                    .where("end_time > NOW()")
+                    .order("start_time DESC").first
     end
   end
   
