@@ -14,6 +14,7 @@ class Admin::Store::DailyDealsController < Admin::BaseController
     @daily_deal.uuid = SecureRandom.uuid
     
     if @daily_deal.save
+      Rails.cache.clear "featured-deal"
       redirect_to action: 'show', id: @daily_deal.id, notice: 'Daily Deal was successfully created.'
     else
       render 'edit'
@@ -32,6 +33,7 @@ class Admin::Store::DailyDealsController < Admin::BaseController
     @daily_deal = DailyDeal.find(params[:id])
     
     if @daily_deal.update_attributes(daily_deal_params)
+      Rails.cache.clear "featured-deal"
       redirect_to admin_store_daily_deal_path(@daily_deal), notice: 'Daily Deal was successfully updated.'
     else
       render 'edit'
@@ -41,6 +43,7 @@ class Admin::Store::DailyDealsController < Admin::BaseController
   def destroy
     @daily_deal = DailyDeal.find(params[:id])
     @daily_deal.destroy
+    Rails.cache.clear "featured-deal"
     redirect_to action: 'index', notice: 'Daily Deal has been deleted.'
   end
   
