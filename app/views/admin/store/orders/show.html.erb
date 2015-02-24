@@ -230,9 +230,11 @@
         <table class="table table-condensed">
         <% @order.shipments.each do |shipment| %>
           <tr>
-            <td><%= link_to shipment.to_s, admin_store_shipment_path(shipment) %></td>
-            <td><%= shipment.ship_method.blank? ? '- unavl -' : shipment.ship_method %></td>
-            <td><%= shipment.tracking_number %></td>
+            <td nowrap><%= link_to shipment.to_s, admin_store_shipment_path(shipment) %></td>
+            <td class="small">
+              <%= shipment.ship_method.blank? ? '- unavl -' : shipment.ship_method %><br/>
+              <%= shipment.tracking_number %>
+            </td>
             <td class="light"><%= systime shipment.created_at %></td>
             <td><span class="label <%= 'label-warning' if shipment.status == 'pending' %>  <%= 'label-success' if shipment.status == 'shipped' %>"><%= shipment.status %></span></td>
           </tr>
