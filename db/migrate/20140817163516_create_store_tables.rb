@@ -110,7 +110,7 @@ class CreateStoreTables < ActiveRecord::Migration
       t.datetime "voucher_expiration"
       t.decimal  "original_price",             precision: 8, scale: 2,              null: false
       t.decimal  "deal_price",                 precision: 8, scale: 2,              null: false
-      t.decimal  "shipping_cost",              precision: 6, scale: 2
+      t.decimal  "shipping_cost",              precision: 6, scale: 2,              null: false, default: 0.0
       t.text     "conditions"
       t.text     "description",                                                     null: false
       t.string   "short_tag_line",                                                  null: false

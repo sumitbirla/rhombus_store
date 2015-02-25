@@ -1,15 +1,22 @@
 module CartHelper
 
   def apply_shipping(order)
-
+    # daily_deals have their own shipping rules
+    order.shipping_cost = order.deal_items.sum { |x| x.daily_deal.shipping_cost * x.quantity }
+    order.shipping_method = nil
+    
     options = ShippingOption.where("max_order_amount >= ? and min_order_amount <= ? and active = ?", order.subtotal, order.subtotal, true)
     if options.length > 0
       selected_option = options.min_by { |x| x.base_cost }
-      order.shipping_cost = selected_option.base_cost
-      order.shipping_method = selected_option.name
-    else
-      order.shipping_cost = 0.0
-      order.shipping_method = nil
+      
+      # apply shipping cost if > 0 only if there are non-deal items
+      if selected_option.base_cost > 0.0 && order.non_deal_items.length > 0
+        order.shipping_cost += selected_option.base_cost
+        order.shipping_method = selected_option.name
+      elsif selected_option.base_cost == 0.0
+        order.shipping_cost = selected_option.base_cost
+        order.shipping_method = selected_option.name
+      end
     end
   end
 
@@ -24,12 +31,10 @@ module CartHelper
 
       # order total needs to be > $0.0 to apply tax
       order.tax_amount = 0.0 if order.tax_amount <= 0.0
-
     else
       order.tax_rate = 0.0
       order.tax_amount = 0.0
     end
-
   end
 
 
