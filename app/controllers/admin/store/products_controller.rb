@@ -141,8 +141,21 @@ class Admin::Store::ProductsController < Admin::BaseController
   
   def item_info
     p = Product.find_by(sku: params[:sku])
+    dd = DailyDeal.find_by(id: params[:sku].sub("DEAL", "").to_i)
+    
     if p
-      return render json: { status: 'ok', product_id: p.id, description: p.name_with_option, price: p.price, dealer_price: p.distributor_price }
+      return render json: { status: 'ok', 
+                            product_id: p.id, 
+                            description: p.name_with_option, 
+                            price: p.price, 
+                            dealer_price: p.distributor_price }
+        
+    elsif dd
+      return render json: { status: 'ok', 
+                            daily_deal_id: dd.id, 
+                            description: dd.title, 
+                            price: dd.deal_price, 
+                            dealer_price: dd.deal_price }
     else
       sku, affiliate_code, variant = params[:sku].split('-')
       p = Product.find_by(sku: sku)

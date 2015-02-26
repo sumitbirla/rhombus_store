@@ -34,6 +34,7 @@
             <%= itemf.hidden_field :product_id, class: 'product-id' %>
             <%= itemf.hidden_field :affiliate_id, class: 'affiliate-id' %>
             <%= itemf.hidden_field :variation, class: 'variation' %>
+            <%= itemf.hidden_field :daily_deal_id, class: 'daily-deal-id' %>
           </td>
         </tr>
       <% end %>
@@ -165,6 +166,7 @@
           item.parent().parent().find('.variation').val(data.variation);
           item.parent().parent().find('.item-desc').val(data.description);
           item.parent().parent().find('.unit-price').val(data.dealer_price);
+          item.parent().parent().find('.daily-deal-id').val(data.daily_deal_id);
             
           if (data.status == 'ok') { 
             item.parent().parent().find('.qty').focus();

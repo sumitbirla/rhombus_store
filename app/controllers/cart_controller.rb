@@ -112,7 +112,7 @@ class CartController < ApplicationController
               daily_deal_id: dd.id,
               quantity: params[:qty],
               unit_price: dd.deal_price,
-              item_description: dd.short_tag_line,
+              item_description: dd.title,
               item_id: "DEAL#{dd.id}"
 
       order.items << item
