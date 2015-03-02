@@ -1,8 +1,13 @@
 <h2>Shipment Labels</h2>
 
+<% 
+  shipment_ids = @shipment_items.collect { |x| x.shipment_id }.uniq 
+  shipments = Shipment.where(id: shipment_ids)
+%>
 <div>
-  For Shipments: <% @shipment_items.uniq(:shipment_id).each do |x| %>
-    <%= link_to x.shipment.to_s, admin_store_shipment_path(x.shipment) %> <span class="light">/</span> 
+  For Shipments: <% shipment_ids.each do |x| %>
+    <% shp = shipments.find { |s| s.id == x }%>
+    <%= link_to shp.to_s, admin_store_shipment_path(shp) %> <span class="light">/</span> 
   <% end %>
 </div>
 <hr style="margin: 15px 0 20px 0;"/>

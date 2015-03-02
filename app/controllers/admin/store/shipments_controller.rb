@@ -88,7 +88,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   end
 
   def show
-    @shipment = Shipment.find(params[:id])
+    @shipment = Shipment.includes(:items, [items: :order_item]).find(params[:id])
   end
 
 

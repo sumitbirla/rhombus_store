@@ -1,7 +1,7 @@
 <% unless order_item.daily_deal_id.nil? %>
   <%= link_to order_item.daily_deal.title, admin_store_daily_deal_path(order_item.daily_deal) %>
 <% else %>
-  <%= link_to order_item.product.name_with_option, admin_store_product_path(order_item.product) %>
+  <%= link_to order_item.item_description, admin_store_product_path(order_item.product_id) %>
   <% unless order_item.affiliate_id.nil? %>
     &nbsp; (<span><%= order_item.affiliate %></span>)
   <% end %>
