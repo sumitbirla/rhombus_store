@@ -3,7 +3,10 @@
 </style>
 
 <% stock = InventoryTransactionItem.where(sku: @product.sku).sum(:quantity) %>
-<%= link_to "edit", edit_admin_store_product_path(@product), class: "btn btn-sm btn-default pull-right" %>
+<div class="pull-right">
+  <%= link_to "clone", clone_admin_store_product_path(@product), class: "btn btn-sm btn-default" %>
+  <%= link_to "edit", edit_admin_store_product_path(@product), class: "btn btn-sm btn-default" %>
+</div>
 <h2><i class="icon-tags"></i>&nbsp; <%= @product.name_with_option %></h2>
 <hr/>
 

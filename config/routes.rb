@@ -96,6 +96,7 @@ Rails.application.routes.draw do
           get 'categories'
           get 'attributes'
           get 'coupons'
+          get 'clone'
           post 'categories' => 'products#create_categories'
           post 'attributes' => 'products#create_attributes'
         end

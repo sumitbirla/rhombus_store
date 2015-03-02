@@ -176,6 +176,12 @@ class Admin::Store::ProductsController < Admin::BaseController
     render json: { status: 'not found' }
   end
   
+  def clone
+    @product = Product.find(params[:id]).dup
+    @product.slug += "-clone"
+    render 'edit'
+  end
+  
   
   private
   
