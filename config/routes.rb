@@ -18,8 +18,13 @@ Rails.application.routes.draw do
   get "paypal_express/review"
   get 'barcode' => 'barcode#generate'
   
+  # daily deals
   get '/deals/email' =>'daily_deals#email'
   get '/deals/:slug' => 'daily_deals#show'
+  
+  # affiliate products
+  get '/ap/:affiliate_slug/:product_slug' => 'affiliate_products#show'
+  get '/ap/:affiliate_slug' => 'affiliate_products#index'
   
   
   namespace :account do

@@ -19,7 +19,7 @@ module StoreCache
   def self.all_affiliate_products(slug)
     Rails.cache.fetch("ap-list:#{slug}") do
       aff = Affiliate.find_by(slug: slug)
-      AffiliateProduct.includes(:product).where(affiliate_id: aff.id)
+      AffiliateProduct.includes(:product).where(affiliate_id: aff.id).where("product.active=1 AND product.hidden=0")
     end
   end
   
@@ -41,6 +41,8 @@ module StoreCache
   end
   
   def self.affiliate_product(affiliate, product_slug)
+    affiliate = Affiliate.find_by(slug: affiliate) if affiliate.class.name == "String"
+    
     Rails.cache.fetch("ap:#{affiliate.slug}:#{product_slug}") do
       AffiliateProduct
             .includes(:product, [product: :pictures, product: :pattributes])

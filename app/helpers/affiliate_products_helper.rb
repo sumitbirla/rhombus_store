@@ -1,0 +1,2 @@
+module AffiliateProductsHelper
+end
