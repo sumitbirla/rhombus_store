@@ -68,7 +68,7 @@ class CartController < ApplicationController
                 variation: variation,
                 quantity: quantity,
                 unit_price: p.price,
-                item_description: p.title
+                item_description: p.name_with_option
 
         item.item_id = p.sku
         item.item_id += "-" + Affiliate.find(affiliate_id).code unless affiliate_id.nil?
