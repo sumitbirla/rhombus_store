@@ -405,19 +405,13 @@ class CartController < ApplicationController
     end
     
     @order.save validate: false
-    
-    sql = ""
-    
+        
     # order result of email blast?
-    unless cookies[:ebuuid].nil?
-      sql += "UPDATE mktg_email_blasts SET sales=sales+1 WHERE uuid='#{cookies[:ebuuid]}'; "
-    end
+    EmailBlast.where(uuid: cookies[:ebuuid]).update_all("sales = sales + 1") unless cookies[:ebuuid].nil?
     
     # update daily_deal counts
-    @order.items.each do |item|
-      unless item.daily_deal_id.nil?
-        sql += "UPDATE store_daily_deals SET number_sold=number_sold+#{item.quantity} WHERE id=#{item.daily_deal_id}; "
-      end
+    @order.deal_items.each do |item|
+      DailyDeal.where(id: item.daily_deal_id).update_all("number_sold = number_sold + #{item.quantity}")
     end
     
     # inventory update?
@@ -426,19 +420,12 @@ class CartController < ApplicationController
     #  sql = sql + "UPDATE store_products SET committed = committed + #{item.quantity} WHERE id = #{item.product_id}; "
     #end
     
-    begin
-      ActiveRecord::Base.connection.execute(sql) unless sql.blank?
-    rescue => e
-      logger.error e
-    end
-
     # email order confirmation to customer
     begin
       OrderMailer.order_submitted_email(@order).deliver
     rescue => e
       logger.error e
     end
-    
     
     # delete cart cookie and display confirmation
     cookies.delete :cart
