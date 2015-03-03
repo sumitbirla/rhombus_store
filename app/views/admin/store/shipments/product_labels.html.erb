@@ -28,6 +28,7 @@
     <th>&nbsp;</th>
   </tr>
   <% @shipment_items.each do |item|
+      next unless item.order_item.daily_deal_id.nil?
         dir = item.order_item.item_id.split('-')[1]
         pdf_path = "/userfiles/images/labels/#{dir}/#{item.order_item.item_id}.pdf"
   %>
