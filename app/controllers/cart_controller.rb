@@ -426,8 +426,11 @@ class CartController < ApplicationController
     #  sql = sql + "UPDATE store_products SET committed = committed + #{item.quantity} WHERE id = #{item.product_id}; "
     #end
     
-    ActiveRecord::Base.connection.execute(sql) unless sql.blank?
-
+    begin
+      ActiveRecord::Base.connection.execute(sql) unless sql.blank?
+    rescue => e
+      logger.error e
+    end
 
     # email order confirmation to customer
     begin
