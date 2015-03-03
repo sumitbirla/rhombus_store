@@ -18,6 +18,10 @@ class DailyDealsController < ApplicationController
   def show_submission
     @deal_submission = DealSubmission.find_by(params[:id])
   end
+  
+  def index
+    
+  end
 
   def show
     @daily_deal = DailyDeal.find_by(slug: params[:slug])

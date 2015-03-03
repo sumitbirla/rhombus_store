@@ -68,4 +68,9 @@ class DailyDeal < ActiveRecord::Base
   def to_s
     short_tag_line
   end
+  
+  def orders
+    Order.includes(:items).where.not(status: 'in cart').where(id: OrderItem.where(daily_deal_id: id).pluck(:order_id)).order(submitted: :desc)
+  end
+  
 end

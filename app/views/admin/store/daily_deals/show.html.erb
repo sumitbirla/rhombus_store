@@ -2,19 +2,35 @@
   web_url = Cache.setting(:system, "Website URL")
 %>
 
-<div class="pull-right">
-  <%= link_to deals_email_path(uuid: @daily_deal.uuid), class: "btn btn-sm btn-default", target: "_new" do %>
-    <i class="fa fa-envelope-o"></i> email preview
-  <% end %>
-  
-  <%= link_to new_admin_marketing_email_blast_path(daily_deal_id: @daily_deal.id), class: "btn btn-sm btn-default" do %>
-    <i class="fa fa-send-o"></i> email blast
-  <% end %>
-
-  <%= link_to edit_admin_store_daily_deal_path(@daily_deal), class: "btn btn-sm btn-default" do %>
-    <i class="fa fa-edit"></i> edit
-  <% end %>
+<div class="dropdown pull-right">
+  <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+    <i class="icon-hand-right"></i> Select Action
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <%= link_to deals_email_path(uuid: @daily_deal.uuid), target: "_new" do %>
+        <i class="fa fa-envelope-o"></i> Email Preview
+      <% end %>
+    </li>
+    <li>
+      <%= link_to new_admin_marketing_email_blast_path(daily_deal_id: @daily_deal.id) do %>
+        <i class="fa fa-send-o"></i> Email Blast
+      <% end %>
+    </li>
+    <li>
+      <%= link_to edit_admin_store_daily_deal_path(@daily_deal) do %>
+        <i class="fa fa-edit"></i> Edit
+      <% end %>
+    </li>
+    <li>
+      <%= link_to orders_admin_store_daily_deal_path(@daily_deal) do %>
+        <i class="fa fa-shopping-cart"></i> Orders
+      <% end %>
+    </li>
+  </ul>
 </div>
+
 
 <h3><i class="fa fa-star-o"></i>&nbsp; <%= @daily_deal.short_tag_line %></h3>
 <h4><%= @daily_deal.title %></h4>

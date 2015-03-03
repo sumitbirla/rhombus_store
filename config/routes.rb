@@ -148,6 +148,7 @@ Rails.application.routes.draw do
 
       resources :daily_deals do
         member do
+          get 'orders'
           get 'pictures' 
           get 'categories' 
           get 'coupons' 

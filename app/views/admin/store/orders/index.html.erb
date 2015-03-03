@@ -62,7 +62,7 @@
 				<%= link_to order.user, admin_system_user_path(order.user_id) %>
 			<% end %>
 		</td>
-		<td><%= order.shipping_city %>, <%= order.shipping_state %>
+		<td><%= order.shipping_city %>, <%= order.shipping_state %></td>
 		<td><%= number_to_currency(order.total) %></td>
 		<td><%= order_status(order) %></td>
 	</tr>

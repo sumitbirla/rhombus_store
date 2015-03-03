@@ -136,6 +136,10 @@ class Admin::Store::DailyDealsController < Admin::BaseController
     redirect_to action: 'show', id: params[:id], notice: 'Daily deal was successfully updated.'
   end
   
+  def orders
+    @daily_deal = DailyDeal.includes(:categories).find(params[:id])
+  end
+  
   private
   
     def daily_deal_params

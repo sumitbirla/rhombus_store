@@ -1,0 +1,53 @@
+<h3><i class="fa fa-star-o"></i>&nbsp; <%= @daily_deal.short_tag_line %></h3>
+<h4><%= @daily_deal.title %></h4>
+<br/>
+
+<table class="table table-striped table-condensed">
+	<tr>
+		<th><input type="checkbox" id="chkAll" /></th>
+		<th>Order #</th>
+		<th>Date</th>
+		<th>Customer</th>
+		<th>Location</th>
+    <th>Qty</th>
+		<th>Amount</th>
+		<th>Status</th>
+	</tr>
+	<% @daily_deal.orders.each do |order| %>
+	<tr>
+		<td><input type="checkbox" name="order_id[]" value="<%= order.id %>"/></td>
+		<td><%= link_to order.id, admin_store_order_path(order) %>
+      <% if order.items.length > 1 %>
+        <i class="fa fa-cubes"></i>
+      <% end %>
+    </td>
+		<td><%= systime order.submitted if order.submitted%></td>
+		<td>
+			<% if order.user_id.nil? %>
+				<%= order.shipping_name || order.billing_name %>
+			<% else %>
+				<%= link_to order.user, admin_system_user_path(order.user_id) %>
+			<% end %>
+		</td>
+		<td><%= order.shipping_city %>, <%= order.shipping_state %></td>
+    <td><%= order.items.find { |x| x.daily_deal_id == @daily_deal.id }.quantity %></td>
+		<td><%= number_to_currency(order.total) %></td>
+		<td><%= order_status(order) %></td>
+	</tr>
+	<% end %>
+</table>
+
+</form>
+
+<div class="table-summary">
+	<%= number_with_delimiter(@daily_deal.orders.length) %> records | <%= link_to 'CSV', orders_admin_store_daily_deal_path(@daily_deal, format: :csv) %>
+</div>
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
+  <li><%= link_to @daily_deal.short_tag_line, admin_store_daily_deal_path(@daily_deal) %>
+	<li class="active">Orders</li>
+<% end %>
