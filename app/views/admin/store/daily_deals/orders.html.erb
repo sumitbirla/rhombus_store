@@ -44,6 +44,11 @@
 </div>
 
 
+<% content_for :title do %>
+	<%= @daily_deal.short_tag_line %> Orders
+<% end %>
+
+
 
 <% content_for :breadcrumbs do %>
 	<li><a href="#">eCommerce</a></li>

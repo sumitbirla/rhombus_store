@@ -37,6 +37,7 @@
 			<% end %>	
 		</td>
 		<td>
+      <%= link_to "orders", orders_admin_store_daily_deal_path(deal) %> &nbsp;
 			<%= link_to "edit", edit_admin_store_daily_deal_path(deal) %> &nbsp;
 			<%= link_to "delete", 
 						  { action: "destroy", id: deal.id }, 
