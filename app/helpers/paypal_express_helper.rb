@@ -10,7 +10,7 @@ module PaypalExpressHelper
     return to_cents(cart.total), {
         :ip => request.remote_ip,
         :return_url => url_for(:action => 'review', :only_path => false),
-        :cancel_return_url => 'http://www.healthybreeds.com/cart',
+        :cancel_return_url => Cache.setting(:system, "Website URL") + "/cart",
         :subtotal => subtotal,
         :shipping => to_cents(cart.shipping_cost),
         :handling => 0,

@@ -16,6 +16,11 @@
 
 <h2><i class="fa fa-truck"></i> &nbsp;Shipments</h2>
 
+<% unless params[:q].nil? %>
+    <div class="bs-callout bs-callout-info">Found <%= @shipments.total_entries %> records matching '<%= params[:q] %>'</div>
+<% end %>
+	
+
 <form id="frmBatch" action="" method="post">
 	<%= token_tag %>
 	

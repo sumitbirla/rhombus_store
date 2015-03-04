@@ -179,7 +179,7 @@ class Order < ActiveRecord::Base
       
       items.each do |item|
         shipment.items << ShipmentItem.new(shipment_id: shipment.id, order_item_id: item.id, quantity: item.quantity)
-        weight += item.quantity * item.product.item_weight unless item.product.item_weight.nil?
+        weight += item.quantity * item.product.item_weight unless (item.product.nil? || item.product.item_weight.nil?)
       end
       
       shipment.update_attribute(:package_weight, weight) unless weight == 0.3

@@ -1,7 +1,7 @@
 <h2><i class="fa fa-shopping-cart"></i>&nbsp; Orders</h2>
 
 <% unless params[:q].nil? %>
-    <div class="alert alert-info">Found <%= @orders.total_entries %> records matching '<%= params[:q] %>'</div>
+    <div class="bs-callout bs-callout-info">Found <%= @orders.total_entries %> records matching '<%= params[:q] %>'</div>
 <% end %>
 	
 <div class="pull-right">

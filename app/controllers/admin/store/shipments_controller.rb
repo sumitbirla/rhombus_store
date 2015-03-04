@@ -9,7 +9,9 @@ require 'uri'
 class Admin::Store::ShipmentsController < Admin::BaseController
 
   def index
+    q = params[:q]
     @shipments = Shipment.all.order('created_at DESC')
+    @shipments = @shipments.where("recipient_name LIKE '%#{q}%' OR recipient_company LIKE '%#{q}%' OR recipient_city LIKE '%#{q}%'")
     
     respond_to do |format|
       format.html { @shipments = @shipments.page(params[:page]) }
@@ -104,13 +106,15 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   
   def create_payment
     @shipment = Shipment.find(params[:id])
+    memo = "Invlice"
+    memo = @shipment.order.external_order_id unless @shipment.order.external_order_id.blank?
     
     pmt = Payment.create(payable_id: @shipment.id,
                          payable_type: 'shipment',
                          user_id: @shipment.order.user_id,
                          amount: @shipment.invoice_amount * -1.0,
                          transaction_id: @shipment.to_s,
-                         memo: 'Invoice')
+                         memo: memo)
                          
     @shipment.update_attribute(:invoice_id, pmt.id)
                          

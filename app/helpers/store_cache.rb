@@ -19,7 +19,7 @@ module StoreCache
   def self.all_affiliate_products(slug)
     Rails.cache.fetch("ap-list:#{slug}") do
       aff = Affiliate.find_by(slug: slug)
-      AffiliateProduct.includes(:product).where(affiliate_id: aff.id).where("product.active=1 AND product.hidden=0")
+      AffiliateProduct.joins(:product).where(affiliate_id: aff.id).where("store_products.active=1 AND store_products.hidden=0")
     end
   end
   
@@ -30,7 +30,10 @@ module StoreCache
       aff = Affiliate.find_by(slug: affiliate_slug)
 
       new_list = []
-      ap_list = AffiliateProduct.includes(:product, [product: :product_categories]).where(affiliate_id: aff.id)
+      ap_list = AffiliateProduct.joins(:product)
+                                .includes(:product, [product: :product_categories])
+                                .where(affiliate_id: aff.id)
+                                .where("store_products.active=1 AND store_products.hidden=0")
       
       ap_list.each do |ap|
         new_list << ap if ap.product.product_categories.any? { |pc| pc.category_id == cat.id }

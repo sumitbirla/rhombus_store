@@ -143,7 +143,7 @@
       <tbody>
       <% @shipment.items.each do |item| %>
       <tr>
-        <td><%= item.order_item.item_id.upcase %></td>
+        <td nowrap><input type="checkbox"> &nbsp; <%= item.order_item.item_id.upcase %></td>
         <td>
           <% unless item.order_item.daily_deal.nil? %>
             <%= item.order_item.daily_deal.title %>
