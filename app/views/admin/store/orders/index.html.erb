@@ -36,6 +36,7 @@
 
 <form id="frmBatch" action="" method="post">
 	<%= token_tag %>
+  <% shipments = Shipment.where(order_id: @orders.map { |o| o.id }) %>
 
 <%= will_paginate @orders %>
 <table class="table table-striped table-condensed">
@@ -66,8 +67,11 @@
 		<td><%= order.shipping_city %>, <%= order.shipping_state %></td>
 		<td><%= number_to_currency(order.total) %></td>
     <td>
-      <% if order.shipments.count > 0 %>
-        <i class="light fa fa-truck"></i>
+      <% os = shipments.find { |x| x.order_id == order.id }
+        if os %>
+        <%= link_to admin_store_shipment_path(os) do %>
+          <i class="light fa fa-truck"></i>
+        <% end %>
       <% end%>
     </td>
 		<td><%= order_status(order) %></td>

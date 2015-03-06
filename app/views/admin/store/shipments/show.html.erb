@@ -199,6 +199,11 @@
   			<% end %>
     	<% end %>
     </div>
+    
+<% else %>
+  <%= link_to admin_store_easy_post_path(shipment_id: @shipment.id), class: "btn btn-success pull-right" do %>
+    Get Rates and Ship
+  <% end %>
 <% end %>
 
 

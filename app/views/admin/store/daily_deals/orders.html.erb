@@ -5,6 +5,7 @@
     valid_orders = @daily_deal.orders.select { |x| ['submitted', 'shipped'].include?(x.status) } 
     valid_sales = 0
     valid_orders.each { |o| valid_sales += o.items.find { |x| x.daily_deal_id == @daily_deal.id }.quantity }
+    shipments = Shipment.where(order_id: @daily_deal.orders.map { |o| o.id })
   %>
   Valid Orders: <%= valid_orders.length %>, 
   Quantity: <%=valid_sales %>, 
@@ -20,6 +21,7 @@
 		<th>Location</th>
     <th>Qty</th>
 		<th>Amount</th>
+    <th></th>
 		<th>Status</th>
 	</tr>
 	<% @daily_deal.orders.each do |order| %>
@@ -41,6 +43,14 @@
 		<td><%= order.shipping_city %>, <%= order.shipping_state %></td>
     <td><%= order.items.find { |x| x.daily_deal_id == @daily_deal.id }.quantity %></td>
 		<td><%= number_to_currency(order.total) %></td>
+    <td>
+      <% os = shipments.find { |x| x.order_id == order.id }
+        if os %>
+        <%= link_to admin_store_shipment_path(os) do %>
+          <i class="light fa fa-truck"></i>
+        <% end %>
+      <% end%>
+    </td>
 		<td><%= order_status(order) %></td>
 	</tr>
 	<% end %>
