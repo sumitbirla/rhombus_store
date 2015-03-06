@@ -1,6 +1,15 @@
 <h3><i class="fa fa-star-o"></i>&nbsp; <%= @daily_deal.short_tag_line %></h3>
 <h4><%= @daily_deal.title %></h4>
-<br/>
+<div style="margin-bottom: 20px;">
+  <% 
+    valid_orders = @daily_deal.orders.select { |x| ['submitted', 'shipped'].include?(x.status) } 
+    valid_sales = 0
+    valid_orders.each { |o| valid_sales += o.items.find { |x| x.daily_deal_id == @daily_deal.id }.quantity }
+  %>
+  Valid Orders: <%= valid_orders.length %>, 
+  Quantity: <%=valid_sales %>, 
+  Sales: <%= number_to_currency valid_orders.sum { |x| x.total } %>
+</div>
 
 <table class="table table-striped table-condensed">
 	<tr>

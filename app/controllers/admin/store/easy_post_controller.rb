@@ -71,7 +71,8 @@ class Admin::Store::EasyPostController < Admin::BaseController
   end
   
   def label
-    @shipment = Shipment.find(params[:shipment_id])
+    EasyPost.api_key = Cache.setting('Shipping', 'EasyPost API Key')
+    @shipment = Shipment.find(params[:shipment_id]) 
     
     ep_shipment = EasyPost::Shipment.retrieve(params[:ep_shipment_id])
     response = ep_shipment.buy(:rate => {:id => params[:rate_id]})
