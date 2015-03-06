@@ -29,11 +29,11 @@
   <tr>
 	<th><input type="checkbox" id="chkAll" /></th>
     <th>ID</th>
-    <th>Date</th>
+    <th>Created</th>
     <th>Ship to</th>
     <th>Destination</th>
+    <th>Shipped</th>
     <th>Method</th>
-    <th>Tracking</th>
     <th>Status</th>
     <th>&nbsp;</th>
   </tr>
@@ -41,11 +41,11 @@
       <tr>
 		<td><input type="checkbox" name="shipment_id[]" value="<%= shipment.id %>"/></td>
         <td nowrap><%= link_to shipment, admin_store_shipment_path(shipment) %></td>
-        <td><%= shipment.ship_date ? sysdate(shipment.ship_date) : "- not shipped -" %></td>
+        <td nowrap class="light"><%= systime shipment.created_at %></td>
         <td><%= shipment.recipient_name %></td>
         <td><%= shipment.recipient_city %>, <%= shipment.recipient_state %></td>
+        <td><%= shipment.ship_date ? sysdate(shipment.ship_date) : "<span class='light'>-</span>".html_safe %></td>
         <td><%= shipment.ship_method.blank? ? '<span class="light">- n/a -</span>'.html_safe : shipment.ship_method %></td>
-        <td class="light"><%= shipment.tracking_number.blank? ? "- n/a -" : shipment.tracking_number %></td>
         <td><span class="label <%= 'label-warning' if shipment.status == 'pending' %>  <%= 'label-success' if shipment.status == 'shipped' %> <%= 'label-danger' if shipment.status == 'void' %>"><%= shipment.status %></span></td>
         <td class="ralign">
           <% if shipment.status == "pending" %>

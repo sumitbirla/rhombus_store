@@ -47,8 +47,11 @@
 
 <h2>
   <i class="fa fa-truck"></i> &nbsp;Shipment #<%= @shipment %>
-  <span class="label <%= 'label-warning' if @shipment.status == 'pending' %>  <%= 'label-success' if @shipment.status == 'shipped' %>"><%= @shipment.status %></span>
 </h2>
+<div>
+  <b>Create: </b> <%= time_ago_in_words(@shipment.created_at) %> ago
+  &nbsp; <span class="label <%= 'label-warning' if @shipment.status == 'pending' %>  <%= 'label-success' if @shipment.status == 'shipped' %>"><%= @shipment.status %></span>
+</div>
 
 <hr style="margin-bottom: 20px;" />
 
