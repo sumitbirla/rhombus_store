@@ -1,27 +1,30 @@
-<h1 style="font-size: 36px; line-height: 1.2; font-weight: 200; margin: 0px 0 10px;">Order #<%= @order.id %></h1>
-<p style="text-align: center;">Received @ <%= @order.submitted %> EST</p>
+<h1 style="font-size: 36px; line-height: 1.2; font-weight: 200; margin: 0; text-align: center;">Order #<%= @order.id %></h1>
+<p style="text-align: center; color: #999; margin: 4px 0 20px 0;">Received @ <%= systime @order.submitted %> EST</p>
 
+<p style="margin-bottom: 30px;">Thank you for placing your order at <%= link_to Cache.setting(:system, "Website Name"), Cache.setting(:setting, "Website URL") %>. 
+  The details of your order are as follows:</p>
 
-
-<table style="width: 100%; padding-bottom: 20px;">
-  <tr style="font-weight: bold; border-bottom: solid 1px #333;">
-    <td>Item</td>
-    <td style="text-align: right;">Qty</td>
+<table style="width: 100%; padding-bottom: 20px; border-collapse: collapse;">
+  <tr style="font-weight: bold;">
+    <td style="border-bottom: solid 1px #999;">Item</td>
+    <td style="border-bottom: solid 1px #999;">Description</td>
+    <td style="border-bottom: solid 1px #999; text-align: right;">Qty</td>
   </tr>
 
   <% @order.items.each do |item| %>
-  <tr style="border-bottom: solid 1px #333;">
-    <td style="padding-right: 15px;">
+  <tr>
+    <td style="border-bottom: solid 1px #999; padding-right: 15px; padding: 4px;"><%= item.item_id %></td>
+    <td style="border-bottom: solid 1px #999; padding-right: 15px; padding: 4px;">
       <%= item.item_description %>
       <% if item.affiliate_id %>
           <br/><i style="color: #666;">For <%= item.affiliate.name %></i>
       <% end %>
     </td>
-    <td style="padding-right: 15px; text-align: right;"><%= item.quantity %></td>
+    <td style="border-bottom: solid 1px #999; padding-right: 15px; padding: 4px; text-align: right;"><%= item.quantity %></td>
   </tr>
   <% end %>
     
 </table>
 
-<p style="text-align: center;">Total: &nbsp; <%= number_to_currency(@order.total) %></p>
+<p style="text-align: center;"><b>Total:</b> &nbsp; <%= number_to_currency(@order.total) %></p>
 
