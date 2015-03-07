@@ -1,5 +1,5 @@
 <h1 style="font-size: 36px; line-height: 1.2; font-weight: 200; margin: 0; text-align: center;">Order #<%= @order.id %></h1>
-<p style="text-align: center; color: #999; margin: 4px 0 20px 0;">Received @ <%= systime @order.submitted %> EST</p>
+<p style="text-align: center; color: #999; margin: 4px 0 20px 0;">Received @ <%= @order.submitted.strftime("%d %b %Y %l:%M %p") %> EST</p>
 
 <p style="margin-bottom: 30px;">Thank you for placing your order at <%= link_to Cache.setting(:system, "Website Name"), Cache.setting(:setting, "Website URL") %>. 
   The details of your order are as follows:</p>
