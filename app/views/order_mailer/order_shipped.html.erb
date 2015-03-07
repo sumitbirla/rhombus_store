@@ -1,0 +1,39 @@
+<h1 style="font-size: 36px; line-height: 1.2; font-weight: 200; margin: 0; text-align: center;">Order #<%= @shipment.order_id %></h1>
+<p style="text-align: center; margin: 4px 0 20px 0;">Your order has shipped!</p>
+
+<table style="width: 100%; padding-bottom: 20px; border-collapse: collapse;">
+  <tr style="font-weight: bold;">
+    <td style="border-bottom: solid 1px #999;">Item</td>
+    <td style="border-bottom: solid 1px #999;">Description</td>
+    <td style="border-bottom: solid 1px #999; text-align: right;">Qty</td>
+  </tr>
+
+  <% @shipment.items.each do |item| %>
+  <tr>
+    <td style="border-bottom: solid 1px #999; padding-right: 15px; padding: 4px;"><%= item.order_item.item_id %></td>
+    <td style="border-bottom: solid 1px #999; padding-right: 15px; padding: 4px;">
+      <%= item.order_item.item_description %>
+      <% if item.order_item.affiliate_id %>
+          <br/><i style="color: #999;">For <%= item.order_item.affiliate.name %></i>
+      <% end %>
+    </td>
+    <td style="border-bottom: solid 1px #999; padding-right: 15px; padding: 4px; text-align: right;"><%= item.quantity %></td>
+  </tr>
+  <% end %>
+    
+</table>
+
+<p style="text-align: center;">Please note that tracking information may not be available online until later at night.</p>
+
+<p style="text-align: center;"><b>Tracking Number:</b> <%= @shipment.tracking_number %></p>
+
+<%  ship_method = @shipment.ship_method.downcase 
+    url = "http://www.fedex.com/Tracking?action=track&tracknumbers=#{@shipment.tracking_number}" if ship_method.include?("fedex")
+    url = "http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=#{@shipment.tracking_number}" if ship_method.include?("ups")
+    url = "https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1=#{@shipment.tracking_number}" if ship_method.include?("usps")
+%>
+<p>
+  <a href="<%= url %>" style="font-size: 100%; line-height: 2; color: #FFF; text-decoration: none; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 25px; background-color: #348eda; margin: 20px 10px 0 0; padding: 0; border-color: #348eda; border-style: solid; border-width: 10px 20px;">Track</a>
+</p>
+
+
