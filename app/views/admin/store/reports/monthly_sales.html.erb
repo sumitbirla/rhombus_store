@@ -37,8 +37,8 @@ amount_total = 0.0
   <% end %>
   <tr>
     <td colspan="1"></td>
-    <td class="ralign"><b><%= number_to_human qty_total %></b></td>
-    <td class="ralign"><b><%= number_to_currency amount_total %></b></td>
+    <td class="ralign"><b><%= qty_total %></b></td>
+    <td class="ralign"><b><%= number_to_currency(amount_total) %></b></td>
   </tr>
 </table>
 

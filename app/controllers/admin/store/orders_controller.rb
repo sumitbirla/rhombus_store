@@ -82,7 +82,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     @order = Order.find(params[:id])
 
     begin
-      OrderMailer.order_submitted_email(@order).deliver
+      OrderMailer.order_submitted(@order).deliver_now
       flash[:notice] = "Order confirmation has been emailed to #{@order.notify_email}"
     rescue Exception => e
       flash[:notice] = e.message

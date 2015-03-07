@@ -3,7 +3,7 @@ class OrderMailer < ActionMailer::Base
   default from: "#{Cache.setting('System', 'From Email Name ')} <#{Cache.setting('System', 'From Email Address')}>"
 
 
-  def order_submitted_email(order)
+  def order_submitted(order)
     @order = order
     @website_url  = Cache.setting('System', 'Website URL')
     @website_name = Cache.setting('System', 'Website Name')
@@ -20,7 +20,7 @@ class OrderMailer < ActionMailer::Base
   end
   
   
-  def order_shipped_email(shipment)
+  def order_shipped(shipment)
     @shipment = shipment
     @website_url  = Cache.setting('System', 'Website URL')
     @website_name = Cache.setting('System', 'Website Name')

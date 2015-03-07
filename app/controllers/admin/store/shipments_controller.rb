@@ -271,7 +271,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipment = Shipment.find(params[:id])
     
     begin
-      OrderMailer.order_shipped_email(@shipment).deliver
+      OrderMailer.order_shipped(@shipment).deliver_now
       flash[:info] = 'Shipment conformation mailed to ' + @shipment.order.notify_email
       
       OrderHistory.create(order_id: @shipment.order.id, 
@@ -279,7 +279,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
                           event_type: :email_shipping_confirmation,
                           system_name: 'Rhombus',
                           identifier: @shipment.id,
-                          comment: "Emailed shipping confirmation to " + @shipment.order.notify_email)
+                          comment: @shipment.order.notify_email)
     rescue => e
       flash[:info] = e.message
     end
