@@ -82,9 +82,9 @@ class Admin::Store::OrdersController < Admin::BaseController
     @order = Order.find(params[:id])
 
     begin
-      OrderMailer.order_submitted(@order).deliver_now
+      OrderMailer.order_submitted(@order, session[:user_id]).deliver_now
       flash[:notice] = "Order confirmation has been emailed to #{@order.notify_email}"
-    rescue Exception => e
+    rescue => e
       flash[:notice] = e.message
     end
 
@@ -223,19 +223,16 @@ EOF
   
   def send_confirmation
       orders = Order.includes(:items).where(id: params[:order_id])
-
+      count = 0
+      
       begin
         orders.each do |o| 
           unless o.notify_email.blank?
-            OrderMailer.order_submitted_email(o).deliver 
-            OrderHistory.create(order_id: o.id, 
-                                user_id: session[:user_id], 
-                                event_type: :confirmation_email,
-                                system_name: 'Rhombus',
-                                comment: "Confirmation email sent to '#{o.notify_email}'")
+            OrderMailer.order_submitted(o, session[:user_id]).deliver_now
+            count += 1
           end
         end
-        flash[:info] = "#{orders.length} notifications sent."
+        flash[:info] = "#{count} notifications sent."
       rescue => e
         flash[:error] = e.message
       end
@@ -244,17 +241,20 @@ EOF
   end
   
   def create_shipment
+    orders = Order.includes(:shipments).where(id: params[:order_id])
+    count = 0
     
-    orders = Order.includes(:items).where(id: params[:order_id])
     orders.each do |o|
-      shipment = o.create_shipment
-      OrderHistory.create order_id: o.id, user_id: current_user.id, event_type: :shipment_created,
-                      system_name: 'Rhombus', identifier: shipment.id, comment: "shipment created: #{shipment}"
+      if o.shipments.length == 0
+        shipment = o.create_shipment
+        count += 1
+        OrderHistory.create(order_id: o.id, user_id: current_user.id, event_type: :shipment_created,
+                      system_name: 'Rhombus', identifier: shipment.id, comment: "shipment created: #{shipment}")                  
+      end
     end
     
-    flash[:info] = "#{orders.length} new shipments created"
-    redirect_to controller: 'admin/store/shipments'
-                    
+    flash[:info] = "#{count} new shipments created"
+    redirect_to :back           
   end
   
   def clone

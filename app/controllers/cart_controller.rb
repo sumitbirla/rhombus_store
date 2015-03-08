@@ -422,7 +422,7 @@ class CartController < ApplicationController
     
     # email order confirmation to customer
     begin
-      OrderMailer.order_submitted(@order).deliver_now
+      OrderMailer.order_submitted(@order, session[user_id]).deliver_now
     rescue => e
       logger.error e
     end

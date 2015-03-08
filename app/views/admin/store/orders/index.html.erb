@@ -54,7 +54,7 @@
 	</tr>
 	<% @orders.each do |order| %>
 	<tr>
-		<td><input type="checkbox" name="order_id[]" value="<%= order.id %>"/></td>
+		<td><input type="checkbox" name="order_id[]" class="order-chk" value="<%= order.id %>"/></td>
 		<td><%= link_to order.id, admin_store_order_path(order) %></td>
         <td><%= order.sales_channel %></td>
 		<td><%= systime order.submitted if order.submitted%></td>
@@ -118,9 +118,13 @@
             }
 	        });
 
-	        $("#chkAll").change(function () {
-	            $("input[name='orderId']").attr("checked", $(this).is(":checked"));
-	        });
+          $("#chkAll").change(function() {
+
+            if ($(this).prop("checked"))
+              $(".order-chk").prop("checked", true);
+            else
+              $(".order-chk").prop("checked", false);
+          });
 
 	    });
     </script>

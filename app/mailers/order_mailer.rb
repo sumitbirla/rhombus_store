@@ -3,7 +3,7 @@ class OrderMailer < ActionMailer::Base
   default from: "#{Cache.setting('System', 'From Email Name ')} <#{Cache.setting('System', 'From Email Address')}>"
 
 
-  def order_submitted(order)
+  def order_submitted(order, user_id)
     @order = order
     @website_url  = Cache.setting('System', 'Website URL')
     @website_name = Cache.setting('System', 'Website Name')
@@ -17,6 +17,12 @@ class OrderMailer < ActionMailer::Base
          bcc: bcc,
          subject: "Order ##{order.id} submitted",
          delivery_method_options: options)
+         
+   OrderHistory.create(order_id: order.id, 
+                       user_id: user_id, 
+                       event_type: :confirmation_email,
+                       system_name: 'Rhombus',
+                       comment: order.notify_email)
   end
   
   
