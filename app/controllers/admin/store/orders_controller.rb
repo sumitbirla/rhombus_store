@@ -246,15 +246,29 @@ EOF
     
     orders.each do |o|
       if o.shipments.length == 0
-        shipment = o.create_shipment
-        count += 1
-        OrderHistory.create(order_id: o.id, user_id: current_user.id, event_type: :shipment_created,
-                      system_name: 'Rhombus', identifier: shipment.id, comment: "shipment created: #{shipment}")                  
+        shipment = o.create_shipment(session[:user_id])
+        count += 1                
       end
     end
     
     flash[:info] = "#{count} new shipments created"
     redirect_to :back           
+  end
+  
+  def batch_ship
+    orders = Order.includes(:shipments).where(id: params[:order_id])
+    shipment_ids = []
+    
+    orders.each do |o|
+      if o.shipments.length == 0
+        shipment = o.create_shipment(session[:user_id])
+        shipment_ids << shipment.id  
+      else
+        shipment_ids << o.shipments[0].id               
+      end
+    end
+    
+    redirect_to admin_store_shipments_batch_path(shipment_ids: shipment_ids)
   end
   
   def clone

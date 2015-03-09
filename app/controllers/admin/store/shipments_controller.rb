@@ -288,6 +288,11 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   end
 
 
+  def batch
+    @shipments = Shipment.where(id: params[:shipment_ids])
+  end
+
+
   private
 
   def shipment_params

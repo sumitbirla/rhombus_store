@@ -141,7 +141,7 @@ class Order < ActiveRecord::Base
     [ 'submitted', 'completed', 'unshipped', 'shipped', 'refunded', 'cancelled', 'backordered' ]
   end
   
-  def create_shipment
+  def create_shipment(user_id)
     seq = 1
     max_seq = shipments.maximum(:sequence)
     seq = max_seq + 1 unless max_seq.nil?
@@ -184,6 +184,9 @@ class Order < ActiveRecord::Base
       
       shipment.update_attribute(:package_weight, weight) unless weight == 0.3
     end
+    
+    OrderHistory.create(order_id: id, user_id: user_id, event_type: :shipment_created,
+                  system_name: 'Rhombus', identifier: shipment.id, comment: "shipment created: #{shipment}") 
     
     shipment
   end

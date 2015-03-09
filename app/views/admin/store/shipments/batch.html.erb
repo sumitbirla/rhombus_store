@@ -1,0 +1,137 @@
+<% 
+packaging_types = [ 
+	'YOUR PACKAGING',
+	'-------------------------',
+	'Card',
+	'Letter',
+	'Flat',
+	'Parcel',
+	'LargeParcel',
+	'IrregularParcel',
+	'FlatRateEnvelope',
+	'FlatRateLegalEnvelope',
+	'FlatRatePaddedEnvelope',
+	'FlatRateGiftCardEnvelope',
+	'FlatRateWindowEnvelope',
+	'FlatRateCardboardEnvelope',
+	'SmallFlatRateEnvelope',
+	'SmallFlatRateBox',
+	'MediumFlatRateBox',
+	'LargeFlatRateBox',
+	'RegionalRateBoxA',
+	'RegionalRateBoxB',
+	'RegionalRateBoxC',
+	'LargeFlatRateBoardGameBox',
+	'-------------------------',
+	'FedExEnvelope',
+	'FedExBox',
+	'FedExPak',
+	'FedExTube',
+	'FedEx10kgBox',
+	'FedEx25kgBox',
+	'-------------------------', 
+	'UPSLetter',
+	'UPSExpressBox',
+	'UPS25kgBox',
+	'UPS10kgBox',
+	'Tube',
+	'Pak',
+	'Pallet',
+	'SmallExpressBox',
+	'MediumExpressBox',
+	'LargeExpressBox' ]
+%>
+
+
+
+<h2>Batch Ship</h2>
+<hr/>
+
+
+<%= simple_form_for :shipment, url: '', html: { class: 'form-inline' } do |f| %>
+  <%= f.input :packaging_type, collection: packaging_types, label: 'Packaging' %>
+  
+  <div class="form-group string optional shipment_dimensions">
+     <label class="string optional control-label" for="shipment_dimensions">Weight (lbs.)</label>
+     <div style="display: inline;">
+       <%= f.input_field :package_weight, as: :numeric, label: 'Weight (lbs)' %>
+     </div>
+  </div>
+
+  <div class="form-group string optional shipment_dimensions">
+     <label class="string optional control-label" for="shipment_dimensions">Size (in.)</label>
+     <div class="dimensions" style="display: inline;">
+       <%= f.input_field :package_length, as: :numeric %> &nbsp;x&nbsp;
+       <%= f.input_field :package_width, as: :numeric %> &nbsp;x&nbsp;
+       <%= f.input_field :package_height, as: :numeric %>
+     </div>
+  </div>
+  <%= f.input :ship_date, as: :date %>
+	<%= f.input :require_signature, as: :boolean, label: 'Signature?' %>
+		 
+  <%= f.submit 'Process', class: 'btn btn-success' %>
+	<span class="label label-warning pull-right"><%= @response[:mode] unless @response.nil? %></span>
+<% end %>
+
+
+<table class="table table-striped table-condensed">
+  <tr>
+    <th>ID</th>
+    <th>Created</th>
+    <th>Ship to</th>
+    <th>Destination</th>
+    <th>Status</th>
+  </tr>
+  <% @shipments.each do |shipment|  %>
+    <tr>
+      <td nowrap><%= link_to shipment, admin_store_shipment_path(shipment) %></td>
+      <td nowrap class="light"><%= systime shipment.created_at %></td>
+      <td><%= shipment.recipient_name %></td>
+      <td><%= shipment.recipient_city %>, <%= shipment.recipient_state %></td>
+      <td><span class="label <%= 'label-warning' if shipment.status == 'pending' %>  <%= 'label-success' if shipment.status == 'shipped' %> <%= 'label-danger' if shipment.status == 'void' %>"><%= shipment.status %></span></td>
+    </tr>
+  <% end %>
+</table>
+
+
+
+<% content_for :title do %>
+  Batch Ship
+<% end %>
+
+<% content_for :head do %>
+    <style>
+        .dimensions .numeric { width: 45px; text-align: center;}
+        .form-inline .control-label { width: 120px; paddin: 0; }
+        .add-on { background-color: #dfeaef; color: #666; text-shadow: none; font-weight: normal; display: inline-block; width: 120px; margin-bottom: 4px; }
+        th { background-color: #ddd; padding: 0; }
+    </style>
+    <link href="/css/datepicker.css" rel="stylesheet">
+    <script src="/js/bootstrap-datepicker.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            $('.input-append.date').datepicker({
+                format: "yyyy-mm-dd"
+            });
+
+						$('#shipment_packaging_type').change(function() {
+							if ($(this).val() == 'YOUR PACKAGING') {
+								//$('.shipment_package_weight').show();
+								$('.shipment_dimensions').show();
+							} else {
+								//$('.shipment_package_weight').hide();
+								$('.shipment_dimensions').hide();
+							}
+						});
+
+        });
+    </script>
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to 'Shipments', admin_store_shipments_path %></li>
+  <li class="active">Batch Ship</li>
+<% end %>

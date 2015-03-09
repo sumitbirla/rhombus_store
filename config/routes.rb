@@ -72,6 +72,7 @@ Rails.application.routes.draw do
       get 'reports/pending_fulfillment'
       get 'reports' => 'reports#index'
 
+      get 'shipments_batch' => 'shipments#batch'
       get 'shipments/choose_order'
       post 'shipments_update_status' => 'shipments#update_status'
       post 'shipments_packing_slip_batch' => 'shipments#packing_slip_batch'
@@ -86,11 +87,13 @@ Rails.application.routes.draw do
       patch 'easy_post' => 'easy_post#rates'
       get 'easy_post_label' => 'easy_post#label'
       
+      post 'orders_batch_ship' => 'orders#batch_ship'
       post 'orders_update_status' => 'orders#update_status'
       post 'orders_print_receipts' => 'orders#print_receipts'
       post 'orders_address_label' => 'orders#address_label'
       post 'orders_send_confirmation' => 'orders#send_confirmation'
       post 'orders_create_shipment' => 'orders#create_shipment'
+      
       
       get 'products/item_info' => 'products#item_info'
       
