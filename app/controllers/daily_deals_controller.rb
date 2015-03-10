@@ -20,12 +20,11 @@ class DailyDealsController < ApplicationController
   end
   
   def index
-    
+    @daily_deals = StoreCache.active_deals
   end
 
   def show
     @daily_deal = DailyDeal.find_by(slug: params[:slug])
-    render 'show'
   end
   
   def email

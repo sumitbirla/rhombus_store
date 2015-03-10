@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   # daily deals
   get '/deals/email' =>'daily_deals#email'
   get '/deals/:slug' => 'daily_deals#show'
+  get '/deals' => 'daily_deals#index'
   
   # affiliate products
   get '/ap/:affiliate_slug/:product_slug' => 'affiliate_products#show'

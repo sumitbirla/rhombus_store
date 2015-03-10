@@ -65,4 +65,13 @@ module StoreCache
     end
   end
   
+  def self.active_deals
+    Rails.cache.fetch("active-deals") do 
+      DailyDeal.where(active: true)
+                    .where("start_time < NOW()")
+                    .where("end_time > NOW()")
+                    .order("start_time DESC")
+    end
+  end
+  
 end
