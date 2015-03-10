@@ -39,7 +39,7 @@
   </tr>
   <% @shipments.each do |shipment|  %>
       <tr>
-		<td><input type="checkbox" name="shipment_id[]" value="<%= shipment.id %>"/></td>
+		<td><input type="checkbox" name="shipment_id[]" class="shipment-chk" value="<%= shipment.id %>"/></td>
         <td nowrap><%= link_to shipment, admin_store_shipment_path(shipment) %></td>
         <td nowrap class="light"><%= systime shipment.created_at %></td>
         <td><%= shipment.recipient_name %></td>
@@ -90,9 +90,13 @@
 	            $("#frmBatch").submit();
 	        });
 
-	        $("#chkAll").change(function () {
-	            $("input[name='orderId']").attr("checked", $(this).is(":checked"));
-	        });
+          $("#chkAll").change(function() {
+
+            if ($(this).prop("checked"))
+              $(".shipment-chk").prop("checked", true);
+            else
+              $(".shipment-chk").prop("checked", false);
+          });
 
 	    });
     </script>
