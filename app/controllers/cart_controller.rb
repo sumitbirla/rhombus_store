@@ -84,7 +84,11 @@ class CartController < ApplicationController
     update_totals order
     order.save validate: false
     
-    redirect_to action: 'index'
+    respond_to do |format|
+      format.html { redirect_to action: 'index' }
+    	format.js
+		end
+    
   end
   
   

@@ -1,5 +1,22 @@
 class Admin::Store::AffiliateProductsController < Admin::BaseController
   
+  def index
+    @affiliate = Affiliate.find(params[:affiliate_id])
+    @products = Product.order(:sku).all
+    @affiliate_products = AffiliateProduct.where(affiliate_id: @affiliate.id)
+  end
+  
+  def create
+    begin
+      ap = AffiliateProduct.new(affiliate_product_params)
+      ap.save!
+    rescue => e
+      flash[:error] = e.message
+    end
+    
+    redirect_to :back
+  end
+  
   def edit
     @affiliate_product = AffiliateProduct.find(params[:id])
   end
@@ -8,7 +25,7 @@ class Admin::Store::AffiliateProductsController < Admin::BaseController
     @affiliate_product = AffiliateProduct.find(params[:id])
     
     if @affiliate_product.update(affiliate_product_params)
-      redirect_to products_admin_system_affiliate_path(@affiliate_product.affiliate_id)
+      redirect_to admin_store_affiliate_products_path(affiliate_id: @affiliate_product.affiliate_id)
     else
       render 'edit'
     end
@@ -20,11 +37,11 @@ class Admin::Store::AffiliateProductsController < Admin::BaseController
 
     redirect_to :back
   end
-
+  
   
   private
   
     def affiliate_product_params
-      params.require(:affiliate_product).permit(:title, :description, :price, :data)
+      params.require(:affiliate_product).permit!
     end
 end
