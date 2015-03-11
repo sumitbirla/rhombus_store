@@ -175,9 +175,13 @@
       <tr>
         <td><%= item.order_item.item_id.upcase %></td>
         <td>
-          <%= item.order_item.product.name_with_option %>
-          <% if item.order_item.affiliate_id %>
-            &nbsp; (<%= item.order_item.affiliate %>)
+          <% unless item.order_item.daily_deal.nil? %>
+            <%= item.order_item.daily_deal.title %>
+          <% else %>
+            <%= item.order_item.product.name_with_option %>
+            <% if item.order_item.affiliate_id %>
+              &nbsp; (<%= item.order_item.affiliate %>)
+            <% end %>
           <% end %>
         </td>
         <td align="right" class="textright"><%= item.order_item.quantity %></td>
