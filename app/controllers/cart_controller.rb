@@ -86,7 +86,7 @@ class CartController < ApplicationController
     
     respond_to do |format|
       format.html { redirect_to action: 'index' }
-    	format.js
+    	format.js { render layout: false }
 		end
     
   end
@@ -133,7 +133,10 @@ class CartController < ApplicationController
     update_totals order
     order.save validate: false
     
-    return redirect_to action: 'index'
+    respond_to do |format|
+      format.html { redirect_to action: 'index' }
+    	format.js { render layout: false }
+		end
   end
   
 
