@@ -85,7 +85,13 @@ class CartController < ApplicationController
     order.save validate: false
     
     respond_to do |format|
-      format.html { redirect_to action: 'index' }
+      format.html do 
+        if params[:redirect].nil?
+          redirect_to action: 'index'
+        else
+          redirect_to params[:redirect]
+        end
+      end
     	format.js { render layout: false }
 		end
     
