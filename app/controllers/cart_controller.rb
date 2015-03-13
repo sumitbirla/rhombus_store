@@ -297,9 +297,9 @@ class CartController < ApplicationController
     if @order.payment_method == 'PAYPAL'
 
       gateway = ActiveMerchant::Billing::PaypalExpressGateway.new(
-          :login => Cache.setting(Rail.configuration.domain_id, 'eCommerce', 'PayPal API Username'),
-          :password => Cache.setting(Rail.configuration.domain_id, 'eCommerce', 'PayPal API Password'),
-          :signature => Cache.setting(Rail.configuration.domain_id, 'eCommerce', 'PayPal Signature'),
+          :login => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'PayPal API Username'),
+          :password => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'PayPal API Password'),
+          :signature => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'PayPal Signature'),
       )
 
       total_as_cents, purchase_params = get_purchase_params(@order, request)
@@ -325,17 +325,17 @@ class CartController < ApplicationController
 
     elsif @order.payment_method == "CREDIT_CARD"
       
-      active_gw = Cache.setting(Rail.configuration.domain_id, 'eCommerce', 'Payment Gateway')
+      active_gw = Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Payment Gateway')
 
       if active_gw == 'Authorize.net'
         gateway = ActiveMerchant::Billing::AuthorizeNetGateway.new(
-            :login => Cache.setting(Rail.configuration.domain_id, 'eCommerce', 'Authorize.Net Login ID'),
-            :password => Cache.setting(Rail.configuration.domain_id, 'eCommerce', 'Authorize.Net Transaction Key'),
+            :login => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Authorize.Net Login ID'),
+            :password => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Authorize.Net Transaction Key'),
             :test => false
         )
       elsif active_gw == 'Stripe'
         gateway = ActiveMerchant::Billing::StripeGateway.new(
-            :login => Cache.setting(Rail.configuration.domain_id, 'eCommerce', 'Stripe Secret Key')
+            :login => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Stripe Secret Key')
         )  
       else
         flash[:error] = "Payment gateway is not set up."
