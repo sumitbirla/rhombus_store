@@ -31,7 +31,7 @@ class OrderMailer < ActionMailer::Base
     from_email = Cache.setting(shipment.order.domain_id, :system, 'From Email Address')
 
     options = {
-        address: Cache.setting(order.domain_id, :system, 'SMTP Server'),
+        address: Cache.setting(shipment.order.domain_id, :system, 'SMTP Server'),
         openssl_verify_mode: 'none'
     }
     mail(from: "#{from_name} <#{from_email}>",
