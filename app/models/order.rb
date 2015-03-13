@@ -60,6 +60,7 @@ class Order < ActiveRecord::Base
   self.table_name = "store_orders"
   attr_accessor :same_as_shipping
   
+  belongs_to :domain
   belongs_to :user
   belongs_to :affiliate_campaign
   belongs_to :coupon

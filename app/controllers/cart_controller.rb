@@ -19,7 +19,7 @@ class CartController < ApplicationController
     # load existing order from database
     order = Order.includes(:items).find_by(cart_key: key)
     if order.nil?
-      order = Order.new(cart_key: key, status: 'in cart', payment_method: 'CREDIT_CARD')
+      order = Order.new(cart_key: key, status: 'in cart', payment_method: 'CREDIT_CARD', domain_id: Rails.configuration.domain_id)
       order.save validate: false
     end
     

@@ -76,6 +76,7 @@
 	  <div class="panel-heading">Order Information</div>
     <div class="panel-body">
       <div class="col-md-6">
+        <%= f.association :domain %>
         <%= f.input :status, as: :select, collection: Order.valid_statuses %>
         <%= f.input :sales_channel %>
         <%= f.input :external_order_id %>

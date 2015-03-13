@@ -30,7 +30,7 @@
 </div>
 
 
-<h2><i class="fa fa-shopping-cart"></i>&nbsp; Orders</h2>
+<h2><i class="fa fa-shopping-cart"></i>&nbsp; <%= Domain.find(cookies[:domain_id]) %> Orders</h2>
 
 <% unless params[:q].nil? %>
     <div class="bs-callout bs-callout-info">Found <%= @orders.total_entries %> records matching '<%= params[:q] %>'</div>
@@ -92,7 +92,7 @@
 
 
 <% content_for :title do %>
-	Orders
+	<%= Domain.find(cookies[:domain_id]) %> Orders
 <% end %>
 
 
