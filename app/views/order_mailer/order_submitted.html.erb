@@ -1,7 +1,7 @@
 <h1 style="font-size: 36px; line-height: 1.2; font-weight: 200; margin: 0; text-align: center;">Order #<%= @order.id %></h1>
 <p style="text-align: center; color: #999; margin: 4px 0 20px 0;">Received @ <%= @order.submitted.strftime("%d %b %Y %l:%M %p") %> EST</p>
 
-<p style="margin-bottom: 30px;">Thank you for placing your order at <a href="<%= Cache.setting(:system, "Website URL") %>"><%= Cache.setting(:system, "Website Name") %></a>. 
+<p style="margin-bottom: 30px;">Thank you for placing your order at <a href="<%= Cache.setting(@order.domain_id, :system, "Website URL") %>"><%= Cache.setting(@order.domain_id, :system, "Website Name") %></a>. 
   The details of your order are as follows:</p>
 
 <table style="width: 100%; padding-bottom: 20px; border-collapse: collapse;">

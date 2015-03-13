@@ -1,16 +1,14 @@
 class OrderMailer < ActionMailer::Base
 
-  default from: "#{Cache.setting('System', 'From Email Name ')} <#{Cache.setting('System', 'From Email Address')}>"
+  default from: "#{Cache.setting(Rails.configuration.domain_id, :system, 'From Email Name')} <#{Cache.setting(Rails.configuration.domain_id, :system, 'From Email Address')}>"
 
 
   def order_submitted(order, user_id)
     @order = order
-    @website_url  = Cache.setting('System', 'Website URL')
-    @website_name = Cache.setting('System', 'Website Name')
-    bcc = Cache.setting('eCommerce', 'Order Copy Recipient')
+    bcc = Cache.setting(order.domain_id, 'eCommerce', 'Order Copy Recipient')
 
     options = {
-        address: Cache.setting('System', 'SMTP Server'),
+        address: Cache.setting(order.domain_id, :system, 'SMTP Server'),
         openssl_verify_mode: 'none'
     }
     mail(to: order.notify_email,
@@ -28,12 +26,10 @@ class OrderMailer < ActionMailer::Base
   
   def order_shipped(shipment)
     @shipment = shipment
-    @website_url  = Cache.setting('System', 'Website URL')
-    @website_name = Cache.setting('System', 'Website Name')
-    bcc = Cache.setting('eCommerce', 'Order Copy Recipient')
+    bcc = Cache.setting(shipment.order.domain_id, 'eCommerce', 'Order Copy Recipient')
 
     options = {
-        address: Cache.setting('System', 'SMTP Server'),
+        address: Cache.setting(order.domain_id, :system, 'SMTP Server'),
         openssl_verify_mode: 'none'
     }
     mail(to: shipment.order.notify_email,
