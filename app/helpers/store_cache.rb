@@ -20,7 +20,7 @@ module StoreCache
     Rails.cache.fetch("ap-list:#{slug}") do
       aff = Affiliate.find_by(slug: slug)
       AffiliateProduct.joins(:product)
-                      .includes(:product)
+                      .includes(:product, [product: :pictures])
                       .where(affiliate_id: aff.id)
                       .where("store_products.active=1 AND store_products.hidden=0").load
     end
