@@ -1,6 +1,6 @@
 <% 
-	new_orders = Order.where("submitted > ?", DateTime.now - 2.weeks).where(status: ['unshipped', 'submitted']).count 
-	new_shipments = Shipment.where("created_at > ?", DateTime.now - 2.weeks).where(status: 'pending').count 
+	new_orders = StoreCache.new_orders_count
+	new_shipments = StoreCache.pending_shipments_count
 	max = [new_orders, new_shipments].max
 %>
 

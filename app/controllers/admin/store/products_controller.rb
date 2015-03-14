@@ -22,7 +22,7 @@ class Admin::Store::ProductsController < Admin::BaseController
   end
 
   def show
-    @product = Product.includes(:pictures, pattributes: :cms_attribute).find(params[:id])
+    @product = Product.includes(:pictures, product_attributes: :cms_attribute).find(params[:id])
   end
 
   def edit
@@ -84,7 +84,7 @@ class Admin::Store::ProductsController < Admin::BaseController
     
     attr_list.each do |attr|
       
-      prod_attr = @product.pattributes.find { |a| a.attribute_id == attr.id }
+      prod_attr = @product.product_attributes.find { |a| a.attribute_id == attr.id }
       attr_id = "attr-#{attr.id}"
       
       # DELETE

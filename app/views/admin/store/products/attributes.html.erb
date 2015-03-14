@@ -21,7 +21,7 @@
     </tr>
 	<% all_attributes = Attribute.where(entity_type: :product).order(:sort) %>
 	<% all_attributes.each do |attr| 
-		prod_attr = @product.pattributes.find { |pa| pa.attribute_id == attr.id } 
+		prod_attr = @product.product_attributes.find { |pa| pa.attribute_id == attr.id } 
 		prod_attr = ProductAttribute.new if prod_attr.nil? %>
 	<tr>
 		<td><b><%= attr.name %></b></td>

@@ -7,10 +7,10 @@
   <%= link_to "clone", clone_admin_store_product_path(@product), class: "btn btn-sm btn-default" %>
   <%= link_to "edit", edit_admin_store_product_path(@product), class: "btn btn-sm btn-default" %>
 </div>
-<h2><i class="icon-tags"></i>&nbsp; <%= @product.name_with_option %></h2>
+<h2><i class="fa fa-tags"></i>&nbsp; <%= @product.name_with_option %></h2>
 <hr/>
 
-<div class="arow">
+<div class="row">
 	<div class="col-md-8">
 
 	<table class="table table-condensed table-bordered summary">
@@ -225,7 +225,7 @@
       <% if @product.pattributes.length > 0 %>
           <h4 style="margin-top: 30px;">Attributes</h4>
           <table class="table table-condensed table-bordered summary">
-            <% @product.pattributes.each do |pattr| %>
+            <% @product.product_attributes.each do |pattr| %>
                 <tr>
                   <td><%= pattr.cms_attribute.name %></td>
                   <td><%= pattr.value.gsub("\n", "<br/>").html_safe %></td>

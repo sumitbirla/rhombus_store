@@ -1,4 +1,16 @@
 module StoreCache
+  
+  def self.new_orders_count
+    Rails.cache.fetch(:new_orders_count, expires_in: 2.minutes) do 
+      Order.where("submitted > ?", DateTime.now - 2.weeks).where(status: ['unshipped', 'submitted']).count
+    end
+  end
+  
+  def self.pending_shipments_count
+    Rails.cache.fetch(:pending_shipments_count, expires_in: 2.minutes) do 
+      Shipment.where("created_at > ?", DateTime.now - 2.weeks).where(status: 'pending').count
+    end
+  end
     
   def self.product(slug) 
     Rails.cache.fetch("product:#{slug}") do 
@@ -61,10 +73,11 @@ module StoreCache
   
   def self.featured_deal
     Rails.cache.fetch("featured-deal") do 
-      DailyDeal.where(active: true)
-                    .where("start_time < NOW()")
-                    .where("end_time > NOW()")
-                    .order("start_time DESC").first
+      DailyDeal.includes(:pictures)
+                .where(active: true)
+                .where("start_time < NOW()")
+                .where("end_time > NOW()")
+                .order("start_time DESC").first
     end
   end
   
