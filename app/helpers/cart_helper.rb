@@ -5,7 +5,7 @@ module CartHelper
     order.shipping_cost = order.deal_items.sum { |x| x.daily_deal.shipping_cost * x.quantity }
     order.shipping_method = nil
     
-    options = ShippingOption.where("max_order_amount >= ? and min_order_amount <= ? and active = ?", order.subtotal, order.subtotal, true)
+    options = ShippingOption.where("domain_id = ? and max_order_amount >= ? and min_order_amount <= ? and active = ?", order.domain_id, order.subtotal, order.subtotal, true)
     if options.length > 0
       selected_option = options.min_by { |x| x.base_cost }
       

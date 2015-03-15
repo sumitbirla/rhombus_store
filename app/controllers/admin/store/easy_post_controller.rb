@@ -34,7 +34,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
     options[:delivery_confirmation] = 'SIGNATURE' if @shipment.require_signature
     
     begin
-      EasyPost.api_key = Cache.setting('Shipping', 'EasyPost API Key')
+      EasyPost.api_key = Cache.setting(@shipment.order.domain_id, :shipping, 'EasyPost API Key')
       @response = EasyPost::Shipment.create(
           :to_address => {
             :name => @shipment.recipient_name,
@@ -71,9 +71,9 @@ class Admin::Store::EasyPostController < Admin::BaseController
   end
   
   def label
-    EasyPost.api_key = Cache.setting('Shipping', 'EasyPost API Key')
-    @shipment = Shipment.find(params[:shipment_id]) 
+    @shipment = Shipment.find(params[:shipment_id])
     
+    EasyPost.api_key = Cache.setting(@shipment.order.domain_id, :shipping, 'EasyPost API Key')
     ep_shipment = EasyPost::Shipment.retrieve(params[:ep_shipment_id])
     response = ep_shipment.buy(:rate => {:id => params[:rate_id]})
     

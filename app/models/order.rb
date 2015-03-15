@@ -171,8 +171,7 @@ class Order < ActiveRecord::Base
                                    ship_from_zip: last_shipment.ship_from_zip,
                                    ship_from_country: last_shipment.ship_from_country,
                                    ship_from_email: last_shipment.ship_from_email,
-                                   ship_from_phone: last_shipment.ship_from_phone,
-                                   package_weight: last_shipment.package_weight)
+                                   ship_from_phone: last_shipment.ship_from_phone)
     end 
                     
     if shipment.save

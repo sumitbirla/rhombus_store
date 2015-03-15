@@ -1,7 +1,7 @@
 class Admin::Store::ShippingOptionsController < Admin::BaseController
   
   def index
-    @shipping_options = ShippingOption.page(params[:page]).order('name')
+    @shipping_options = ShippingOption.where(domain: cookies[:domain_id]).page(params[:page]).order(:name)
   end
 
   def new
@@ -11,6 +11,7 @@ class Admin::Store::ShippingOptionsController < Admin::BaseController
 
   def create
     @shipping_option = ShippingOption.new(shipping_option_params)
+    @shipping_option.domain_id = cookies[:domain_id]
     
     if @shipping_option.save
       redirect_to action: 'index', notice: 'Shipping Option was successfully created.'
@@ -47,7 +48,6 @@ class Admin::Store::ShippingOptionsController < Admin::BaseController
   private
   
     def shipping_option_params
-      params.require(:shipping_option).permit(:name, :base_cost, :min_order_amount, :max_order_amount, :active, 
-              :add_product_attribute, :international_surcharge, :description)
+      params.require(:shipping_option).permit!
     end
 end

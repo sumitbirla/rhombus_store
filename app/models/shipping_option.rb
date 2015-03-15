@@ -17,4 +17,5 @@
 
 class ShippingOption < ActiveRecord::Base
   self.table_name = "store_shipping_options"
+  belongs_to :domain
 end
