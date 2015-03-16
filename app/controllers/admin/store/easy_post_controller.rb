@@ -72,16 +72,21 @@ class Admin::Store::EasyPostController < Admin::BaseController
   
   def label
     @shipment = Shipment.find(params[:shipment_id])
-    
     EasyPost.api_key = Cache.setting(@shipment.order.domain_id, :shipping, 'EasyPost API Key')
-    ep_shipment = EasyPost::Shipment.retrieve(params[:ep_shipment_id])
-    response = ep_shipment.buy(:rate => {:id => params[:rate_id]})
+    
+    begin
+      ep_shipment = EasyPost::Shipment.retrieve(params[:ep_shipment_id])
+      response = ep_shipment.buy(:rate => {:id => params[:rate_id]})
+    rescue => e
+      flash[:error] = e.message
+      return redirect_to :back
+    end
     
     @shipment.copy_easy_post(response)
     @shipment.status = 'shipped'
     @shipment.fulfilled_by_id = session[:user_id]
     @shipment.save
-    
+  
     OrderHistory.create order_id: @shipment.order_id,
                               user_id: current_user.id,
                               event_type: 'package_shipped',
@@ -91,7 +96,6 @@ class Admin::Store::EasyPostController < Admin::BaseController
                               comment:  response[:selected_rate][:service]
 
     @shipment.order.update_attribute(:status, 'shipped')
-    
     redirect_to admin_store_shipment_path(@shipment)
   end
 
