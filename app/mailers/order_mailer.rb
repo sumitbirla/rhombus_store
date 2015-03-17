@@ -1,4 +1,5 @@
 class OrderMailer < ActionMailer::Base
+  helper :image
 
   def order_submitted(order, user_id)
     @order = order
