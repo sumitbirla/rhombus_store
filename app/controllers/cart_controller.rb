@@ -19,7 +19,11 @@ class CartController < ApplicationController
     # load existing order from database
     order = Order.includes(:items).find_by(cart_key: key)
     if order.nil?
-      order = Order.new(cart_key: key, status: 'in cart', payment_method: 'CREDIT_CARD', domain_id: Rails.configuration.domain_id)
+      order = Order.new(cart_key: key, 
+                        status: 'in cart', 
+                        payment_method: 'CREDIT_CARD', 
+                        domain_id: Rails.configuration.domain_id,
+                        sales_channel: Cache.setting(Rails.configuration.domain_id, :system, "Website Name"))
       order.save validate: false
     end
     
@@ -511,7 +515,7 @@ class CartController < ApplicationController
       params.require(:order).permit(:shipping_name, :shipping_street1, :shipping_street2, :shipping_city, :shipping_state, 
       :shipping_zip, :shipping_country, :contact_phone, :billing_name, :billing_street1, :billing_street2, :billing_city,
       :billing_state, :billing_zip, :billing_country, :cc_type, :cc_number, :cc_expiration_month, :cc_expiration_year,
-      :cc_code, :notify_email, :customer_note, :payment_method, :same_as_shipping, :user_id, :sales_channel)
+      :cc_code, :notify_email, :customer_note, :payment_method, :same_as_shipping, :user_id)
     end
   
 end
