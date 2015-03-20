@@ -272,7 +272,7 @@
           <% if item.event_type == 'shipment_created' %>
               <%= link_to "view", admin_store_shipment_path(item.identifier) %>
           <% elsif item.event_type == 'package_shipped' %>
-              
+              <a href="<%= tracking_url(item.system_name + ":" + item.identifier) %>" target="_new">track</a>
           <% end %>
         </td>
         <td>

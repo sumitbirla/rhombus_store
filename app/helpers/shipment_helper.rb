@@ -14,4 +14,20 @@ module ShipmentHelper
     "<img src='#{url}' alt='#{carrier}' />".html_safe
   end
   
+  def tracking_url(shipment)
+    if shipment.class.name == "String"
+      carrier, tracking = shipment.split(":")
+      carrier = carrier.downcase
+      url = "http://www.fedex.com/Tracking?action=track&tracknumbers=#{tracking}" if carrier.include?("fedex")
+      url = "http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=#{tracking}" if carrier.include?("ups")
+      url = "https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1=#{tracking}" if carrier.include?("usps")
+    else
+      ship_method = shipment.ship_method.downcase 
+      url = "http://www.fedex.com/Tracking?action=track&tracknumbers=#{shipment.tracking_number}" if ship_method.include?("fedex")
+      url = "http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=#{shipment.tracking_number}" if ship_method.include?("ups")
+      url = "https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1=#{shipment.tracking_number}" if ship_method.include?("usps")
+    end
+    
+    url
+  end
 end

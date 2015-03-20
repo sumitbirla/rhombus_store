@@ -168,7 +168,13 @@
         <% end %>
 	      <tr>
 	        <td class="key">Tracking:</td>
-	        <td><%= @shipment.tracking_number || "n/a" %></td>
+	        <td>
+            <% unless @shipment.tracking_number.blank? %>
+              <a href="<%= tracking_url(@shipment) %>" target="_new"><%= @shipment.tracking_number %></a>
+            <% else %>
+              n/a
+            <% end %>
+          </td>
 	      </tr>
 	      <tr>
 	        <td class="key">Package Type:</td>
