@@ -7,12 +7,7 @@
 
 <h2><i class="fa fa-tags"></i>&nbsp; Products</h2>
 
-<% unless params[:q].nil? %>
-    <div class="alert alert-info">
-      <%= link_to "clear filter", admin_store_products_path, class: "pull-right btn btn-xs btn-default" %>
-      Found <%= @products.total_entries %> records matching '<%= params[:q] %>'
-    </div>
-<% end %>
+<%= render "admin/shared/search_results_header", object: @products %>
 
 <select name="product_type" class="pull-right product-status">
   <option value="active">Active Products</option>

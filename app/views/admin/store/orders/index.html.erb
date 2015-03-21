@@ -32,11 +32,7 @@
 
 <h2><i class="fa fa-shopping-cart"></i>&nbsp; <%= current_domain %> Orders</h2>
 
-<% unless params[:q].nil? %>
-    <div class="bs-callout bs-callout-info">Found <%= @orders.total_entries %> records matching '<%= params[:q] %>'</div>
-<% end %>
-	
-
+<%= render "admin/shared/search_results_header", object: @orders %>
 
 <form id="frmBatch" action="" method="post">
 	<%= token_tag %>

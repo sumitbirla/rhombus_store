@@ -3,9 +3,7 @@
 <h2><i class="fa fa-barcode"></i> UPC</h2>
 
 
-<% unless params[:q].nil? %>
-    <div class="alert alert-info">Found <%= @upcs.total_entries %> records matching '<%= params[:q] %>'</div>
-<% end %>
+<%= render "admin/shared/search_results_header", object: @upcs %>
 
 <%= will_paginate @upcs %>
 <table class="table table-striped table-condensed">
