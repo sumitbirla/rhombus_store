@@ -1,9 +1,9 @@
 class Admin::Store::ProductsController < Admin::BaseController
   
   def index
-    @products = Product.includes(:brand).order(:sku).page(params[:page])
-    @products = @products.where("active = #{params[:active]}") unless params[:active].nil?
-    @products = @products.where("title LIKE '%#{params[:q]}%' OR sku = '#{params[:q]}'") unless params[:q].nil?
+    @products = Product.includes(:brand).order(:name).page(params[:page])
+    @products = @products.where(active: true) unless params[:product_type] == "all"
+    @products = @products.where("name LIKE '%#{params[:q]}%' OR sku = '#{params[:q]}'") unless params[:q].nil?
   end
 
   def new
