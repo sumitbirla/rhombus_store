@@ -147,8 +147,6 @@ class Order < ActiveRecord::Base
     max_seq = shipments.maximum(:sequence)
     seq = max_seq + 1 unless max_seq.nil?
 
-    last_shipment = Shipment.order(updated_at: :desc).first
-
     shipment = Shipment.new(order_id: id,
                              sequence: seq,
                              recipient_company: shipping_company,
@@ -162,16 +160,19 @@ class Order < ActiveRecord::Base
                              package_weight: 1.0,
                              status: 'pending')
 
-     unless last_shipment.nil?
-       shipment.assign_attributes(ship_from_company: last_shipment.ship_from_company,
-                                   ship_from_street1: last_shipment.ship_from_street1,
-                                   ship_from_street2: last_shipment.ship_from_street2,
-                                   ship_from_city: last_shipment.ship_from_city,
-                                   ship_from_state: last_shipment.ship_from_state,
-                                   ship_from_zip: last_shipment.ship_from_zip,
-                                   ship_from_country: last_shipment.ship_from_country,
-                                   ship_from_email: last_shipment.ship_from_email,
-                                   ship_from_phone: last_shipment.ship_from_phone)
+     loc_id = Cache.setting(shipment.order.domain_id, :shipping, "Ship From Location ID")
+     loc = Location.find(loc_id) if loc_id
+
+     unless loc.nil?
+       shipment.assign_attributes(ship_from_company: loc.name,
+                                   ship_from_street1: loc.street1,
+                                   ship_from_street2: loc.street2,
+                                   ship_from_city: loc.city,
+                                   ship_from_state: loc.state,
+                                   ship_from_zip: loc.zip,
+                                   ship_from_country: loc.country,
+                                   ship_from_email: loc.email,
+                                   ship_from_phone: loc.phone)
     end 
                     
     if shipment.save

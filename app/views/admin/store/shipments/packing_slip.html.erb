@@ -67,16 +67,24 @@
         <thead>
         <tr valign="top">
           <th scope="col" style="text-align:left;">
-            <h2><img src="/img/logo.png" alt="HealthyBreeds.com"/></h2>
+            <%
+                loc_id = Cache.setting(@shipment.order.domain_id, :shipping, "Ship From Location ID")
+                loc = Location.find(loc_id)
+                
+                if loc.pictures.length > 0
+            %>
+            <h2><img src="<%= cdn_image_url loc.pictures[0].file_path, 250, 60, 0 %>" alt="Logo"></h2>
+            <% else %>
+            <h2><%= loc.name %></h2>
+            <% end %>
+            
             <p>
-              Healthy Breeds, Inc.<br/>
-              231 Douglas Rd. E, Unit 8<br/>
-              Oldsmar, FL 34677
+              <%= loc.to_text(skip_country: true, new_line: "<br>").html_safe %>
             </p>
             <p>
-              <strong>Web:</strong> http://www.healthybreeds.com<br/>
-                <strong>Phone:</strong> 855-727-3337<br/>
-                <strong>Email:</strong> help@healthybreeds.com
+              <strong>Web:</strong> <%= loc.website %><br/>
+              <strong>Phone:</strong> <%= loc.phone %><br/>
+              <strong>Email:</strong> <%= loc.email %>
             </p>
           </th>
           <th scope="col" style="text-align:right;"> <h2>PACKING SLIP</h2>
