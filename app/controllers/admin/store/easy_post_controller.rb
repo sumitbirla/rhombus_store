@@ -2,12 +2,6 @@ require 'easypost'
 
 class Admin::Store::EasyPostController < Admin::BaseController
 
-  before_filter :setup_easypost
-  
-  def setup_easypost
-    EasyPost.api_key = Cache.setting(@shipment.order.domain_id, :shipping, 'EasyPost API Key')
-  end
-
   def index
     @shipment = Shipment.find(params[:shipment_id])
 		@shipment.packaging_type = 'YOUR PACKAGING' if @shipment.packaging_type.blank?
@@ -31,7 +25,8 @@ class Admin::Store::EasyPostController < Admin::BaseController
   # Purchases shipping for given shipment
   def buy
     @shipment = Shipment.find(params[:shipment_id])
-        
+    EasyPost.api_key = Cache.setting(@shipment.order.domain_id, :shipping, 'EasyPost API Key')
+    
     begin
       ep_shipment = EasyPost::Shipment.retrieve(params[:ep_shipment_id])
       response = ep_shipment.buy(:rate => {:id => params[:rate_id]})
@@ -67,6 +62,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
       return redirect_to :back
     end
     
+    
     debug_str = "<pre>"
     
     @shipments.each do |shp|
@@ -82,6 +78,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
         require_signature: @shipment_params.require_signature
       )
 
+      EasyPost.api_key = Cache.setting(shp.order.domain_id, :shipping, 'EasyPost API Key')
       begin
         ep_shipment = create_ep_shipment(shp)
         selected_rate = ep_shipment.lowest_rate(carriers = [@shipment_params.carrier])
@@ -151,6 +148,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
     }
     options[:delivery_confirmation] = 'SIGNATURE' if shipment.require_signature
     
+    EasyPost.api_key = Cache.setting(shipment.order.domain_id, :shipping, 'EasyPost API Key')
     response = EasyPost::Shipment.create(
         :to_address => {
           :name => shipment.recipient_name,
