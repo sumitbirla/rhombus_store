@@ -2,7 +2,7 @@ class Admin::Store::ProductsController < Admin::BaseController
   
   def index
     @products = Product.includes(:brand).order(:name).page(params[:page])
-    @products = @products.where(active: true) unless params[:product_type] == "all"
+    @products = @products.where(active: true) unless (params[:product_type] == "all" || params[:q])
     @products = @products.where("name LIKE '%#{params[:q]}%' OR sku = '#{params[:q]}'") unless params[:q].nil?
   end
 
