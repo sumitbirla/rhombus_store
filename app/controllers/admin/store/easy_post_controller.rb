@@ -2,6 +2,12 @@ require 'easypost'
 
 class Admin::Store::EasyPostController < Admin::BaseController
 
+  before_filter :setup_easypost
+  
+  def setup_easypost
+    EasyPost.api_key = Cache.setting(@shipment.order.domain_id, :shipping, 'EasyPost API Key')
+  end
+
   def index
     @shipment = Shipment.find(params[:shipment_id])
 		@shipment.packaging_type = 'YOUR PACKAGING' if @shipment.packaging_type.blank?
@@ -25,8 +31,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
   # Purchases shipping for given shipment
   def buy
     @shipment = Shipment.find(params[:shipment_id])
-    EasyPost.api_key = Cache.setting(@shipment.order.domain_id, :shipping, 'EasyPost API Key')
-    
+        
     begin
       ep_shipment = EasyPost::Shipment.retrieve(params[:ep_shipment_id])
       response = ep_shipment.buy(:rate => {:id => params[:rate_id]})
@@ -81,7 +86,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
         ep_shipment = create_ep_shipment(shp)
         selected_rate = ep_shipment.lowest_rate(carriers = [@shipment_params.carrier])
         debug_str += ":\t" + selected_rate[:carrier] + " " + selected_rate[:service] + " " + selected_rate[:rate] 
-        next
+        #next
         reply = ep_shipment.buy(rate: selected_rate)
         
         shp.copy_easy_post(reply)
@@ -109,6 +114,13 @@ class Admin::Store::EasyPostController < Admin::BaseController
           s.send label_data, 0
           s.close
           debug_str += "label printed"
+        end
+        
+        if params[:send_email] == "1"
+          unless shp.order.notify_email.include?("marketplace")
+            OrderMailer.order_shipped(shp).deliver
+            debug_str += "\t emailed #{shp.order.notify_email}"
+          end
         end
       rescue => e
         debug_str += e.message 
@@ -139,7 +151,6 @@ class Admin::Store::EasyPostController < Admin::BaseController
     }
     options[:delivery_confirmation] = 'SIGNATURE' if shipment.require_signature
     
-    EasyPost.api_key = Cache.setting(shipment.order.domain_id, :shipping, 'EasyPost API Key')
     response = EasyPost::Shipment.create(
         :to_address => {
           :name => shipment.recipient_name,

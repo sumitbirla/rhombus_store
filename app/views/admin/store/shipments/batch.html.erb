@@ -74,7 +74,8 @@ packaging_types = [
 	<%= f.input :require_signature, as: :boolean, label: 'Signature?' %>
 		 
   <%= f.submit 'Process', class: 'btn btn-success' %>
-  <input type="checkbox" name="print_epl" value="1" checked> Print EPL &nbsp;
+  <input type="checkbox" name="print_epl" value="1" checked> Print EPL &nbsp; &nbsp;
+  <input type="checkbox" name="sent_email" value="1" checked> Email notification &nbsp; &nbsp;
 	<span class="label label-warning pull-right"><%= @response[:mode] unless @response.nil? %></span>
 <% end %>
 
