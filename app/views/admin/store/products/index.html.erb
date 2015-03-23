@@ -9,10 +9,13 @@
 
 <%= render "admin/shared/search_results_header", object: @products %>
 
-<select name="product_type" class="pull-right product-status">
-  <option value="active">Active Products</option>
-  <option value="all" <%= "selected" if params[:product_type] == "all" %>>All Products</option>
-</select>
+<% unless params[:q] %>
+  <select name="product_type" class="pull-right product-status">
+    <option value="active">Active Products</option>
+    <option value="all" <%= "selected" if params[:product_type] == "all" %>>All Products</option>
+  </select>
+<% end %>
+
 <%= will_paginate @products %>
 <table class="table table-striped table-condensed">
 	<tr>
