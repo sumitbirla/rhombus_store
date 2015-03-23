@@ -103,7 +103,10 @@ class Admin::Store::EasyPostController < Admin::BaseController
         
         if params[:print_epl] == "1"
           # download label
-          label_url = reply[:postage_label]["label_epl2_url"]
+          label_reply = ep_shipment.label({'file_format' => "epl2"})
+      
+          # download label
+          label_url = label_reply[:postage_label]["label_epl2_url"]
           label_data = Net::HTTP.get(URI.parse(label_url))
       
           ip_addr = Cache.setting(shp.order.domain_id, :shipping, 'Thermal Printer IP')
