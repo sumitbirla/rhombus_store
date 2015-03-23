@@ -66,7 +66,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
     debug_str = "<pre>"
     
     @shipments.each do |shp|
-      debug_str += "\n" + shp.to_s + "\t" + shp.recipient_name + "\t" + shp.recipient_city + "\t" + shp.recipient_state
+      debug_str += "\n" + shp.to_s + "\t" + shp.recipient_name.ljust(20) + (shp.recipient_city + ", " + shp.recipient_state).ljust(20)
       
       shp.assign_attributes(
         packaging_type: @shipment_params.packaging_type,
@@ -82,7 +82,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
       begin
         ep_shipment = create_ep_shipment(shp)
         selected_rate = ep_shipment.lowest_rate(carriers = [@shipment_params.carrier])
-        debug_str += ":\t" + selected_rate[:carrier] + " " + selected_rate[:service] + " " + selected_rate[:rate] 
+        debug_str += ":  " + selected_rate[:carrier] + " " + selected_rate[:service] + " " + selected_rate[:rate] 
         #next
         reply = ep_shipment.buy(rate: selected_rate)
         
@@ -113,7 +113,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
           s = TCPSocket.new(ip_addr, 9100)
           s.send label_data, 0
           s.close
-          debug_str += "label printed"
+          debug_str += "\t label printed"
         end
         
         if params[:send_email] == "1"
