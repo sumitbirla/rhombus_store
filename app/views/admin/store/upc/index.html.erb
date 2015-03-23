@@ -10,12 +10,14 @@
 	<tr>
 		<th>Code</th>
 		<th>Assigned item</th>
+    <th>Notes</th>
 		<th>&nbsp;</th>
 	</tr>
 	<% @upcs.each do |upc| %>
 	<tr>
 		<td><%= upc.code %></td>
-		<td><%= upc.item %>
+		<td><%= upc.item %></td>
+    <td><%= upc.notes %></td>
 		<td>
 			<%= link_to "edit", edit_admin_store_upc_path(upc) %> &nbsp;
 			<%= link_to "delete",
