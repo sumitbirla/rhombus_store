@@ -2,6 +2,7 @@
   <select id="selAction" class="form-control" style="display: inline; width: 75%">
     <option> - - Select Action - - </option>
 	  <option method="get" value="<%= admin_store_shipments_choose_order_path %>">New Shipment</option>
+    <option method="get" value="/admin/store/shipments_batch">Batch Ship</option>
     <option method="post" value="/admin/store/shipments_packing_slip_batch">Packing Slips (PDF)</option>
     <option method="post" value="/admin/store/shipments_invoice_batch">Invoices (PDF)</option>
     <option method="get" value="/admin/store/shipments/product_labels">Product Labels</option>
@@ -42,7 +43,7 @@
         <td><%= shipment.recipient_name %></td>
         <td><%= shipment.recipient_city %>, <%= shipment.recipient_state %></td>
         <td><%= shipment.ship_date ? sysdate(shipment.ship_date) : "<span class='light'>-</span>".html_safe %></td>
-        <td><%= shipment.ship_method.blank? ? '<span class="light">- n/a -</span>'.html_safe : shipment.ship_method %></td>
+        <td><%= shipment.ship_method.blank? ? '<span class="light">- n/a -</span>'.html_safe : "#{shipment.carrier} #{shipment.ship_method}" %></td>
         <td><span class="label <%= 'label-warning' if shipment.status == 'pending' %>  <%= 'label-success' if shipment.status == 'shipped' %> <%= 'label-danger' if shipment.status == 'void' %>"><%= shipment.status %></span></td>
         <td class="ralign">
           <% if shipment.status == "pending" %>

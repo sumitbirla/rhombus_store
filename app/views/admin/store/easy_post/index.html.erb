@@ -135,7 +135,7 @@ packaging_types = [
 			  <td class="calign"><%= rate[:est_delivery_days] || "<span class='light'> - n/a - </span>".html_safe %></td>
 			  <td class="calign"><%= number_to_currency(rate[:rate]) %></td>
 			  <td class="ralign">
-			    <%= link_to "purchase", admin_store_easy_post_label_path(shipment_id: @shipment.id, rate_id: rate[:id], ep_shipment_id: @response[:id]), class: 'btn btn-sm btn-default'  %>
+			    <%= link_to "purchase", admin_store_easy_post_buy_path(shipment_id: @shipment.id, rate_id: rate[:id], ep_shipment_id: @response[:id]), class: 'btn btn-sm btn-default'  %>
 			</tr>
 			<% end %>
 		</table>

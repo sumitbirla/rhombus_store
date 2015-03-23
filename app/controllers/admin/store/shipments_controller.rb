@@ -182,7 +182,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       # send to thermal printer
       if ['epl2','zpl'].include?(params[:format])
         
-        ip_addr = Cache.setting('Shipping', 'Thermal Printer IP')
+        ip_addr = Cache.setting(shipment.order.domain_id, :shipping, 'Thermal Printer IP')
         s = TCPSocket.new(ip_addr, 9100)
         s.send label_data, 0
         s.close
@@ -289,7 +289,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
 
   def batch
-    @shipments = Shipment.where(id: params[:shipment_ids])
+    @shipments = Shipment.where(id: params[:shipment_id])
   end
 
 

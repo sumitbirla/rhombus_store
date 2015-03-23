@@ -268,7 +268,7 @@ EOF
       end
     end
     
-    redirect_to admin_store_shipments_batch_path(shipment_ids: shipment_ids)
+    redirect_to admin_store_shipments_batch_path(shipment_id: shipment_ids)
   end
   
   def clone

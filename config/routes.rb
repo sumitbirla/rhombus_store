@@ -84,9 +84,10 @@ Rails.application.routes.draw do
       get 'products/adjust_prices'
       post 'products/adjust_prices' => 'products#update_prices'
 
+      post 'easy_post/batch'
 			get 'easy_post' => 'easy_post#index'
       patch 'easy_post' => 'easy_post#rates'
-      get 'easy_post_label' => 'easy_post#label'
+      get 'easy_post_buy' => 'easy_post#buy'
       
       post 'orders_batch_ship' => 'orders#batch_ship'
       post 'orders_update_status' => 'orders#update_status'

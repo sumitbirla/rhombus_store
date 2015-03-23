@@ -77,6 +77,7 @@
         <div class="panel panel-success">
           <div class="panel-heading">Shipment Details:</div>
           <div class="panel-body">
+            <%= f.input :carrier, collection: ["USPS", "FedEx", "UPS"] %>
             <%= f.input :ship_method %>
             <%= f.input :ship_date %>
             <%= f.input :ship_cost %>

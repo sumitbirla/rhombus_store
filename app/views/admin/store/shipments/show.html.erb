@@ -99,7 +99,7 @@
 
 
 <h4>
-  <% unless @shipment.invoice_id.nil? %>
+  <% unless @shipment.invoice.nil? %>
     <span class="label label-success pull-right">invoiced: <%= number_to_currency(@shipment.invoice.amount * -1.0) %></span>
   <% end %>
   Items:</h4>

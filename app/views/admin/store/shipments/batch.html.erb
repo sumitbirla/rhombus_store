@@ -48,7 +48,11 @@ packaging_types = [
 <hr/>
 
 
-<%= simple_form_for :shipment, url: '', html: { class: 'form-inline' } do |f| %>
+<%= simple_form_for :shipment, url: admin_store_easy_post_batch_path, html: { class: 'form-inline' } do |f| %>
+  <% @shipments.each do |shp| %>
+    <input type="hidden" name="shipment_id[]" value="<%= shp.id %>">
+  <% end %>
+  <%= f.input :carrier, collection: ["USPS", "FedEx", "UPS"]%>
   <%= f.input :packaging_type, collection: packaging_types, label: 'Packaging' %>
   
   <div class="form-group string optional shipment_dimensions">
@@ -70,6 +74,7 @@ packaging_types = [
 	<%= f.input :require_signature, as: :boolean, label: 'Signature?' %>
 		 
   <%= f.submit 'Process', class: 'btn btn-success' %>
+  <input type="checkbox" name="print_epl" value="1" checked> Print EPL &nbsp;
 	<span class="label label-warning pull-right"><%= @response[:mode] unless @response.nil? %></span>
 <% end %>
 
@@ -114,16 +119,6 @@ packaging_types = [
             $('.input-append.date').datepicker({
                 format: "yyyy-mm-dd"
             });
-
-						$('#shipment_packaging_type').change(function() {
-							if ($(this).val() == 'YOUR PACKAGING') {
-								//$('.shipment_package_weight').show();
-								$('.shipment_dimensions').show();
-							} else {
-								//$('.shipment_package_weight').hide();
-								$('.shipment_dimensions').hide();
-							}
-						});
 
         });
     </script>

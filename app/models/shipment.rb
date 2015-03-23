@@ -119,7 +119,8 @@ class Shipment < ActiveRecord::Base
       
       self.assign_attributes(
         ship_date: DateTime.iso8601(plabel[:label_date]).to_date,
-      	ship_method: rate[:carrier] + ' ' + rate[:service],
+      	carrier: rate[:carrier],
+        ship_method: rate[:service],
         ship_cost: rate[:rate],
         require_signature: response[:options][:delivery_confirmation] == 'SIGNATURE',
       	tracking_number: response[:tracking_code],
