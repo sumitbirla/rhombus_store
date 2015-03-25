@@ -276,10 +276,8 @@
           <% end %>
         </td>
         <td>
-          <%= item.comment %>
-          <% if item.event_type == 'package_shipped' %>
-              : <%= item.identifier %>
-          <% end %>
+          <%= item.comment %> 
+          <%= item.identifier if item.event_type == 'package_shipped' %>
         </td>
       </tr>
   <% end %>
