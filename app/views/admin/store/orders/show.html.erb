@@ -282,7 +282,7 @@
       </tr>
   <% end %>
   <tr>
-    <td><%= systime @order.created_at %></td>
+    <td><%= systime @order.submitted %></td>
     <td><% unless @order.user_id.nil? %>
           <%= link_to @order.user.name, admin_system_user_path(@order.user), class: 'small' %>
       <% end %></td>
