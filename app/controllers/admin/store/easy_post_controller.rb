@@ -5,6 +5,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
   def index
     @shipment = Shipment.find(params[:shipment_id])
 		@shipment.packaging_type = 'YOUR PACKAGING' if @shipment.packaging_type.blank?
+    @shipment.ship_date = Date.today
   end
   
   def rates

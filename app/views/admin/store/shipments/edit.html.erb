@@ -79,7 +79,13 @@
           <div class="panel-body">
             <%= f.input :carrier, collection: ["USPS", "FedEx", "UPS"] %>
             <%= f.input :ship_method %>
-            <%= f.input :ship_date %>
+            <div class="form-group string optional ship_date">
+              <label class="string required control-label">Ship Date</label>
+              <div class="input-group date date-field">
+                <%= f.input_field :ship_date, as: :string, class: "form-control" %>
+                <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+              </div>
+            </div>
             <%= f.input :ship_cost %>
             <%= f.input :tracking_number %>
             <%= f.input :status, collection: ['pending', 'shipped', 'void', 'cancelled', 'delivered'] %>

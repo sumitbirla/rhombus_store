@@ -55,22 +55,30 @@ packaging_types = [
 
      <%= simple_form_for @shipment, url: '', html: { class: 'form-inline' } do |f| %>
 
-		<%= f.input :packaging_type, collection: packaging_types, label: 'Packaging' %>
-        <%= f.input :package_weight, label: 'Weight (lbs)' %>
+		  <%= f.input :packaging_type, collection: packaging_types, label: 'Packaging' %>
+      <%= f.input :package_weight, label: 'Weight (lbs)' %>
 
-        <div class="form-group string optional shipment_dimensions" style="<%= 'display: none' unless @shipment.packaging_type == 'YOUR PACKAGING' %>">
-           <label class="string optional control-label" for="shipment_dimensions">Size (in.)</label>
-           <div class="dimensions" style="display: inline;">
-             <%= f.input_field :package_length %> &nbsp;x&nbsp;
-             <%= f.input_field :package_width %> &nbsp;x&nbsp;
-             <%= f.input_field :package_height %>
-           </div>
+      <div class="form-group string optional shipment_dimensions" style="<%= 'display: none' unless @shipment.packaging_type == 'YOUR PACKAGING' %>">
+        <label class="string optional control-label" for="shipment_dimensions">Size (in.)</label>
+        <div class="dimensions" style="display: inline;">
+          <%= f.input_field :package_length %> &nbsp;x&nbsp;
+          <%= f.input_field :package_width %> &nbsp;x&nbsp;
+          <%= f.input_field :package_height %>
         </div>
-        <%= f.input :ship_date %>
-		<%= f.input :require_signature, label: 'Signature?' %>
+      </div>
+      <div class="form-group string optional ship_date">
+        <label class="string required control-label">Ship Date</label>
+        <div class="input-group date date-field">
+          <%= f.input_field :ship_date, as: :string, class: "form-control" %>
+          <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+        </div>
+      </div>
+      
+      <%= f.input :ship_date, as: :string, input_html: { class: "date-field", style: "width: 120px"  } %>
+		  <%= f.input :require_signature, label: 'Signature?' %>
 		 
-        <%= f.submit 'Get Rates', class: 'btn btn-success' %>
-		<span class="label label-warning pull-right"><%= @response[:mode] unless @response.nil? %></span>
+      <%= f.submit 'Get Rates', class: 'btn btn-success' %>
+		  <span class="label label-warning pull-right"><%= @response[:mode] unless @response.nil? %></span>
      <% end %>
    </div>
 
@@ -162,10 +170,6 @@ packaging_types = [
     <script src="/js/bootstrap-datepicker.js"></script>
     <script>
         $(document).ready(function() {
-
-            $('.input-append.date').datepicker({
-                format: "yyyy-mm-dd"
-            });
 
 						$('#shipment_packaging_type').change(function() {
 							if ($(this).val() == 'YOUR PACKAGING') {

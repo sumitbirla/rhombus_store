@@ -14,7 +14,13 @@ module StoreCache
     
   def self.product(slug) 
     Rails.cache.fetch("product:#{slug}") do 
-      Product.includes(:categories, :pattributes, [pattributes: :attribute], :brand, :pictures, :comments).where(slug: slug).first
+      Product.includes(:categories, :product_attributes, :pattributes, :brand, :pictures, :comments).where(slug: slug).first
+    end
+  end
+  
+  def self.featured_product 
+    Rails.cache.fetch("featured-product") do 
+      Product.includes(:brand, :pictures, :comments).where(featured: true, active: true).first
     end
   end
   
