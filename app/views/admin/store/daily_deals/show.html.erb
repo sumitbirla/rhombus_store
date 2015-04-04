@@ -262,8 +262,8 @@
   
 	<h4>Pictures &nbsp;<%= link_to 'edit', pictures_admin_store_daily_deal_path(@daily_deal), class: 'small pull-right' %></h4>
 	<% @daily_deal.pictures.each do |pic| %>
-	<a href="<%= cdn_image_url pic, 700, 600, 0 %>" class="fancybox" rel="gallery">
-		<img src="<%= cdn_image_url pic, 60, 60, 2 %>" class="img-polaroid" style="margin: 4px" title="<%= pic.caption %>"/>
+	<a href="<%= cdn_image_url pic, 700, 600, 0 %>"  data-lightbox="image-1">
+		<img src="<%= cdn_image_url pic, 60, 60, 2 %>" class="img-thumbnail" style="margin: 4px" title="<%= pic.caption %>"/>
 	</a>
 	<% end %>
 	<hr/>

@@ -242,13 +242,13 @@
 <div class="col-md-4">
 	<% if @product.pictures.length > 0 %>
       <h4>Pictures</h4>
-      <a href="<%= cdn_image_url @product.pictures[0], 700, 600, 0 %>" class="fancybox" rel="gallery">
-          <img src="<%= cdn_image_url @product.pictures[0], 200, 200, 2 %>" class="img-polaroid" title="<%= @product.pictures[0].caption %>"/>
+      <a href="<%= cdn_image_url @product.pictures[0], 800, 700, 0 %>" data-lightbox="image-1">
+          <img src="<%= cdn_image_url @product.pictures[0], 400, 300, 2 %>" class="img-responsive" title="<%= @product.pictures[0].caption %>"/>
       </a>
       <% if @product.pictures.length > 1 %>
           <br/>
           <% @product.pictures[1..-1].each do |pic| %>
-              <a href="<%= cdn_image_url pic, 700, 600, 0 %>" class="fancybox" rel="gallery">
+              <a href="<%= cdn_image_url pic, 700, 600, 0 %>"  data-lightbox="image-1">
                 <img src="<%= cdn_image_url pic, 240, 240, 2 %>" class="img-polaroid" style="margin: 4px" title="<%= pic.caption %>"/>
               </a>
           <% end %>
