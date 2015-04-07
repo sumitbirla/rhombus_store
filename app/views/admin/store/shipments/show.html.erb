@@ -120,7 +120,7 @@
             <td nowrap><%= item.order_item.item_id.upcase %></td>
             <td>
               <%= render item.order_item %>
-              <% unless upc.notes.include?("P") %>
+              <% unless upc.nil? || upc.notes.include?("P") %>
                 &nbsp; &nbsp; <i class="fa fa-camera" style="color: #d9534f;"></a>
               <% end %>
             </td>
