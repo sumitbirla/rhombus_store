@@ -1,4 +1,5 @@
 module OrderHelper
+  
   def order_status(order, css = '')
     css_class = css + ' '
 
@@ -27,4 +28,5 @@ module OrderHelper
     str += "<i class='fa fa-eye-slash'></i>" if product.hidden
     str.html_safe
   end
+  
 end
