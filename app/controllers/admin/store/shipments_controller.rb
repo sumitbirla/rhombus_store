@@ -167,6 +167,14 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
 
   def label
+    # used background processing for printing to thermal printer as it can take a few seconds
+    if ['epl2','zpl'].include?(params[:format])
+      ShippingLabelJob.perform_later(session[:user_id], params[:id], params[:format])
+      flash[:info] = "Shipping label dispatched to printer"
+      return redirect_to :back
+    end
+    
+    # requested a PNG probably
     shipment = Shipment.find(params[:id])
     courier_data = JSON.parse(shipment.courier_data)
     
@@ -178,18 +186,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       # download label
       label_url = response[:postage_label]["label_#{params[:format]}_url"]
       label_data = Net::HTTP.get(URI.parse(label_url))
-      
-      # send to thermal printer
-      if ['epl2','zpl'].include?(params[:format])
-        
-        ip_addr = Cache.setting(shipment.order.domain_id, :shipping, 'Thermal Printer IP')
-        s = TCPSocket.new(ip_addr, 9100)
-        s.send label_data, 0
-        s.close
-        flash[:info] = "Shipping label sent to #{ip_addr}."
-        
-        return redirect_to :back
-      end
       
     rescue => e
       flash[:error] = "Error downloading shipping label: " + e.message

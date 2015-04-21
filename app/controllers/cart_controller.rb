@@ -390,7 +390,8 @@ class CartController < ApplicationController
       @order.save validate: false
     end
 
-
+    # email order confirmation
+    OrderMailer.order_submitted(@order, session[:user_id]).deliver_later
     
     # update any voucher, coupon stats
     Coupon.increment_counter(:times_used, @order.coupon_id) unless @order.coupon_id.nil?
@@ -429,19 +430,6 @@ class CartController < ApplicationController
     # update daily_deal counts
     @order.deal_items.each do |item|
       DailyDeal.where(id: item.daily_deal_id).update_all("number_sold = number_sold + #{item.quantity}")
-    end
-    
-    # inventory update?
-    #sql = ""
-    #@order.items.each do |item|
-    #  sql = sql + "UPDATE store_products SET committed = committed + #{item.quantity} WHERE id = #{item.product_id}; "
-    #end
-    
-    # email order confirmation to customer
-    begin
-      OrderMailer.order_submitted(@order, session[:user_id]).deliver_now
-    rescue => e
-      logger.error e
     end
     
     # delete cart cookie and display confirmation

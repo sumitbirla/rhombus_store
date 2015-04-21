@@ -103,23 +103,13 @@ class Admin::Store::EasyPostController < Admin::BaseController
         shp.order.update_attribute(:status, 'shipped')
         
         if params[:print_epl] == "1"
-          # download label
-          label_reply = ep_shipment.label({'file_format' => "epl2"})
-      
-          # download label
-          label_url = label_reply[:postage_label]["label_epl2_url"]
-          label_data = Net::HTTP.get(URI.parse(label_url))
-      
-          ip_addr = Cache.setting(shp.order.domain_id, :shipping, 'Thermal Printer IP')
-          s = TCPSocket.new(ip_addr, 9100)
-          s.send label_data, 0
-          s.close
+          ShippingLabelJob.perform_later(session[:user_id], shp.id, "epl2")
           debug_str += "\t label printed"
         end
         
         if params[:send_email] == "1"
           unless shp.order.notify_email.include?("marketplace")
-            OrderMailer.order_shipped(shp).deliver
+            OrderMailer.order_shipped(shp).deliver_later
             debug_str += "\t emailed #{shp.order.notify_email}"
           end
         end
