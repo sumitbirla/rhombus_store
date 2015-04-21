@@ -66,6 +66,7 @@ packaging_types = [
           <%= f.input_field :package_height %>
         </div>
       </div>
+      
       <div class="form-group string optional ship_date">
         <label class="string required control-label">Ship Date</label>
         <div class="input-group date date-field">
@@ -74,7 +75,6 @@ packaging_types = [
         </div>
       </div>
       
-      <%= f.input :ship_date, as: :string, input_html: { class: "date-field", style: "width: 120px"  } %>
 		  <%= f.input :require_signature, label: 'Signature?' %>
 		 
       <%= f.submit 'Get Rates', class: 'btn btn-success' %>

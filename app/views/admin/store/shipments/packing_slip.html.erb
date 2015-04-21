@@ -98,6 +98,7 @@
         </thead>
       </table>
 
+      <% upc_list = Upc.where(item: @shipment.items.collect { |x| x.order_item.item_id }) %>
 
       <div class="boxleft">
         <h2>
@@ -149,7 +150,8 @@
       </tr>
       </thead>
       <tbody>
-      <% @shipment.items.each do |item| %>
+      <% @shipment.items.each do |item| 
+          upc = upc_list.find { |x| x.item == item.order_item.item_id } %>
       <tr>
         <td nowrap><input type="checkbox"> &nbsp; <%= item.order_item.item_id.upcase %></td>
         <td>
@@ -160,6 +162,9 @@
             <% if item.order_item.affiliate_id %>
               &nbsp; (<%= item.order_item.affiliate %>)
             <% end %>
+          <% end %>
+          <% if upc && !upc.notes.include?("P") %>
+            &nbsp; &nbsp; <i style="color: #ccc;">P</i>
           <% end %>
         </td>
         <td align="right" class="textright"><%= item.order_item.quantity %></td>

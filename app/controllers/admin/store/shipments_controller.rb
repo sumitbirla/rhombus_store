@@ -272,7 +272,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     
     begin
       OrderMailer.order_shipped(@shipment).deliver_now
-      flash[:info] = 'Shipment conformation mailed to ' + @shipment.order.notify_email
+      flash[:info] = 'Shipment confirmation mailed to ' + @shipment.order.notify_email
       
       OrderHistory.create(order_id: @shipment.order.id, 
                           user_id: session[:user_id], 

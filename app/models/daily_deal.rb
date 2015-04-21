@@ -41,7 +41,7 @@ class DailyDeal < ActiveRecord::Base
   
   belongs_to :affiliate
   belongs_to :region
-  has_many :pictures, as: :imageable
+  has_many :pictures, -> { order 'sort' }, as: :imageable
   has_many :items, class_name: 'DailyDealItem'
   has_many :daily_deal_locations
   has_many :locations, through: :daily_deal_locations
