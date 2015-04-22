@@ -1,3 +1,5 @@
+require "peddler"
+
 class AmazonImportJob < ActiveJob::Base
   queue_as :default
 
