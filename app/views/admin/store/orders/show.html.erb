@@ -210,7 +210,7 @@
         <% payments = @order.payments + Payment.where(payable_type: :shipment, payable_id: @order.shipments.collect { |x| x.id })%>
         <% payments.each do |pmt| %>
           <tr>
-            <td><%= link_to number_to_currency(pmt.amount), admin_billing_payment_path(pmt) %></td>
+            <td><%= link_to number_to_currency(pmt.amount, negative_format: "(%u%n)"), admin_billing_payment_path(pmt) %></td>
             <td><%= pmt.memo %></td>
             <td><%= systime pmt.created_at %></td>
           </tr>
