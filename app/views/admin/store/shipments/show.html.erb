@@ -19,7 +19,7 @@
           <i class="icon-print"></i> Product Labels
       <% end %>
     </li>
-    <% if @shipment.invoice_id.nil? %>
+    <% if @shipment.invoice_amount > 0.0 %>
     <li>
       <%= link_to create_payment_admin_store_shipment_path(@shipment) do %>
           <i class="icon-file-alt"></i> Create Invoice
