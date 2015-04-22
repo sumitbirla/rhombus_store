@@ -54,6 +54,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
     # auto print label if specified in settings
     if Cache.setting(@shipment.order.domain_id, :shipping, "Auto Print EPL2") == "true"
       ShippingLabelJob.perform_later(session[:user_id], @shipment.id, "epl2")
+      flash[:success] = "Shipping label sent to printer"
     end
     
     redirect_to admin_store_shipment_path(@shipment)
