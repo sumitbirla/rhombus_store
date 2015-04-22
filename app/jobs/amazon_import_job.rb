@@ -2,6 +2,11 @@ require "peddler"
 
 class AmazonImportJob < ActiveJob::Base
   queue_as :default
+  
+  # reschedule job
+  after_perform do |job|
+    self.class.set(wait: 600).perform_later
+  end
 
   def perform(*args)
     @logger = Logger.new(Rails.root.join("log", "amazon.log"))
