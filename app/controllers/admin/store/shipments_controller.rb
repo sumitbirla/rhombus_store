@@ -109,25 +109,13 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   
   def create_payment
     @shipment = Shipment.find(params[:id])
-    memo = "Invoice"
-    memo = @shipment.order.external_order_id unless @shipment.order.external_order_id.blank?
     
-    pmt = Payment.create(payable_id: @shipment.id,
-                         payable_type: 'shipment',
-                         user_id: @shipment.order.user_id,
-                         amount: @shipment.invoice_amount * -1.0,
-                         transaction_id: @shipment.to_s,
-                         memo: memo)
-                         
-    @shipment.update_attribute(:invoice_id, pmt.id)
-                         
-    OrderHistory.create(order_id: @shipment.order.id, 
-                        user_id: session[:user_id], 
-                        event_type: :invoice,
-                        system_name: 'Rhombus',
-                        identifier: @shipment.to_s,
+    if @shipment.post_invoice                   
+      OrderHistory.create(order_id: @shipment.order.id, user_id: session[:user_id], 
+                        event_type: :invoice, system_name: 'Rhombus', identifier: @shipment.to_s,
                         comment: "Invoiced $#{pmt.amount * -1.0}" )
-                        
+    end
+         
     flash[:info] = 'Invoice created'
     redirect_to :back                    
   end

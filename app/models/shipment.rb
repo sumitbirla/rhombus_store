@@ -74,7 +74,7 @@ class Shipment < ActiveRecord::Base
   
   def post_invoice
     return if (invoice_amount == 0.0 || Payment.exists?(payable_type: :shipment, payable_id: id))
-    Payment.create(user_id: order.user_id, payable_id: id, payable_type: :shipment, amount: invoice_amount * -1.0, memo: 'invoice')                
+    Payment.create(user_id: order.user_id, payable_id: id, payable_type: :shipment, amount: invoice_amount * -1.0, memo: 'invoice')               
   end
   
   def copy_easy_post(response)
