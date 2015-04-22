@@ -113,7 +113,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     if @shipment.post_invoice                   
       OrderHistory.create(order_id: @shipment.order.id, user_id: session[:user_id], 
                         event_type: :invoice, system_name: 'Rhombus', identifier: @shipment.to_s,
-                        comment: "Invoiced $#{pmt.amount * -1.0}" )
+                        comment: "Invoiced $#{@shipment.invoice_amount * -1.0}" )
       flash[:success] = 'Invoice posted'
     else
       flash[:error] = 'Invoice was not posted'
