@@ -50,6 +50,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
                               comment:  response[:selected_rate][:service]
 
     @shipment.order.update_attribute(:status, 'shipped')
+    @shipment.post_invoice
     
     # auto print label if specified in settings
     if Cache.setting(@shipment.order.domain_id, :shipping, "Auto Print EPL2") == "true"

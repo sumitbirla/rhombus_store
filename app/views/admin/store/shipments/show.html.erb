@@ -99,9 +99,7 @@
 
 
 <h4>
-  <% unless @shipment.invoice.nil? %>
-    <span class="label label-success pull-right">invoiced: <%= number_to_currency(@shipment.invoice.amount * -1.0) %></span>
-  <% end %>
+  <span class="label label-success pull-right">invoice: <%= number_to_currency(@shipment.invoice_amount) %></span>
   Items:</h4>
 
 <% upc_list = Upc.where(item: @shipment.items.collect { |x| x.order_item.item_id })%>

@@ -40,7 +40,6 @@ class Shipment < ActiveRecord::Base
   self.table_name = "store_shipments"
   belongs_to :order
   belongs_to :fulfiller, class_name: 'User', foreign_key: 'fulfilled_by_id'
-  belongs_to :invoice, class_name: 'Payment', foreign_key: 'invoice_id'
   has_many :items, class_name: 'ShipmentItem', dependent: :destroy
   
   accepts_nested_attributes_for :items, allow_destroy: true
@@ -74,10 +73,8 @@ class Shipment < ActiveRecord::Base
   end
   
   def post_invoice
-    unless (invoice_id || invoice_amount.nil? || invoice_amount == 0.0)
-      Payment.create(user_id: order.user_id, payable_id: order.id, payable_type: :order, 
-                      amount: invoice_amount * -1.0, memo: 'invoice')
-    end
+    return if (invoice_amount == 0.0 || Payment.exists?(payable_type: :shipment, payable_id: id))
+    Payment.create(user_id: order.user_id, payable_id: id, payable_type: :shipment, amount: invoice_amount * -1.0, memo: 'invoice')                
   end
   
   def copy_easy_post(response)
