@@ -67,10 +67,17 @@ class Shipment < ActiveRecord::Base
     "#{order_id}-#{sequence}"
   end
   
-  def invoice_amount
+  def calculate_invoice_amount
     subtotal = 0
     items.each { |item| subtotal += item.quantity * item.order_item.unit_price }
-    subtotal 
+    subtotal
+  end
+  
+  def post_invoice
+    unless (invoice_id || invoice_amount.nil? || invoice_amount == 0.0)
+      Payment.create(user_id: order.user_id, payable_id: order.id, payable_type: :order, 
+                      amount: order.total * -1.0, memo: 'invoice')
+    end
   end
   
   def copy_easy_post(response)

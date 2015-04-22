@@ -318,9 +318,8 @@ class CartController < ApplicationController
       @order.submitted = Time.now
       @order.save validate: false
       
-      # create payment entries
-      Payment.create(payable_id: @order.id, payable_type: :order, amount: @order.total * -1.0, memo: 'invoice')
-      Payment.create(payable_id: @order.id, payable_type: :order, amount: @order.total, memo: 'PayPal Payment', transaction_id: response.authorization)
+      Payment.create(payable_id: @order.id, payable_type: :order, amount: @order.total, memo: 'PayPal Payment', 
+                     user_id: @order.user_id, transaction_id: response.authorization)
 
       # add order history row
       OrderHistory.create order_id: @order.id, user_id: @order.user_id, amount: @order.total,
@@ -375,9 +374,8 @@ class CartController < ApplicationController
       @order.cc_number = @order.credit_card.display_number
       @order.save validate: false
 
-      # create payment entries
-      Payment.create(payable_id: @order.id, payable_type: :order, amount: @order.total * -1.0, memo: 'invoice')
-      Payment.create(payable_id: @order.id, payable_type: :order, amount: @order.total, memo: @order.cc_number, transaction_id: response.authorization)
+      Payment.create(payable_id: @order.id, payable_type: :order, amount: @order.total, memo: @order.cc_number, 
+                    user_id: @order.user_id, transaction_id: response.authorization)
       
       # add order history row
       OrderHistory.create order_id: @order.id, user_id: @order.user_id, amount: @order.total,
@@ -443,7 +441,7 @@ class CartController < ApplicationController
   
   
   def submitted
-      @order = Order.includes(:items).find(session[:order_id])
+    @order = Order.includes(:items).find(session[:order_id])
   end
   
 

@@ -174,6 +174,9 @@ class Order < ActiveRecord::Base
                                    ship_from_email: loc.email,
                                    ship_from_phone: loc.phone)
     end 
+    
+    # set invoice amount
+    shipment.invoice_amount = shipment.order.total if seq == 1
                     
     if shipment.save
       weight = 0.3

@@ -68,6 +68,9 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @order.items.each do |item|
       @shipment.items.build(order_item_id: item.id, quantity: item.quantity)
     end
+    
+    # set invoice amount
+    @shipment.invoice_amount = @order.total if seq = 1
                     
     render 'edit'
   end
