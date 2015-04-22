@@ -76,7 +76,7 @@ class Shipment < ActiveRecord::Base
   def post_invoice
     unless (invoice_id || invoice_amount.nil? || invoice_amount == 0.0)
       Payment.create(user_id: order.user_id, payable_id: order.id, payable_type: :order, 
-                      amount: order.total * -1.0, memo: 'invoice')
+                      amount: invoice_amount * -1.0, memo: 'invoice')
     end
   end
   
