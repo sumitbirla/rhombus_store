@@ -64,7 +64,7 @@ class AmazonImportJob < ActiveJob::Base
         )
       end
 
-      res = order.save
+      res = order.save!
       @logger.debug "#{order.id} : #{order.external_order_id} : #{order.status} : #{order.billing_name}"
       
       # log any errors

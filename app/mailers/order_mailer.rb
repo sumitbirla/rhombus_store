@@ -12,7 +12,7 @@ class OrderMailer < ActionMailer::Base
         openssl_verify_mode: 'none'
     }
     mail(from: "#{from_name} <#{from_email}>",
-         to: order.notify_email,
+         to: @order.notify_email,
          bcc: bcc,
          subject: "Order ##{@order.id} submitted",
          delivery_method_options: options)
