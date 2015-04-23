@@ -70,7 +70,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     end
     
     # set invoice amount
-    @shipment.invoice_amount = @order.total if seq = 1
+    @shipment.invoice_amount = @order.total if seq == 1
                     
     render 'edit'
   end
