@@ -60,15 +60,13 @@ class AmazonImportJob < ActiveJob::Base
           shipping_state: saddr["StateOrRegion"],
           shipping_city: saddr["City"],
           shipping_zip: saddr["PostalCode"],
-          shipping_country: saddr["CountryCode"]
+          shipping_country: saddr["CountryCode"],
+          contact_phone: saddr["Phone"]
         )
       end
 
-      res = order.save!
+      order.save!
       @logger.debug "#{order.id} : #{order.external_order_id} : #{order.status} : #{order.billing_name}"
-      
-      # log any errors
-      @logger.error order.errors.full_messages unless res
       
       return if order_items.nil?
 
