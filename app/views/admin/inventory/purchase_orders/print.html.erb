@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <title><%= @shipment %> Packing Slip</title>
+  <title>Purchase Order <%= @purchase_order.id %></title>
   <style>
       body {
           background:white !important;
@@ -10,14 +10,14 @@
           width: 95%!important;
           margin: 0 auto!important;
           font-family:Arial, Helvetica, sans-serif!important;
-          font-size:10px!important;
+          font-size:12px!important;
       }
       table {
           width: 100%!important;
           border-collapse:collapse;
       }
-      table td{
-          aborder: 1px solid #ccc;
+      table td {
+          border-right: 1px solid #000;
           padding: 5px!important;
       }
       table.bordered {
@@ -38,6 +38,9 @@
       h2 {
           font-size:20px !important;
           margin-bottom: 0px;
+      }
+      h3 {
+        margin-bottom:4px;
       }
       .boxleft {
           float:left!important;
@@ -67,23 +70,22 @@
         <thead>
         <tr valign="top">
           <th scope="col" style="text-align:left;">
-            <h2><img src="/img/logo.png" alt="HealthyBreeds.com"/></h2>
+            <h2>Pet Healthbox, LLC</h2>
             <p>
-              Healthy Breeds, Inc.<br/>
-              180 Douglas Rd E.<br/>
+              231 Douglas Rd E.<br/>
+              Suite 8<br>
               Oldsmar, FL 34677
             </p>
             <p>
-              <strong>Web:</strong> http://www.healthybreeds.com<br/>
-                <strong>Phone:</strong> 855-727-3337<br/>
-                <strong>Email:</strong> help@healthybreeds.com
+              <strong>Phone:</strong> 855-727-3337<br/>
+              <strong>Fax:</strong> 813-814-5888<br/>
             </p>
           </th>
-          <th scope="col" style="text-align:right;"> <h2>PACKING SLIP</h2>
+          <th scope="col" style="text-align:right;"> <h2>PURCHASE ORDER</h2>
             <p>
-              <strong>Order Date: </strong><%= sysdate @shipment.order.submitted %><br>
-              <strong>Shipment ID: </strong> <%= @shipment %><br/>
-              <img src="/barcode?code=<%= @shipment %>" />
+              <strong>Purchase Order Number: </strong><%= @purchase_order.id %><br>
+              <strong>Vendor Code: </strong> <%= @purchase_order.supplier.code %><br/>
+              <img src="/barcode?code=PO<%= @purchase_order.id %>" />
             </p>
           </th>
         </tr>
@@ -92,22 +94,13 @@
 
 
       <div class="boxleft">
-        <h2>
-          Billing address            </h2>
-        <p><%= @shipment.order.billing_name %><br/>
-          <%= raw @shipment.order.billing_company + '<br/>' unless @shipment.order.billing_company.blank? %>
-          <%= @shipment.order.billing_street1 %><br/>
-          <%= raw @shipment.order.billing_street2 + '<br/>' unless @shipment.order.billing_street2.blank? %>
-          <%= @shipment.order.billing_city %>, <%= @shipment.order.billing_state %> <%= @shipment.order.billing_zip %></p>
+        <h3>Purchased From</h3>
+        <p><%= @purchase_order.supplier.name %><br/>
+          <%= raw @purchase_order.supplier.address_as_text.gsub("\n", "<br>") %>
       </div>
       <div class="boxright">
-        <h2>
-          Shipping address            </h2>
-        <p><%= @shipment.recipient_name %><br/>
-          <%= raw @shipment.recipient_company + '<br/>' unless @shipment.recipient_company.blank? %>
-          <%= @shipment.recipient_street1 %><br/>
-          <%= raw @shipment.recipient_street2 + '<br/>' unless @shipment.recipient_street2.blank? %>
-          <%= @shipment.recipient_city %>, <%= @shipment.recipient_state %> <%= @shipment.recipient_zip %></p>
+        <h3>Ship To</h3>
+        <p><%= raw @purchase_order.ship_to.gsub("\n", "<br>") %></p>
       </div>
       <div style="clear:both;"></div>
     </header>
@@ -115,18 +108,18 @@
     <table class="bordered" width="100%" cellspacing="0" cellpadding="0">
       <thead>
       <tr>
-        <th scope="col" style="text-align:left;"><strong>Order Date</strong></th>
-        <th scope="col" style="text-align:left;"><strong>Order #</strong></th>
-        <th scope="col" style="text-align:left;"><strong>Purchase Order #</strong></th>
-        <th scope="col" style="text-align:left;"><strong>Customer Contact</strong></th>
+        <th scope="col" style="text-align:left;"><strong>PO Date</strong></th>
+        <th scope="col" style="text-align:left;"><strong>Ship Via Carrier</strong></th>
+        <th scope="col" style="text-align:left;"><strong>Terms</strong></th>
+        <th scope="col" style="text-align:left;"><strong>ATTN:</strong></th>
       </tr>
       </thead>
       <tbody>
       <tr>
-        <td><%= @shipment.order.submitted.strftime("%d-%^b-%Y") %></td>
-        <td><%= @shipment.order_id %></td>
-        <td><%= @shipment.order.external_order_id %></td>
-        <td><%= @shipment.recipient_name %></td>
+        <td><%= @purchase_order.issue_date.strftime("%d-%^b-%Y") %></td>
+        <td><%= @purchase_order.ship_method %></td>
+        <td><%= @purchase_order.payment_terms %></td>
+        <td><%= @purchase_order.supplier.contact_person %></td>
       </tr>
       </tbody>
     </table>
@@ -134,42 +127,34 @@
     <table class="bordered" width="100%" cellspacing="0" cellpadding="0">
       <thead>
       <tr>
-        <th scope="col" style="text-align:left;"><strong>Item</strong></th>
+        <th scope="col" style="text-align:left;"><strong>Quantity</strong></th>
+        <th scope="col" style="text-align:left;"><strong>Item No.</strong></th>
         <th scope="col" style="text-align:left;"><strong>Description</strong></th>
-        <th scope="col" style="text-align:right;"><strong>Order Quantity</strong></th>
-        <th scope="col" style="text-align:right;"><strong>Ship Quantity</strong></th>
+        <th scope="col" style="text-align:right;"><strong>Unit Cost</strong></th>
+        <th scope="col" style="text-align:right;"><strong>Ext. Cost</strong></th>
       </tr>
       </thead>
       <tbody>
-      <% @shipment.items.each do |item| %>
+      <% @purchase_order.items.each do |item| %>
       <tr>
-        <td><%= item.order_item.item_id.upcase %></td>
-        <td>
-          <%= item.order_item.product.name_with_option %>
-          <% if item.order_item.affiliate_id %>
-            &nbsp; (<%= item.order_item.affiliate %>)
-          <% end %>
-        </td>
-        <td align="right" class="textright"><%= item.order_item.quantity %></td>
-        <td align="right" class="textright"><%= item.quantity unless item.quantity == 0 && !item.special_status.blank? %> <%= item.special_status %></td>
+        <td><%= item.quantity %></td>
+        <td><%= item.supplier_code %></td>
+        <td><%= item.description %></td>
+        <td align="right" class="textright"><%= number_to_currency(item.unit_price) %></td>
+        <td align="right" class="textright"><%= number_to_currency(item.unit_price * item.quantity) %></td>
       </tr>
       <% end %>
-      <tr style="height: 20<%= "0" if @shipment.items.length < 9 %>px;"><td colspan="4"></td></tr>
       <tr style="border-top: solid 1px black;">
-        <td align="right" class="textright" colspan="3"><b>Total Items</b></td>
-        <td align="right" class="textright"><b><%= @shipment.items.sum(:quantity) %></b></td>
+        <td align="right" class="textright" colspan="4"><b>Total:</b></td>
+        <td align="right" class="textright"><b><%= number_to_currency(@purchase_order.total_amount) %></b></td>
       </tr>
       </tbody>
     </table>
   </article>
-
-
-  <h2>Comments</h2>
-  <% unless @shipment.notes.blank? %>
-    <%= @shipment.notes %>
-  <% else %>
-    Thank you for your business!
-  <% end %>
+  
+  <h3>Notes:</h3>
+  Ship unlabeled<br>
+  Lot/Exp Date on outisde of box only
 
 </section>
 </body>

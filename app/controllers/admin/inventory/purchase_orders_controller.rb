@@ -135,6 +135,7 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
   
   def print
     @purchase_order = PurchaseOrder.find(params[:id])
+    render 'print', layout: nil
   end
   
   private
