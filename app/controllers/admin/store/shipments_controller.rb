@@ -256,19 +256,13 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     redirect_to :back
   end
   
-  def email_confirmation
-    @shipment = Shipment.find(params[:id])
+  
+  def email_confirmation    
+    shipment = Shipment.find(params[:id])
     
     begin
-      OrderMailer.order_shipped(@shipment).deliver_now
-      flash[:info] = 'Shipment confirmation mailed to ' + @shipment.order.notify_email
-      
-      OrderHistory.create(order_id: @shipment.order.id, 
-                          user_id: session[:user_id], 
-                          event_type: :email_shipping_confirmation,
-                          system_name: 'Rhombus',
-                          identifier: @shipment.id,
-                          comment: @shipment.order.notify_email)
+      OrderMailer.order_shipped(shipment.id, session[:user_id]).deliver_now
+      flash[:info] = "Shipment email sent to '#{shipment.order.notify_email}'"
     rescue => e
       flash[:info] = e.message
     end

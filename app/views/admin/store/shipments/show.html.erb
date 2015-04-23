@@ -36,6 +36,13 @@
           <i class="icon-file-alt"></i> Print Packing Slip
       <% end %>
     </li>
+    <% if @shipment.status == "shipped" %>
+    <li>
+      <%= link_to email_confirmation_admin_store_shipment_path(@shipment) do %>
+        Email tracking info
+      <% end %>
+    </li>
+    <% end %>
     <li>
       <%= link_to admin_store_easy_post_path(shipment_id: @shipment.id) do %>
         Get Rates and Ship
@@ -139,9 +146,6 @@
     <div style="color: #ccc; font-size: 24px; text-align: center; line-height: 300px; border: solid 1px #ccc;">
       Shipping Label not available
     </div>
-    <% end %>
-    <%= link_to email_confirmation_admin_store_shipment_path(@shipment) do %>
-      <i class="fa fa-envelope"></i> Email confirmation to <%= @shipment.order.notify_email %>
     <% end %>
 	</div>
 	

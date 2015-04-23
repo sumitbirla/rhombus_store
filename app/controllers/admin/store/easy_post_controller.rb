@@ -58,6 +58,12 @@ class Admin::Store::EasyPostController < Admin::BaseController
       flash[:success] = "Shipping label sent to printer"
     end
     
+    # email customer with tracking info if specified in settings
+    if Cache.setting(@shipment.order.domain_id, :shipping, "Auto Email Tracking") == "true"
+      OrderMailer.order_shipped(@shipment.id, session[:user_id]).deliver_later
+      flash[:info] = "Shipment confirmation sent to #{@shipment.order.notify_email}"         
+    end
+    
     redirect_to admin_store_shipment_path(@shipment)
   end
   

@@ -82,7 +82,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     @order = Order.find(params[:id])
 
     begin
-      OrderMailer.order_submitted(@order, session[:user_id]).deliver_now
+      OrderMailer.order_submitted(@order.id, session[:user_id]).deliver_now
       flash[:notice] = "Order confirmation has been emailed to #{@order.notify_email}"
     rescue => e
       flash[:notice] = e.message
@@ -90,27 +90,7 @@ class Admin::Store::OrdersController < Admin::BaseController
 
     redirect_to :back
   end
-
-  def print_shipping_label
-    oh = OrderHistory.find(params[:order_history_id])
-    if oh.data2 == "PDF"
-      return send_data oh.data1, filename: 'label.pdf', type: 'application/pdf'
-    else
-      begin
-        ip_addr = Cache.setting('Shipping', 'Thermal Printer IP')
-        s = TCPSocket.new(ip_addr, 9100)
-        s.send oh.data1, 0
-        s.close
-
-        flash[:info] = "Label send to thermal printer at #{ip_addr}"
-      rescue Exception => e
-        flash[:error] = e.message
-      end
-    end
-
-    redirect_to :back
-  end
-
+  
 
   def receipt
     @order = Order.find(params[:id])

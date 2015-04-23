@@ -389,7 +389,7 @@ class CartController < ApplicationController
     end
 
     # email order confirmation
-    OrderMailer.order_submitted(@order, session[:user_id]).deliver_later
+    OrderMailer.order_submitted(@order.id, session[:user_id]).deliver_later
     
     # update any voucher, coupon stats
     Coupon.increment_counter(:times_used, @order.coupon_id) unless @order.coupon_id.nil?
