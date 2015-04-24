@@ -10,11 +10,13 @@ class AmazonImportJob < ActiveJob::Base
 
   def perform(*args)
     @logger = Logger.new(Rails.root.join("log", "amazon.log"))
+    
+    d = Rails.configuration.domain_id
     @client = MWS.orders(
-          marketplace_id: 'ATVPDKIKX0DER',
-          merchant_id: 'A2MPCZD8121NJH',
-          aws_access_key_id: 'AKIAIIBDZMGLHXCEZRIA',
-          aws_secret_access_key: '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')
+                marketplace_id: Cache.setting(d, "eCommerce", "Amazon Marketplace ID"),
+                merchant_id: Cache.setting(d, "eCommerce", "Amazon Merchant ID"),
+                aws_access_key_id: Cache.setting(d, "eCommerce", "AWS Access Key ID"),
+                aws_secret_access_key: Cache.setting(d, "eCommerce", "AWS Secret Access Key")
           
     parser = @client.list_orders({ created_after: 1.week.ago.iso8601 })
 

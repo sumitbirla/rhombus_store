@@ -52,6 +52,11 @@ class Admin::Store::EasyPostController < Admin::BaseController
     @shipment.order.update_attribute(:status, 'shipped')
     @shipment.post_invoice
     
+    # Amazon orders need to be notified about shipment
+    if @shipment.order.sales_channel == "Amazon.com"
+      AmazonFulfillmentJob.perform_later(@shipment.id)
+    end
+    
     # auto print label if specified in settings
     if Cache.setting(@shipment.order.domain_id, :shipping, "Auto Print EPL2") == "true"
       ShippingLabelJob.perform_later(session[:user_id], @shipment.id, "epl2")
