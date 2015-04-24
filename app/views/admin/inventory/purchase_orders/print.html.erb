@@ -70,15 +70,11 @@
         <thead>
         <tr valign="top">
           <th scope="col" style="text-align:left;">
-            <h2>Pet Healthbox, LLC</h2>
+            <h2><%= @purchase_order.affiliate.name %></h2>
+            <p><%= raw @purchase_order.affiliate.address_as_text.gsub("\n", "<br>") %></p>
             <p>
-              231 Douglas Rd E.<br/>
-              Suite 8<br>
-              Oldsmar, FL 34677
-            </p>
-            <p>
-              <strong>Phone:</strong> 855-727-3337<br/>
-              <strong>Fax:</strong> 813-814-5888<br/>
+              <strong>Phone:</strong> <%= @purchase_order.affiliate.phone %><br/>
+              <strong>Fax:</strong> <%= @purchase_order.affiliate.fax %><br/>
             </p>
           </th>
           <th scope="col" style="text-align:right;"> <h2>PURCHASE ORDER</h2>
@@ -152,9 +148,11 @@
     </table>
   </article>
   
-  <h3>Notes:</h3>
-  Ship unlabeled<br>
-  Lot/Exp Date on outisde of box only
+  <% unless @purchase_order.notes.blank? %>
+    <br><br>
+    <h3>Notes:</h3>
+    <%= raw @purchase_order.notes.gsub("\n", "<br>") %>
+  <% end %>
 
 </section>
 </body>

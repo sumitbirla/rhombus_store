@@ -4,7 +4,7 @@ module PurchaseOrderHelper
     css_class = css + ' '
     
     if po.status == 'open'
-      css_class += 'label-default'
+      css_class += 'label-info'
     elsif ['late', 'cancelled'].include?(po.status)
       css_class += 'label-warning'
     elsif po.status == 'received'

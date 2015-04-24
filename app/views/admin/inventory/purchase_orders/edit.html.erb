@@ -23,29 +23,39 @@
   <%= render 'admin/shared/error_messages', object: f.object %>
 
   <%= f.input :status, collection: ['new', 'open', 'partially_received', 'received', 'cancelled']%>
+  <%= f.association :affiliate, collection: Cache.affiliate_list('purchase-orders') %>
   <%= f.association :supplier, collection: Cache.affiliate_list('suppliers') %>
-  <%= f.input :issue_date %>
-  <%= f.input :due_date %>
+  <div class="form-group string optional ship_date">
+    <label class="string required control-label">Ship Date</label>
+    <div class="input-group date date-field">
+      <%= f.input_field :issue_date, as: :string, class: "form-control" %>
+      <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+    </div>
+  </div>
+  <div class="form-group string optional ship_date">
+    <label class="string control-label">Due Date</label>
+    <div class="input-group date date-field">
+      <%= f.input_field :due_date, as: :string, class: "form-control" %>
+      <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+    </div>
+  </div>
   <%= f.input :ship_method %>
   <%= f.input :payment_terms %>
   
   <div class="form-group string optional brand_website">
 	  <label class="string optional control-label" for="shipping_address">Shipping Address</label>
-	  <div class="controls" style="display: inline;">
-		  <select id="sel-shipping-address">
-			<option value="">-- select warehouse --</option>
-		  <% CmsCache.location_list('warehouses').each do |loc| %>
-		  	<option value="<%= loc.to_text %>"><%= loc.name %></option>
-		  <% end %>
-		  <select>
-	  </div>
+	  <select id="sel-shipping-address">
+		<option value="">-- select warehouse --</option>
+	  <% CmsCache.location_list('warehouses').each do |loc| %>
+	  	<option value="<%= loc.to_text %>"><%= loc.name %></option>
+	  <% end %>
+	  <select>
   </div>
-  <%= f.input :ship_to, as: :text, input_html: { class: 'span6', rows: 6 }%>
+  <%= f.input :ship_to, as: :text, input_html: { rows: 4 } %>
+  <%= f.input :notes, as: :text %>
   
-  
-  <div class="form-actions">
-  	<%= f.button :submit %>
-  </div>
+  <%= f.button :submit %>
+
 <% end %>
 
 

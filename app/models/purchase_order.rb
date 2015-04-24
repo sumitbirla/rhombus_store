@@ -16,8 +16,11 @@
 
 class PurchaseOrder < ActiveRecord::Base
   self.table_name = "store_purchase_orders"
+  
+  belongs_to :affiliate
   belongs_to :supplier, class_name: 'Affiliate'
   has_many :items, class_name: 'PurchaseOrderItem', dependent: :destroy
+  validates_presence_of :affiliate, :supplier, :issue_date, :status
   
   def total_amount
     amt = 0.0

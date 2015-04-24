@@ -141,7 +141,7 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
   private
   
     def purchase_order_params
-      params.require(:purchase_order).permit(:supplier_id, :status, :issue_date, :due_date, :ship_method, :payment_terms, :ship_to)
+      params.require(:purchase_order).permit!
     end
     
 end
