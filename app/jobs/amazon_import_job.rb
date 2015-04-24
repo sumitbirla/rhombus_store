@@ -16,7 +16,7 @@ class AmazonImportJob < ActiveJob::Base
                 marketplace_id: Cache.setting(d, "eCommerce", "Amazon Marketplace ID"),
                 merchant_id: Cache.setting(d, "eCommerce", "Amazon Merchant ID"),
                 aws_access_key_id: Cache.setting(d, "eCommerce", "AWS Access Key ID"),
-                aws_secret_access_key: Cache.setting(d, "eCommerce", "AWS Secret Access Key")
+                aws_secret_access_key: Cache.setting(d, "eCommerce", "AWS Secret Access Key"))
           
     parser = @client.list_orders({ created_after: 1.week.ago.iso8601 })
 
