@@ -38,12 +38,12 @@
 
           <p style="text-align: center; margin-top: 20px;">Please note that tracking information may not be available online until later at night.</p>
 
-          <p style="text-align: center;"><b>Tracking #</b> <%= @shipment.tracking_number %></p>
+          <p style="text-align: center;"><b>Tracking #</b> <%= @shipment.carrier %> <%= @shipment.tracking_number %></p>
 
-          <%  ship_method = @shipment.ship_method.downcase 
-              url = "http://www.fedex.com/Tracking?action=track&tracknumbers=#{@shipment.tracking_number}" if ship_method.include?("fedex")
-              url = "http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=#{@shipment.tracking_number}" if ship_method.include?("ups")
-              url = "https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1=#{@shipment.tracking_number}" if ship_method.include?("usps")
+          <%  carrier = @shipment.carrier.downcase 
+              url = "http://www.fedex.com/Tracking?action=track&tracknumbers=#{@shipment.tracking_number}" if carrier.include?("fedex")
+              url = "http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=#{@shipment.tracking_number}" if carrier.include?("ups")
+              url = "https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1=#{@shipment.tracking_number}" if carrier.include?("usps")
           %>
           <p style="text-align: center;">
             <a href="<%= url %>" style="font-size: 100%; line-height: 2; color: #FFF; text-decoration: none; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 25px; background-color: #348eda; margin: 20px 10px 0 0; padding: 0; border-color: #348eda; border-style: solid; border-width: 10px 20px;">Track Shipment</a>
