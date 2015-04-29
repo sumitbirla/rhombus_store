@@ -24,7 +24,7 @@
             <td nowrap><%= itemf.hidden_field :order_item_id %><%= oitem.item_id.upcase %></td>
             <td><%= render oitem %></td>
             <td class="calign"><%= oitem.quantity %></td>
-            <td class="calign"><%= itemf.number_field :quantity, style: 'width: 80px; text-align: center;' %></td>
+            <td class="calign"><%= itemf.number_field :quantity, unit_price: oitem.unit_price, class: "item-qty", style: 'width: 80px; text-align: center;' %></td>
             <td class="calign"><%= itemf.text_field :special_status %></td>
           </tr>
       <% end %>
