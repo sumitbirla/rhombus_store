@@ -104,9 +104,17 @@
 </div>
 
 
+<% pmt = Payment.find_by(payable_type: :shipment, payable_id: @shipment.id) %>
 
 <h4>
-  <span class="label label-success pull-right">invoice: <%= number_to_currency(@shipment.invoice_amount) %></span>
+  <div class="pull-right">
+    <% unless pmt.nil? %>
+      <span class="label label-info">posted: <%= number_to_currency(pmt.amount * -1.0) %></span>
+    <% else %>
+      <span class="label label-warning">not posted</span>
+    <% end %> &nbsp; 
+    <span class="label label-success">invoice: <%= number_to_currency(@shipment.invoice_amount) %></span>
+  </div>
   Items:</h4>
 
 <% upc_list = Upc.where(item: @shipment.items.collect { |x| x.order_item.item_id })%>
@@ -143,7 +151,7 @@
     <% unless @shipment.courier_data.nil? %>
 		  <img width="100%" src="<%= label_image_admin_store_shipment_path(@shipment) %>" alt="label image"/>
     <% else %>
-    <div style="color: #ccc; font-size: 24px; text-align: center; line-height: 300px; border: solid 1px #ccc;">
+    <div style="color: #ccc; font-size: 24px; text-align: center; line-height: 150px; border: solid 1px #ccc;">
       Shipping Label not available
     </div>
     <% end %>

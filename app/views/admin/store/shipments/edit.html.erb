@@ -57,7 +57,7 @@
         </div>
         
         <div class="panel panel-success">
-          <div class="panel-heading">Invoice</div>
+          <div class="panel-heading"><%= link_to "update", "#", class: 'update-invoice pull-right' %>Invoice</div>
           <div class="panel-body">
             <%= f.input :invoice_amount%>
           </div>
@@ -118,6 +118,28 @@
     <style>
         .form-inline .form-group { margin: 10px 0; }
     </style>
+    
+    <script>
+      $(document).ready(function() {
+        
+        $(".update-invoice").click(function(e) {
+          
+          e.preventDefault();
+          var total = 0.0;
+      
+          $(".item-qty").each(function() {  
+              var unit_price = parseFloat($(this).attr("unit_price"));
+              var quantity = parseFloat($(this).val());
+        
+              if (!isNaN(unit_price) && !isNaN(quantity))
+                total += unit_price * quantity; 
+          });
+      
+          $("#shipment_invoice_amount").val(total);
+        });
+        
+      });
+    </script>
 <% end %>
 
 
