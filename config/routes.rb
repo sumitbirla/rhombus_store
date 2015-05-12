@@ -133,6 +133,8 @@ Rails.application.routes.draw do
           get 'void_label'
           get 'email_confirmation'
           get 'create_payment'
+          get 'scan'
+          post 'scan' => 'shipments#verify_scan'
         end
       end
       resources :tax_rates

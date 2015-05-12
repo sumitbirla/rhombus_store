@@ -275,6 +275,23 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipments = Shipment.where(id: params[:shipment_id])
   end
 
+  def scan
+    @shipment = Shipment.find(params[:id])
+  end
+  
+  def verify_scan
+    @shipment = Shipment.find(params[:id])
+    scan_list = params["upc_list"].split("\n").map { |x| x.chomp! }
+    
+    @scans = {}
+    scan_list.each do |scan|
+      @scans[scan] = 0 if @scans[scan].nil?
+      @scans[scan] += 1
+    end
+    
+    render 'scan'
+  end
+
 
   private
 

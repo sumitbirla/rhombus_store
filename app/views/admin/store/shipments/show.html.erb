@@ -36,6 +36,13 @@
           <i class="icon-file-alt"></i> Print Packing Slip
       <% end %>
     </li>
+    <% if @shipment.items.length > 1 %>
+    <li>
+      <%= link_to scan_admin_store_shipment_path(@shipment) do %>
+        Scan
+      <% end %>
+    </li>
+    <% end %>
     <% if @shipment.status == "shipped" %>
     <li>
       <%= link_to email_confirmation_admin_store_shipment_path(@shipment) do %>
