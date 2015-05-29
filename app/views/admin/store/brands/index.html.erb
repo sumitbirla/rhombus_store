@@ -8,14 +8,14 @@
 		<th>Name</th>
 		<th>Products</th>
 		<th>Website</th>
-		<th>&nbsp;</th>
+		<th class="actions">&nbsp;</th>
 	</tr>
 	<% @brands.each do |brand| %>
 	<tr>
 		<td><%= link_to brand.name, edit_admin_store_brand_path(brand) %></td>
 		<td><%= brand.products.count %>
 		<td><%= brand.website %></td>
-		<td>
+		<td class="actions">
 			<%= link_to "edit", edit_admin_store_brand_path(brand) %> &nbsp;
 			<%= link_to "delete", 
 						  { action: "destroy", id: brand.id }, 

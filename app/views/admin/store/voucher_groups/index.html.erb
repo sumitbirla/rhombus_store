@@ -9,7 +9,7 @@
 		<th>Expires</th>
 		<th>Codes issued</th>
 		<th>Status</th>
-		<th>&nbsp;</th>
+		<th class="actions">&nbsp;</th>
 	</tr>
 	<% @voucher_groups.each do |vg| %>
 	<tr>
@@ -23,7 +23,7 @@
 			<span class="label label-success">active</span>
 			<% end %>
 		</td>
-		<td>
+		<td class="actions">
       <%= link_to "vouchers", admin_store_voucher_group_path(vg) %> &nbsp;
 			<%= link_to "edit", edit_admin_store_voucher_group_path(vg) %> &nbsp;
 			<%= link_to "delete", 

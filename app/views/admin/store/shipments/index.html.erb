@@ -33,7 +33,7 @@
     <th>Shipped</th>
     <th>Method</th>
     <th>Status</th>
-    <th>&nbsp;</th>
+    <th class="actions">&nbsp;</th>
   </tr>
   <% @shipments.each do |shipment|  %>
       <tr>
@@ -45,7 +45,7 @@
         <td><%= shipment.ship_date ? sysdate(shipment.ship_date) : "<span class='light'>-</span>".html_safe %></td>
         <td><%= shipment.ship_method.blank? ? '<span class="light">- n/a -</span>'.html_safe : "#{shipment.carrier} #{shipment.ship_method}" %></td>
         <td><span class="label <%= 'label-warning' if shipment.status == 'pending' %>  <%= 'label-success' if shipment.status == 'shipped' %> <%= 'label-danger' if shipment.status == 'void' %>"><%= shipment.status %></span></td>
-        <td class="ralign">
+        <td class="actions ralign">
           <% if shipment.status == "pending" %>
             <%= link_to "ship", admin_store_easy_post_path(shipment_id: shipment.id) %> &nbsp;
           <% end %>

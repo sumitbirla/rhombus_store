@@ -13,7 +13,7 @@
 		<th>Per user</th>
 		<th>Times used</th>
 		<th>Status</th>
-		<th>&nbsp;</th>
+		<th class="actions">&nbsp;</th>
 	</tr>
 	<% @coupons.each do |coupon| %>
 	<tr>
@@ -50,7 +50,7 @@
 			<span class="label label-warning">pending</span>
 			<% end %>
 		</td>
-		<td>
+		<td class="actions">
 			<%= link_to "edit", edit_admin_store_coupon_path(coupon) %> &nbsp;
 			<%= link_to "delete", 
 						  { action: "destroy", id: coupon.id }, 

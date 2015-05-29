@@ -8,7 +8,7 @@
 		<th>Size</th>
 		<th>Resolution</th>
 		<th>Areas</th>
-		<th>&nbsp;</th>
+		<th class="actions">&nbsp;</th>
 	</tr>
 	<% @label_sheets.each do |sheet| %>
 	<tr>
@@ -16,7 +16,7 @@
 		<td><%= sheet.width %> in. x. <%= sheet.height %> in.</td>
 		<td><%= sheet.dpi %> dpi</td>
 		<td><%= sheet.areas.length %></td>
-		<td>
+		<td class="actions">
 			<%= link_to "edit", edit_admin_store_label_sheet_path(sheet) %> &nbsp;
 			<%= link_to "delete", 
 						  { action: "destroy", id: sheet.id }, 
