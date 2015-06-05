@@ -11,7 +11,7 @@
 		<th>Max. order</th>
 		<th>Intl. surcharge</th>
 		<th>Active</th>
-		<th>&nbsp;</th>
+		<th class="actions">&nbsp;</th>
 	</tr>
 	<% @shipping_options.each do |option| %>
 	<tr>
@@ -27,7 +27,7 @@
 			<span class="label label-danger">disabled</span>
 			<% end %>
 		</td>
-		<td>
+		<td class="actions">
 			<%= link_to "edit", edit_admin_store_shipping_option_path(option) %> &nbsp;
 			<%= link_to "delete", 
 						  { action: "destroy", id: option.id }, 

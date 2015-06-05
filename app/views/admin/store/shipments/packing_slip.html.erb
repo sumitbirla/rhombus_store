@@ -171,7 +171,7 @@
         <td align="right" class="textright"><%= item.quantity unless item.quantity == 0 && !item.special_status.blank? %> <%= item.special_status %></td>
       </tr>
       <% end %>
-      <tr style="height: 20<%= "0" if @shipment.items.length < 9 %>px;"><td colspan="4"></td></tr>
+      <tr style="height: 10<%= "0" if @shipment.items.length < 9 %>px;"><td colspan="4"></td></tr>
       <tr style="border-top: solid 1px black;">
         <td align="right" class="textright" colspan="3"><b>Total Items</b></td>
         <td align="right" class="textright"><b><%= @shipment.items.sum(:quantity) %></b></td>
@@ -181,11 +181,16 @@
   </article>
 
 
-  <h2>Comments</h2>
   <% unless @shipment.notes.blank? %>
+    <h2>Comments</h2>
     <%= @shipment.notes %>
-  <% else %>
-    Thank you for your business!
+  <% end %>
+  
+  
+  <% if ["Healthy Breeds", "Amazon.com"].include? @shipment.order.sales_channel %>
+  <div style="text-align: ceanter; margin-top: 40px;">
+    <img src="/img/HB10_reorder_coupon.jpg" width="250" style="padding: 10px; border: dashed 3px #666;">
+  </div>
   <% end %>
 
 </section>

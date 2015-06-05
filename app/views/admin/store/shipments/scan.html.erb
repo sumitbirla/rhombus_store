@@ -1,0 +1,65 @@
+<%= link_to admin_store_shipment_path(@shipment), class: "btn btn-default pull-right" do %>
+  <i class="fa fa-mail-reply"></i> Return to shipment
+<% end %>
+<h2>
+  <i class="fa fa-truck"></i> &nbsp;Shipment #<%= @shipment %>
+</h2>
+<div>
+  <b>Created: </b> <%= time_ago_in_words(@shipment.created_at) %> ago
+  &nbsp; <span class="label <%= 'label-warning' if @shipment.status == 'pending' %>  <%= 'label-success' if @shipment.status == 'shipped' %>"><%= @shipment.status %></span>
+</div>
+
+
+<% upc_list = Upc.where(item: @shipment.items.collect { |x| x.order_item.item_id })%>
+
+<div class="row">
+  <div class="col-md-9">
+    <table class="table table-striped table-condensed table-bordered">
+        <tr>
+            <th>Item</th>
+            <th>Description</th>
+            <th class="calign">Qty.</th>
+            <th class="calign">Scanned</th>
+        </tr>
+        <% @shipment.items.each do |item| 
+            next unless item.order_item 
+            upc = upc_list.find { |x| x.item == item.order_item.item_id }%>
+            <tr>
+                <td nowrap><%= item.order_item.item_id.upcase %></td>
+                <td><%= render item.order_item %></td>
+                <td class="calign"><%= item.quantity %></td>
+                <td class="calign" id="<%= upc.code %>"><%= @scans[upc.code] unless @scans.nil? %></td>
+            </tr>
+        <% end %>
+    </table>
+  </div>
+  <div class="col-md-3">
+    <form method="post">
+      <%= token_tag %>
+      <textarea id="upc-list" name="upc_list" rows="20"></textarea><br>
+      <button class="btn btn-primary">Crosscheck</button>
+    <form>
+  </div>
+</div>
+
+
+<% content_for :title do %>
+    Shipment <%= @shipment.order_id %>-<%= @shipment.sequence %>
+<% end %>
+
+<% content_for :head do %>
+  <script>
+    $(document).ready(function() {
+      
+      $("#upc-list").focus();
+          
+    });
+  </script>
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+    <li><a href="#">eCommerce</a></li>
+    <li><%= link_to 'Shipments', admin_store_shipments_path %></li>
+    <li class="active"><%= @shipment %></li>
+<% end %>

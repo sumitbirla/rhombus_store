@@ -16,7 +16,7 @@
 		<th>Price</th>
 		<th>Sold</th>
 		<th>Status</th>
-		<th>&nbsp;</th>
+		<th class="actions">&nbsp;</th>
 	</tr>
 	<% @daily_deals.each do |deal| %>
 	<tr>
@@ -36,7 +36,7 @@
 			<span class="label label-default">pending</span>
 			<% end %>	
 		</td>
-		<td>
+		<td class="actions">
       <%= link_to "orders", orders_admin_store_daily_deal_path(deal) %> &nbsp;
 			<%= link_to "edit", edit_admin_store_daily_deal_path(deal) %> &nbsp;
 			<%= link_to "delete", 

@@ -1,9 +1,11 @@
 class Admin::Store::OrdersController < Admin::BaseController
   
   def index
-    @orders = Order.where(status: params[:status] || Order.valid_statuses, domain_id: cookies[:domain_id]).order(submitted: :desc)
-    
     q = params[:q]
+    
+    @orders = Order.where(status: params[:status] || Order.valid_statuses).order(submitted: :desc)
+    @orders = @orders.where(domain_id: cookies[:domain_id]) if q.nil?
+    
     unless q.nil?
       if q.to_i == 0
         @orders = @orders.where("billing_name LIKE '%#{q}%' OR shipping_name LIKE '%#{q}%'")

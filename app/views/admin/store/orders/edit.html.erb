@@ -88,16 +88,16 @@
         <%= f.input :notify_email, label: 'Email' %>  
       </div>
       <div class="col-md-6">
-        <div class="form-group decimal optional order_subtotal">
-          <label class="decimal optional control-label" for="order_subtotal">Subtotal</label>
-          <%= f.input_field :subtotal %>  <%= link_to "update", "#", class: 'update-subtotal' %>
-        </div>
-        <%= f.input :tax_amount %>
-        <%= f.input :tax_rate %>
-        <%= f.input :shipping_cost %>
+        <%= f.input :subtotal %>
         <%= f.input :discount_amount %>
         <%= f.input :credit_applied %>
-        <%= f.input :total %>
+        <%= f.input :tax_rate %>
+        <%= f.input :tax_amount %>    
+        <%= f.input :shipping_cost %>
+        <div class="form-group decimal optional order_subtotal">
+          <label class="decimal optional control-label" for="order_subtotal">Total</label>
+          <%= f.input_field :total %>  <%= link_to "update", "#", class: 'update-total' %>
+        </div>
         <%= f.input :customer_note, as: :text, input_html: { class: 'span10', rows: 3}%>
       </div>
     </div>
@@ -135,11 +135,13 @@
         $("form.form-inline").submit();
       });
       
-      $(".update-subtotal").click(function(e) {
+      $(".update-total").click(function(e) {
         
+        e.preventDefault();
         var subtotal = 0.0;
         
-        $(".unit-price").each(function() {  
+        // calculate subtotal first
+        $(".unit-price").each(function() { 
           if ($(this).is(":visible")) {
             var unit_price = parseFloat($(this).val());
             var quantity = parseFloat($(this).parent().parent().find(".qty").val());
@@ -149,8 +151,16 @@
           }
         });
         
+        var shipping_cost = parseFloat($("#order_shipping_cost").val());
+        var discount_amount = parseFloat($("#order_discount_amount").val());
+        var credit_applied = parseFloat($("#order_credit_applied").val());
+        var tax_rate = parseFloat($("#order_tax_rate").val());
+        var tax_amount = (subtotal - discount_amount - credit_applied) * tax_rate / 100.0;
+        var total = subtotal + shipping_cost + tax_amount - discount_amount - credit_applied;
+        
         $("#order_subtotal").val(subtotal);
-        e.preventDefault();
+        $("#order_tax_amount").val(tax_amount.toFixed(2));
+        $("#order_total").val(total.toFixed(2));
         
       });
       

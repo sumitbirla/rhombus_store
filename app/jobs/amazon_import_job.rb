@@ -108,7 +108,7 @@ class AmazonImportJob < ActiveJob::Base
         order.update(shipping_cost: item["ShippingPrice"]["Amount"].to_f) unless item["ShippingPrice"].nil?
       end
 
-    else
+    elsif o["OrderStatus"].downcase != "unshipped"
       updated_str = ""
       updated_str = "(updated)" unless o["OrderStatus"].downcase == db_order.status
       @logger.debug "#{db_order.id} : #{db_order.external_order_id} : #{db_order.status} : #{db_order.billing_name} #{updated_str}"

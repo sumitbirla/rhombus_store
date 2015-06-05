@@ -24,7 +24,7 @@
             <td nowrap><%= itemf.hidden_field :order_item_id %><%= oitem.item_id.upcase %></td>
             <td><%= render oitem %></td>
             <td class="calign"><%= oitem.quantity %></td>
-            <td class="calign"><%= itemf.number_field :quantity, style: 'width: 80px; text-align: center;' %></td>
+            <td class="calign"><%= itemf.number_field :quantity, unit_price: oitem.unit_price, class: "item-qty", style: 'width: 80px; text-align: center;' %></td>
             <td class="calign"><%= itemf.text_field :special_status %></td>
           </tr>
       <% end %>
@@ -57,7 +57,7 @@
         </div>
         
         <div class="panel panel-success">
-          <div class="panel-heading">Invoice</div>
+          <div class="panel-heading"><%= link_to "update", "#", class: 'update-invoice pull-right' %>Invoice</div>
           <div class="panel-body">
             <%= f.input :invoice_amount%>
           </div>
@@ -118,6 +118,28 @@
     <style>
         .form-inline .form-group { margin: 10px 0; }
     </style>
+    
+    <script>
+      $(document).ready(function() {
+        
+        $(".update-invoice").click(function(e) {
+          
+          e.preventDefault();
+          var total = 0.0;
+      
+          $(".item-qty").each(function() {  
+              var unit_price = parseFloat($(this).attr("unit_price"));
+              var quantity = parseFloat($(this).val());
+        
+              if (!isNaN(unit_price) && !isNaN(quantity))
+                total += unit_price * quantity; 
+          });
+      
+          $("#shipment_invoice_amount").val(total.toFixed(2));
+        });
+        
+      });
+    </script>
 <% end %>
 
 

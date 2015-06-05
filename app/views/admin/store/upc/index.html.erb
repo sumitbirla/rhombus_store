@@ -11,14 +11,14 @@
 		<th>Code</th>
 		<th>Assigned item</th>
     <th>Notes</th>
-		<th>&nbsp;</th>
+		<th class="actions">&nbsp;</th>
 	</tr>
 	<% @upcs.each do |upc| %>
 	<tr>
 		<td><%= upc.code %></td>
 		<td><%= upc.item %></td>
     <td><%= upc.notes %></td>
-		<td>
+		<td class="actions">
 			<%= link_to "edit", edit_admin_store_upc_path(upc) %> &nbsp;
 			<%= link_to "delete",
 						  { action: "destroy", id: upc.id },

@@ -25,7 +25,7 @@
 		<th>Status</th>
 		<th class="ralign">Price</th>
     <th class="calign">Sold</td>
-		<th>&nbsp;</th>
+		<th class="actions">&nbsp;</th>
 	</tr>
 	<% @products.each do |product|
    order_count = OrderItem.joins(:order)
@@ -39,7 +39,7 @@
     <td><%= product_status(product) %></td>
 		<td class="ralign">$<%= product.price %></td>
     <td class="calign"><%= number_with_delimiter(order_count) %></td>
-		<td class="ralign">
+		<td class="actions ralign">
 			<%= link_to "edit", edit_admin_store_product_path(product) %> &nbsp;
 			<%= link_to "delete", 
 						  { action: "destroy", id: product.id }, 
