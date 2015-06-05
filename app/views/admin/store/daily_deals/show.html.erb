@@ -28,6 +28,11 @@
         <i class="fa fa-shopping-cart"></i> Orders
       <% end %>
     </li>
+    <li>
+      <%= link_to new_admin_store_daily_deal_path(clone_id: @daily_deal) do %>
+        <i class="fa fa-plus"></i> Clone
+      <% end %>
+    </li>
   </ul>
 </div>
 
@@ -147,7 +152,7 @@
   	<tr>
   		<td><%= item.item_id %></td>
   		<td>
-        <span class="item-desc"><%= item.product.name unless item.product.nil? %></span>
+        <span class="item-desc"><%= item.product.name_with_option unless item.product.nil? %></span>
         <span class="light affiliate-name"> &nbsp; &nbsp; <%= item.affiliate unless item.affiliate.nil? %></span>
   		</td>
   		<td><%= number_to_currency item.unit_cost %></td>

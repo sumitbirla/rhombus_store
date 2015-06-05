@@ -38,7 +38,7 @@
         <% end %>
       </td>
       <td>
-        <span class="item-desc"><%= item.product.name unless item.product.nil? %></span>
+        <span class="item-desc"><%= item.product.name_with_option unless item.product.nil? %></span>
         <span class="light affiliate-name"> &nbsp; &nbsp; <%= item.affiliate unless item.affiliate.nil? %></span>
       </td>
       <td><%= itemf.input_field :unit_cost, class: 'unit-price' %></td>

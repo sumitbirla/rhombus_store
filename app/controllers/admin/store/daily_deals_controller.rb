@@ -5,7 +5,12 @@ class Admin::Store::DailyDealsController < Admin::BaseController
   end
 
   def new
-    @daily_deal = DailyDeal.new short_tag_line: 'New daily deal', theme: 'default', facebook_posts: 0, facebook_clicks: 0, number_sold: 0
+    if params[:clone_id].nil?
+      @daily_deal = DailyDeal.new short_tag_line: 'New daily deal', theme: 'default', facebook_posts: 0, facebook_clicks: 0, number_sold: 0
+    else
+      @daily_deal = DailyDeal.find(params[:clone_id]).dup
+      @daily_deal.slug += "-copy"
+    end
     render 'edit'
   end
 
