@@ -40,7 +40,7 @@ module StoreCache
       AffiliateProduct.joins(:product)
                       .includes(:product, [product: :pictures])
                       .where(affiliate_id: aff.id)
-                      .where("store_products.active=1 AND store_products.hidden=0").load
+                      .where("store_products.active=1 AND store_products.hidden=0 AND store_products.affiliate_only=1").load
     end
   end
   
@@ -54,7 +54,7 @@ module StoreCache
       ap_list = AffiliateProduct.joins(:product)
                                 .includes(:product, [product: :product_categories])
                                 .where(affiliate_id: aff.id)
-                                .where("store_products.active=1 AND store_products.hidden=0")
+                                .where("store_products.active=1 AND store_products.hidden=0 AND store_products.affiliate_only=1")
       
       ap_list.each do |ap|
         new_list << ap if ap.product.product_categories.any? { |pc| pc.category_id == cat.id }
@@ -71,6 +71,14 @@ module StoreCache
       AffiliateProduct
             .includes(:product, [product: :pictures, product: :pattributes])
             .find_by(affiliate_id: affiliate.id, product_id: Product.select(:id).where(slug: product_slug))
+    end
+  end
+  
+  def self.non_affiliate_products
+    Rails.cache.fetch("non-affiliate-products") do
+      Product
+          .includes(:pictures, :pattributes, :categories)
+          .where(affiliate_only: false, hidden: false, active: true)
     end
   end
   

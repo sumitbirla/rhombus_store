@@ -36,23 +36,23 @@
 		<tr>
 			<td>Price</td>
 			<td>
-              <span class="label label-default price">Web: $<%= @product.price %></span>
-              <% unless @product.special_price.nil? %>
-                <span class="label label-default price">Promo: $<%= @product.special_price %></span>
-              <% end %>
-              <% unless @product.distributor_price.nil? %>
-                  <span class="label label-default price">Distributor: $<%= @product.distributor_price %></span>
-              <% end %>
-              <% unless @product.retailer_price.nil? %>
-                  <span class="label label-default price">Retailer: $<%= @product.retailer_price %></span>
-              <% end %>
-              <% unless @product.retail_map.nil? %>
-                  <span class="label label-default price">MAP: $<%= @product.retail_map %></span>
-              <% end %>
-              <% unless @product.msrp.nil? %>
-                  <span class="label label-default price">MSRP: $<%= @product.msrp %></span>
-              <% end %>
-            </td>
+        <span class="label label-default price">Web: $<%= @product.price %></span>
+        <% unless @product.special_price.nil? %>
+          <span class="label label-default price">Promo: $<%= @product.special_price %></span>
+        <% end %>
+        <% unless @product.distributor_price.nil? %>
+            <span class="label label-default price">Distributor: $<%= @product.distributor_price %></span>
+        <% end %>
+        <% unless @product.retailer_price.nil? %>
+            <span class="label label-default price">Retailer: $<%= @product.retailer_price %></span>
+        <% end %>
+        <% unless @product.retail_map.nil? %>
+            <span class="label label-default price">MAP: $<%= @product.retail_map %></span>
+        <% end %>
+        <% unless @product.msrp.nil? %>
+            <span class="label label-default price">MSRP: $<%= @product.msrp %></span>
+        <% end %>
+      </td>
 		</tr>
 
       <tr>
@@ -159,6 +159,10 @@
             <% if @product.featured %>
                 <span class="label label-info">featured</span>
             <% end %>
+            
+            <% if @product.affiliate_only %>
+                <span class="label label-warning">affiliate</span>
+            <% end %>
 
             <% if !@product.low_threshold.nil? && stock <= @product.low_threshold %>
                 <span class="label label-danger">low inventory</span>
@@ -243,13 +247,13 @@
 	<% if @product.pictures.length > 0 %>
       <h4>Pictures</h4>
       <a href="<%= cdn_image_url @product.pictures[0], 800, 700, 0 %>" data-lightbox="image-1">
-          <img src="<%= cdn_image_url @product.pictures[0], 400, 300, 2 %>" class="img-responsive" title="<%= @product.pictures[0].caption %>"/>
+          <img src="<%= cdn_image_url @product.pictures[0], 500, 500, 0 %>" class="img-responsive" title="<%= @product.pictures[0].caption %>" style="width: 100%;"/>
       </a>
       <% if @product.pictures.length > 1 %>
           <br/>
           <% @product.pictures[1..-1].each do |pic| %>
               <a href="<%= cdn_image_url pic, 700, 600, 0 %>"  data-lightbox="image-1">
-                <img src="<%= cdn_image_url pic, 240, 240, 2 %>" class="img-polaroid" style="margin: 4px" title="<%= pic.caption %>"/>
+                <img src="<%= cdn_image_url pic, 50, 50, 2 %>" class="img-thumbnail" style="margin: 4px" title="<%= pic.caption %>"/>
               </a>
           <% end %>
       <% end %>
