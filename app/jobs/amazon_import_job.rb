@@ -107,6 +107,11 @@ class AmazonImportJob < ActiveJob::Base
 
         order.update(shipping_cost: item["ShippingPrice"]["Amount"].to_f) unless item["ShippingPrice"].nil?
       end
+      
+      # create shipment if requested
+      if Cache.setting(order.domain_id, :shipping, "Auto Create Shipment")
+        CreateShipmentJob.perform_later(order.id)
+      end
 
     elsif o["OrderStatus"].downcase != "unshipped"
       updated_str = ""

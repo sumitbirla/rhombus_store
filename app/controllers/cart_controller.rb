@@ -430,6 +430,11 @@ class CartController < ApplicationController
       DailyDeal.where(id: item.daily_deal_id).update_all("number_sold = number_sold + #{item.quantity}")
     end
     
+    # create shipment if requested
+    if Cache.setting(@order.domain_id, :shipping, "Auto Create Shipment")
+      CreateShipmentJob.perform_later(@order.id)
+    end
+    
     # delete cart cookie and display confirmation
     cookies.delete :cart
     session[:order_id] = @order.id
