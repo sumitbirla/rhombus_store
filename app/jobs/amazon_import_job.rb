@@ -109,7 +109,7 @@ class AmazonImportJob < ActiveJob::Base
       end
       
       # create shipment if requested
-      if Cache.setting(order.domain_id, :shipping, "Auto Create Shipment")
+      if o["FulfillmentChannel"] == "MFN" && Cache.setting(order.domain_id, :shipping, "Auto Create Shipment") == "true"
         CreateShipmentJob.perform_later(order.id)
       end
 
