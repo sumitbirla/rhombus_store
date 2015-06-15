@@ -55,7 +55,13 @@
 	<tr>
 		<td><input type="checkbox" name="order_id[]" class="order-chk" value="<%= order.id %>"/></td>
 		<td><%= link_to order.id, admin_store_order_path(order) %></td>
-        <td><%= order.sales_channel %></td>
+    <td>
+    <% unless order.affiliate_campaign_id.nil? %>
+      <%= link_to order.affiliate_campaign.affiliate, admin_system_affiliate_path(order.affiliate_campaign.affiliate_id) %>
+    <% else %>
+      <%= order.sales_channel %>
+    <% end %>
+    </td>
 		<td><%= systime order.submitted if order.submitted%></td>
 		<td>
 			<% if order.user_id.nil? %>
