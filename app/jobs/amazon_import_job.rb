@@ -45,6 +45,7 @@ class AmazonImportJob < ActiveJob::Base
       order = Order.new(
           domain_id: 1,
           external_order_id: o["AmazonOrderId"],
+          cart_key: SecureRandom.hex,
           submitted: Time.iso8601(o["PurchaseDate"]),
           shipping_method: o["ShipmentServiceLevelCategory"],
           notify_email: o["BuyerEmail"],

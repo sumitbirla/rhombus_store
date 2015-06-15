@@ -17,7 +17,7 @@ class CartController < ApplicationController
     end    
     
     # load existing order from database
-    order = Order.includes(:items).find_by(cart_key: key)
+    order = Order.includes(:items, [items: [:product, :affiliate]]).find_by(cart_key: key)
     if order.nil?
       order = Order.new(cart_key: key, 
                         status: 'in cart', 
@@ -152,7 +152,7 @@ class CartController < ApplicationController
 
   def remove
     id = params[:id].to_i
-    order = Order.includes(:items).find_by(cart_key: cookies[:cart])
+    order = Order.includes(:items).find_by(cart_key: cookies[:cart]) unless cookies[:cart].nil?
 
     if order != nil
       item = order.items.find { |t| t.id == id }
@@ -174,7 +174,8 @@ class CartController < ApplicationController
 
   
   def update
-    order = Order.includes(:items).find_by(cart_key: cookies[:cart])
+    order = Order.includes(:items).find_by(cart_key: cookies[:cart]) unless cookies[:cart].nil?
+    return redirect_to :back if order.nil?
     
     # iterate through items
     params.each do |key, val|
@@ -215,8 +216,8 @@ class CartController < ApplicationController
   
   
   def checkout
-      @order = Order.includes(:items).find_by(cart_key: cookies[:cart])
-      redirect_to action: 'index' if @order.nil? || @order.items.length == 0
+      @order = Order.includes(:items).find_by(cart_key: cookies[:cart]) unless cookies[:cart].nil?
+      return redirect_to action: 'index' if (@order.nil? || @order.items.length == 0)
 
       # retrieve info from previous order if user is logged in
       if @order.user_id.nil? && !session[:user_id].nil?
@@ -247,7 +248,9 @@ class CartController < ApplicationController
   
   
   def checkout_update  
-    @order = Order.includes(:items).find_by(cart_key: cookies[:cart])
+    @order = Order.includes(:items).find_by(cart_key: cookies[:cart]) unless cookies[:cart].nil?
+    return redirect_to action: 'index' if @order.nil? || @order.items.length == 0
+    
     @order.assign_attributes(order_params)
 
     # update billing name otherwise credit card validation will fail
@@ -278,7 +281,7 @@ class CartController < ApplicationController
   
   
   def submit
-    @order = Order.includes(:items).find(params[:id])
+    @order = Order.includes(:items).find(params[:id]) 
     @order.user_id = session[:user_id] if @order.user_id.nil?   # attach order to logged-in user
 
     # Double check if voucher is not being reused.  this can happen if user has multiple

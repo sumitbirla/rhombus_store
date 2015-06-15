@@ -31,6 +31,7 @@ class Admin::Store::OrdersController < Admin::BaseController
   def create
     @order = Order.new(order_params)
     @order.submitted = DateTime.now
+    @order.cart_key = SecureRandom.hex
     
     unless params[:add_more_items].blank?
       count = params[:add_more_items].to_i - @order.items.length + 5 
