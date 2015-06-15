@@ -77,6 +77,23 @@ class Admin::Store::ReportsController < Admin::BaseController
     ActiveRecord::Base.connection.execute(sql).each { |row| @data << row } 
   end
   
+  def inventory_required
+    
+    sql = <<-EOF
+      select p.id, p.sku, p.name, p.option_title, sum(quantity), s.name, s.id
+      from store_order_items oi
+      join store_orders o on oi.order_id = o.id
+      join store_products p on oi.product_id = p.id
+      left join store_label_sheets s on p.label_sheet_id = s.id
+      where o.status in ('unshipped', 'submitted')
+      group by oi.product_id
+      order by sum(quantity) desc;
+    EOF
+    
+    @data = []
+    ActiveRecord::Base.connection.execute(sql).each { |row| @data << row } 
+  end
+  
   
   def set_report_params
     

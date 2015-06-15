@@ -5,8 +5,8 @@
 
 
 <ul class="nav nav-tabs">
-  <li role="presentation" class="active"><a href="#">By Label</a></li>
-  <li role="presentation"><a href="/admin/store/reports/inventory_required">By Inventory</a></li>
+  <li role="presentation"><a href="/admin/store/reports/pending_fulfillment">By Label</a></li>
+  <li role="presentation" class="active"><a href="/admin/store/reports/inventory_required">By Inventory</a></li>
 </ul>
 
 <% total = 0 %>
@@ -17,29 +17,21 @@
     <th>Item</th>
     <th>Label</th>
     <th class="calign">Quantity</th>
-    <th></th>
 	</tr>
   <% @data.each do |row| 
-      total += row[5] 
-      dir = row[0].split('-')[1]
-      pdf_path = "/userfiles/images/labels/#{dir}/#{row[0]}.pdf"
+      total += row[4] 
   %>
 	<tr>
-		<td><%= row[0] %></td>
-    <td><%= link_to row[2] + ", " + row[3], admin_store_product_path(row[1]) %> &nbsp;(<%= row[4]%>)</td>
+		<td><%= row[1] %></td>
+    <td><%= link_to row[2] + ", " + row[3], admin_store_product_path(row[0]) %></td>
     <td>
-      <% unless row[7].nil? %>
-        <%= link_to row[6], edit_admin_store_label_sheet_path(row[7]) %>
+      <% unless row[6].nil? %>
+        <%= link_to row[5], edit_admin_store_label_sheet_path(row[6]) %>
       <% else %>
         <span class="light">- not set -</span>
       <% end %>
     </td>
-    <td class="calign"><%= number_to_human row[5] %></td>
-    <td>
-      <%= link_to Cache.setting('System', 'Static Files Url') + pdf_path, target: '_blank' do %>
-          <i class="fa fa-download"></i> pdf
-      <% end %>
-    </td>
+    <td class="calign"><%= number_to_human row[4] %></td>
 	</tr>
   <% end %>
   <tr>
@@ -50,7 +42,7 @@
 </table>
 
 
-<%= content_for :title do %>
+<% content_for :title do %>
 	Pending Fulfillment
 <% end %>
 
