@@ -59,7 +59,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     @order = Order.find(params[:id])
     item_count = @order.items.length
 
-    @order.attributes = order_params
+    @order.assign_attributes(order_params)
     
     unless params[:add_more_items].blank?
       count = params[:add_more_items].to_i - item_count + 5 
