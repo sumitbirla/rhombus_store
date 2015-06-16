@@ -50,11 +50,12 @@ class Admin::Store::EasyPostController < Admin::BaseController
                               comment:  response[:selected_rate][:service]
 
     @shipment.order.update_attribute(:status, 'shipped')
-    @shipment.post_invoice
     
     # Amazon orders need to be notified about shipment
     if @shipment.order.sales_channel == "Amazon.com"
       AmazonFulfillmentJob.perform_later(@shipment.id)
+    else
+      @shipment.post_invoice
     end
     
     # auto print label if specified in settings
