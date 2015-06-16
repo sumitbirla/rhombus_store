@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   post 'cart/checkout' => 'cart#checkout_update'
   get 'cart/submitted'
   get 'cart' => 'cart#index'
+  get 'planding/:slug' => 'products#product_landing'
   get "products/:slug" => 'products#show'
   get 'resize' => 'images#resize'
   get 'images/resize'
