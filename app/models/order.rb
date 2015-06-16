@@ -187,10 +187,10 @@ class Order < ActiveRecord::Base
       end
       
       shipment.update_attribute(:package_weight, weight) unless weight == 0.3
+      
+      OrderHistory.create(order_id: id, user_id: user_id, event_type: :shipment_created,
+                    system_name: 'Rhombus', identifier: shipment.id, comment: "shipment created: #{shipment}") 
     end
-    
-    OrderHistory.create(order_id: id, user_id: user_id, event_type: :shipment_created,
-                  system_name: 'Rhombus', identifier: shipment.id, comment: "shipment created: #{shipment}") 
     
     shipment
   end
