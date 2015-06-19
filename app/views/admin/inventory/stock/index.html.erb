@@ -7,26 +7,32 @@
 		<th>In stock</th>
 		<th>Committed</th>
 		<th>Low threshold</th>
-        <th class="calign">Supplier</th>
+    <th>Supplier</th>
+    <th class="ralign">Cost</th>
 	</tr>
 	<% @products.each do |p|
-		stock = InventoryTransactionItem.where(sku: p.sku).sum(:quantity) %>
+		stock = InventoryTransactionItem.where(sku: p.sku).sum(:quantity) 
+    ap = AffiliateProduct.find_by(affiliate_id: p.primary_supplier_id, product_id: p.id) unless p.primary_supplier_id.nil?
+    %>
 	<tr>
 		<td><%= link_to p.sku, admin_store_product_path(p) %></td>
 		<td>
-          <%= p.name %>
-          <% if !p.low_threshold.nil?  and stock <= p.low_threshold %>
-              &nbsp; <label class="label label-danger">Low</label>
-          <% end %>
-        </td>
+      <%= p.name_with_option %>
+      <% if !p.low_threshold.nil?  and stock <= p.low_threshold and p.low_threshold != 0 %>
+          &nbsp; <label class="label label-danger">Low</label>
+      <% end %>
+    </td>
 		<td class="calign"><%= stock %></td>
 		<td class="calign"><%= p.committed %></td>
 		<td class="calign"><%= p.low_threshold %></td>
-        <td class="calign">
-          <% unless p.primary_supplier_id.nil? %>
-              <%= link_to p.supplier, admin_system_affiliate_path(p.primary_supplier_id) %>
-          <% end %>
-        </td>
+    <td>
+      <% unless p.primary_supplier_id.nil? %>
+          <%= link_to p.supplier, admin_system_affiliate_path(p.primary_supplier_id) %>
+      <% end %>
+    </td>
+    <td class="ralign">
+      <%= number_to_currency ap.price unless ap.nil? %>
+    </td>
 	</tr>
 	<% end %>
 </table>
