@@ -43,15 +43,15 @@
 <div>
   <b>Submitted: </b> <%= time_ago_in_words(@order.submitted) %> ago
   <% unless @order.user_id.nil? %>
-    &nbsp; &nbsp; <i class="icon-user"></i> <%= link_to @order.user.name, admin_system_user_path(@order.user) %>
+    &nbsp; &nbsp; <i class="fa fa-user"></i> <%= link_to @order.user.name, admin_system_user_path(@order.user) %>
   <% end %>
 
   <% unless @order.affiliate_campaign_id.nil? %>
-      &nbsp; &nbsp; <i class="icon-building"></i> <%= link_to @order.affiliate_campaign.affiliate.name, admin_system_affiliate_path(@order.affiliate_campaign.affiliate) %>
+      &nbsp; &nbsp; <i class="fa fa-building"></i> <%= link_to @order.affiliate_campaign.affiliate.name, admin_system_affiliate_path(@order.affiliate_campaign.affiliate) %>
   <% end %>
 
   <% unless @order.external_order_id.blank? %>
-      &nbsp; &nbsp; <i class="icon-link"></i> <%= @order.external_order_id %>
+      &nbsp; &nbsp; [ <%= @order.sales_channel %>: <%= @order.external_order_id %> ]
   <% end %>
 
   &nbsp; <%= order_status(@order, 'large') %> <%= "<i class='icon-gift'></i>".html_safe if @order.gift %>
