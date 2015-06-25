@@ -50,7 +50,7 @@ class AmazonImportJob < ActiveJob::Base
           shipping_method: o["ShipmentServiceLevelCategory"],
           notify_email: o["BuyerEmail"],
           billing_name: o["BuyerName"],
-          status: o["OrderStatus"].downcase,
+          status: o["OrderStatus"].downcase.sub("unshipped", "submitted"),
           sales_channel: o["SalesChannel"],
           total: total)
 
