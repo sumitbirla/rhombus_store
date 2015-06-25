@@ -12,6 +12,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     q = params[:q]
     @shipments = Shipment.all.order('created_at DESC')
     @shipments = @shipments.where("recipient_name LIKE '%#{q}%' OR recipient_company LIKE '%#{q}%' OR recipient_city LIKE '%#{q}%'")
+    @shipments = @shipments.where(status: params[:status]) unless params[:status].blank?
     
     respond_to do |format|
       format.html { @shipments = @shipments.page(params[:page]) }

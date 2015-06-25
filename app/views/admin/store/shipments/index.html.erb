@@ -21,6 +21,12 @@
 
 <form id="frmBatch" action="" method="post">
 	<%= token_tag %>
+  
+  <ul class="nav nav-tabs" style="margin-bottom: 10px;">
+    <li role="presentation" class="<%= "active" if params[:status] == "pending" %>"><a href="<%= admin_store_shipments_path(status: "pending")%>">Pending</a></li>
+    <li role="presentation" class="<%= "active" if params[:status] == "shipped" %>"><a href="<%= admin_store_shipments_path(status: "shipped")%>">Shipped</a></li>
+    <li role="presentation" class="<%= "active" if params[:status].blank? %>"><a href="<%= admin_store_shipments_path%>">All</a></li>
+  </ul>
 	
 <%= will_paginate @shipments %>
 <table class="table table-striped table-condensed">
