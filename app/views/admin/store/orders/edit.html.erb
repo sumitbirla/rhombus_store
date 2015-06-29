@@ -1,6 +1,6 @@
 <h2>Order #<%= @order.id %></h2>
 
-<%= simple_form_for [:admin, :store, @order], html: { class: 'form-inline', style: 'margin-left: 0;' } do |f| %>
+<%= simple_form_for [:admin, :store, @order], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
   <input type="hidden" name="add_more_items" value=""/>
   
 	<%= render 'admin/shared/error_messages', object: f.object %>
@@ -79,9 +79,9 @@
         <%= f.association :domain %>
         <%= f.input :status, as: :select, collection: Order.valid_statuses %>
         <%= f.input :sales_channel %>
-        <%= f.input :external_order_id %>
+        <%= f.input :external_order_id, label: "Ext. ID" %>
         <%= f.association :user %>
-        <%= f.input :shipping_method %>
+        <%= f.input :shipping_method, label: "Ship Via" %>
         <%= f.input :affiliate_campaign_id %>
         <%= f.input :gift %>
         <%= f.input :contact_phone, label: 'Phone' %>
@@ -89,16 +89,18 @@
       </div>
       <div class="col-md-6">
         <%= f.input :subtotal %>
-        <%= f.input :discount_amount %>
-        <%= f.input :credit_applied %>
+        <%= f.input :discount_amount, label: "Discount" %>
+        <%= f.input :credit_applied, label: "Credit" %>
         <%= f.input :tax_rate %>
-        <%= f.input :tax_amount %>    
-        <%= f.input :shipping_cost %>
-        <div class="form-group decimal optional order_subtotal">
-          <label class="decimal optional control-label" for="order_subtotal">Total</label>
-          <%= f.input_field :total %>  <%= link_to "update", "#", class: 'update-total' %>
+        <%= f.input :tax_amount, label: "Tax" %>    
+        <%= f.input :shipping_cost, label: "Shipping" %>
+        <div class="form-group decimal optional order_total">
+          <label class="decimal optional col-sm-3 control-label" for="order_total">Total</label>
+          <div class="col-sm-9">
+            <%= f.input_field :total %>  &laquo; <%= link_to "update", "#", class: 'update-total' %>
+          </div>
         </div>
-        <%= f.input :customer_note, as: :text, input_html: { class: 'span10', rows: 3}%>
+        <%= f.input :customer_note, as: :text, input_html: { rows: 3 }%>
       </div>
     </div>
   </div>
