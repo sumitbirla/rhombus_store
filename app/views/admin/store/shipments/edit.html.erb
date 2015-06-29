@@ -2,7 +2,7 @@
 
 <%= render 'admin/shared/error_messages', object: @shipment %>
 
-<%= simple_form_for [:admin, :store, @shipment], html: { class: 'form-inline', style: 'margin-left: 0' } do |f| %>
+<%= simple_form_for [:admin, :store, @shipment], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
     <%= f.hidden_field :order_id %>
     <%= f.hidden_field :sequence %>
     <%= f.hidden_field :status %>
@@ -86,13 +86,7 @@
           <div class="panel-body">
             <%= f.input :carrier, collection: ["USPS", "FedEx", "UPS"] %>
             <%= f.input :ship_method %>
-            <div class="form-group string optional ship_date">
-              <label class="string required control-label">Ship Date</label>
-              <div class="input-group date date-field">
-                <%= f.input_field :ship_date, as: :string, class: "form-control" %>
-                <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
-              </div>
-            </div>
+            <%= f.input :ship_date, as: :string, input_html: { class: "date-field" } %>
             <%= f.input :ship_cost %>
             <%= f.input :tracking_number %>
             <%= f.input :status, collection: ['pending', 'shipped', 'void', 'cancelled', 'delivered'] %>
