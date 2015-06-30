@@ -151,18 +151,15 @@
       </thead>
       <tbody>
       <% @shipment.items.each do |item| 
-          upc = upc_list.find { |x| x.item == item.order_item.item_id } %>
+          upc = upc_list.find { |x| x.item == item.sku } %>
       <tr>
-        <td nowrap><input type="checkbox"> &nbsp; <%= item.order_item.item_id.upcase %></td>
+        <td nowrap><input type="checkbox"> &nbsp; <%= item.sku.upcase %></td>
         <td>
-          <% unless item.order_item.daily_deal.nil? %>
-            <%= item.order_item.daily_deal.title %>
-          <% else %>
-            <%= item.order_item.product.name_with_option %>
-            <% if item.order_item.affiliate_id %>
-              &nbsp; (<%= item.order_item.affiliate %>)
-            <% end %>
+          <%= item.product.name_with_option %>
+          <% unless item.affiliate_id.nil? %>
+            &nbsp; (<span><%= item.affiliate %></span>)
           <% end %>
+          
           <% if upc && !upc.notes.include?("P") %>
             &nbsp; &nbsp; <i style="color: #ccc;">P</i>
           <% end %>

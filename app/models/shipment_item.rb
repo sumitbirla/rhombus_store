@@ -16,4 +16,13 @@ class ShipmentItem < ActiveRecord::Base
 
   belongs_to :shipment
   belongs_to :order_item
+  belongs_to :product
+  belongs_to :affiliate
+  
+  def sku
+    str = product.sku
+    str += "-" + affiliate.code unless affiliate.nil?
+    str += "-" + variation unless variation.blank?
+    str 
+  end
 end

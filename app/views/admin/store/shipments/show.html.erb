@@ -124,7 +124,7 @@
   </div>
   Items:</h4>
 
-<% upc_list = Upc.where(item: @shipment.items.collect { |x| x.order_item.item_id })%>
+<% upc_list = Upc.where(item: @shipment.items.collect { |x| x.sku })%>
 
 <table class="table table-striped table-condensed table-bordered">
     <tr>
@@ -134,19 +134,13 @@
         <th class="calign">Status</th>
     </tr>
     <% @shipment.items.each do |item| 
-        next unless item.order_item 
-        upc = upc_list.find { |x| x.item == item.order_item.item_id }
-        oi = item.order_item %>
+        upc = upc_list.find { |x| x.item == item.sku } %>
         <tr>
-            <td nowrap><%= oi.item_id %></td>
+            <td nowrap><%= item.sku %></td>
             <td>
-              <% unless oi.daily_deal_id.nil? %>
-                <%= link_to oi.daily_deal.title, admin_store_daily_deal_path(oi.daily_deal) %>
-              <% else %>
-                <%= link_to oi.product.name_with_option, admin_store_product_path(oi.product_id) %>
-                <% unless oi.affiliate_id.nil? %>
-                  &nbsp; (<span><%= oi.affiliate %></span>)
-                <% end %>
+              <%= link_to item.product.name_with_option, admin_store_product_path(item.product_id) %>
+              <% unless item.affiliate_id.nil? %>
+                &nbsp; (<span><%= item.affiliate %></span>)
               <% end %>
               
               <% if upc && !upc.notes.include?("P") %>

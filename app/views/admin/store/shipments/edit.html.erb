@@ -17,14 +17,22 @@
       </tr>
       <%= f.fields_for :items do |itemf| %>
         <% 
-          sitem = @shipment.items[itemf.index] 
-          oitem = OrderItem.find(sitem.order_item_id)
+          item = @shipment.items[itemf.index] 
         %>
           <tr>
-            <td nowrap><%= itemf.hidden_field :order_item_id %><%= oitem.item_id.upcase %></td>
-            <td><%= render oitem %></td>
-            <td class="calign"><%= oitem.quantity %></td>
-            <td class="calign"><%= itemf.number_field :quantity, unit_price: oitem.unit_price, class: "item-qty", style: 'width: 80px; text-align: center;' %></td>
+            <td nowrap>
+              <%= itemf.hidden_field :order_item_id %>
+              <%= itemf.hidden_field :product_id %>
+              <%= itemf.hidden_field :affiliate_id %>
+              <%= itemf.hidden_field :variation %>
+              <%= item.sku.upcase %></td>
+            <td>
+              <%= link_to item.product.name_with_option, admin_store_product_path(item.product_id) %>
+              <% unless item.affiliate_id.nil? %>
+                &nbsp; (<span><%= item.affiliate %></span>)
+              <% end %></td>
+            <td class="calign"><%= item.quantity %></td>
+            <td class="calign"><%= itemf.number_field :quantity, unit_price: item.order_item.unit_price, class: "item-qty", style: 'width: 80px; text-align: center;' %></td>
             <td class="calign"><%= itemf.text_field :special_status %></td>
           </tr>
       <% end %>

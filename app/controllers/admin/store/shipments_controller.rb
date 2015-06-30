@@ -67,7 +67,11 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     
     # prepopulate with items to ship
     @order.items.each do |item|
-      @shipment.items.build(order_item_id: item.id, quantity: item.quantity)
+      @shipment.items.build(order_item_id: item.id, 
+                            product_id: item.product_id, 
+                            affiliate_id: item.affiliate_id, 
+                            variation: item.variation, 
+                            quantity: item.quantity)
     end
     
     # set invoice amount
@@ -94,12 +98,12 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   end
 
   def show
-    @shipment = Shipment.includes(:items, [items: :order_item]).find(params[:id])
+    @shipment = Shipment.includes(:items, [items: :product], [items: :affiliate]).find(params[:id])
   end
 
 
   def packing_slip
-    @shipment = Shipment.find(params[:id])
+    @shipment = Shipment.includes(:items, [items: :product], [items: :affiliate], [items: :order_item]).find(params[:id])
     render 'packing_slip', layout: false
   end
   
@@ -125,7 +129,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
 
   def edit
-    @shipment = Shipment.find(params[:id])
+    @shipment = Shipment.includes(:items, [items: :product], [items: :affiliate], [items: :order_item]).find(params[:id])
   end
 
 

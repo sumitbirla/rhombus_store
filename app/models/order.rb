@@ -182,7 +182,13 @@ class Order < ActiveRecord::Base
       weight = 0.3
       
       items.each do |item|
-        shipment.items << ShipmentItem.new(shipment_id: shipment.id, order_item_id: item.id, quantity: item.quantity)
+        shipment.items << ShipmentItem.new(shipment_id: shipment.id, 
+                                           order_item_id: item.id, 
+                                           product_id: item.product_id,
+                                           affiliate_id: item.affiliate_id,
+                                           variation: item.variation, 
+                                           quantity: item.quantity)
+                                           
         weight += item.quantity * item.product.item_weight unless (item.product.nil? || item.product.item_weight.nil?)
       end
       
