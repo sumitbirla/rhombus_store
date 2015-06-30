@@ -10,7 +10,7 @@
 </div>
 
 
-<% upc_list = Upc.where(item: @shipment.items.collect { |x| x.order_item.item_id })%>
+<% upc_list = Upc.where(item: @shipment.items.collect { |x| x.sku })%>
 
 <div class="row">
   <div class="col-md-9">
@@ -22,11 +22,15 @@
             <th class="calign">Scanned</th>
         </tr>
         <% @shipment.items.each do |item| 
-            next unless item.order_item 
-            upc = upc_list.find { |x| x.item == item.order_item.item_id }%>
+            upc = upc_list.find { |x| x.item == item.sku } %>
             <tr>
-                <td nowrap><%= item.order_item.item_id.upcase %></td>
-                <td><%= render item.order_item %></td>
+                <td nowrap><%= item.sku %></td>
+                <td>
+                  <%= link_to item.product.name_with_option, admin_store_product_path(item.product_id) %>
+                  <% unless item.affiliate_id.nil? %>
+                    &nbsp; (<span><%= item.affiliate %></span>)
+                  <% end %>
+                </td>
                 <td class="calign"><%= item.quantity %></td>
                 <td class="calign" id="<%= upc.code %>"><%= @scans[upc.code] unless @scans.nil? %></td>
             </tr>
@@ -36,7 +40,7 @@
   <div class="col-md-3">
     <form method="post">
       <%= token_tag %>
-      <textarea id="upc-list" name="upc_list" rows="20"></textarea><br>
+      <textarea id="upc-list" name="upc_list" rows="20"><%= params["upc_list"] %></textarea><br>
       <button class="btn btn-primary">Crosscheck</button>
     <form>
   </div>

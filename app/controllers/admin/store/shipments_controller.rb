@@ -293,11 +293,11 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   end
 
   def scan
-    @shipment = Shipment.find(params[:id])
+    @shipment = Shipment.includes(:items, [items: :product], [items: :affiliate]).find(params[:id])
   end
   
   def verify_scan
-    @shipment = Shipment.find(params[:id])
+    @shipment = Shipment.includes(:items, [items: :product], [items: :affiliate]).find(params[:id])
     scan_list = params["upc_list"].split("\n").map { |x| x.chomp! }
     
     @scans = {}
