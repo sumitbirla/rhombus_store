@@ -177,23 +177,31 @@ class Order < ActiveRecord::Base
     
     # set invoice amount
     shipment.invoice_amount = shipment.order.total if seq == 1
-                    
-    if shipment.save
-      weight = 0.3
+    
+    # build the shipment items                
+    items.each do |item|
       
-      items.each do |item|
-        shipment.items << ShipmentItem.new(shipment_id: shipment.id, 
-                                           order_item_id: item.id, 
-                                           product_id: item.product_id,
-                                           affiliate_id: item.affiliate_id,
-                                           variation: item.variation, 
-                                           quantity: item.quantity)
-                                           
-        weight += item.quantity * item.product.item_weight unless (item.product.nil? || item.product.item_weight.nil?)
+      # regular order item, not a daily deal
+      if item.product_id
+        shipment.items.build(order_item_id: item.id, 
+                             product_id: item.product_id,
+                             affiliate_id: item.affiliate_id,
+                             variation: item.variation, 
+                             quantity: item.quantity)
+
+      elsif item.daily_deal_id
+        item.daily_deal.items.each do |di|
+          shipment.items.build(order_item_id: item.id, 
+                               product_id: di.product_id,
+                               affiliate_id: di.affiliate_id,
+                               variation: di.variation, 
+                               quantity: item.quantity * di.quantity)
+        end
       end
-      
-      shipment.update_attribute(:package_weight, weight) unless weight == 0.3
-      
+
+    end
+
+    if shipment.save  
       OrderHistory.create(order_id: id, user_id: user_id, event_type: :shipment_created,
                     system_name: 'Rhombus', identifier: shipment.id, comment: "shipment created: #{shipment}") 
     end

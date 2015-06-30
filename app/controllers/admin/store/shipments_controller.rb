@@ -67,11 +67,23 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     
     # prepopulate with items to ship
     @order.items.each do |item|
-      @shipment.items.build(order_item_id: item.id, 
-                            product_id: item.product_id, 
-                            affiliate_id: item.affiliate_id, 
-                            variation: item.variation, 
-                            quantity: item.quantity)
+      # regular order item, not a daily deal
+      if item.product_id
+        @shipment.items.build(order_item_id: item.id, 
+                             product_id: item.product_id,
+                             affiliate_id: item.affiliate_id,
+                             variation: item.variation, 
+                             quantity: item.quantity)
+
+      elsif item.daily_deal_id
+        item.daily_deal.items.each do |di|
+          @shipment.items.build(order_item_id: item.id, 
+                               product_id: di.product_id,
+                               affiliate_id: di.affiliate_id,
+                               variation: di.variation, 
+                               quantity: item.quantity * di.quantity)
+        end
+      end
     end
     
     # set invoice amount
