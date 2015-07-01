@@ -11,6 +11,14 @@
 		<td>Quanity of each product sold</td>
 	</tr>
 	<tr>
+		<td><%= link_to 'User Leaderboard', admin_store_reports_user_leaderboard_path %></td>
+		<td>Orders placed by each customer</td>
+	</tr>
+	<tr>
+		<td><%= link_to 'Purchase Frequency', admin_store_reports_purchase_frequency_path %></td>
+		<td>How many people ordered 'n' times</td>
+	</tr>
+	<tr>
 		<td>Order Volume - 
       <%= link_to "daily", admin_store_reports_daily_sales_path %>, 
       <%= link_to "monthly", admin_store_reports_monthly_sales_path %>

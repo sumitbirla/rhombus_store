@@ -24,6 +24,41 @@ class Admin::Store::ReportsController < Admin::BaseController
     
   end
   
+  def user_leaderboard
+    
+    sql = <<-EOF
+      select shipping_name, user_id, count(id), sum(total)
+      from store_orders
+      where status in ('submitted', 'completed', 'shipped', 'unshipped')
+      and submitted > '#{@start_date}' and submitted < '#{@end_date}'
+      and sales_channel LIKE '#{@selected_channel}'
+      group by notify_email
+      order by count(id) desc;
+    EOF
+    
+    @data = []
+    ActiveRecord::Base.connection.execute(sql).each { |row| @data << row }
+    
+  end
+  
+  def purchase_frequency
+    
+    sql = <<-EOF
+      select order_count, count(*) as num_users
+      from (select shipping_name, COUNT(*) as order_count 
+      	  from store_orders 
+          where status in ('submitted', 'completed', 'shipped', 'unshipped')
+          and submitted > '#{@start_date}' and submitted < '#{@end_date}'
+          and sales_channel LIKE '#{@selected_channel}'
+      	  group by notify_email) as dt
+      group by order_count
+      order by order_count desc;
+    EOF
+    
+    @data = []
+    ActiveRecord::Base.connection.execute(sql).each { |row| @data << row }
+  end
+  
   def daily_sales
     
     sql = <<-EOF

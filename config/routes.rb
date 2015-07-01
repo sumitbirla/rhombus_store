@@ -73,6 +73,8 @@ Rails.application.routes.draw do
       get 'reports/monthly_sales'
       get 'reports/pending_fulfillment'
       get 'reports/inventory_required'
+      get 'reports/user_leaderboard'
+      get 'reports/purchase_frequency'
       get 'reports' => 'reports#index'
 
       get 'shipments_batch' => 'shipments#batch'
