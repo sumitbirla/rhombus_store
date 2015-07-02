@@ -21,9 +21,9 @@ class SendInvoiceJob < ActiveJob::Base
     
     Mail.deliver do
       from      Cache.setting(Rails.configuration.domain_id, :system, 'From Email Address')
-      to        "sumit@barkingdeals.com" #shipment.order.notify_email
-      subject   "Invoice for #{shipment.order.external_order_id || shipment.order.id}"
-      body      "Invoice attached:"
+      to        shipment.order.notify_email
+      subject   "Invoice for #{shipment.order.external_order_id.blank? ? shipment.order.id : shipment.order.external_order_id}"
+      body      "Invoice attached:\n\n"
       add_file  output_file
     end
     
