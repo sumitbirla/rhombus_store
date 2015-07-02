@@ -33,9 +33,9 @@ class SendInvoiceJob < ActiveJob::Base
     OrderHistory.create(order_id: o.id, 
                         user_id: user_id, 
                         event_type: :invoice_send,
-                        amount: s.invoice_amount,
+                        amount: shipment.invoice_amount,
                         system_name: 'Rhombus', 
                         identifier: shipment.to_s,
-                        comment: shipment.order.notify_email )
+                        comment: o.notify_email )
   end
 end
