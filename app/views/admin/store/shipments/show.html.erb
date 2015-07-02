@@ -1,3 +1,5 @@
+<% pmt = Payment.find_by(payable_type: :shipment, payable_id: @shipment.id) %>
+
 <div class="dropdown pull-right">
   <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
     <i class="icon-hand-right"></i> Select Action
@@ -24,6 +26,11 @@
       <%= link_to create_payment_admin_store_shipment_path(@shipment) do %>
           <i class="icon-file-alt"></i> Post Invoice
       <% end %>
+      <li>
+        <%= link_to email_invoice_admin_store_shipment_path(@shipment), target: "_blank" do %>
+            <i class="icon-file-alt"></i> Email Invoice
+        <% end %>
+      </li>
     </li>
     <% end %>
     <li>
@@ -62,6 +69,16 @@
 <h2>
   <i class="fa fa-truck"></i> &nbsp;Shipment #<%= @shipment %>
 </h2>
+
+<div class="pull-right">
+  <% unless pmt.nil? %>
+    <span class="label label-info">posted: <%= number_to_currency(pmt.amount * -1.0) %></span>
+  <% else %>
+    <span class="label label-warning">not posted</span>
+  <% end %> &nbsp; 
+  <span class="label label-success">invoice: <%= number_to_currency(@shipment.invoice_amount) %></span>
+</div>
+  
 <div>
   <b>Created: </b> <%= time_ago_in_words(@shipment.created_at) %> ago
   &nbsp; <span class="label <%= 'label-warning' if @shipment.status == 'pending' %>  <%= 'label-success' if @shipment.status == 'shipped' %>"><%= @shipment.status %></span>
@@ -111,18 +128,7 @@
 </div>
 
 
-<% pmt = Payment.find_by(payable_type: :shipment, payable_id: @shipment.id) %>
-
-<h4>
-  <div class="pull-right">
-    <% unless pmt.nil? %>
-      <span class="label label-info">posted: <%= number_to_currency(pmt.amount * -1.0) %></span>
-    <% else %>
-      <span class="label label-warning">not posted</span>
-    <% end %> &nbsp; 
-    <span class="label label-success">invoice: <%= number_to_currency(@shipment.invoice_amount) %></span>
-  </div>
-  Items:</h4>
+<h4>Items:</h4>
 
 <% upc_list = Upc.where(item: @shipment.items.collect { |x| x.sku })%>
 

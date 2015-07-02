@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'chunky_png'
   s.add_dependency 'rails'
   s.add_dependency 'peddler'
+  s.add_dependency 'mail'
 end

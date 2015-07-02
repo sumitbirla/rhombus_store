@@ -133,6 +133,7 @@ Rails.application.routes.draw do
           get 'label'
           get 'print'
           get 'packing_slip'
+          get 'email_invoice'
           get 'invoice'
           get 'void_label'
           get 'email_confirmation'

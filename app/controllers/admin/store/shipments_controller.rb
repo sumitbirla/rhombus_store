@@ -124,6 +124,14 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     render 'invoice', layout: false
   end
   
+  def email_invoice
+    @shipment = Shipment.find(params[:id])
+    SendInvoiceJob.perform_now(@shipment.id, session[:user_id])
+    
+    flash[:success] = "Invoice was emailed to #{@shipment.order.notify_email}"
+    redirect_to :back
+  end
+  
   def create_payment
     @shipment = Shipment.find(params[:id])
     
