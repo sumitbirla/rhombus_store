@@ -13,6 +13,7 @@ class SendInvoiceJob < ActiveJob::Base
     website_url = Cache.setting(Rails.configuration.domain_id, :system, 'Website URL')
     
     shipment = Shipment.find(shipment_id)
+    o = shipment.order
     digest = Digest::MD5.hexdigest(shipment_id.to_s + token) 
     url = website_url + "/admin/store/shipments/#{shipment.id}/invoice?digest=#{digest}" 
       
@@ -22,15 +23,19 @@ class SendInvoiceJob < ActiveJob::Base
     Mail.deliver do
       from      Cache.setting(Rails.configuration.domain_id, :system, 'From Email Address')
       to        shipment.order.notify_email
-      subject   "Invoice for #{shipment.order.external_order_id.blank? ? shipment.order.id : shipment.order.external_order_id}"
+      subject   "Invoice for #{o.external_order_id.blank? ? "order ##{o.id}" : o.external_order_id}"
       body      "Invoice attached:\n\n"
       add_file  output_file
     end
     
     File.delete(output_file)
     
-    OrderHistory.create(order_id: shipment.order.id, user_id: user_id, 
-                      event_type: :invoice_send, system_name: 'Rhombus', identifier: shipment.to_s,
-                      comment: shipment.order.notify_email )
+    OrderHistory.create(order_id: o.id, 
+                        user_id: user_id, 
+                        event_type: :invoice_send,
+                        amount: s.invoice_amount,
+                        system_name: 'Rhombus', 
+                        identifier: shipment.to_s,
+                        comment: shipment.order.notify_email )
   end
 end
