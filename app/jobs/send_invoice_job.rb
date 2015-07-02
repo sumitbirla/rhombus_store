@@ -4,6 +4,11 @@ class SendInvoiceJob < ActiveJob::Base
   queue_as :default
 
   def perform(shipment_id, user_id)
+
+    Mail.defaults do
+      delivery_method :smtp, { :enable_starttls_auto => false  }
+    end
+    
     token = Cache.setting(Rails.configuration.domain_id, :system, 'Security Token')
     website_url = Cache.setting(Rails.configuration.domain_id, :system, 'Website URL')
     
