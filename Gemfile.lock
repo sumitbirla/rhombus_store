@@ -6,6 +6,7 @@ PATH
       barby
       chunky_png
       easypost
+      mail
       peddler
       rails
 
@@ -34,7 +35,7 @@ GEM
     activejob (4.2.1)
       activesupport (= 4.2.1)
       globalid (>= 0.3.0)
-    activemerchant (1.48.0)
+    activemerchant (1.50.0)
       activesupport (>= 3.2.14, < 5.0.0)
       builder (>= 2.1.2, < 4.0.0)
       i18n (>= 0.6.9)
@@ -58,7 +59,7 @@ GEM
     chunky_png (1.3.4)
     domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
-    easypost (2.1.1)
+    easypost (2.1.6)
       multi_json (>= 1.0.4, < 2)
       rest-client (~> 1.4)
     erubis (2.7.0)
@@ -78,12 +79,12 @@ GEM
     mime-types (2.4.3)
     mini_portile (0.6.2)
     minitest (5.6.0)
-    multi_json (1.11.0)
+    multi_json (1.11.1)
     multi_xml (0.5.5)
     netrc (0.10.3)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
-    peddler (0.15.0)
+    peddler (0.16.0)
       jeff (~> 1.3)
       multi_xml (~> 0.5.0)
     rack (1.6.0)

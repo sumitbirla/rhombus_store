@@ -1,10 +1,5 @@
 <style>
-    .form-inline .control-label { width: 110px; }
-    .panel .control-label { width: 130px; }
-    .panel .form-group { margin: 5px; }
-    .dimensions .numeric { width: 17%; }
-    .help-block { display: none; }
-    .options-panel .form-group { margin: 0; }
+.dimensions input { width: 60px; }
 </style>
 
 <%
@@ -17,22 +12,23 @@
 
 <h2><%= @product.name_with_option %></h2>
 
-<% unless @product.id.nil? %>
-<ul class="nav nav-tabs">
-  <li class="active"><a href="#">Summary</a></li>
-  <li><%= link_to "Pictures", pictures_admin_store_product_path(@product) %></a></li>
-  <li><%= link_to "Categories", categories_admin_store_product_path(@product) %></li>
-  <li><%= link_to "Attributes", attributes_admin_store_product_path(@product) %></li>
-  <li><%= link_to "Coupons", coupons_admin_store_product_path(@product) %></li>
-</ul>
-<% end %>
 
 
-<%= simple_form_for [:admin, :store, @product], html: { class: 'form-inline' } do |f| %>
+<%= simple_form_for [:admin, :store, @product], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
+
+  <% unless @product.id.nil? %>
+  <ul class="nav nav-tabs" style="margin-bottom: 20px;">
+    <li class="active"><a href="#">Summary</a></li>
+    <li><%= link_to "Pictures", pictures_admin_store_product_path(@product) %></a></li>
+    <li><%= link_to "Categories", categories_admin_store_product_path(@product) %></li>
+    <li><%= link_to "Attributes", attributes_admin_store_product_path(@product) %></li>
+    <li><%= link_to "Coupons", coupons_admin_store_product_path(@product) %></li>
+  </ul>
+  <% end %>
 	
 	<%= render 'admin/shared/error_messages', object: f.object %>
-	
-	<div class="row" style="margin-left: 0;">
+
+  <div class="row">
 		<div class="col-md-7">
       <%= f.input :name %>
 		  <%= f.input :title %>
@@ -56,67 +52,74 @@
 		</div>
 		
 		<div class="col-md-5">
-          <div class="panel panel-default options-panel">
-            <div class="panel-heading">Options</div>
-            <div class="panel-body">
-              <%= f.input :active %>
-              <%= f.input :free_shipping %>
-              <%= f.input :tax_exempt %>
-              <%= f.input :hidden %>
-              <%= f.input :featured %>
-              <%= f.input :affiliate_only %>
-              <%= f.input :require_image_upload %>
+      <div class="panel panel-default options-panel">
+        <div class="panel-heading">Options</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-6"><%= f.input_field :active %> &nbsp; Active</div>
+            <div class="col-md-6"><%= f.input_field :free_shipping %> &nbsp; Free Shipping</div>
+            <div class="col-md-6"><%= f.input_field :tax_exempt %> &nbsp; Tax Exempt</div>
+            <div class="col-md-6"><%= f.input_field :auto_ship %> &nbsp; Auto Ship Enabled</div>
+            <div class="col-md-6"><%= f.input_field :hidden %> &nbsp; Hidden</div>
+            <div class="col-md-6"><%= f.input_field :featured %> &nbsp; Featured</div>
+            <div class="col-md-6"><%= f.input_field :affiliate_only %> &nbsp; Affiliate Only</div>
+            <div class="col-md-6"><%= f.input_field :require_image_upload %> &nbsp; Require Image Upload</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">Inventory</div>
+        <div class="panel-body">
+          <%= f.association :supplier, collection: suppliers %>
+          <%= f.association :fulfiller, collection: dropshippers %>
+          <%= f.input :low_threshold %>
+          <%= f.input :committed %>
+          <%= f.input :country_of_origin, label: "Origin" %>
+          <%= f.input :shipping_lead_time %>
+          <%= f.input :item_availability, as: :string, input_html: { class: "date-field" }, label: "Date avail." %>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">Dimensions</div>
+        <div class="panel-body">
+
+          <div class="form-group string optional dimensions">
+            <label class="string optional col-sm-3 control-label" for="item_dimensions">Item Size (in.)</label>
+            <div class="dimensions col-sm-9">
+              <%= f.input_field :item_length %> x 
+              <%= f.input_field :item_width  %> x 
+              <%= f.input_field :item_height  %>
             </div>
           </div>
+          <%= f.input :item_weight, label: 'Weight' %>
 
-          <div class="panel panel-default">
-            <div class="panel-heading">Inventory</div>
-            <div class="panel-body">
-              <%= f.association :supplier, collection: suppliers %>
-              <%= f.association :fulfiller, collection: dropshippers %>
-              <%= f.input :low_threshold %>
-              <%= f.input :committed %>
-              <%= f.input :country_of_origin, label: "Origin" %>
-              <%= f.input :shipping_lead_time %>
-              <%= f.input :item_availability, as: :date, label: "Date avail." %>
+          <hr/>
+          <div class="form-group string optional dimensions">
+            <label class="string optional col-sm-3 control-label" for="case_dimensions">Case Size (in.)</label>
+            <div class="dimensions col-sm-9">
+              <%= f.input_field :case_length %> x 
+              <%= f.input_field :case_width  %> x 
+              <%= f.input_field :case_height  %>
             </div>
           </div>
-
-          <div class="panel panel-default">
-            <div class="panel-heading">Dimensions</div>
-            <div class="panel-body">
-              <div class="form-group string optional dimensions">
-                <label class="string optional control-label" for="item_dimensions">Item Size (in.)</label>
-                <div class="dimensions" style="display: inline;">
-                  <%= f.input_field :item_length %>
-                  <%= f.input_field :item_width  %>
-                  <%= f.input_field :item_height  %>
-                </div>
-              </div>
-              <%= f.input :item_weight, label: 'Weight' %>
-
-              <hr/>
-              <div class="form-group string optional dimensions">
-                <label class="string optional control-label" for="case_dimensions">Case Size (in.)</label>
-                <div class="dimensions" style="display: inline;">
-                  <%= f.input_field :case_length %>
-                  <%= f.input_field :case_width  %>
-                  <%= f.input_field :case_height  %>
-                </div>
-              </div>
-              <%= f.input :case_weight, label: 'Weight' %>
-              <%= f.input :case_quantity %>
-            </div>
-          </div>
+          <%= f.input :case_weight, label: 'Weight' %>
+          <%= f.input :case_quantity %>
+        </div>
+      </div>
 		</div>
-	</div>
+  </div>
+
+	<div class="row">
+    <h4>Short Description</h4>
+  	<%= f.input_field :short_description, class: "form-control text", rows: 4  %>
+    <br>
+    <h4>Long Description</h4>
+  	<%= f.input_field :long_description, class: "form-control text", rows: 20  %>
 	
-	<%= f.input :short_description, input_html: { rows: 4 }  %>
-	<%= f.input :long_description, input_html: { rows: 20 }  %>
-	
-	<div class="form-actions">
-		<%= f.button :submit %>
-	</div>
+  	<%= f.button :submit %>
+  </div>
 
 <% end %>
 

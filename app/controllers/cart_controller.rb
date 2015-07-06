@@ -72,7 +72,8 @@ class CartController < ApplicationController
                 variation: variation,
                 quantity: quantity,
                 unit_price: p.price,
-                item_description: p.name_with_option
+                item_description: p.name_with_option,
+                autoship_months: params[:autoship_months] || 0
 
         item.item_id = p.sku
         item.item_id += "-" + Affiliate.find(affiliate_id).code unless affiliate_id.nil?

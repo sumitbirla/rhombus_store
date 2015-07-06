@@ -32,6 +32,7 @@ Rails.application.routes.draw do
   namespace :account do
     resources :orders
     resources :vouchers
+    resources :auto_ship_items
   end
   
   
