@@ -6,7 +6,12 @@ class ProcessOrderJob < ActiveJob::Base
     o = Order.find(order_id)
     
     # email order confirmation
-    #OrderMailer.order_submitted(o.id, o.user_id).deliver_later
+    OrderMailer.order_submitted(o.id, o.user_id).deliver_later
+    
+    # create shipment if requested
+    if Cache.setting(o.domain_id, :shipping, "Auto Create Shipment")
+      CreateShipmentJob.perform_later(o.id)
+    end
     
     # update any voucher, coupon stats
     Coupon.increment_counter(:times_used, o.coupon_id) unless o.coupon_id.nil?
@@ -17,11 +22,6 @@ class ProcessOrderJob < ActiveJob::Base
     # update daily_deal counts
     o.deal_items.each do |item|
       DailyDeal.where(id: item.daily_deal_id).update_all("number_sold = number_sold + #{item.quantity}")
-    end
-    
-    # create shipment if requested
-    if Cache.setting(o.domain_id, :shipping, "Auto Create Shipment")
-    #  CreateShipmentJob.perform_later(o.id)
     end
     
     # Affiliate tracking and commissions
