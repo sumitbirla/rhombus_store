@@ -36,20 +36,28 @@
     <th>Created</th>
     <th>Ship to</th>
     <th>Destination</th>
-    <th>Shipped</th>
-    <th>Method</th>
+    <% if params[:status] == "pending" %>
+      <th>Age</th>
+    <% else %>
+      <th>Shipped</th>
+      <th>Method</th>
+    <% end %>
     <th>Status</th>
     <th class="actions">&nbsp;</th>
   </tr>
   <% @shipments.each do |shipment|  %>
       <tr>
 		<td><input type="checkbox" name="shipment_id[]" class="shipment-chk" value="<%= shipment.id %>"/></td>
-        <td nowrap><%= link_to shipment, admin_store_shipment_path(shipment) %></td>
+        <td nowrap><%= link_to shipment, admin_store_shipment_path(shipment, status: params[:status]) %></td>
         <td nowrap class="light"><%= systime shipment.created_at %></td>
         <td><%= shipment.recipient_name %></td>
         <td><%= shipment.recipient_city %>, <%= shipment.recipient_state %></td>
-        <td><%= shipment.ship_date ? sysdate(shipment.ship_date) : "<span class='light'>-</span>".html_safe %></td>
-        <td><%= shipment.ship_method.blank? ? '<span class="light">- n/a -</span>'.html_safe : "#{shipment.carrier} #{shipment.ship_method}" %></td>
+        <% if params[:status] == "pending" %>
+          <td><%= time_ago shipment.order.submitted %></td>
+        <% else %>
+          <td><%= shipment.ship_date ? sysdate(shipment.ship_date) : "<span class='light'>-</span>".html_safe %></td>
+          <td><%= shipment.ship_method.blank? ? '<span class="light">- n/a -</span>'.html_safe : "#{shipment.carrier} #{shipment.ship_method}" %></td>
+        <% end %>
         <td><span class="label <%= 'label-warning' if shipment.status == 'pending' %>  <%= 'label-success' if shipment.status == 'shipped' %> <%= 'label-danger' if shipment.status == 'void' %>"><%= shipment.status %></span></td>
         <td class="actions ralign">
           <% if shipment.status == "pending" %>

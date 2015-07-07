@@ -10,7 +10,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
   def index
     q = params[:q]
-    @shipments = Shipment.all.order('created_at DESC')
+    @shipments = Shipment.includes(:order).all.order('created_at DESC')
     @shipments = @shipments.where("recipient_name LIKE '%#{q}%' OR recipient_company LIKE '%#{q}%' OR recipient_city LIKE '%#{q}%'")
     @shipments = @shipments.where(status: params[:status]) unless params[:status].blank?
     

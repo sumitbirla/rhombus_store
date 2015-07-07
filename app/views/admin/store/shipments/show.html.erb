@@ -258,6 +258,6 @@
 
 <% content_for :breadcrumbs do %>
     <li><a href="#">eCommerce</a></li>
-    <li><%= link_to 'Shipments', admin_store_shipments_path %></li>
+    <li><%= link_to 'Shipments', admin_store_shipments_path(status: params[:status]) %></li>
     <li class="active"><%= @shipment %></li>
 <% end %>

@@ -1,11 +1,11 @@
 <style>
-    .form-inline .control-label { width: 120px; }
+    .form-horizontal .control-label { width: 120px; }
 </style>
 
 <h2><%= @daily_deal.short_tag_line %></h2>
 
 <% unless @daily_deal.id.nil? %>
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs" style="margin-bottom: 20px;">
   <li class="active"><a href="#">Summary</a></li>
   <li><%= link_to "Pictures", pictures_admin_store_daily_deal_path(@daily_deal) %></a></li>
   <li><%= link_to "Categories", categories_admin_store_daily_deal_path(@daily_deal) %></li>
@@ -16,10 +16,10 @@
 </ul>
 <% end %>
 
-<%= simple_form_for [:admin, :store, @daily_deal], html:  { class: 'form-inline' } do |f| %>
 
-  <%= render 'admin/shared/error_messages', object: f.object %>
-  
+<%= render 'admin/shared/error_messages', object: @daily_deal %>
+
+<%= simple_form_for [:admin, :store, @daily_deal], html:  { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
   <%= f.input :facebook_posts, as: :hidden %>
   <%= f.input :facebook_clicks, as: :hidden %>
   
