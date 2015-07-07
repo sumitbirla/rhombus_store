@@ -302,6 +302,7 @@ class CartController < ApplicationController
       end
     end
 
+    # PROCESS PAYMENT
     begin
       @order.process_payment(request)
     rescue => e
@@ -335,7 +336,6 @@ class CartController < ApplicationController
     session[:order_id] = @order.id
     
     redirect_to action: 'submitted', id: @order.id
-    
   end
   
   
