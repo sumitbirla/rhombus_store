@@ -57,6 +57,8 @@
 require 'activemerchant'
 
 class Order < ActiveRecord::Base
+  include PaypalExpressHelper
+  
   self.table_name = "store_orders"
   attr_accessor :same_as_shipping
   
@@ -125,13 +127,13 @@ class Order < ActiveRecord::Base
   end
   
   def copy_shipping_address
-    billing_name = shipping_name
-    billing_street1 = shipping_street1
-    billing_street2 = shipping_street2
-    billing_city = shipping_city
-    billing_state = shipping_state
-    billing_zip = shipping_zip
-    billing_country = shipping_country
+    self.billing_name = shipping_name
+    self.billing_street1 = shipping_street1
+    self.billing_street2 = shipping_street2
+    self.billing_city = shipping_city
+    self.billing_state = shipping_state
+    self.billing_zip = shipping_zip
+    self.billing_country = shipping_country
   end
   
   def total_cents
@@ -142,6 +144,113 @@ class Order < ActiveRecord::Base
     [ 'submitted', 'completed', 'unshipped', 'shipped', 'refunded', 'cancelled', 'backordered' ]
   end
   
+  # create a dummy user if one doesn't exist and assign user_id.  user object is not saved
+  def create_user
+    return unless user_id.nil?
+    
+    u = User.find_by(email: notify_email, domain_id: domain_id)
+    if u.nil?
+      u = User.create(
+            name: shipping_name || "unknown",
+            email: notify_email,
+            phone: contact_phone,
+            status: "Z",
+            role_id: Role.find_by(default: true).id,
+            domain_id: domain_id,
+            referral_key: SecureRandom.hex(5),
+            location: "#{shipping_city}, #{shipping_state}")
+    end
+    
+    self.user_id = u.id
+  end
+  
+  
+  # process payment, this is called when order is being submitted on website
+  def process_payment(request)
+    if payment_method == 'PAYPAL'
+
+      gateway = ActiveMerchant::Billing::PaypalExpressGateway.new(
+          :login => Cache.setting(domain_id, 'eCommerce', 'PayPal API Username'),
+          :password => Cache.setting(domain_id, 'eCommerce', 'PayPal API Password'),
+          :signature => Cache.setting(domain_id, 'eCommerce', 'PayPal Signature'),
+      )
+
+      total_as_cents, purchase_params = get_purchase_params(self, request)
+      response = gateway.purchase(total_as_cents, purchase_params)
+
+      raise "PayPal processing failed: #{response.message}" unless response.success?
+
+      self.status = 'submitted'
+      self.submitted = Time.now
+      
+      Payment.create(payable_id: id, payable_type: :order, amount: total, memo: 'PayPal Payment', 
+                     user_id: user_id, transaction_id: response.authorization)
+
+      # add order history row
+      OrderHistory.create order_id: id, user_id: user_id, amount: total,
+                          event_type: 'paypal_payment', system_name: 'PayPal', identifier: response.authorization,
+                          comment: notify_email
+
+    elsif payment_method == "CREDIT_CARD"
+      
+      active_gw = Cache.setting(domain_id, 'eCommerce', 'Payment Gateway')
+
+      if active_gw == 'Authorize.net'
+        gateway = ActiveMerchant::Billing::AuthorizeNetGateway.new(
+            :login => Cache.setting(domain_id, 'eCommerce', 'Authorize.Net Login ID'),
+            :password => Cache.setting(domain_id, 'eCommerce', 'Authorize.Net Transaction Key'),
+            :test => false
+        )
+      elsif active_gw == 'Stripe'
+        gateway = ActiveMerchant::Billing::StripeGateway.new(
+            :login => Cache.setting(domain_id, 'eCommerce', 'Stripe Secret Key')
+        )  
+      else
+        raise "Payment gateway is not set up."
+      end 
+
+      customer_name = billing_name
+      customer_name = user.name unless user_id.nil?
+      
+      purchase_options = {
+        :ip => request.remote_ip,
+        :order_id => id,
+        :customer => customer_name,
+        :billing_address => {
+          :name     => billing_name,
+          :address1 => billing_street1,
+          :city     => billing_street2,
+          :state    => billing_state,
+          :zip      => billing_zip
+      }}
+
+      response = gateway.purchase(total_cents, credit_card, purchase_options)
+
+      # credit cart authorization failed?
+      raise response.message unless response.success?
+  
+      self.status = 'submitted'
+      self.submitted = Time.now
+      self.cc_code = nil
+      self.cc_number = credit_card.display_number
+
+      Payment.create(payable_id: id, payable_type: :order, amount: total, memo: cc_number, 
+                    user_id: user_id, transaction_id: response.authorization)
+      
+      # add order history row
+      OrderHistory.create order_id: id, user_id: user_id, amount: total,
+                          event_type: 'cc_authorization', system_name: active_gw, identifier: response.authorization,
+                          comment: "Successfully charged #{cc_number}"
+
+    else # NO_BILLING
+      self.status = 'submitted'
+      self.submitted = Time.now
+    end
+    
+  end
+  
+  
+  # create shipment for the order.  doesn't take inventory into consideration currently
   def create_shipment(user_id)
     seq = 1
     max_seq = shipments.maximum(:sequence)

@@ -284,6 +284,7 @@ class CartController < ApplicationController
   def submit
     @order = Order.includes(:items).find(params[:id]) 
     @order.user_id = session[:user_id] if @order.user_id.nil?   # attach order to logged-in user
+    @order.create_user if @order.user_id.nil?
 
     # Double check if voucher is not being reused.  this can happen if user has multiple
     # carts in different browsers, all not check-out yet, but voucher applied, i.e. the 
@@ -301,150 +302,39 @@ class CartController < ApplicationController
       end
     end
 
-
-    if @order.payment_method == 'PAYPAL'
-
-      gateway = ActiveMerchant::Billing::PaypalExpressGateway.new(
-          :login => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'PayPal API Username'),
-          :password => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'PayPal API Password'),
-          :signature => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'PayPal Signature'),
-      )
-
-      total_as_cents, purchase_params = get_purchase_params(@order, request)
-      response = gateway.purchase(total_as_cents, purchase_params)
-
-      unless response.success?
-        flash[:error] = "PayPal processing failed: #{response.message}"
-        return render 'review'
-      end
-
-      @order.status = 'submitted'
-      @order.submitted = Time.now
-      @order.save validate: false
-      
-      Payment.create(payable_id: @order.id, payable_type: :order, amount: @order.total, memo: 'PayPal Payment', 
-                     user_id: @order.user_id, transaction_id: response.authorization)
-
-      # add order history row
-      OrderHistory.create order_id: @order.id, user_id: @order.user_id, amount: @order.total,
-                          event_type: 'paypal_payment', system_name: 'PayPal', identifier: response.authorization,
-                          comment: @order.notify_email
-
-    elsif @order.payment_method == "CREDIT_CARD"
-      
-      active_gw = Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Payment Gateway')
-
-      if active_gw == 'Authorize.net'
-        gateway = ActiveMerchant::Billing::AuthorizeNetGateway.new(
-            :login => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Authorize.Net Login ID'),
-            :password => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Authorize.Net Transaction Key'),
-            :test => false
-        )
-      elsif active_gw == 'Stripe'
-        gateway = ActiveMerchant::Billing::StripeGateway.new(
-            :login => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Stripe Secret Key')
-        )  
-      else
-        flash[:error] = "Payment gateway is not set up."
-        return render 'review'
-      end 
-
-      customer_name = @order.billing_name
-      customer_name = @order.user.name unless @order.user_id.nil?
-      
-      purchase_options = {
-        :ip => request.remote_ip,
-        :order_id => @order.id,
-        :customer => customer_name,
-        :billing_address => {
-          :name     => @order.billing_name,
-          :address1 => @order.billing_street1,
-          :city     => @order.billing_street2,
-          :state    => @order.billing_state,
-          :zip      => @order.billing_zip
-      }}
-
-      response = gateway.purchase(@order.total_cents, @order.credit_card, purchase_options)
-
-      # credit cart authorization failed?
-      unless response.success?
-        @order.errors.add :base, response.message
-        return render 'review'
-      end
-
-      @order.status = 'submitted'
-      @order.submitted = Time.now
-      @order.cc_code = nil
-      @order.cc_number = @order.credit_card.display_number
-      @order.save validate: false
-
-      Payment.create(payable_id: @order.id, payable_type: :order, amount: @order.total, memo: @order.cc_number, 
-                    user_id: @order.user_id, transaction_id: response.authorization)
-      
-      # add order history row
-      OrderHistory.create order_id: @order.id, user_id: @order.user_id, amount: @order.total,
-                          event_type: 'cc_authorization', system_name: active_gw, identifier: response.authorization,
-                          comment: "Successfully charged #{@order.cc_number}"
-
-    else # NO_BILLING
-      @order.status = 'submitted'
-      @order.submitted = Time.now
-      @order.save validate: false
-    end
-
-    # email order confirmation
-    OrderMailer.order_submitted(@order.id, session[:user_id]).deliver_later
-    
-    # update any voucher, coupon stats
-    Coupon.increment_counter(:times_used, @order.coupon_id) unless @order.coupon_id.nil?
-    
-    unless @order.voucher_id.nil?
-      voucher = @order.voucher
-      voucher.update_attribute(:amount_used, voucher.amount_used + @order.credit_applied)
+    begin
+      @order.process_payment(request)
+    rescue => e
+      @order.errors.add :base, e.message
+      return render "review"
     end
     
     # affiliate credit
     unless cookies[:acid].nil?
       ac = AffiliateCampaign.find(cookies[:acid])
-      unless ac.nil?
-        ac.increment!(:orders)
-        @order.affiliate_campaign_id = ac.id
-        
-        # add commission to payments table?
-      end
+      @order.affiliate_campaign_id = ac.id unless ac.nil?
     end
     
     # referral rewards
     unless cookies[:refkey].nil?
       referrer = User.find_by(referral_key: cookies[:refkey])
-      unless referrer.nil?
-        @order.referred_by = referrer.id
-        
-        # apply rewards programs
-      end
+      @order.referred_by = referrer.id unless referrer.nil?
     end
     
+    # IMPORTANT:  save the order!
     @order.save validate: false
         
     # order result of email blast?
     EmailBlast.where(uuid: cookies[:ebuuid]).update_all("sales = sales + 1") unless cookies[:ebuuid].nil?
     
-    # update daily_deal counts
-    @order.deal_items.each do |item|
-      DailyDeal.where(id: item.daily_deal_id).update_all("number_sold = number_sold + #{item.quantity}")
-    end
-    
-    # create shipment if requested
-    if Cache.setting(@order.domain_id, :shipping, "Auto Create Shipment")
-      CreateShipmentJob.perform_later(@order.id)
-    end
+    # Do other stuff like creating ships, deal counter updates, affiliate commission etc.
+    ProcessOrderJob.perform_later(@order.id)
     
     # delete cart cookie and display confirmation
     cookies.delete :cart
     session[:order_id] = @order.id
     
     redirect_to action: 'submitted', id: @order.id
-    return
     
   end
   
