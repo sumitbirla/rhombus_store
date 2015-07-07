@@ -6,7 +6,7 @@ class ProcessOrderJob < ActiveJob::Base
     o = Order.find(order_id)
     
     # email order confirmation
-    OrderMailer.order_submitted(o.id, o.user_id).deliver_later
+    #OrderMailer.order_submitted(o.id, o.user_id).deliver_later
     
     # update any voucher, coupon stats
     Coupon.increment_counter(:times_used, o.coupon_id) unless o.coupon_id.nil?
@@ -21,13 +21,44 @@ class ProcessOrderJob < ActiveJob::Base
     
     # create shipment if requested
     if Cache.setting(o.domain_id, :shipping, "Auto Create Shipment")
-      CreateShipmentJob.perform_later(o.id)
+    #  CreateShipmentJob.perform_later(o.id)
     end
     
-    ######  ac.increment!(:orders)
-    o.affiliate_campaign.increment!(:orders) unless o.affiliate_campaign.nil?
+    # Affiliate tracking and commissions
+    unless o.affiliate_campaign.nil?
+      o.affiliate_campaign.increment!(:orders) 
+      
+      # create commission
+      unless o.affiliate_campaign.sale_commission == 0.0
+        amt = o.total * o.affiliate_campaign.sale_commission / 100.0
+        user = User.find_by(affiliate_id: o.affiliate_campaign.affiliate.id)
+        
+        unless user.nil?
+          Payment.create(payable_id: o.id, payable_type: :order, user_id: user.id, customer: false, amount: amt, memo: "commission")
+        end
+      end
+    end
     
     # set up auto_ship items
+    order_items = o.items.select { |x| x.autoship_months > 0 }
+    order_items.each do |item|
+      autoship = AutoShipItem.find_by(user_id: o.user_id, item_id: item.item_id)
+      if autoship.nil?
+        autoship = AutoShipItem.new(
+                    user_id: o.user_id,
+                    item_id: item.item_id,
+                    description: item.item_description,
+                    product_id: item.product_id,
+                    affiliate_id: item.affiliate_id,
+                    variation: item.variation,
+                    quantity: item.quantity)
+      end
+      
+      autoship.days = item.autoship_months * 30
+      autoship.last_shipped = Date.today
+      autoship.next_ship_date = Date.today + autoship.days.days
+      autoship.save
+    end
     
   end
 end
