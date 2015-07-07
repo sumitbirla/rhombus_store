@@ -32,7 +32,7 @@ class Admin::Store::ReportsController < Admin::BaseController
       where status in ('submitted', 'completed', 'shipped', 'unshipped')
       and submitted > '#{@start_date}' and submitted < '#{@end_date}'
       and sales_channel LIKE '#{@selected_channel}'
-      group by notify_email
+      group by user_id
       order by count(id) desc;
     EOF
     
@@ -50,7 +50,7 @@ class Admin::Store::ReportsController < Admin::BaseController
           where status in ('submitted', 'completed', 'shipped', 'unshipped')
           and submitted > '#{@start_date}' and submitted < '#{@end_date}'
           and sales_channel LIKE '#{@selected_channel}'
-      	  group by notify_email) as dt
+      	  group by user_id) as dt
       group by order_count
       order by order_count desc;
     EOF

@@ -67,7 +67,22 @@ class AmazonImportJob < ActiveJob::Base
           contact_phone: saddr["Phone"]
         )
       end
-
+      
+      # create user if one doesn't exist already
+      u = User.find_by(email: order.notify_email, domain_id: order.domain_id)
+      if u.nil?
+        u = User.create(
+              name: order.shipping_name || "unknown",
+              email: order.notify_email,
+              phone: order.contact_phone,
+              status: "Z",
+              role_id: 2,
+              domain_id: order.domain_id,
+              referral_key: SecureRandom.hex(5),
+              location: "#{order.shipping_city}, #{order.shipping_state}")
+      end
+      order.user_id = u.id
+      
       order.save!
       @logger.debug "#{order.id} : #{order.external_order_id} : #{order.status} : #{order.billing_name}"
       
