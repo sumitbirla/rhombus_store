@@ -8,7 +8,7 @@
 
 <div class="col-md-5">
 	<h3>Sheet Summary</h3>
-	<%= simple_form_for [:admin, :store, @label_sheet], html: { class: 'form-inline'} do |f| %>
+	<%= simple_form_for [:admin, :store, @label_sheet], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
 		<%= render 'admin/shared/error_messages', object: f.object %>
 
 		<%= f.input :name, input_html: { class: 'span10' }  %>
@@ -16,9 +16,8 @@
 		<%= f.input :height, input_html: { class: 'span4' } %>
 		<%= f.input :dpi, input_html: { class: 'span4' } %>
 
-		<div class="form-actions">
-			<%= f.button :submit %>
-		</div>
+		<%= f.button :submit %>
+
 	<% end %>
 </div>
 

@@ -27,15 +27,15 @@
   <%= f.association :region %>
   <%= f.input :slug %>
   <%= f.input :short_tag_line %>
-  <%= f.input :title, as: :text, input_html: { rows: 2, class: 'span6' } %>
+  <%= f.input :title, as: :text, input_html: { rows: 2 } %>
   <%= f.input :theme, as: :select, collection: ['default']%>
   <%= f.input :active %>
   <%= f.association :affiliate %>
   <%= f.input :affiliate_remittance %>
   <%= f.input :affiliate_paid %>
-  <%= f.input :start_time %>
-  <%= f.input :end_time %>
-  <%= f.input :voucher_expiration %>
+  <%= f.input :start_time, as: :string, input_html: { class: "datetime-field" } %>
+  <%= f.input :end_time, as: :string, input_html: { class: "datetime-field" } %>
+  <%= f.input :voucher_expiration, as: :string, input_html: { class: "datetime-field" } %>
   <%= f.input :original_price %>
   <%= f.input :deal_price %>
   <%= f.input :shipping_cost %>
@@ -46,10 +46,10 @@
   <%= f.input :sales_before_showing_count %>
   <%= f.input :allow_photo_upload %>
   <%= f.input :featured %>
-  <%= f.input :description, as: :text, input_html: { class: 'span8', rows: 12 } %>
-  <%= f.input :conditions, as: :text, input_html: { class: 'span8', rows: 6 } %>
-  <%= f.input :redemption_instructions, as: :text, input_html: { class: 'span8', rows: 6 } %>
-  <%= f.input :order_specifications, as: :text, input_html: { class: 'span8', rows: 6 } %>
+  <%= f.input :description, as: :text, input_html: { rows: 12 } %>
+  <%= f.input :conditions, as: :text, input_html: { rows: 6 } %>
+  <%= f.input :redemption_instructions, as: :text, input_html: { rows: 6 } %>
+  <%= f.input :order_specifications, as: :text, input_html: { rows: 6 } %>
   
   <div class="form-actions">
   	<%= f.button :submit %>
