@@ -94,7 +94,7 @@
           <div class="panel-body">
             <%= f.input :carrier, collection: ["USPS", "FedEx", "UPS"] %>
             <%= f.input :ship_method %>
-            <%= f.input :ship_date, as: :string, input_html: { class: "date-field" } %>
+            <%= f.input :ship_date, as: :datepicker %>
             <%= f.input :ship_cost %>
             <%= f.input :tracking_number %>
             <%= f.input :status, collection: ['pending', 'shipped', 'void', 'cancelled', 'delivered'] %>

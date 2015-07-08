@@ -33,9 +33,9 @@
   <%= f.association :affiliate %>
   <%= f.input :affiliate_remittance %>
   <%= f.input :affiliate_paid %>
-  <%= f.input :start_time, as: :string, input_html: { class: "datetime-field" } %>
-  <%= f.input :end_time, as: :string, input_html: { class: "datetime-field" } %>
-  <%= f.input :voucher_expiration, as: :string, input_html: { class: "datetime-field" } %>
+  <%= f.input :start_time, as: :datetimepicker %>
+  <%= f.input :end_time, as: :datetimepicker %>
+  <%= f.input :voucher_expiration, as: :datetimepicker %>
   <%= f.input :original_price %>
   <%= f.input :deal_price %>
   <%= f.input :shipping_cost %>
