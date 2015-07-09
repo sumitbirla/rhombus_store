@@ -82,6 +82,7 @@ class CartController < ApplicationController
         order.items << item
       else
         item.quantity += quantity
+        item.autoship_months = params[:autoship_months] || item.autoship_months
         item.save
       end
     end

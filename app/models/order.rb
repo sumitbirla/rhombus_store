@@ -228,6 +228,28 @@ class Order < ActiveRecord::Base
 
       # credit cart authorization failed?
       raise response.message unless response.success?
+      
+      # save CC?
+      if items.any? { |x| x.autoship_months > 0 }
+        unless PaymentMethod.exists?(user_id: user_id, card_display: "x-#{cc_number.last(4)}")
+          PaymentMethod.create(
+                    user_id: user_id,
+                    default: true,
+                    cardholder_name: billing_name,
+                    number: cc_number,
+                    expiration_month: cc_expiration_month,
+                    expiration_year: cc_expiration_year,
+                    billing_street1: billing_street1,
+                    billing_street2: billing_street2,
+                    billing_city: billing_city,
+                    billing_state: billing_state,
+                    billing_zip: billing_zip,
+                    billing_country: billing_country,
+                    status: "A",
+                    last_transaction_date: DateTime.now,
+                    last_transaction_result: response.message)
+          end
+      end
   
       self.status = 'submitted'
       self.submitted = Time.now
@@ -248,6 +270,7 @@ class Order < ActiveRecord::Base
     end
     
   end
+  
   
   
   # create shipment for the order.  doesn't take inventory into consideration currently
@@ -317,5 +340,9 @@ class Order < ActiveRecord::Base
     
     shipment
   end
+  
+  
+  
+  
   
 end
