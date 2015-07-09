@@ -6,21 +6,22 @@
 </h2>
 <hr/>
 
-<%= simple_form_for([:admin, :store, @brand], html: { class: 'form-inline' }) do |f| %>
+<%= simple_form_for [:admin, :store, @brand], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
 
   <%= render 'admin/shared/error_messages', object: f.object %>
 
   <%= f.input :name %>
   <%= f.input :website %>
   <div class="form-group string optional brand_website">
-	  <label class="string optional control-label" for="brand_website">Logo</label>
+	  <label class="string optional control-label col-sm-3" for="brand_website">Logo</label>
+    <div class="col-md-9">
 	  <%= f.input_field :logo, style: 'width: 50%' %> <input type="button" value="Browse Server" class="btn btn-default btn-sm" onclick="javascript:BrowseServer();">
+    </div>
   </div>
-  <%= f.input :about, as: :text, input_html: { style: 'width: 500px; height: 200px;' } %>
+  <%= f.input :about, as: :text, input_html: { rows: 10 } %>
   
-  <div class="form-actions">
-  	<%= f.button :submit %>
-  </div>
+  <%= f.button :submit %>
+
 <% end %>
 
 

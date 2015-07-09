@@ -1,7 +1,7 @@
 <h2><%= @affiliate_product.affiliate.name %></h2>
 <hr/>
 
-<%= simple_form_for([:admin, :store, @affiliate_product], html: { class: 'form-inline' }) do |f| %>
+<%= simple_form_for [:admin, :store, @affiliate_product], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
 
   <%= render 'admin/shared/error_messages', object: f.object %>
 
@@ -11,9 +11,8 @@
   <%= f.input :data %>
   <%= f.input :images %>
   
-  <div class="form-actions">
-  	<%= f.button :submit %>
-  </div>
+  <%= f.button :submit %>
+
 <% end %>
 
 

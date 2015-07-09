@@ -1,20 +1,20 @@
 <style>
-    .form-inline .control-label { width: 140px; }
+    .form-horizontal .control-label { width: 140px; }
 </style>
 
 <h2><%= @coupon.code %></h2>
 <hr/>
 
-<%= simple_form_for [:admin, :store, @coupon], html: { class: 'form-inline' } do |f| %>
+<%= simple_form_for [:admin, :store, @coupon], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
 
 	<input type="hidden" name="redirect" value="<%= @redirect %>" />
 	<%= render 'admin/shared/error_messages', object: f.object %>
 	
 	
-	<%= f.input :code, input_html: { class: 'span2' } %>
-	<%= f.input :start_time %>
-	<%= f.input :expire_time %>
-	<%= f.input :description, input_html: { class: 'span6', rows: 3 }  %>
+	<%= f.input :code, input_html: { class: 'short' } %>
+	<%= f.input :start_time, as: :datetimepicker %>
+	<%= f.input :expire_time, as: :datetimepicker %>
+	<%= f.input :description, input_html: { rows: 3 }  %>
 	<%= f.association :product %>
 	<%= f.association :daily_deal %>
 	<%= f.input :free_shipping %>
