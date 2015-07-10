@@ -157,6 +157,7 @@ class Order < ActiveRecord::Base
             status: "Z",
             role_id: Role.find_by(default: true).id,
             domain_id: domain_id,
+            password_digest: SecureRandom.hex(8),
             referral_key: SecureRandom.hex(5),
             location: "#{shipping_city}, #{shipping_state}")
     end

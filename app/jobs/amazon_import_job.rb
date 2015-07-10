@@ -78,6 +78,7 @@ class AmazonImportJob < ActiveJob::Base
               status: "Z",
               role_id: 2,
               domain_id: order.domain_id,
+              password_digest: SecureRandom.hex(8),
               referral_key: SecureRandom.hex(5),
               location: "#{order.shipping_city}, #{order.shipping_state}")
       end
