@@ -220,6 +220,12 @@ class CartController < ApplicationController
   def checkout
       @order = Order.includes(:items).find_by(cart_key: cookies[:cart]) unless cookies[:cart].nil?
       return redirect_to action: 'index' if (@order.nil? || @order.items.length == 0)
+      
+      # check if login is required
+      if (session[:user_id].nil? && Cache.setting(Rails.configuration.domain_id, "eCommerce", "Checkout Require Login") == "true")
+        flash[:notice] = "Please log in to proceed with checkout"
+        return redirect_to "/login?redirect=/cart/checkout"
+      end
 
       # retrieve info from previous order if user is logged in
       if @order.user_id.nil? && !session[:user_id].nil?
