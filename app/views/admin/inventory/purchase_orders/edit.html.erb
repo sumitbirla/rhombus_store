@@ -1,7 +1,3 @@
-<style>
-    .form-inline .control-label { width: 140px; }
-</style>
-
 <h2><% if @purchase_order.id.nil? %>
 	New Purchase Order
 	<% else %>
@@ -10,7 +6,7 @@
 	</h2>
 
 <% unless @purchase_order.id.nil? %>
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs" style="margin-bottom: 20px;">
   <li class="active"><a href="#">Summary</a></li>
   <li><%= link_to "Items", items_admin_inventory_purchase_order_path(@purchase_order) %></a></li>
 </ul>
@@ -18,38 +14,28 @@
     <hr/>
 <% end %>
 
-<%= simple_form_for([:admin, :inventory, @purchase_order], html: { class: 'form-inline' }) do |f| %>
+<%= simple_form_for [:admin, :inventory, @purchase_order], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
 
   <%= render 'admin/shared/error_messages', object: f.object %>
 
   <%= f.input :status, collection: ['new', 'open', 'partially_received', 'received', 'cancelled']%>
   <%= f.association :affiliate, collection: Cache.affiliate_list('purchase-orders') %>
   <%= f.association :supplier, collection: Cache.affiliate_list('suppliers') %>
-  <div class="form-group string optional ship_date">
-    <label class="string required control-label">Ship Date</label>
-    <div class="input-group date date-field">
-      <%= f.input_field :issue_date, as: :string, class: "form-control" %>
-      <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
-    </div>
-  </div>
-  <div class="form-group string optional ship_date">
-    <label class="string control-label">Due Date</label>
-    <div class="input-group date date-field">
-      <%= f.input_field :due_date, as: :string, class: "form-control" %>
-      <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
-    </div>
-  </div>
+  <%= f.input :issue_date, as: :datepicker%>
+  <%= f.input :due_date, as: :datepicker%>
   <%= f.input :ship_method %>
   <%= f.input :payment_terms %>
   
   <div class="form-group string optional brand_website">
-	  <label class="string optional control-label" for="shipping_address">Shipping Address</label>
-	  <select id="sel-shipping-address">
-		<option value="">-- select warehouse --</option>
-	  <% CmsCache.location_list('warehouses').each do |loc| %>
-	  	<option value="<%= loc.to_text %>"><%= loc.name %></option>
-	  <% end %>
-	  <select>
+	  <label class="string optional control-label col-sm-3" for="shipping_address">Shipping Address</label>
+	  <div class="col-sm-9">
+      <select id="sel-shipping-address">
+  		<option value="">-- select warehouse --</option>
+  	  <% CmsCache.location_list('warehouses').each do |loc| %>
+  	  	<option value="<%= loc.to_text %>"><%= loc.name %></option>
+  	  <% end %>
+  	  <select>
+    </div>
   </div>
   <%= f.input :ship_to, as: :text, input_html: { rows: 4 } %>
   <%= f.input :notes, as: :text %>

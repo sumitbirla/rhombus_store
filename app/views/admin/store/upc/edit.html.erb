@@ -1,16 +1,14 @@
 <h2><%= @upc.item %></h2>
 <hr/>
 
-<%= simple_form_for [:admin, :store, @upc], html: { class: 'form-inline' } do |f| %>
+<%= simple_form_for [:admin, :store, @upc], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
 
     <%= render 'admin/shared/error_messages', object: f.object %>
 
     <%= f.input :code %>
     <%= f.input :item %>
 
-    <div class="form-actions">
-      <%= f.button :submit %>
-    </div>
+    <%= f.button :submit %>
 
 <% end %>
 
