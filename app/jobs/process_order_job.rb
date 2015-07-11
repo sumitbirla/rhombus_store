@@ -6,7 +6,7 @@ class ProcessOrderJob < ActiveJob::Base
     o = Order.find(order_id)
     
     # email order confirmation
-    OrderMailer.order_submitted(o.id, o.user_id).deliver_later
+    OrderMailer.order_submitted(o.id, nil).deliver_later
     
     # create shipment if requested
     if Cache.setting(o.domain_id, :shipping, "Auto Create Shipment")

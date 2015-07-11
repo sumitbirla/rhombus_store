@@ -263,9 +263,13 @@
   <% @order.history.each do |item| %>
       <tr>
         <td><%= systime item.created_at %></td>
-        <td><% unless item.user_id.nil? %>
-              <%= link_to item.user.name, admin_system_user_path(item.user), class: 'small' %>
-          <% end %></td>
+        <td class="small light">
+          <% unless item.user_id.nil? %>
+            <%= link_to item.user.name, admin_system_user_path(item.user) %>
+          <% else %>
+            system
+          <% end %>
+        </td>
         <td><b><%= item.system_name %></b> &nbsp; <%= item.event_type %></td>
         <td><%= number_to_currency(item.amount) unless item.amount.nil? %></td>
         <td>
