@@ -1,0 +1,68 @@
+<%= link_to "Edit", edit_admin_inventory_inventory_transaction_path(@transaction), class: "btn btn-sm pull-right btn-default" %>
+<h2>Transaction #<%= @transaction.id %></h2>
+
+<div class="col-md-6">
+  <table class="table summary table-condensed table-bordered">
+  <tr>
+    <td>Timestamp:</td> 
+    <td><%= systime @transaction.timestamp %></td>
+  </tr>
+  <tr>
+    <td>Method:</td>
+    <td>
+    <% if @transaction.purchase_order_id  %>
+        <%= link_to "PO ##{@transaction.purchase_order_id}", admin_inventory_purchase_order_path(@transaction.purchase_order_id) %>
+    <% elsif @transaction.shipment_id %>
+        <%= link_to "Shipment #{@transaction.purchase_order_id}", admin_store_shipment_path(@transaction.shipment_id) %>
+    <% else %>
+      Manual Entry
+    <% end %>
+    </td>
+  </tr>
+  <tr>
+    <td>Entered by:</td> 
+    <td>
+    <% unless @transaction.user.nil? %>
+      <%= link_to @transaction.user.name, admin_system_user_path(@transaction.user) %>
+    <% else %>
+      system
+    <% end %>
+    </td>
+  </tr>
+  <% unless @transaction.notes.nil? %>
+  <tr>
+    <td>Notes:</td> 
+    <td><i><%= @transaction.notes %></i></td>
+  </tr>
+  <% end %>
+  </table>
+</div>
+
+<table class="table table-condensed table-bordered">
+<tr>
+  <th>SKU</th>
+  <th>Description</th>
+  <th>Cases</th>
+  <th>Units per case</th>
+  <th>Loose items</th>
+  <th>Total</th>
+</tr>
+<% @transaction.items.each do |i| 
+    p = Product.find_by(sku: i.sku) %>
+<tr>
+  <td><%= i.sku %></td>
+  <td><%= p.name_with_option unless p.nil? %></td>
+  <td><%= i.cases %></td>
+  <td><%= i.units_per_case %></td>
+  <td><%= i.loose_items %></td>
+  <td><%= i.quantity %></td>
+</tr>
+<% end %>
+</table>
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">Inventory</a></li>
+	<li><%= link_to 'Transactions', admin_inventory_inventory_transactions_path %></li>
+	<li class="active"># <%= @transaction.id %></li>
+<% end %>

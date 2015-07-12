@@ -72,6 +72,9 @@ class Admin::Store::EasyPostController < Admin::BaseController
       end
     end
     
+    # update inventory
+    UpdateInventoryJob.perform_later(shipment_id: @shipment.id)
+    
     redirect_to admin_store_shipment_path(@shipment)
   end
   

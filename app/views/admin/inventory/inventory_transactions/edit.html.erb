@@ -1,0 +1,128 @@
+<h2>
+<% if @transaction.persisted? %>
+  Transaction #<%= @transaction.id %>
+<% else %>
+  New Transaction
+<% end %>
+</h2>
+
+<%= simple_form_for [:admin, :inventory, @transaction] do |f| %>
+  <input type="hidden" name="add_more_items" value=""/>
+  
+	<%= render 'admin/shared/error_messages', object: f.object %>
+	
+  <%= f.input :notes %>
+  
+	 <div class="panel panel-info">
+    <div class="panel-heading">
+      <%= link_to '+ add more items', '#', class: 'add-more-items pull-right' %>
+      Items
+    </div>
+    <div class="panel-body">
+      <table class="table">
+        <tr>
+          <th style="width: 200px;">Item</th>
+          <th>Description</th>
+          <th>Units per case</th>
+          <th>Cases</th>
+          <th>Loose Items</th>
+          <th style="width: 120px;">Total</th>
+          <th style="width: 60px;"></th>
+        </tr>
+        <%= f.fields_for :items do |itemf| %>
+          <% 
+            item = @transaction.items[itemf.index] 
+            p = Product.find_by(sku: item.sku) unless item.sku.blank?
+          %>
+          <tr>
+            <td><%= itemf.input_field :sku, class: 'item-id form-control' %></td>
+            <td><span class="item-desc"><%= p.name_with_option unless p.nil? %></span></td>
+            <td><%= itemf.input_field :units_per_case, class: 'qty units-per-case form-control' %></td>
+            <td><%= itemf.input_field :cases, class: 'qty cases form-control' %></td>
+            <td><%= itemf.input_field :loose_items, class: 'qty loose-items form-control' %></td>
+            <td><%= itemf.input_field :quantity, class: 'total form-control' %></td>
+            <td><i class="fa fa-times"></i>
+              <%= itemf.hidden_field :_destroy, class: 'destroy' %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+  
+  
+  <b>Signed by:</b> <%= current_user.name %><br><br>
+
+	<%= f.button :submit %>
+
+<% end %>
+
+
+<% content_for :title do %>
+	Transactions: <%= @transaction.id %>
+<% end %>
+
+<% content_for :head do %>
+    <style>
+        .form-inline .form-group { margin: 10px 0; }
+        .fa-times { cursor: pointer; }
+    </style>
+    
+    <script>
+    $(document).ready(function() {
+      
+      $(".fa-times").click(function () {
+        $(this).parent().parent().hide("slow");
+        $(this).siblings(".destroy").val("true");
+        return false;
+      });
+      
+      $(".add-more-items").click(function() {
+        $("input[name='add_more_items']").val(<%= @transaction.items.length %>);
+        $("form.simple_form").submit();
+      });
+      
+      $(".qty").change(function() {
+        var units_per_case = $(this).parent().parent().find('.units-per-case').val();
+        var cases = $(this).parent().parent().find('.cases').val();
+        var loose_items = $(this).parent().parent().find('.loose-items').val();
+        
+        var total = parseInt(units_per_case) * parseInt(cases) + parseInt(loose_items);
+        $(this).parent().parent().find('.total').val(total);
+        
+      });
+      
+      $(".item-id").change(function() {
+        var item = $(this);
+        
+        $.get('/admin/store/products/item_info?sku=' + $(this).val(), function(data) {
+          
+          if (data.status == 'ok') { 
+            item.parent().parent().find('.item-desc').html(data.description);
+            item.parent().parent().find('.units-per-case').val(data.case_quantity);
+            item.parent().parent().find('.cases').focus();
+          } else {
+            item.parent().parent().find('.item-desc').val('ITEM NOT FOUND!');
+            item.parent().parent().find('.item-id').select();
+          }
+          
+        });
+      });
+      
+    });
+    </script>
+<% end %>
+
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">Inventory</a></li>
+	<li><%= link_to 'Transactions', admin_inventory_inventory_transactions_path %></li>
+	<% if @transaction.persisted? %>
+		<li><%= link_to '#' + @transaction.id.to_s, admin_inventory_inventory_transaction_path(@transaction)%></li>
+		<li class="active">edit</li>
+	<% else %>
+		<li class="active">new</li>
+	<% end %>
+<% end %>

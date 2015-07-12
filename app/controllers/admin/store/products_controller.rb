@@ -161,7 +161,8 @@ class Admin::Store::ProductsController < Admin::BaseController
                             product_id: p.id, 
                             description: p.name_with_option, 
                             price: p.price, 
-                            dealer_price: p.distributor_price }
+                            dealer_price: p.distributor_price,
+                            case_quantity: p.case_quantity }
         
     elsif dd
       return render json: { status: 'ok', 

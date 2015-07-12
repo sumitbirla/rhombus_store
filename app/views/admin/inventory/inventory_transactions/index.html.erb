@@ -1,3 +1,4 @@
+<%= link_to "New transaction", new_admin_inventory_inventory_transaction_path, class: "btn btn-sm pull-right btn-default" %>
 <h2>Inventory Transactions</h2>
 
 <%= will_paginate @transactions %>
@@ -8,21 +9,37 @@
     <th>User</th>
     <th>Type</th>
     <th>Items</th>
+    <th></th>
   </tr>
   <% @transactions.each do |tran| %>
     <tr>
-      <td><%= tran.id %></td>
+      <td><%= link_to tran.id.to_s, admin_inventory_inventory_transaction_path(tran) %></td>
       <td><%= systime tran.timestamp %></td>
-      <td><%= link_to tran.user.name, admin_system_user_path(tran.user) %></td>
       <td>
-        <% unless tran.purchase_order_id.nil?  %>
+      <% unless tran.user.nil? %>
+        <%= link_to tran.user.name, admin_system_user_path(tran.user) %>
+      <% else %>
+        system
+      <% end %>
+      </td>
+      <td>
+        <% if tran.purchase_order_id  %>
             <%= link_to "PO ##{tran.purchase_order_id}", admin_inventory_purchase_order_path(tran.purchase_order_id) %>
-        <% end %>
-        <% unless tran.shipment_id.nil?  %>
-            <%= link_to "Shipment #{tran.purchase_order_id}", admin_store_shipment_path(tran.shipment_id) %>
+        <% elsif tran.shipment_id %>
+          <% s = Shipment.find(tran.shipment_id)%>
+            <%= link_to "Shipment #{s}", admin_store_shipment_path(tran.shipment_id) %>
+        <% else %>
+          Manual Entry
         <% end %>
       </td>
       <td><%= tran.num_items %></td>
+      <td>
+			<%= link_to "edit", edit_admin_inventory_inventory_transaction_path(tran) %> &nbsp;
+			<%= link_to "delete", 
+						  { action: "destroy", id: tran.id }, 
+						  method: :delete, 
+						  data: { confirm: "Are you sure?" } %>
+      </td>
     </tr>
 
   <% end %>

@@ -14,7 +14,7 @@
   <%= render 'admin/shared/error_messages', object: f.object %>
 
   <%= f.input :code %>
-  <%= f.input :description, input_html: { class: 'span8' } %>
+  <%= f.input :description %>
   <%= f.input :low_threshold %>
   <%= f.input :committed %>
   <%= f.association :supplier, collection: suppliers %>
