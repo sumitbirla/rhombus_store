@@ -53,7 +53,7 @@ packaging_types = [
 
    <div class="col-md-6">
 
-     <%= simple_form_for @shipment, url: '', html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
+     <%= simple_form_for @shipment, url: '' do |f| %>
 
 		  <%= f.input :packaging_type, collection: packaging_types, label: 'Packaging' %>
       <%= f.input :package_weight, label: 'Weight (lbs)' %>

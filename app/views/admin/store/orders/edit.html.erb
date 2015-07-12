@@ -1,6 +1,6 @@
 <h2>Order #<%= @order.id %></h2>
 
-<%= simple_form_for [:admin, :store, @order], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
+<%= simple_form_for [:admin, :store, @order] do |f| %>
   <input type="hidden" name="add_more_items" value=""/>
   
 	<%= render 'admin/shared/error_messages', object: f.object %>

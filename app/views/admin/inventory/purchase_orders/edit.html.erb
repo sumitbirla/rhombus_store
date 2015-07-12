@@ -14,7 +14,7 @@
     <hr/>
 <% end %>
 
-<%= simple_form_for [:admin, :inventory, @purchase_order], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
+<%= simple_form_for [:admin, :inventory, @purchase_order] do |f| %>
 
   <%= render 'admin/shared/error_messages', object: f.object %>
 

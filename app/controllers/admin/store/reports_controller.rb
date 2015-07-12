@@ -15,8 +15,49 @@ class Admin::Store::ReportsController < Admin::BaseController
       where o.status in ('submitted', 'completed', 'shipped', 'unshipped')
       and o.submitted > '#{@start_date}' and o.submitted < '#{@end_date}'
       and o.sales_channel LIKE '#{@selected_channel}'
-      group by o.sales_channel, item_id
+      group by #{@group_channel} item_id
       order by sum(quantity) desc;
+    EOF
+    
+    @data = []
+    ActiveRecord::Base.connection.execute(sql).each { |row| @data << row }
+    
+  end
+  
+  def product_sales_by_sku
+    
+    sql = <<-EOF
+      select sales_channel, product_id, sku, sum(quantity), CONCAT(p.name, ' ', p.option_title) 
+      from store_shipment_items si, store_shipments s, store_orders o, store_products p
+      where si.shipment_id = s.id 
+      and s.order_id = o.id
+      and si.product_id = p.id
+      and s.status = 'shipped'
+      and o.submitted > '#{@start_date}' and o.submitted < '#{@end_date}'
+      and o.sales_channel LIKE '#{@selected_channel}'
+      group by #{@group_channel} product_id
+      order by sum(`quantity`) desc;
+    EOF
+    
+    @data = []
+    ActiveRecord::Base.connection.execute(sql).each { |row| @data << row }
+    
+  end
+  
+  def product_sales_by_affiliate
+    
+    sql = <<-EOF
+      select sales_channel, a.code, name, sum(quantity), a.name, a.id 
+      from store_shipment_items si, store_shipments s, store_orders o, core_affiliates a
+      where si.shipment_id = s.id 
+      and si.affiliate_id IS NOT NULL
+      and s.order_id = o.id
+      and si.affiliate_id = a.id
+      and s.status = 'shipped'
+      and o.submitted > '#{@start_date}' and o.submitted < '#{@end_date}'
+      and o.sales_channel LIKE '#{@selected_channel}'
+      group by #{@group_channel} affiliate_id
+      order by sum(`quantity`) desc;
     EOF
     
     @data = []
@@ -134,9 +175,14 @@ class Admin::Store::ReportsController < Admin::BaseController
     
     @sales_channels = Order.uniq(:sales_channel).pluck(:sales_channel)
     @selected_channel = '%'
-    @selected_channel = params[:sales_channel] unless params[:sales_channel].blank?
+    @group_channel = ''
+    unless params[:sales_channel].blank?
+      @selected_channel = params[:sales_channel]
+      @group_channel = "sales_channel, "
+    end
+    
     @start_date = params[:start_date] || 2.months.ago.strftime("%Y-%m-%d")
-    @end_date = params[:end_date] || '2018-1-1'
+    @end_date = params[:end_date] || 1.day.from_now.strftime("%Y-%m-%d")
     
   end
   

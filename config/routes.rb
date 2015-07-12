@@ -69,6 +69,8 @@ Rails.application.routes.draw do
     # Store Routes
     namespace :store do
 
+      get 'reports/product_sales_by_sku'
+      get 'reports/product_sales_by_affiliate'
       get 'reports/product_sales'
       get 'reports/daily_sales'
       get 'reports/monthly_sales'

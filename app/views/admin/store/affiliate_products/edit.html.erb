@@ -1,7 +1,7 @@
 <h2><%= @affiliate_product.affiliate.name %></h2>
 <hr/>
 
-<%= simple_form_for [:admin, :store, @affiliate_product], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
+<%= simple_form_for [:admin, :store, @affiliate_product] do |f| %>
 
   <%= render 'admin/shared/error_messages', object: f.object %>
 

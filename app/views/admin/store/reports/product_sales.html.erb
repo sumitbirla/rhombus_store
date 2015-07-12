@@ -1,46 +1,37 @@
-<form action="" method="get" class="pull-right well">
-  Sales channel:  &nbsp; <select name="sales_channel">
-    <option value="">-- all channels --</option>
-    <% @sales_channels.each do |ch| %>
-      <option <%= "selected" if @selected_channel == ch %>><%= ch %></option>
-    <% end %> 
-  </select> &nbsp; 
-  Date range:  &nbsp; <input type="text" class="date-field" name="start_date" value="<%= @start_date %>" style="width: 120px;"/> &nbsp; to &nbsp;
-              <input type="text" class="date-field" name="end_date" value="<%= @end_date %>" style="width: 120px;"/>
-  <button class="btn btn-success btn-sm">Filter</button>
-</form>
+<%= render 'admin/shared/report_filter'%>
 
 <h2>Product Leaderboard</h2>
 
-<%
-qty_total = 0
-amount_total = 0.0
-%>
+<b>Total sold: <%= number_with_delimiter @data.sum { |x| x[3] } %></b><br>
+<b>Total revenue: <%= number_to_currency @data.sum { |x| x[5] } %></b><br><br>
+
+<ul class="nav nav-tabs">
+  <li role="presentation"><a href="/admin/store/reports/product_sales_by_sku">By SKU</a></li>
+  <li role="presentation" class="active"><a href="#">By Label</a></li>
+  <li role="presentation"><a href="/admin/store/reports/product_sales_by_affiliate">By Affiliate</a></li>
+</ul>
 
 <table class="table table-striped">
 	<tr>
+    <% unless params[:sales_channel].blank? %>
 		<th>Sales Channel</th>
+    <% end %>
 		<th>Item</th>
     <th>Title</th>
     <th class="ralign">Qty Sold</th>
     <th class="ralign">Revenue</th>
 	</tr>
-  <% @data.each do |row| 
-    qty_total += row[3] 
-    amount_total += row[5] %>
+  <% @data.each do |row| %>
 	<tr>
+    <% unless params[:sales_channel].blank? %>
 		<td><%= row[0] %></td>
+    <% end %>
 		<td><%= row[1] %></td>
     <td><%= row[2] %></td>
     <td class="ralign"><%= number_to_human row[3] %></td>
     <td class="ralign"><%= number_to_currency row[5] %></td>
 	</tr>
   <% end %>
-  <tr>
-    <td colspan="3"></td>
-    <td class="ralign"><b><%= number_to_human qty_total %></b></td>
-    <td class="ralign"><b><%= number_to_currency amount_total %></b></td>
-  </tr>
 </table>
 
 

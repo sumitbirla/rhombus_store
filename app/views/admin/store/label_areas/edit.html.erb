@@ -1,7 +1,7 @@
 <h2><%= @label_area.name %></h2>
 <hr/>
 
-<%= simple_form_for [:admin, :store, @label_area], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
+<%= simple_form_for [:admin, :store, @label_area] do |f| %>
 	<%= render 'admin/shared/error_messages', object: f.object %>
 
 	<%= f.input :label_sheet_id, as: :hidden %>

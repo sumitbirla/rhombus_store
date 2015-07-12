@@ -2,7 +2,7 @@
 
 <%= render 'admin/shared/error_messages', object: @shipment %>
 
-<%= simple_form_for [:admin, :store, @shipment], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
+<%= simple_form_for [:admin, :store, @shipment] do |f| %>
     <%= f.hidden_field :order_id %>
     <%= f.hidden_field :sequence %>
     <%= f.hidden_field :status %>

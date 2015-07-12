@@ -14,7 +14,7 @@
 
 
 
-<%= simple_form_for [:admin, :store, @product], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
+<%= simple_form_for [:admin, :store, @product] do |f| %>
 
   <% unless @product.id.nil? %>
   <ul class="nav nav-tabs" style="margin-bottom: 20px;">

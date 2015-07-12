@@ -28,17 +28,14 @@
 		<th class="actions">&nbsp;</th>
 	</tr>
 	<% @products.each do |product|
-   order_count = OrderItem.joins(:order)
-                          .where(product_id: product.id)
-                          .where("store_orders.status IN ('shipped', 'submitted', 'unshipped')")
-                          .sum(:quantity)  %>
+   order_count = @sold.find { |x| x[0] == product.id }  %>
 	<tr>
 		<td><%= link_to product.sku, admin_store_product_path(product) %></td>
     <td><%= product.brand %></td>
 		<td><%= product.name_with_option %></td>
     <td><%= product_status(product) %></td>
 		<td class="ralign">$<%= product.price %></td>
-    <td class="calign"><%= number_with_delimiter(order_count) %></td>
+    <td class="calign"><%= order_count.nil? ? 0 : number_with_delimiter(order_count[1]) %></td>
 		<td class="actions ralign">
 			<%= link_to "edit", edit_admin_store_product_path(product) %> &nbsp;
 			<%= link_to "delete", 
