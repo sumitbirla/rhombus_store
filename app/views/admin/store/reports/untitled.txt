@@ -1,0 +1,46 @@
+<%= render 'admin/shared/report_filter'%>
+
+<h2>Product Leaderboard</h2>
+
+<b>Total sold: <%= number_with_delimiter @data.sum { |x| x[3] } %></b><br><br>
+
+<ul class="nav nav-tabs">
+  <li role="presentation"><a href="/admin/store/reports/product_sales_by_sku">By SKU</a></li>
+  <li role="presentation"><a href="/admin/store/reports/product_sales">By Label</a></li>
+  <li role="presentation" class="active"><a href="#">By Affiliate</a></li>
+</ul>
+
+
+<table class="table table-striped">
+	<tr>
+    <% unless params[:sales_channel].blank? %>
+		<th>Sales Channel</th>
+    <% end %>
+		<th>Item</th>
+    <th>Title</th>
+    <th class="text-right">Qty Sold</th>
+	</tr>
+  <% @data.each do |row|  %>
+	<tr>
+    <% unless params[:sales_channel].blank? %>
+		<td><%= row[0] %></td>
+    <% end %>
+		<td><%= link_to row[1], admin_system_affiliate_path(row[5]) %></td>
+    <td><%= row[4] %></td>
+    <td class="text-right"><%= row[3] %></td>
+	</tr>
+  <% end %>
+</table>
+
+
+
+<%= content_for :title do %>
+	Product Sales
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Reports", admin_store_reports_path %></li>
+	<li class="active">Product Sales</li>
+<% end %>
