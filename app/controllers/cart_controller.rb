@@ -73,7 +73,7 @@ class CartController < ApplicationController
                 quantity: quantity,
                 unit_price: p.price,
                 item_description: p.name_with_option,
-                autoship_months: params[:autoship_months] || 0
+                autoship_months: params[:autoship_months].blank? ? 0 : params[:autoship_months]
 
         item.item_id = p.sku
         item.item_id += "-" + Affiliate.find(affiliate_id).code unless affiliate_id.nil?
@@ -82,7 +82,7 @@ class CartController < ApplicationController
         order.items << item
       else
         item.quantity += quantity
-        item.autoship_months = params[:autoship_months] || item.autoship_months
+        item.autoship_months = params[:autoship_months].blank? ? 0 : item.autoship_months
         item.save
       end
     end
