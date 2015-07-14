@@ -28,8 +28,6 @@ class UpdateInventoryJob < ActiveJob::Base
       end
     end
     
-    puts trans.items.inspect
-    
     trans.save
     
   end
