@@ -1,10 +1,10 @@
 # == Schema Information
 #
-# Table name: coupons
+# Table name: store_coupons
 #
 #  id               :integer          not null, primary key
 #  code             :string(255)      not null
-#  description      :text
+#  description      :text(65535)
 #  product_id       :integer
 #  daily_deal_id    :integer
 #  free_shipping    :boolean

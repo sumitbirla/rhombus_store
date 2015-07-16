@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: external_coupons
+# Table name: store_external_coupons
 #
 #  id            :integer          not null, primary key
 #  daily_deal_id :integer          not null

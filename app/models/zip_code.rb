@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: zip_codes
+# Table name: store_zip_codes
 #
 #  id               :integer          not null, primary key
 #  code             :string(16)       default(""), not null

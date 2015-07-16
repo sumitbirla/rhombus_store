@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: daily_deal_locations
+# Table name: store_daily_deal_locations
 #
 #  id            :integer          not null, primary key
 #  daily_deal_id :integer          not null

@@ -1,29 +1,55 @@
 # == Schema Information
 #
-# Table name: products
+# Table name: store_products
 #
-#  id                   :integer          not null, primary key
-#  group                :string(255)
-#  product_type         :string(255)
-#  slug                 :string(255)
-#  brand_id             :integer
-#  title                :string(255)      not null
-#  option_title         :string(255)
-#  option_sort          :integer
-#  sku_id               :integer          not null
-#  sku_multiple         :integer          default(1), not null
-#  price                :decimal(10, 2)   not null
-#  special_price        :decimal(10, 2)
-#  dealer_price         :decimal(10, 2)
-#  free_shipping        :boolean          default(FALSE), not null
-#  tax_exempt           :boolean          default(FALSE), not null
-#  hidden               :boolean          default(FALSE), not null
-#  featured             :boolean          default(FALSE), not null
-#  require_image_upload :boolean          default(FALSE), not null
-#  short_description    :text
-#  long_description     :text
-#  created_at           :datetime
-#  updated_at           :datetime
+#  id                     :integer          not null, primary key
+#  name                   :string(255)      not null
+#  group                  :string(255)
+#  product_type           :string(255)
+#  slug                   :string(255)
+#  brand_id               :integer
+#  sku                    :string(255)      default(""), not null
+#  active                 :boolean          default(TRUE), not null
+#  title                  :string(255)      not null
+#  option_title           :string(255)
+#  option_sort            :integer
+#  distributor_price      :decimal(10, 2)
+#  retailer_price         :decimal(8, 2)
+#  retail_map             :decimal(10, 2)
+#  price                  :decimal(10, 2)   not null
+#  msrp                   :decimal(10, 2)
+#  special_price          :decimal(10, 2)
+#  free_shipping          :boolean          default(FALSE), not null
+#  tax_exempt             :boolean          default(FALSE), not null
+#  hidden                 :boolean          default(FALSE), not null
+#  featured               :boolean          default(FALSE), not null
+#  auto_ship              :boolean          default(FALSE), not null
+#  affiliate_only         :boolean
+#  require_image_upload   :boolean          default(FALSE), not null
+#  short_description      :text(65535)
+#  long_description       :text(65535)
+#  keywords               :string(255)
+#  warranty               :string(255)
+#  primary_supplier_id    :integer
+#  fulfiller_id           :integer
+#  label_sheet_id         :integer
+#  item_length            :decimal(10, 3)
+#  item_width             :decimal(10, 3)
+#  item_height            :decimal(10, 3)
+#  item_weight            :decimal(10, 3)
+#  case_length            :decimal(10, 3)
+#  case_width             :decimal(10, 3)
+#  case_height            :decimal(10, 3)
+#  case_weight            :decimal(10, 3)
+#  case_quantity          :integer
+#  country_of_origin      :string(255)
+#  minimum_order_quantity :integer
+#  low_threshold          :integer
+#  committed              :integer          default(0), not null
+#  shipping_lead_time     :integer
+#  item_availability      :date
+#  created_at             :datetime
+#  updated_at             :datetime
 #
 
 require 'rhombus_cms'

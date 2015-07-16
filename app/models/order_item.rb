@@ -1,14 +1,19 @@
 # == Schema Information
 #
-# Table name: order_items
+# Table name: store_order_items
 #
 #  id                  :integer          not null, primary key
 #  order_id            :integer          not null
-#  product_id          :integer          not null
+#  product_id          :integer
+#  daily_deal_id       :integer
 #  affiliate_id        :integer
+#  external_id         :string(255)
 #  variation           :string(255)
 #  quantity            :integer          not null
 #  unit_price          :decimal(10, 2)   not null
+#  item_id             :string(32)       not null
+#  item_description    :string(255)      not null
+#  autoship_months     :integer          default(0), not null
 #  uploaded_file       :string(255)
 #  upload_file_preview :string(255)
 #  start_x_percent     :integer

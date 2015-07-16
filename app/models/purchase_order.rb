@@ -1,8 +1,9 @@
 # == Schema Information
 #
-# Table name: purchase_orders
+# Table name: store_purchase_orders
 #
 #  id            :integer          not null, primary key
+#  affiliate_id  :integer
 #  supplier_id   :integer
 #  status        :string(255)
 #  issue_date    :date
@@ -12,6 +13,7 @@
 #  ship_to       :string(255)
 #  created_at    :datetime
 #  updated_at    :datetime
+#  notes         :string(255)
 #
 
 class PurchaseOrder < ActiveRecord::Base

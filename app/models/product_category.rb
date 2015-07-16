@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: product_categories
+# Table name: store_product_categories
 #
 #  id          :integer          not null, primary key
 #  product_id  :integer          not null

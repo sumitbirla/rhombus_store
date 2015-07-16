@@ -1,12 +1,12 @@
 # == Schema Information
 #
-# Table name: brands
+# Table name: store_brands
 #
 #  id         :integer          not null, primary key
 #  name       :string(255)
 #  website    :string(255)
 #  logo       :string(255)
-#  about      :text
+#  about      :text(65535)
 #  created_at :datetime
 #  updated_at :datetime
 #

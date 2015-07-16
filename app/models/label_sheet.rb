@@ -1,11 +1,11 @@
 # == Schema Information
 #
-# Table name: label_sheets
+# Table name: store_label_sheets
 #
 #  id         :integer          not null, primary key
 #  name       :string(255)      not null
-#  width      :decimal(6, 2)    not null
-#  height     :decimal(6, 2)    not null
+#  width      :decimal(6, 3)    not null
+#  height     :decimal(6, 3)    not null
 #  dpi        :integer          not null
 #  created_at :datetime
 #  updated_at :datetime

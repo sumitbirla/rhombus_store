@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: sublocations
+# Table name: store_sublocations
 #
 #  id          :integer          not null, primary key
 #  location_id :integer

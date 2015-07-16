@@ -1,10 +1,10 @@
 # == Schema Information
 #
-# Table name: purchase_order_items
+# Table name: store_purchase_order_items
 #
 #  id                :integer          not null, primary key
 #  purchase_order_id :integer          not null
-#  sku_id            :integer          not null
+#  sku               :string(32)       default(""), not null
 #  quantity          :integer          default(1), not null
 #  description       :string(255)
 #  supplier_code     :string(255)

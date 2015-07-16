@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: label_elements
+# Table name: store_label_elements
 #
 #  id                   :integer          not null, primary key
 #  product_id           :integer          not null
@@ -14,7 +14,7 @@
 #  background_color     :string(255)
 #  horizontal_alignment :string(255)
 #  vertical_alignment   :string(255)
-#  font_size            :integer
+#  font_size            :decimal(10, )
 #  font_color           :string(255)
 #  font_family          :string(255)
 #  font_style           :string(255)

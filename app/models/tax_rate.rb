@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: tax_rates
+# Table name: store_tax_rates
 #
 #  id               :integer          not null, primary key
 #  code             :string(255)      not null

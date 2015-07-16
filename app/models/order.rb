@@ -1,12 +1,13 @@
 # == Schema Information
 #
-# Table name: orders
+# Table name: store_orders
 #
 #  id                    :integer          not null, primary key
-#  external_id           :string(255)
-#  provider              :string(255)
+#  domain_id             :integer          not null
+#  external_order_id     :string(255)
+#  sales_channel         :string(255)
 #  user_id               :integer
-#  cart_key              :string(255)
+#  cart_key              :string(255)      default(""), not null
 #  affiliate_campaign_id :integer
 #  referred_by           :integer
 #  coupon_id             :integer
@@ -39,10 +40,10 @@
 #  billing_state         :string(255)
 #  billing_zip           :string(255)
 #  billing_country       :string(255)
-#  customer_note         :text
+#  customer_note         :text(65535)
 #  notify_email          :string(255)
 #  contact_phone         :string(255)
-#  payment_method        :string(255)      default(""), not null
+#  payment_method        :string(255)      default("")
 #  cc_type               :string(255)
 #  cc_number             :string(255)
 #  cc_code               :string(255)

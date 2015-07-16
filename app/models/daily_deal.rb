@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: daily_deals
+# Table name: store_daily_deals
 #
 #  id                         :integer          not null, primary key
 #  region_id                  :integer          not null
@@ -15,12 +15,12 @@
 #  voucher_expiration         :datetime
 #  original_price             :decimal(8, 2)    not null
 #  deal_price                 :decimal(8, 2)    not null
-#  shipping_cost              :decimal(6, 2)
-#  conditions                 :text
-#  description                :text             not null
+#  shipping_cost              :decimal(6, 2)    default(0.0), not null
+#  conditions                 :text(65535)
+#  description                :text(65535)      not null
 #  short_tag_line             :string(255)      not null
-#  redemption_instructions    :text
-#  order_specifications       :text
+#  redemption_instructions    :text(65535)
+#  order_specifications       :text(65535)
 #  theme                      :string(255)
 #  max_sales                  :integer
 #  max_per_user               :integer
@@ -34,6 +34,7 @@
 #  facebook_clicks            :integer          not null
 #  created_at                 :datetime
 #  updated_at                 :datetime
+#  uuid                       :string(255)      not null
 #
 
 class DailyDeal < ActiveRecord::Base

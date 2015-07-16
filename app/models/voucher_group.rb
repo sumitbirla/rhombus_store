@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: voucher_groups
+# Table name: store_voucher_groups
 #
 #  id         :integer          not null, primary key
 #  name       :string(255)      not null

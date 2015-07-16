@@ -1,10 +1,12 @@
 # == Schema Information
 #
-# Table name: daily_deal_items
+# Table name: store_daily_deal_items
 #
 #  id            :integer          not null, primary key
 #  daily_deal_id :integer          not null
 #  product_id    :integer          not null
+#  affiliate_id  :integer
+#  variation     :string(255)
 #  unit_cost     :decimal(8, 2)    not null
 #  quantity      :integer          not null
 #  created_at    :datetime

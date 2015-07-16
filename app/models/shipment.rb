@@ -1,38 +1,54 @@
 # == Schema Information
 #
-# Table name: shipments
+# Table name: store_shipments
 #
-#  id                :integer          not null, primary key
-#  order_id          :integer          not null
-#  sequence          :integer          not null
-#  fulfilled_by_id   :integer
-#  status            :string(255)      not null
-#  ship_from_id      :integer          not null
-#  recipient_name    :string(255)      not null
-#  recipient_company :string(255)
-#  recipient_street1 :string(255)      not null
-#  recipient_street2 :string(255)
-#  recipient_city    :string(255)      not null
-#  recipient_state   :string(255)      not null
-#  recipient_zip     :string(255)      not null
-#  recipient_country :string(255)      not null
-#  ship_method       :string(255)
-#  tracking_number   :string(255)
-#  ship_date         :datetime
-#  ship_cost         :decimal(6, 2)
-#  package_length    :integer
-#  package_width     :integer
-#  package_height    :integer
-#  package_weight    :decimal(6, 2)
-#  notes             :text
-#  packaging_type    :string(255)
-#  drop_off_type     :string(255)
-#  courier_data      :text
-#  created_at        :datetime
-#  updated_at        :datetime
-#  label_data        :binary(16777215)
-#  label_format      :string(255)
+#  id                 :integer          not null, primary key
+#  order_id           :integer          not null
+#  sequence           :integer          not null
+#  fulfilled_by_id    :integer
+#  invoice_amount     :decimal(10, 2)   default(0.0), not null
+#  status             :string(255)      not null
+#  ship_from_company  :string(255)      default(""), not null
+#  ship_from_street1  :string(255)      default(""), not null
+#  ship_from_street2  :string(255)
+#  ship_from_city     :string(255)      default(""), not null
+#  ship_from_state    :string(255)      default(""), not null
+#  ship_from_zip      :string(255)      default(""), not null
+#  ship_from_country  :string(255)      default(""), not null
+#  ship_from_email    :string(255)
+#  ship_from_phone    :string(255)
+#  recipient_name     :string(255)      not null
+#  recipient_company  :string(255)
+#  recipient_street1  :string(255)      not null
+#  recipient_street2  :string(255)
+#  recipient_city     :string(255)      not null
+#  recipient_state    :string(255)      not null
+#  recipient_zip      :string(255)      not null
+#  recipient_country  :string(255)      not null
+#  carrier            :string(255)
+#  ship_method        :string(255)
+#  tracking_number    :string(255)
+#  ship_date          :date
+#  ship_cost          :decimal(6, 2)
+#  package_length     :integer
+#  package_width      :integer
+#  package_height     :integer
+#  package_weight     :decimal(6, 2)
+#  notes              :text(65535)
+#  packaging_type     :string(255)
+#  require_signature  :boolean
+#  insurance          :decimal(8, 2)    default(0.0), not null
+#  drop_off_type      :string(255)
+#  label_data         :binary(16777215)
+#  label_format       :string(255)
+#  courier_name       :string(255)
+#  courier_data       :text(16777215)
+#  fulfiller_notified :boolean          default(FALSE), not null
+#  inventory_updated  :boolean          default(FALSE), not null
+#  created_at         :datetime
+#  updated_at         :datetime
 #
+
 require 'net/http'
 require 'uri'
 

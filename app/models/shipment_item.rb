@@ -1,13 +1,17 @@
 # == Schema Information
 #
-# Table name: shipment_items
+# Table name: store_shipment_items
 #
-#  id            :integer          not null, primary key
-#  shipment_id   :integer          not null
-#  order_item_id :integer          not null
-#  quantity      :integer          not null
-#  created_at    :datetime
-#  updated_at    :datetime
+#  id             :integer          not null, primary key
+#  shipment_id    :integer          not null
+#  order_item_id  :integer          not null
+#  product_id     :integer          not null
+#  affiliate_id   :integer
+#  variation      :string(255)
+#  quantity       :integer          not null
+#  special_status :string(64)       default("")
+#  created_at     :datetime
+#  updated_at     :datetime
 #
 
 class ShipmentItem < ActiveRecord::Base

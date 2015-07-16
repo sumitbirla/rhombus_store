@@ -1,10 +1,11 @@
 # == Schema Information
 #
-# Table name: invoice_images
+# Table name: store_invoice_images
 #
 #  id         :integer          not null, primary key
 #  created_at :datetime
 #  updated_at :datetime
+#  domain_id  :integer          not null
 #
 
 class InvoiceImage < ActiveRecord::Base

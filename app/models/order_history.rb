@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: order_histories
+# Table name: store_order_history
 #
 #  id          :integer          not null, primary key
 #  order_id    :integer          not null
@@ -10,8 +10,8 @@
 #  system_name :string(255)      not null
 #  identifier  :string(255)
 #  comment     :string(255)
-#  data1       :binary
-#  data2       :binary
+#  data1       :binary(65535)
+#  data2       :binary(65535)
 #  created_at  :datetime
 #  updated_at  :datetime
 #
