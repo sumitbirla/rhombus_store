@@ -160,7 +160,7 @@
             &nbsp; (<span><%= item.affiliate %></span>)
           <% end %>
           
-          <% if upc && !upc.notes.include?("P") %>
+          <% if upc && !upc.flags.include?("P") %>
             &nbsp; &nbsp; <i style="color: #ccc;">P</i>
           <% end %>
         </td>

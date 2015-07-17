@@ -53,6 +53,6 @@ class Admin::Store::UpcController < Admin::BaseController
   private
   
     def upc_params
-      params.require(:upc).permit(:code, :item)
+      params.require(:upc).permit!
     end
 end

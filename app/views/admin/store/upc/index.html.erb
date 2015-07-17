@@ -10,6 +10,8 @@
 	<tr>
 		<th>Code</th>
 		<th>Assigned item</th>
+    <th>Flags</th>
+    <th>Img Label</th>
     <th>Notes</th>
 		<th class="actions">&nbsp;</th>
 	</tr>
@@ -17,6 +19,8 @@
 	<tr>
 		<td><%= upc.code %></td>
 		<td><%= upc.item %></td>
+    <td><%= upc.flags %></td>
+    <td><%= upc.image_label %></td>
     <td><%= upc.notes %></td>
 		<td class="actions">
 			<%= link_to "edit", edit_admin_store_upc_path(upc) %> &nbsp;
