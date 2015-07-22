@@ -134,7 +134,7 @@
       
       $(".add-more-items").click(function() {
         $("input[name='add_more_items']").val(<%= @order.items.length %>);
-        $("form.form-inline").submit();
+        $("form.form-horizontal").submit();
       });
       
       $(".update-total").click(function(e) {
