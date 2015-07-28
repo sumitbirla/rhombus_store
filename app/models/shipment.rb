@@ -54,6 +54,7 @@ require 'uri'
 
 class Shipment < ActiveRecord::Base
   self.table_name = "store_shipments"
+  after_save :update_order
   belongs_to :order
   belongs_to :fulfiller, class_name: 'User', foreign_key: 'fulfilled_by_id'
   has_many :items, class_name: 'ShipmentItem', dependent: :destroy
@@ -95,6 +96,15 @@ class Shipment < ActiveRecord::Base
   def post_invoice
     return if (invoice_amount == 0.0 || invoice_posted?)
     Payment.create(user_id: order.user_id, payable_id: id, payable_type: :shipment, amount: invoice_amount * -1.0, memo: 'invoice')               
+  end
+  
+  # this callback is executed after shipment is saved
+  def update_order
+    if status == "shipped"
+      if Shipment.where(order_id: order_id).where.not(status: "shipped").length == 0
+        Order.find(order_id).update_attribute(:status, "shipped")
+      end
+    end
   end
   
   def copy_easy_post(response)

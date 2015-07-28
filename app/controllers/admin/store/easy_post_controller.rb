@@ -48,8 +48,6 @@ class Admin::Store::EasyPostController < Admin::BaseController
                               system_name: response[:selected_rate][:carrier],
                               identifier: @shipment.tracking_number,
                               comment:  response[:selected_rate][:service]
-
-    @shipment.order.update_attribute(:status, 'shipped')
     
     # Amazon orders need to be notified about shipment
     if @shipment.order.sales_channel == "Amazon.com"

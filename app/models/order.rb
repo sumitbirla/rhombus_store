@@ -145,7 +145,7 @@ class Order < ActiveRecord::Base
     [ 'submitted', 'completed', 'unshipped', 'shipped', 'refunded', 'cancelled', 'backordered' ]
   end
   
-  # create a dummy user if one doesn't exist and assign user_id.  user object is not saved
+  # create a dummy user if one doesn't exist and assign user_id
   def create_user
     return unless user_id.nil?
     
