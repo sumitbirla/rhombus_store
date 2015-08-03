@@ -1,0 +1,34 @@
+<h2>Autoship Item
+</h2>
+<hr/>
+
+<%= simple_form_for [:admin, :store, @auto_ship_item] do |f| %>
+
+  <%= render 'admin/shared/error_messages', object: f.object %>
+
+  <%= f.association :user %>
+  <%= f.input :item_id %>
+  <%= f.input :quantity %>
+  <%= f.input :description %>
+  <%= f.input :last_shipped, as: :datepicker %>
+  <%= f.input :next_ship_date, as: :datepicker %>
+  
+  <%= f.button :submit %>
+
+<% end %>
+
+
+
+
+<% content_for :title do %>
+	Autoship Item
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Autoship Items", admin_store_auto_ship_items_path %></li>
+	<li class="active">edit</li>
+<% end %>
+
+

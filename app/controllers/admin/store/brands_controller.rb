@@ -47,6 +47,6 @@ class Admin::Store::BrandsController < Admin::BaseController
   private
   
     def brand_params
-      params.require(:brand).permit(:name, :website, :logo, :about)
+      params.require(:brand).permit!
     end
 end

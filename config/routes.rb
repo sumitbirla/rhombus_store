@@ -106,6 +106,7 @@ Rails.application.routes.draw do
       
       get 'products/item_info' => 'products#item_info'
       
+      resources :auto_ship_items
       resources :brands
       resources :products do
         member do
