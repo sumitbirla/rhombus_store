@@ -28,7 +28,7 @@
     <% end %>
 		<td><%= row[1] %></td>
     <td><%= row[2] %></td>
-    <td class="ralign"><%= number_to_human row[3] %></td>
+    <td class="ralign"><%= number_with_delimiter row[3] %></td>
     <td class="ralign"><%= number_to_currency row[5] %></td>
 	</tr>
   <% end %>

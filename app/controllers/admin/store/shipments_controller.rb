@@ -233,6 +233,13 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
   def product_labels
     @shipment_items = ShipmentItem.includes(:order_item, [order_item: :product]).where(shipment_id: params[:shipment_id])
+    @shipment_items = @shipment_items.sort do |x, y| 
+      if x.product.label_sheet_id && y.product.label_sheet_id 
+        x.product.label_sheet_id <=> y.product.label_sheet_id
+      else
+        x.product.label_sheet_id ? -1 : 1
+      end
+    end
   end
   
   

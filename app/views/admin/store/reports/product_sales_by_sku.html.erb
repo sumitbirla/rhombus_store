@@ -27,7 +27,7 @@
     <% end %>
 		<td><%= link_to row[2], admin_store_product_path(row[1]) %></td>
     <td><%= row[4] %></td>
-    <td class="text-right"><%= row[3] %></td>
+    <td class="text-right"><%= number_with_delimiter row[3] %></td>
 	</tr>
   <% end %>
 </table>
