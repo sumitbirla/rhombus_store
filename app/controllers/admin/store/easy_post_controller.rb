@@ -31,6 +31,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
     begin
       ep_shipment = EasyPost::Shipment.retrieve(params[:ep_shipment_id])
       response = ep_shipment.buy(:rate => {:id => params[:rate_id]})
+      Rails.logger.debug response.inspect
     rescue => e
       flash[:error] = e.message
       return redirect_to :back
@@ -39,7 +40,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
     @shipment.copy_easy_post(response)
     @shipment.status = 'shipped'
     @shipment.fulfilled_by_id = session[:user_id]
-    @shipment.save
+    @shipment.save!
   
     OrderHistory.create order_id: @shipment.order_id,
                               user_id: current_user.id,
