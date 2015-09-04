@@ -31,7 +31,6 @@ class Admin::Store::EasyPostController < Admin::BaseController
     begin
       ep_shipment = EasyPost::Shipment.retrieve(params[:ep_shipment_id])
       response = ep_shipment.buy(:rate => {:id => params[:rate_id]})
-      Rails.logger.debug response.inspect
     rescue => e
       flash[:error] = e.message
       return redirect_to :back
