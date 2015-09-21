@@ -168,9 +168,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
 
   def destroy
-    @shipment = Shipment.find(params[:id])
-    @shipment.destroy
-
+    Shipment.find(params[:id]).destroy
     redirect_to :back
   end
 
