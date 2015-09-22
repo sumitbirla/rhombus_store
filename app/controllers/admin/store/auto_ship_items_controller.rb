@@ -1,7 +1,7 @@
 class Admin::Store::AutoShipItemsController < Admin::BaseController
   
   def index
-    @auto_ship_items = AutoShipItem.order(user_id: :asc, created_at: :desc).page(params[:page])
+    @auto_ship_items = AutoShipItem.order(:next_ship_date).page(params[:page])
   end
   
   
