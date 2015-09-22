@@ -22,7 +22,32 @@ class Admin::Store::OrdersController < Admin::BaseController
   end
 
   def new
-    @order = Order.new
+    unless params[:user_id].nil?
+      old_order = Order.where(user_id: params[:user_id]).last
+      unless old_order.nil?
+        @order = old_order.dup
+    
+        @order.assign_attributes(
+          submitted: DateTime.now,
+          status: 'submitted',
+          payment_method: '',
+          cc_type: nil,
+          cc_number: nil,
+          cc_code: nil,
+          cc_expiration_month: nil,
+          cc_expiration_year: nil,
+          paypal_token: nil, 
+          subtotal: 0.0,
+          total: 0.0, 
+          tax_rate: 0.0,
+          tax_amount: 0.0
+        )
+        
+        @order.items 
+      end
+    end
+    
+    @order = Order.new(user_id: params[:user_id]) if @order.nil?
     5.times { @order.items.build }
     
     render 'edit'
