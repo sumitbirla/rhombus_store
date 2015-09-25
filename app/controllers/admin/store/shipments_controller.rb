@@ -3,10 +3,13 @@ require 'base64'
 require 'socket'
 require 'easypost'
 require 'net/http'
+require 'net/scp'
 require 'uri'
 
 
 class Admin::Store::ShipmentsController < Admin::BaseController
+  
+  skip_before_filter  :verify_authenticity_token, only: :label_print
 
   def index
     q = params[:q]
@@ -238,6 +241,55 @@ class Admin::Store::ShipmentsController < Admin::BaseController
         x.product.label_sheet_id ? -1 : 1
       end
     end
+  end
+  
+  def label_print
+    label_prefix = Setting.get(:kiaro, "Label Prefix")
+    label = params[:label].split(" ", 2)[1] + ".alf"
+    label_count = 0
+    str = ""
+    
+    params.each do |k,v|
+      if k.start_with?("item-")
+        item, sku, breed, variant = k.split("-")
+        qty = v.to_i
+        label_count += qty
+        
+        if qty > 0
+          str << "LABELNAME=#{label}\r\n"
+          str << "FIELD 001=#{label_prefix}\\#{breed}\\#{sku}-#{breed}-#{variant}.pdf\r\n"
+          str << "LABELQUANTITY=#{qty}\r\n"
+          str << "PRINTER=QuickLabel Kiaro;Kiaro!\r\n\r\n"
+        end
+      end
+    end
+    
+    # handle nothing to print
+    if label_count == 0
+      flash[:error] = "No labels specified for printing."
+      return redirect_to :back
+    end
+    
+    puts str
+    # SCP file over to server
+    tmp_file = "/tmp/" + Time.now.strftime("%Y-%m-%d-%H%M%S") + ".alf"
+    File.write(tmp_file, str)
+    
+    host = Setting.get(:kiaro, "SCP Host")
+    port = Setting.get(:kiaro, "SCP Port")
+    user = Setting.get(:kiaro, "SCP Username")
+    pass = Setting.get(:kiaro, "SCP Password")
+    dir = Setting.get(:kiaro, "SCP Directory")
+    
+    begin
+      Net::SCP.upload!(host, user, tmp_file, dir, :ssh => { :password => pass, :port => port })
+      flash[:success] = "#{label_count} labels submitted for printing"
+    rescue => e
+      flash[:error] = e.message
+    end
+    
+    #File.delete(tmp_file)
+    redirect_to :back
   end
   
   

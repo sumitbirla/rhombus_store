@@ -86,6 +86,7 @@ Rails.application.routes.draw do
       post 'shipments_packing_slip_batch' => 'shipments#packing_slip_batch'
       post 'shipments_invoice_batch' => 'shipments#invoice_batch'
       get 'shipments/product_labels'
+      post 'shipments/product_labels' => 'shipments#label_print'
       
       
       get 'products/adjust_prices'

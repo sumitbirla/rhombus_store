@@ -18,12 +18,19 @@
     unless item.product.label_sheet_id == prev_label_id
       prev_label_id = item.product.label_sheet_id %>
       </table>
-      <h3><%= item.product.label_sheet || "- not set -" %></h3>
+      </form>
+      <form action="" method="post">
+        <input type="hidden" name="label" value="<%= item.product.label_sheet %>">
+      <h3>  
+        <%= item.product.label_sheet || "- not set -" %>  &nbsp; 
+        <button class="btn btn-xs btn-default"><i class="fa fa-print"></i> print</button>
+      </h3>
       <table id="item-table" class="table table-striped table-condensed tablesorter">
         <tr>
           <th class="col-md-3">Item</th>
-          <th class="col-md-6">Description</th>
+          <th class="col-md-5">Description</th>
           <th class="col-md-2 calign">Quantity</th>
+          <th class="col-md-1 calign">Print</th>
           <th class="col-md-1 actions">&nbsp;</th>
         </tr> 
     <% end %>
@@ -35,6 +42,9 @@
         <td><%= item.order_item.item_id.upcase %></td>
         <td><%= item.product.name_with_option %></td>
         <td class="calign"><%= item.quantity %></td>
+        <td class="calign">
+          <input style="width: 60px; text-align: center;" type="numeric" name="item-<%= item.order_item.item_id %>" value="<%= item.quantity %>">
+        </td>
         <td class="actions">
           <%= link_to Cache.setting('System', 'Static Files Url') + pdf_path, target: '_blank' do %>
               <i class="fa fa-download"></i> pdf
@@ -44,6 +54,7 @@
   <% end %>
 
 </table>
+</form>
 
 
 
