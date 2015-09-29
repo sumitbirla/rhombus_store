@@ -272,7 +272,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     
     puts str
     # SCP file over to server
-    tmp_file = "/tmp/" + Time.now.strftime("%Y-%m-%d-%H%M%S") + ".alf"
+    tmp_file = "/tmp/" + Time.now.strftime("%Y-%m-%d-%H%M%S") + ".acf"
     File.write(tmp_file, str)
     
     host = Setting.get(:kiaro, "SCP Host")
