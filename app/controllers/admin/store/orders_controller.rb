@@ -294,7 +294,7 @@ EOF
       cc_expiration_year: nil,
       paypal_token: nil
     })
-    new_order.save
+    new_order.save(validate: false)
     
     order.items.each { |x| new_order.items << x.dup }
     redirect_to action: 'edit', id: new_order.id
