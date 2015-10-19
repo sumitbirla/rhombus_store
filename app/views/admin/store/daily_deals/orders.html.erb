@@ -26,7 +26,7 @@
 <h4><%= @daily_deal.title %></h4>
 <div style="margin-bottom: 20px;">
   <% 
-    valid_orders = @daily_deal.orders.select { |x| ['submitted', 'shipped'].include?(x.status) } 
+    valid_orders = @daily_deal.orders.select { |x| ['submitted', 'shipped', 'shipped_by_vendor'].include?(x.status) } 
     valid_sales = 0
     valid_orders.each { |o| valid_sales += o.items.find { |x| x.daily_deal_id == @daily_deal.id }.quantity }
     shipments = Shipment.where(order_id: @daily_deal.orders.map { |o| o.id })

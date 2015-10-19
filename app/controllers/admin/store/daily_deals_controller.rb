@@ -1,3 +1,5 @@
+require 'csv'
+
 class Admin::Store::DailyDealsController < Admin::BaseController
   
   def index
@@ -142,7 +144,73 @@ class Admin::Store::DailyDealsController < Admin::BaseController
   end
   
   def orders
-    @daily_deal = DailyDeal.includes(:categories).find(params[:id])
+    @daily_deal = DailyDeal.find(params[:id])
+    
+    respond_to do |format|
+      format.html
+      format.csv do
+        
+        file = CSV.generate do |csv|
+          
+          # headers
+          csv << [ "MerchantFulfillmentOrderID", 
+                   "DisplayableOrderID", 
+                   "DisplayableOrderDate", 
+                   "MerchantSKU",
+                   "Quantity",
+                   "MerchantFulfillmentOrderItemID",
+                   "GiftMessage",
+                   "DisplayableComment",
+                   "PerUnitDeclaredValue",
+                   "DisplayableOrderComment",
+                   "DeliverySLA",
+                   "AddressName",
+                   "AddressFieldOne",
+                   "AddressFieldTwo",
+                   "AddressFieldThree",
+                   "AddressCity",
+                   "AddressCountryCode",
+                   "AddressStateOrRegion",
+                   "AddressPostalCode",
+                   "AddressPhoneNumber",
+                   "NotificationEmail",
+                   "FulfillmentAction"
+                 ]
+          
+          @daily_deal.orders.each do |o|
+            #next if o.status != 'submitted'
+            
+            o.items.find_all { |x| x.daily_deal_id == @daily_deal.id }.each do |oi|
+              csv << [ o.id, 
+                       o.id, 
+                       o.submitted.strftime("%FT%T%:z"), 
+                       "SKU",
+                       oi.quantity,
+                       oi.id,
+                       "",
+                       "",
+                       oi.unit_price,
+                       "",
+                       "Standard",
+                       o.shipping_name, 
+                       o.shipping_street1, 
+                       o.shipping_street2, 
+                       "",
+                       o.shipping_city, 
+                       o.shipping_country,
+                       o.shipping_state, 
+                       o.shipping_zip, 
+                       o.contact_phone, 
+                       o.notify_email,
+                       "Ship"]
+            end
+          end
+        end
+      
+        send_data file
+        
+      end
+    end
   end
   
   private
