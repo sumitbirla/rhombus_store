@@ -126,10 +126,13 @@
 </div>
 
 
+<% 
+  upc_list = Upc.where(item: @shipment.items.collect { |x| x.sku }) 
+  item_count = @shipment.items.select { |x| x.quantity > 0 }.count
+  total_qty = @shipment.items.map(&:quantity).reduce(:+)
+%>
+
 <h4>Items:</h4>
-
-<% upc_list = Upc.where(item: @shipment.items.collect { |x| x.sku })%>
-
 <table class="table table-striped table-condensed table-bordered">
     <tr>
         <th>Item</th>
@@ -155,6 +158,12 @@
             <td class="calign"><%= item.special_status %></td>
         </tr>
     <% end %>
+    <tr>
+      <th><%= pluralize item_count, "item" %></th>
+      <th class="ralign">Total: </th>
+      <th class="text-center"><%= total_qty %></th>
+      <th></th>
+    </tr>
 </table>
 
 <br/>
