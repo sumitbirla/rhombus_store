@@ -236,7 +236,11 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipment_items = ShipmentItem.includes(:order_item, [order_item: :product]).where(shipment_id: params[:shipment_id])
     @shipment_items = @shipment_items.sort do |x, y| 
       if x.product.label_sheet_id && y.product.label_sheet_id 
-        x.product.label_sheet_id <=> y.product.label_sheet_id
+        if x.product.label_sheet_id == y.product.label_sheet_id
+          x.product.sku <=> y.product.sku
+        else
+          x.product.label_sheet_id <=> y.product.label_sheet_id
+        end
       else
         x.product.label_sheet_id ? -1 : 1
       end
@@ -288,7 +292,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       flash[:error] = e.message
     end
     
-    #File.delete(tmp_file)
+    File.delete(tmp_file)
     redirect_to :back
   end
   

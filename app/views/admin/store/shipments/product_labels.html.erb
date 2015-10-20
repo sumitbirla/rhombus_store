@@ -4,6 +4,10 @@
   shipment_ids = @shipment_items.collect { |x| x.shipment_id }.uniq 
   shipments = Shipment.where(id: shipment_ids)
 %>
+<div class="pull-right">
+  <a href="#" class="zero-counts btn btn-sm btn-default"><i class="fa fa-dot-circle-o"></i> Zero Counts</a>
+</div>
+
 <div>
   For Shipments: <% shipment_ids.each do |x| %>
     <% shp = shipments.find { |s| s.id == x }%>
@@ -27,11 +31,12 @@
       </h3>
       <table id="item-table" class="table table-striped table-condensed tablesorter">
         <tr>
-          <th class="col-md-3">Item</th>
+          <th class="col-md-2">Item</th>
           <th class="col-md-5">Description</th>
           <th class="col-md-2 calign">Quantity</th>
           <th class="col-md-1 calign">Print</th>
-          <th class="col-md-1 actions">&nbsp;</th>
+          <th class="col-md-1 calign">&nbsp;</th>
+          <th class="col-md-1 calign">&nbsp;</th>
         </tr> 
     <% end %>
   <%
@@ -45,9 +50,10 @@
         <td class="calign">
           <input style="width: 60px; text-align: center;" type="numeric" name="item-<%= item.order_item.item_id %>" value="<%= item.quantity %>">
         </td>
-        <td class="actions">
+        <td class="calign"><a class="print-single" href="#"><i class="fa fa-print"></i> print</a></td>
+        <td class="calign"> 
           <%= link_to Cache.setting('System', 'Static Files Url') + pdf_path, target: '_blank' do %>
-              <i class="fa fa-download"></i> pdf
+              <i class="fa fa-file-pdf-o"></i> pdf
           <% end %>
         </td>
       </tr>
@@ -69,7 +75,18 @@
 
   <script>
     $(document).ready(function() {
-      $("#item-table").tablesorter(); 
+      
+      $(".zero-counts").click(function() {
+        $("input[type='numeric']").val("0");
+      });
+      
+      $(".print-single").click(function() {
+        var qty = $(this).parent().prev().find("input[type='numeric']").val();
+        $(this).parent().parent().parent().find("input[type='numeric']").val("0");
+        $(this).parent().prev().find("input[type='numeric']").val(qty);
+        $(this).parents("form").submit();
+      }); 
+      
     });
   </script>
 
