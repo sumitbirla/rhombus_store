@@ -48,29 +48,23 @@ packaging_types = [
 <hr/>
 
 
-<%= simple_form_for :shipment, url: admin_store_easy_post_batch_path, html: { class: 'form-inline' } do |f| %>
+<%= simple_form_for :shipment, url: admin_store_easy_post_batch_path do |f| %>
   <% @shipments.each do |shp| %>
     <input type="hidden" name="shipment_id[]" value="<%= shp.id %>">
   <% end %>
   <%= f.input :carrier, collection: ["USPS", "FedEx", "UPS"]%>
   <%= f.input :packaging_type, collection: packaging_types, label: 'Packaging' %>
-  
-  <div class="form-group string optional shipment_dimensions">
-     <label class="string optional control-label" for="shipment_dimensions">Weight (lbs.)</label>
-     <div style="display: inline;">
-       <%= f.input_field :package_weight, as: :numeric, label: 'Weight (lbs)' %>
-     </div>
-  </div>
+  <%= f.input :package_weight, label: 'Weight (lbs)' %>
 
   <div class="form-group string optional shipment_dimensions">
-     <label class="string optional control-label" for="shipment_dimensions">Size (in.)</label>
-     <div class="dimensions" style="display: inline;">
-       <%= f.input_field :package_length, as: :numeric %> &nbsp;x&nbsp;
-       <%= f.input_field :package_width, as: :numeric %> &nbsp;x&nbsp;
-       <%= f.input_field :package_height, as: :numeric %>
-     </div>
+    <label class="string optional control-label col-sm-3" for="shipment_dimensions">Size (in.)</label>
+    <div class="dimensions col-sm-9">
+      <%= f.input_field :package_length %> &nbsp;x&nbsp;
+      <%= f.input_field :package_width %> &nbsp;x&nbsp;
+      <%= f.input_field :package_height %>
+    </div>
   </div>
-  <%= f.input :ship_date, as: :date %>
+  <%= f.input :ship_date, as: :datepicker %>
 	<%= f.input :require_signature, as: :boolean, label: 'Signature?' %>
 		 
   <%= f.submit 'Process', class: 'btn btn-success' %>
@@ -108,18 +102,21 @@ packaging_types = [
 <% content_for :head do %>
     <style>
         .dimensions .numeric { width: 45px; text-align: center;}
-        .form-inline .control-label { width: 120px; paddin: 0; }
         .add-on { background-color: #dfeaef; color: #666; text-shadow: none; font-weight: normal; display: inline-block; width: 120px; margin-bottom: 4px; }
         th { background-color: #ddd; padding: 0; }
     </style>
-    <link href="/css/datepicker.css" rel="stylesheet">
-    <script src="/js/bootstrap-datepicker.js"></script>
     <script>
         $(document).ready(function() {
 
-            $('.input-append.date').datepicker({
-                format: "yyyy-mm-dd"
-            });
+						$('#shipment_packaging_type').change(function() {
+							if ($(this).val() == 'YOUR PACKAGING') {
+								//$('.shipment_package_weight').show();
+								$('.shipment_dimensions').show();
+							} else {
+								//$('.shipment_package_weight').hide();
+								$('.shipment_dimensions').hide();
+							}
+						});
 
         });
     </script>
