@@ -62,7 +62,7 @@
 
 
 <h2>
-  <i class="fa fa-truck"></i> &nbsp;Shipment #<%= @shipment %> 
+  <i class="fa fa-truck"></i> Shipment #<%= @shipment %> 
 </h2>
 
 <div class="pull-right">
@@ -265,6 +265,6 @@
 
 <% content_for :breadcrumbs do %>
     <li><a href="#">eCommerce</a></li>
-    <li><%= link_to 'Shipments', admin_store_shipments_path(status: params[:status]) %></li>
+    <li><%= link_to 'Shipments', admin_store_shipments_path(status: @shipment.status) %></li>
     <li class="active"><%= @shipment %></li>
 <% end %>

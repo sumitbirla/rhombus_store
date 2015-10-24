@@ -33,7 +33,7 @@
 </div>
 
 
-<h2>Order #<%= @order.id %></h2>
+<h2><i class="fa fa-shopping-cart"></i> Order #<%= @order.id %></h2>
 
 <div>
   <b>Submitted: </b> <%= time_ago_in_words(@order.submitted) %> ago
@@ -302,7 +302,7 @@
 
 <% content_for :breadcrumbs do %>
 	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to 'Orders', admin_store_orders_path %></li>
+	<li><%= link_to 'Orders', admin_store_orders_path(status: "submitted") %></li>
 	<li class="active">#<%= @order.id %></li>
 <% end %>
 

@@ -25,17 +25,7 @@
 		<td><%= link_to deal.short_tag_line, admin_store_daily_deal_path(deal) %></td>
 		<td><%= number_to_currency(deal.deal_price) %></td>
 		<td><%= deal.number_sold %></td>
-		<td>
-			<% if deal.number_sold > deal.max_sales %>
-			<span class="label label-important">sold out</span>
-			<% elsif deal.start_time < DateTime.now && deal.end_time > DateTime.now %>
-			<span class="label label-success">active</span>
-			<%elsif deal.end_time < DateTime.now %>
-			<span class="label label-warning">expired</span>
-			<% else %>
-			<span class="label label-default">pending</span>
-			<% end %>	
-		</td>
+		<td><%= deal_status(deal)%></td>
 		<td class="actions">
       <%= link_to "orders", orders_admin_store_daily_deal_path(deal) %> &nbsp;
 			<%= link_to "edit", edit_admin_store_daily_deal_path(deal) %> &nbsp;

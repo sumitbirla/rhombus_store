@@ -200,7 +200,7 @@
 
 <% content_for :breadcrumbs do %>
 	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to 'Orders', admin_store_orders_path %></li>
+	<li><%= link_to 'Orders', admin_store_orders_path(status: "submitted") %></li>
 	<% unless @order.id.nil? %>
 		<li><%= link_to '#' + @order.id.to_s, admin_store_order_path(@order)%></li>
 		<li class="active">edit</li>
