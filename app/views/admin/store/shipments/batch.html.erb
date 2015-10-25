@@ -40,6 +40,52 @@ packaging_types = [
 	'SmallExpressBox',
 	'MediumExpressBox',
 	'LargeExpressBox' ]
+  
+  service_types = [
+    'USPS',
+    '-------------------------',
+    'First',
+    'Priority',
+    'Express',
+    'ParcelSelect',
+    'LibraryMail',
+    'MediaMail',
+    'CriticalMail',
+    'FirstClassMailInternational',
+    'FirstClassPackageInternationalService',
+    'PriorityMailInternational',
+    'ExpressMailInternational',
+    '-------------------------', 
+    'UPS',
+    '-------------------------',
+    'Ground',
+    'UPSStandard',
+    'UPSSaver',
+    'Express',
+    'ExpressPlus',
+    'Expedited',
+    'NextDayAir',
+    'NextDayAirSaver',
+    'NextDayAirEarlyAM',
+    '2ndDayAir',
+    '2ndDayAirAM',
+    '3DaySelect',
+    '-------------------------',
+    'FedEx',
+    '-------------------------',
+    'FEDEX_GROUND',
+    'FEDEX_2_DAY',
+    'FEDEX_2_DAY_AM',
+    'FEDEX_EXPRESS_SAVER',
+    'STANDARD_OVERNIGHT',
+    'FIRST_OVERNIGHT',
+    'PRIORITY_OVERNIGHT',
+    'INTERNATIONAL_ECONOMY',
+    'INTERNATIONAL_FIRST',
+    'INTERNATIONAL_PRIORITY',
+    'GROUND_HOME_DELIVERY',
+    'SMART_POST',
+  ]
 %>
 
 
@@ -47,14 +93,16 @@ packaging_types = [
 <h2>Batch Ship</h2>
 <hr/>
 
+<% shipment = Shipment.new(ship_date: Date.today) %>
 
-<%= simple_form_for :shipment, url: admin_store_easy_post_batch_path do |f| %>
+<%= simple_form_for shipment, url: admin_store_easy_post_batch_path do |f| %>
   <% @shipments.each do |shp| %>
-    <input type="hidden" name="shipment_id[]" value="<%= shp.id %>">
+    <input type="hidden" name="shipment_ids[]" value="<%= shp.id %>">
   <% end %>
-  <%= f.input :carrier, collection: ["USPS", "FedEx", "UPS"]%>
-  <%= f.input :packaging_type, collection: packaging_types, label: 'Packaging' %>
-  <%= f.input :package_weight, label: 'Weight (lbs)' %>
+  <%= f.input :carrier, collection: ["USPS", "FedEx", "UPS"], required: true %>
+  <%= f.input :ship_method, collection: service_types, label: "Service", required: true %>
+  <%= f.input :packaging_type, collection: packaging_types, label: 'Packaging', required: true %>
+  <%= f.input :package_weight, label: 'Weight (lbs)', required: true %>
 
   <div class="form-group string optional shipment_dimensions">
     <label class="string optional control-label col-sm-3" for="shipment_dimensions">Size (in.)</label>
@@ -64,7 +112,7 @@ packaging_types = [
       <%= f.input_field :package_height %>
     </div>
   </div>
-  <%= f.input :ship_date, as: :datepicker %>
+  <%= f.input :ship_date, as: :datepicker, required: true %>
 	<%= f.input :require_signature, as: :boolean, label: 'Signature?' %>
 		 
   <%= f.submit 'Process', class: 'btn btn-success' %>

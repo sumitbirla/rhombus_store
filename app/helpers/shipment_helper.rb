@@ -1,4 +1,17 @@
 module ShipmentHelper
+  
+  def shipment_status(shipment)
+    
+    css = "label-warning"
+    
+    if shipment.status == 'shipped'
+      css = 'label-success'
+    elsif shipment.status == 'void'
+      css_class += 'label-danger'
+    end
+
+    "<span class='label #{css}'>#{shipment.status}</span>".html_safe
+  end
     
   def carrier_image(carrier) 
 		if carrier == 'USPS'
@@ -30,4 +43,5 @@ module ShipmentHelper
     
     url
   end
+  
 end

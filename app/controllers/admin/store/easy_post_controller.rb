@@ -78,71 +78,40 @@ class Admin::Store::EasyPostController < Admin::BaseController
   
   # Creates an EasyPost shipment object which contains rates
   def batch
-    @shipment_params = Shipment.new(shipment_params)
-    @shipments = Shipment.where(id: params[:shipment_id])
+    shp = Shipment.new(shipment_params)
     
-    if @shipment_params[:packaging_type].blank? || @shipment_params[:carrier].blank?
-      flash[:error] = "Please specify a carrier/packaging type"
-      return redirect_to :back
-    end
+    job_params = {
+      shipment_ids: params[:shipment_ids],
+      carrier: shp.carrier,
+      service: shp.ship_method,
+      packaging: shp.packaging_type,
+      length: shp.package_length.to_f,
+      width: shp.package_width.to_f,
+      height: shp.package_height.to_f,
+      weight: shp.package_weight.to_f,
+      require_signature: shp.require_signature,
+      print_epl: params[:print_epl] == "1",
+      send_email: params[:send_email] == "1",
+      ship_date: shp.ship_date.to_s,
+      user_id: session[:user_id]
+    }
     
+    Shipment.where(id: params[:shipment_ids]).update_all(batch_status: "queued", batch_status_message: "")
+    BatchShipJob.perform_later(job_params)
     
-    debug_str = "<pre>"
-    
-    @shipments.each do |shp|
-      debug_str += "\n" + shp.to_s + "\t" + shp.recipient_name + "\t" + shp.recipient_city + "\t" + shp.recipient_state
-      
-      shp.assign_attributes(
-        packaging_type: @shipment_params.packaging_type,
-        package_length: @shipment_params.package_length,
-        package_width: @shipment_params.package_width,
-        package_height: @shipment_params.package_height,
-        package_weight: @shipment_params.package_weight,
-        ship_date: @shipment_params.ship_date,
-        require_signature: @shipment_params.require_signature
-      )
-
-      EasyPost.api_key = Cache.setting(shp.order.domain_id, :shipping, 'EasyPost API Key')
-      begin
-        ep_shipment = create_ep_shipment(shp)
-        selected_rate = ep_shipment.lowest_rate(carriers = [@shipment_params.carrier])
-        debug_str += ":\t" + selected_rate[:carrier] + " " + selected_rate[:service] + " " + selected_rate[:rate] 
-        #next
-        reply = ep_shipment.buy(rate: selected_rate)
-        
-        shp.copy_easy_post(reply)
-        shp.status = 'shipped'
-        shp.fulfilled_by_id = session[:user_id]
-        shp.save
-  
-        OrderHistory.create order_id: shp.order_id,
-                                  user_id: current_user.id,
-                                  event_type: 'package_shipped',
-                                  amount: shp.ship_cost,
-                                  system_name: reply[:selected_rate][:carrier],
-                                  identifier: shp.tracking_number,
-                                  comment:  reply[:selected_rate][:service]
-
-        shp.order.update_attribute(:status, 'shipped')
-        
-        if params[:print_epl] == "1"
-          ShippingLabelJob.perform_later(session[:user_id], shp.id, "epl2")
-          debug_str += "\t label printed"
-        end
-        
-        if params[:send_email] == "1"
-          unless shp.order.notify_email.include?("marketplace")
-            OrderMailer.order_shipped(shp).deliver_later
-            debug_str += "\t emailed #{shp.order.notify_email}"
-          end
-        end
-      rescue => e
-        debug_str += e.message 
-      end
-    end
-    
-    render text: debug_str
+    redirect_to action: :batch_status, shipment_ids: params[:shipment_ids].join(".")
   end
+  
+  
+  def batch_status
+    @shipments = Shipment.where(id: params[:shipment_ids].split("."))
+    
+    respond_to do |format|
+      format.html
+      format.json { render json: @shipments, only: [:id, :status, :batch_status, :batch_status_message] }
+    end
+  end
+  
   
   def create_ep_shipment(shipment)
 		if shipment.packaging_type == 'YOUR PACKAGING'
