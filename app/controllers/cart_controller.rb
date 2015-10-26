@@ -71,7 +71,7 @@ class CartController < ApplicationController
                 affiliate_id: affiliate_id,
                 variation: variation,
                 quantity: quantity,
-                unit_price: p.price,
+                unit_price: p.special_price || p.price,
                 item_description: p.name_with_option,
                 autoship_months: params[:autoship_months].blank? ? 0 : params[:autoship_months]
 
