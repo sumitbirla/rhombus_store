@@ -5,8 +5,13 @@
 </div>
 
 <div>
-  For Shipments: <% @shipments.each do |shp| %>
-    <%= link_to shp.to_s, admin_store_shipment_path(shp) %> <span class="light">/</span> 
+  For Shipments: 
+  <% if @shipments.length > 8 %>
+    <%= @shipments.length %> shipments
+  <% else %>
+    <% @shipments.each do |shp| %>
+      <%= link_to shp.to_s, admin_store_shipment_path(shp) %> <span class="light">/</span> 
+    <% end %>
   <% end %>
 </div>
 
