@@ -231,20 +231,45 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     
     redirect_to :back
   end
+  
+  def product_labels_pending
+    @shipments = Shipment.where(status: :pending)
+    
+    sql = <<-EOF
+      select sheet.name as label, p.sku, a.code, item.variation, p.name, p.option_title, sum(quantity) as quantity
+      from store_shipment_items item
+      join store_shipments shp on shp.id = item.shipment_id
+      join store_products p on p.id = item.product_id
+      left join core_affiliates a on a.id = item.affiliate_id
+      join store_label_sheets sheet on sheet.id = p.label_sheet_id
+      where shp.id in (#{@shipments.map(&:id).join(",")})
+      group by p.sku, a.code, item.variation
+      order by p.label_sheet_id;
+    EOF
+    
+    @items = []
+    ActiveRecord::Base.connection.execute(sql).each(as: :hash) { |row| @items << row.with_indifferent_access }
+    
+    render 'product_labels'
+  end
 
   def product_labels
-    @shipment_items = ShipmentItem.includes(:order_item, [order_item: :product]).where(shipment_id: params[:shipment_id])
-    @shipment_items = @shipment_items.sort do |x, y| 
-      if x.product.label_sheet_id && y.product.label_sheet_id 
-        if x.product.label_sheet_id == y.product.label_sheet_id
-          x.product.sku <=> y.product.sku
-        else
-          x.product.label_sheet_id <=> y.product.label_sheet_id
-        end
-      else
-        x.product.label_sheet_id ? -1 : 1
-      end
-    end
+    @shipments = Shipment.where(status: params[:shipment_id])
+    
+    sql = <<-EOF
+      select sheet.name as label, p.sku, a.code, item.variation, p.name, p.option_title, sum(quantity) as quantity
+      from store_shipment_items item
+      join store_shipments shp on shp.id = item.shipment_id
+      join store_products p on p.id = item.product_id
+      left join core_affiliates a on a.id = item.affiliate_id
+      join store_label_sheets sheet on sheet.id = p.label_sheet_id
+      where shp.id in (#{params[:shipment_id].join(",")})
+      group by p.sku, a.code, item.variation
+      order by p.label_sheet_id;
+    EOF
+    
+    @items = []
+    ActiveRecord::Base.connection.execute(sql).each(as: :hash) { |row| @items << row.with_indifferent_access }
   end
   
   def label_print
