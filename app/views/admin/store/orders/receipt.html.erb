@@ -168,7 +168,7 @@
           <tr>
             <td><%= item.item_id.upcase %></td>
             <td>
-              <%= item.product.name_with_option %>
+              <%= item.item_description %>
               <% unless item.affiliate.nil? %>
                 &nbsp; (<span><%= item.affiliate %></span>)
               <% end %>
