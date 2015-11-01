@@ -7,7 +7,7 @@ module ShipmentHelper
     if shipment.status == 'shipped'
       css = 'label-success'
     elsif shipment.status == 'void'
-      css_class += 'label-danger'
+      css = 'label-danger'
     end
 
     "<span class='label #{css}'>#{shipment.status}</span>".html_safe

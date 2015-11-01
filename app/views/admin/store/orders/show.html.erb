@@ -33,12 +33,16 @@
 </div>
 
 
-<h2><i class="fa fa-shopping-cart"></i> Order #<%= @order.id %></h2>
+<h2><i class="fa fa-shopping-cart"></i> Order #<%= @order.id %>
+  <% if @order.auto_ship %>
+    <span class=" pull-right text-success" style="margin-right: 20px;"><i class="fa fa-refresh"></i> autoship</span>
+  <% end %>
+</h2>
 
 <div>
   <b>Submitted: </b> <%= time_ago_in_words(@order.submitted) %> ago
   <% unless @order.user_id.nil? %>
-    &nbsp; &nbsp; <i class="fa fa-user"></i> <%= link_to @order.user.name, admin_system_user_path(@order.user) %>
+    &nbsp; &nbsp; <i class="fa fa-user"></i> <%= link_to @order.user.name, admin_system_user_path(@order.user, q: :orders) %>
   <% end %>
 
   <% unless @order.affiliate_campaign_id.nil? %>

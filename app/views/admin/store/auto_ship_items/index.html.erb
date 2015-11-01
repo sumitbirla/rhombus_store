@@ -11,6 +11,7 @@
     <th class="text-center">Quantity</th>
     <th class="text-center">Last Shipped</th>
     <th class="text-center">Next Ship Date</th>
+    <th class="text-center">Status</th>
 		<th class="actions">&nbsp;</th>
 	</tr>
 	<% @auto_ship_items.each do |as| %>
@@ -21,6 +22,7 @@
     <td class="text-center"><%= as.quantity %></td>
     <td class="text-center"><%= as.last_shipped %></td>
     <td class="text-center"><%= as.next_ship_date %></td>
+    <td class="text-center"><%= auto_ship_status(as) %></td>
 		<td class="actions">
 			<%= link_to "edit", edit_admin_store_auto_ship_item_path(as) %> &nbsp;
 			<%= link_to "delete", 

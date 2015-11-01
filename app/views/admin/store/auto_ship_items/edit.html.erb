@@ -12,6 +12,7 @@
   <%= f.input :description %>
   <%= f.input :last_shipped, as: :datepicker %>
   <%= f.input :next_ship_date, as: :datepicker %>
+  <%= f.input :status, collection: [:active, :billing_failed, :waiting, :cancelled ]%>
   
   <%= f.button :submit %>
 
