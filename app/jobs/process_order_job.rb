@@ -51,7 +51,8 @@ class ProcessOrderJob < ActiveJob::Base
                     product_id: item.product_id,
                     affiliate_id: item.affiliate_id,
                     variation: item.variation,
-                    quantity: item.quantity)
+                    quantity: item.quantity, 
+                    status: :active)
       end
       
       autoship.days = item.autoship_months * 30
