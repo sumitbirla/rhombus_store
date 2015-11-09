@@ -71,6 +71,7 @@
       <div class="panel panel-default">
         <div class="panel-heading">Inventory</div>
         <div class="panel-body">
+          <%= f.input :sku2, label: 'SKU2' %>
           <%= f.association :supplier, collection: suppliers %>
           <%= f.association :fulfiller, collection: dropshippers %>
           <%= f.input :low_threshold %>

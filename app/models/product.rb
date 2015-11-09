@@ -71,6 +71,7 @@ class Product < ActiveRecord::Base
   has_many :pattributes, -> { order :sort }, through: :product_attributes, source: :cms_attribute
   
   validates_presence_of :name, :sku, :title, :slug, :brand_id, :product_type, :price
+  validates_presence_of :sku2, if: :warehoused?
   validates_uniqueness_of :slug
   
   def to_s
@@ -85,6 +86,10 @@ class Product < ActiveRecord::Base
   
   def cache_key
     "product:#{slug}"
+  end
+  
+  def warehoused?
+    product_type == "warehoused"
   end
   
 end
