@@ -121,15 +121,16 @@ class CartController < ApplicationController
     order = load_or_create_order
     
     # add item to cart
-    item = order.items.find { |i| i.daily_deal_id == dd.id }
+    item = order.items.find { |i| i.daily_deal_id == dd.id && i.custom_text == params[:order_specifications] }
     if item.nil?
 
       item = OrderItem.new order_id: order.id,
               daily_deal_id: dd.id,
               quantity: params[:qty],
               unit_price: dd.deal_price,
-              item_description: dd.title,
-              item_id: "DEAL#{dd.id}"
+              item_description: dd.short_tag_line,
+              item_id: "DEAL#{dd.id}",
+              custom_text: params[:order_specifications]
 
       order.items << item
     else
