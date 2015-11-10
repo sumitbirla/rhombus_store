@@ -11,7 +11,7 @@ class UpdateInventoryJob < ActiveJob::Base
       s = Shipment.includes(:items, [items: :product]).find(h[:shipment_id])
       
       s.items.each do |i|
-        trans.items.build(sku: i.product.sku,
+        trans.items.build(sku: i.product.sku2,
                           loose_items: -1 * i.quantity, 
                           quantity: -1 * i.quantity)
       end
@@ -22,7 +22,7 @@ class UpdateInventoryJob < ActiveJob::Base
       po = PurchaseOrder.find(h[:purchase_order_id]).includes(:items, [items: :product])
       
       po.items.each do |i|
-        trans.items.build(sku: i.sku,
+        trans.items.build(sku: i.sku2,
                           loose_items: i.quantity, 
                           quantity: i.quantity_received)
       end
