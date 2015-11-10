@@ -55,8 +55,8 @@ class DailyDeal < ActiveRecord::Base
   accepts_nested_attributes_for :locations
   
   validates_presence_of :deal_type, :slug, :title, :start_time, :end_time, :original_price, :deal_price, :description
-  validates_presence_of :short_tag_line, :max_sales, :number_sold, :region_id
-  validates_uniqueness_of :slug, :affiliate_id
+  validates_presence_of :short_tag_line, :max_sales, :number_sold, :region_id,:affiliate_id
+  validates_uniqueness_of :slug
   
   def cache_key
     "daily-deal:#{slug}"
