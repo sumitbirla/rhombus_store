@@ -26,7 +26,7 @@
   <%= f.input :title, as: :text, input_html: { rows: 2 } %>
   <%= f.input :theme, as: :select, collection: ['default']%>
   <%= f.input :active %>
-  <%= f.association :affiliate %>
+  <%= f.input :affiliate_id, collection: Cache.affiliate_list('marketing-partners') %>
   <%= f.input :affiliate_remittance %>
   <%= f.input :affiliate_paid %>
   <%= f.input :start_time, as: :datetimepicker %>
