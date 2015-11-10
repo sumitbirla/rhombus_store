@@ -75,6 +75,7 @@ Rails.application.routes.draw do
       get 'reports/daily_sales'
       get 'reports/monthly_sales'
       get 'reports/pending_fulfillment'
+      get 'reports/current_stock'
       get 'reports/inventory_required'
       get 'reports/user_leaderboard'
       get 'reports/purchase_frequency'

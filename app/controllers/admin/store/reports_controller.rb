@@ -153,6 +153,23 @@ class Admin::Store::ReportsController < Admin::BaseController
     ActiveRecord::Base.connection.execute(sql).each { |row| @data << row } 
   end
   
+  def current_stock
+    
+    sql = <<-EOF
+      select p.id as product_id, p.sku, p.name, p.option_title, p.price as 'retail_price', sum(i.quantity) as 'quantity', 
+        aff.id as 'supplier_id', aff.name as 'supplier_name', ap.price as 'supplier_price'
+      from store_inventory_transaction_items i
+      join store_products p on p.sku = i.sku
+      left join core_affiliates aff on aff.id = p.primary_supplier_id
+      left join store_affiliate_products ap on ap.affiliate_id = aff.id and ap.product_id = p.id 
+      group by sku
+      order by sku;
+    EOF
+    
+    @data = []
+    ActiveRecord::Base.connection.execute(sql).each(as: :hash) { |row| @data << row.symbolize_keys!} 
+  end
+  
   def inventory_required
     
     sql = <<-EOF
