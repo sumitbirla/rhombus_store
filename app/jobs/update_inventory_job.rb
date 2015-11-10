@@ -19,10 +19,10 @@ class UpdateInventoryJob < ActiveJob::Base
     
     # this is a PO being received
     unless h[:purchase_order_id].nil?
-      po = PurchaseOrder.find(h[:purchase_order_id]).includes(:items, [items: :product])
+      po = PurchaseOrder.find(h[:purchase_order_id])
       
       po.items.each do |i|
-        trans.items.build(sku: i.sku2,
+        trans.items.build(sku: i.sku,
                           loose_items: i.quantity, 
                           quantity: i.quantity_received)
       end
