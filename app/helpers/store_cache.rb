@@ -27,10 +27,8 @@ module StoreCache
   
   def self.product_list(category_slug)
     Rails.cache.fetch("product-list:#{category_slug}") do
-      c = Category.where(slug: category_sluf, enabled: true, entity_type: :product)
-      unless c.nil?
-        
-      end
+      c = Category.find_by(slug: category_slug, entity_type: :product)
+      Product.where(active: true, id: ProductCategory.where(category_id: c.id).pluck(:product_id)).load
     end
   end
   
