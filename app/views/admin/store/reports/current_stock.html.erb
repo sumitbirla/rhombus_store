@@ -15,10 +15,12 @@
     <th class="ralign">Supplier Price</th>
     <th class="ralign">Total Cost</th>
 	</tr>
-  <% @data.each do |row| %>
+  <% @data.each do |row| 
+      pname = row[:name]
+      pname += ", " + row[:option_title] unless row[:option_title].blank? %>
 	<tr>
 		<td><%= row[:sku] %></td>
-		<td><%= link_to row[:name], admin_store_product_path(id: row[:product_id]) %></td>
+		<td><%= link_to pname, admin_store_product_path(id: row[:product_id]) %></td>
     <td class="ralign"><%= number_with_delimiter row[:quantity] %></td>
     <td class="ralign"><%= number_to_currency row[:retail_price] %></td>
     <td class="ralign"><%= number_to_currency(row[:quantity] * row[:retail_price]) %></td>
