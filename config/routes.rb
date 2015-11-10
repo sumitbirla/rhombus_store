@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get 'cart/add_deal'
   get 'cart/add'
   post 'cart/applycode'
+  get 'cart/apply_fb_discount'
   get 'cart/checkout'
   get 'cart/review'
   post 'cart/review' => 'cart#submit'

@@ -153,6 +153,16 @@ class CartController < ApplicationController
   end
   
 
+  # GET /cart/apply_fb_discount?dd=
+  def apply_fb_discount
+    dd = DailyDeal.find(params[:dd])
+    order = load_or_create_order
+    order.fb_discount = dd.fb_discount
+    order.save(validate: false)
+    render json: { status: :ok }
+  end
+
+
   def remove
     id = params[:id].to_i
     order = Order.includes(:items).find_by(cart_key: cookies[:cart]) unless cookies[:cart].nil?

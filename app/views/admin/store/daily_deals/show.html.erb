@@ -105,7 +105,13 @@
   	<% unless @daily_deal.shipping_cost.blank? %>
   	<tr>
   		<td>Shipping cost</td>
-  		<td>$<%= @daily_deal.shipping_cost %></td>
+  		<td><%= number_to_currency @daily_deal.shipping_cost %></td>
+  	</tr>
+  	<% end %>
+  	<% unless @daily_deal.fb_discount == 0.0 %>
+  	<tr>
+  		<td>Facebook discount</td>
+  		<td><%= number_to_currency @daily_deal.fb_discount %></td>
   	</tr>
   	<% end %>
   	<tr>

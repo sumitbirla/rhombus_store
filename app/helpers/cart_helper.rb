@@ -27,7 +27,7 @@ module CartHelper
     unless zip.nil?
       # determine tax
       order.tax_rate = zip.tax_rate
-      order.tax_amount = (order.subtotal - order.discount_amount - order.credit_applied) * zip.tax_rate / 100.0
+      order.tax_amount = (order.subtotal - order.discount_amount - order.credit_applied - order.fb_discount) * zip.tax_rate / 100.0
 
       # order total needs to be > $0.0 to apply tax
       order.tax_amount = 0.0 if order.tax_amount <= 0.0
@@ -63,7 +63,7 @@ module CartHelper
     apply_tax(order)
 
     # grand total
-    order.total = order.subtotal + order.tax_amount + order.shipping_cost - order.discount_amount - order.credit_applied
+    order.total = order.subtotal + order.tax_amount + order.shipping_cost - order.discount_amount - order.credit_applied - order.fb_discount
     order.total = 0.0 if order.total < 0.0
   end
 

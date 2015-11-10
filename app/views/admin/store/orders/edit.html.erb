@@ -90,6 +90,7 @@
       <div class="col-md-6">
         <%= f.input :subtotal %>
         <%= f.input :discount_amount, label: "Discount" %>
+        <%= f.input :fb_discount, label: "Facebook" %>
         <%= f.input :credit_applied, label: "Credit" %>
         <%= f.input :tax_rate %>
         <%= f.input :tax_amount, label: "Tax" %>    
@@ -156,9 +157,10 @@
         var shipping_cost = parseFloat($("#order_shipping_cost").val());
         var discount_amount = parseFloat($("#order_discount_amount").val());
         var credit_applied = parseFloat($("#order_credit_applied").val());
+        var fb_discount = parseFloat($("#order_fb_discount").val());
         var tax_rate = parseFloat($("#order_tax_rate").val());
         var tax_amount = (subtotal - discount_amount - credit_applied) * tax_rate / 100.0;
-        var total = subtotal + shipping_cost + tax_amount - discount_amount - credit_applied;
+        var total = subtotal + shipping_cost + tax_amount - discount_amount - credit_applied - fb_discount;
         
         $("#order_subtotal").val(subtotal);
         $("#order_tax_amount").val(tax_amount.toFixed(2));
