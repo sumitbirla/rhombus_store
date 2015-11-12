@@ -6,9 +6,9 @@
   <% unless order_item.affiliate_id.nil? %>
     &nbsp; (<span><%= order_item.affiliate %></span>)
   <% end %>
-  
-  <% unless order_item.custom_text.blank? %>
-    &nbsp; (<span><%= order_item.custom_text %></span>)
-  <% end %>
-  
+
+<% end %>
+
+<% unless order_item.custom_text.blank? %>
+  &nbsp; (<span><%= order_item.custom_text %></span>)
 <% end %>
