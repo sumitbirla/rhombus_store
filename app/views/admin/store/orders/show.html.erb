@@ -103,7 +103,7 @@
     <div class="panel panel-success">
       <div class="panel-heading">Payment & Contact</div>
       <div class="panel-body">
-        <% if @order.payment_method == 'CREDIT_CARD' %>
+        <% if @order.payment_method == 'CREDIT_CARD' && !@order.cc_type.blank? %>
             <code>
               <%= @order.cc_type.upcase %>: &nbsp;<%= @order.cc_number %> -
               <%= @order.cc_expiration_month %>/<%= @order.cc_expiration_year %>
