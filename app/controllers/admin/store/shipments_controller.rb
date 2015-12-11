@@ -36,61 +36,10 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       return redirect_to action: 'choose_order'
     end
 
-    seq = 1
-    max_seq = @order.shipments.maximum(:sequence)
-    seq = max_seq + 1 unless max_seq.nil?
-
-    @shipment = Shipment.new(order_id: @order.id,
-                             sequence: seq,
-                             recipient_company: @order.shipping_company,
-                             recipient_name: @order.shipping_name,
-                             recipient_street1: @order.shipping_street1,
-                             recipient_street2: @order.shipping_street2,
-                             recipient_city: @order.shipping_city,
-                             recipient_state: @order.shipping_state,
-                             recipient_zip: @order.shipping_zip,
-                             recipient_country: @order.shipping_country,
-                             package_weight: 1.0,
-                             status: 'pending')
-
-     loc_id = Cache.setting(@order.domain_id, :shipping, "Ship From Location ID")
-     loc = Location.find(loc_id) if loc_id
-
-     unless loc.nil?
-       @shipment.assign_attributes(ship_from_company: loc.name,
-                                   ship_from_street1: loc.street1,
-                                   ship_from_street2: loc.street2,
-                                   ship_from_city: loc.city,
-                                   ship_from_state: loc.state,
-                                   ship_from_zip: loc.zip,
-                                   ship_from_country: loc.country,
-                                   ship_from_email: loc.email,
-                                   ship_from_phone: loc.phone)
-    end 
-    
-    # prepopulate with items to ship
-    @order.items.each do |item|
-      # regular order item, not a daily deal
-      if item.product_id
-        @shipment.items.build(order_item_id: item.id, 
-                             product_id: item.product_id,
-                             affiliate_id: item.affiliate_id,
-                             variation: item.variation, 
-                             quantity: item.quantity)
-
-      elsif item.daily_deal_id
-        item.daily_deal.items.each do |di|
-          @shipment.items.build(order_item_id: item.id, 
-                               product_id: di.product_id,
-                               affiliate_id: di.affiliate_id,
-                               variation: di.variation, 
-                               quantity: item.quantity * di.quantity)
-        end
-      end
-    end
+    @shipment = @order.create_shipment(session[:user_id], false)
     
     # set invoice amount
-    @shipment.invoice_amount = @order.total if seq == 1
+    @shipment.invoice_amount = @order.total if @shipment.sequence == 1
                     
     render 'edit'
   end

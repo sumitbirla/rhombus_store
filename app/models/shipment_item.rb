@@ -29,4 +29,17 @@ class ShipmentItem < ActiveRecord::Base
     str += "-" + variation unless variation.blank?
     str 
   end
+  
+  def formatted_expiration
+    
+    str = " - "
+    
+    unless expiration.nil?
+      s = expiration.to_s
+      str = (s[2..3] + " / " + s[0..1]).html_safe
+    end
+    
+    str
+  end
+  
 end

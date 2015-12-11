@@ -32,7 +32,7 @@
           Manual Entry
         <% end %>
       </td>
-      <td><%= tran.num_items %></td>
+      <td><%= number_with_delimiter tran.num_items %></td>
       <td>
 			<%= link_to "edit", edit_admin_inventory_inventory_transaction_path(tran) %> &nbsp;
 			<%= link_to "delete", 

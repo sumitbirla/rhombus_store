@@ -12,7 +12,6 @@ class UpdateInventoryJob < ActiveJob::Base
       
       s.items.each do |i|
         trans.items.build(sku: i.product.sku2,
-                          loose_items: -1 * i.quantity, 
                           quantity: -1 * i.quantity)
       end
     end
@@ -23,7 +22,6 @@ class UpdateInventoryJob < ActiveJob::Base
       
       po.items.each do |i|
         trans.items.build(sku: i.sku,
-                          loose_items: i.quantity, 
                           quantity: i.quantity_received)
       end
     end

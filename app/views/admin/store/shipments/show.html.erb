@@ -137,6 +137,8 @@
     <tr>
         <th>Item</th>
         <th>Description</th>
+        <th class="calign">Lot #</th>
+        <th class="calign">Expiration</th>
         <th class="calign">Ship Qty.</th>
         <th class="calign">Status</th>
     </tr>
@@ -154,12 +156,16 @@
                 &nbsp; &nbsp; <i class="fa fa-camera" style="color: #d9534f;"></i>
               <% end %>
             </td>
+            <td class="calign"><%= item.lot %></td>
+            <td class="calign"><%= item.formatted_expiration %></td>
             <td class="calign"><%= item.quantity %></td>
             <td class="calign"><%= item.special_status %></td>
         </tr>
     <% end %>
     <tr>
       <th><%= pluralize item_count, "item" %></th>
+      <th></th>
+      <th></th>
       <th class="ralign">Total: </th>
       <th class="text-center"><%= total_qty %></th>
       <th></th>

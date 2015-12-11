@@ -38,24 +38,27 @@
   </table>
 </div>
 
-<table class="table table-condensed table-bordered">
+<table class="table table-condensed table-striped">
 <tr>
   <th>SKU</th>
   <th>Description</th>
-  <th>Cases</th>
-  <th>Units per case</th>
-  <th>Loose items</th>
-  <th>Total</th>
+  <th class="text-center">Lot #</th>
+  <th class="text-center">Expiration</th>
+  <th class="text-center">Quantity</th>
 </tr>
 <% @transaction.items.each do |i| 
-    p = Product.find_by(sku: i.sku) %>
+    p = Product.find_by(sku: i.sku) 
+    unless i.expiration.nil?
+      str =  i.expiration.to_s
+      exp = str[2..3] + "/" + str[0..1]
+    end
+    %>
 <tr>
   <td><%= i.sku %></td>
   <td><%= p.name_with_option unless p.nil? %></td>
-  <td><%= i.cases %></td>
-  <td><%= i.units_per_case %></td>
-  <td><%= i.loose_items %></td>
-  <td><%= i.quantity %></td>
+  <td class="text-center"><%= i.lot %></td>
+  <td class="text-center"><%= exp %></td>
+  <td class="text-right" style="padding-right: 20px;"><%= number_with_delimiter i.quantity %></td>
 </tr>
 <% end %>
 </table>

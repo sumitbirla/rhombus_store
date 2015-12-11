@@ -12,6 +12,8 @@
         <th>Item</th>
         <th>Description</th>
         <th class="calign">Ordered</th>
+        <th class="calign">Lot #</th>
+        <th class="calign">Expiration</th>
         <th class="calign">Ship Qty</th>
         <th class="calign">Special Status</th>
       </tr>
@@ -32,6 +34,8 @@
                 &nbsp; (<span><%= item.affiliate %></span>)
               <% end %></td>
             <td class="calign"><%= item.quantity %></td>
+            <td class="calign"><%= itemf.text_field :lot, style: 'width: 120px; text-align: center;' %></td>
+            <td class="calign"><%= itemf.text_field :expiration, placeholder: "YYMM", style: 'width: 60px; text-align: center;' %></td>
             <td class="calign"><%= itemf.number_field :quantity, unit_price: item.order_item.unit_price, class: "item-qty", style: 'width: 80px; text-align: center;' %></td>
             <td class="calign"><%= itemf.text_field :special_status %></td>
           </tr>

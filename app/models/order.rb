@@ -276,7 +276,8 @@ class Order < ActiveRecord::Base
   
   
   # create shipment for the order.  doesn't take inventory into consideration currently
-  def create_shipment(user_id)
+  def create_shipment(user_id, save_to_db = true)
+    
     seq = 1
     max_seq = shipments.maximum(:sequence)
     seq = max_seq + 1 unless max_seq.nil?
@@ -334,17 +335,28 @@ class Order < ActiveRecord::Base
       end
 
     end
+    
+    
+    # update lot numbers and expirations in shipment items
+    shipment.items.each do |i|
+      
+      t = InventoryTransactionItem.select("sku, lot, expiration, sum(quantity) as quantity")
+                                  .where(sku: i.product.sku2)
+                                  .group(:lot)
+                                  .order(:expiration)
+                                  .having("sum(quantity) > ?", i.quantity-1).first
+      
+      i.assign_attributes(lot: t.lot, expiration: t.expiration) unless t.nil?
+    end
+    
 
-    if shipment.save  
+    if save_to_db && shipment.save  
       OrderHistory.create(order_id: id, user_id: user_id, event_type: :shipment_created,
                     system_name: 'Rhombus', identifier: shipment.id, comment: "shipment created: #{shipment}") 
     end
     
     shipment
   end
-  
-  
-  
   
   
 end
