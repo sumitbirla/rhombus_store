@@ -243,7 +243,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     end
     
     # handle nothing to print
-    if label_count == 0
+    if label_count > 0
       flash[:error] = "No labels specified for printing."
       return redirect_to :back
     end
