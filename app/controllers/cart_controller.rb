@@ -2,6 +2,7 @@ class CartController < ApplicationController
 
   include CartHelper
   include PaypalExpressHelper
+  include ActionView::Helpers::NumberHelper
   
   force_ssl  if Rails.env.production?
   layout 'single_column'
@@ -372,6 +373,7 @@ class CartController < ApplicationController
     coupon = Coupon.find_by(code: params[:code])
     unless coupon.nil?
 
+      applied = true
       if (coupon.times_used > coupon.max_uses)
         flash[:notice] = 'This coupon is no longer available.'
       elsif coupon.start_time > Time.now || coupon.expire_time < Time.now
@@ -383,7 +385,6 @@ class CartController < ApplicationController
         update_totals order
         order.save validate: false
 
-        applied = true
         flash[:notice] = "Coupon code '#{coupon.code}' has been applied to your order."
       end
 

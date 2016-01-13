@@ -45,7 +45,7 @@
 			<% if Time.now > coupon.start_time && Time.now < coupon.expire_time %>
 			<span class="label label-success">active</span>
 			<% elsif Time.now > coupon.expire_time %>
-			<span class="label label-important">expired</span>
+			<span class="label label-danger">expired</span>
 			<% else %>
 			<span class="label label-warning">pending</span>
 			<% end %>

@@ -6,17 +6,21 @@ class Admin::Store::ProductsController < Admin::BaseController
     @products = @products.where("name LIKE '%#{params[:q]}%' OR sku = '#{params[:q]}'") unless params[:q].nil?
     
     # get quantities sold for each product
-    sql = <<-EOF
-      select product_id, sum(quantity) 
-      from store_shipment_items si, store_shipments s
-      where si.shipment_id = s.id 
-      and s.status = 'shipped'
-      and product_id in (#{@products.map { |x| x.id}.join(',')})
-      group by product_id;
-    EOF
-    
     @sold = []
-    ActiveRecord::Base.connection.execute(sql).each { |row| @sold << row }
+    pids = @products.map { |x| x.id}.join(',')
+    
+    unless pids == ''
+      sql = <<-EOF
+        select product_id, sum(quantity) 
+        from store_shipment_items si, store_shipments s
+        where si.shipment_id = s.id 
+        and s.status = 'shipped'
+        and product_id in (#{pids})
+        group by product_id;
+      EOF
+    
+      ActiveRecord::Base.connection.execute(sql).each { |row| @sold << row }
+    end
   end
 
   def new
