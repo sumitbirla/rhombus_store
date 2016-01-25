@@ -39,7 +39,7 @@ class Admin::Store::ProductsController < Admin::BaseController
   end
 
   def show
-    @product = Product.includes(:pictures, product_attributes: :cms_attribute).find(params[:id])
+    @product = Product.includes(:pictures, product_attributes: :core_attribute).find(params[:id])
   end
 
   def edit
