@@ -117,7 +117,7 @@
 
 <% content_for :breadcrumbs do %>
 	<li><a href="#">eCommerce</a></li>
-	<li class="active">Orders</li>
+	<li class="active"><%= "Purchase" if params[:po] == "1" %> Orders</li>
 <% end %>
 
 
