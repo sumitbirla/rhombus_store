@@ -2,7 +2,13 @@ module StoreCache
   
   def self.new_orders_count
     Rails.cache.fetch(:new_orders_count, expires_in: 2.minutes) do 
-      Order.where("submitted > ?", DateTime.now - 2.weeks).where(status: ['unshipped', 'submitted']).count
+      Order.where("submitted > ?", DateTime.now - 2.weeks).where(status: ['unshipped', 'submitted'], po: false).count
+    end
+  end
+  
+  def self.new_purchase_orders_count
+    Rails.cache.fetch(:new_purchase_orders_count, expires_in: 2.minutes) do 
+      Order.where("submitted > ?", DateTime.now - 2.weeks).where(status: ['unshipped', 'submitted'], po: true).count
     end
   end
   

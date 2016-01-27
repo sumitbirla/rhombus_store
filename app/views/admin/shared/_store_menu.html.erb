@@ -1,7 +1,9 @@
 <% 
 	new_orders = StoreCache.new_orders_count
 	new_shipments = StoreCache.pending_shipments_count
-	max = [new_orders, new_shipments].max
+	new_pos = StoreCache.new_purchase_orders_count
+  max = [new_orders, new_shipments, new_pos].max
+  
 %>
 
 <li class="<%= 'active' if request.original_url.include? 'admin/store' %>">
@@ -19,13 +21,19 @@
     <li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
     <li><%= link_to "Invoice Images", admin_store_invoice_images_path %></li>
     <li>
-    <%= link_to admin_store_orders_path(status: "submitted") do %>
+    <%= link_to admin_store_orders_path(status: "submitted", po: 0) do %>
     Orders
     <% if new_orders > 0 %>
     	<span class="badge pull-right"><%= new_orders %></span>
     <% end %>
     <% end %>
     </li>
+    <li><%= link_to admin_store_orders_path(status: "submitted", po: 1) do %>
+    Purchase Orders
+    <% if new_pos > 0 %>
+    	<span class="badge pull-right"><%= new_pos %></span>
+    <% end %>
+    <% end %></li>
     <li><%= link_to "Products", admin_store_products_path %></li>
     <li><%= link_to "Reports", admin_store_reports_path %></li>
     <li><%= link_to "Shipping Options", admin_store_shipping_options_path %></li>

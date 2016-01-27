@@ -5,6 +5,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     
     @orders = Order.where(status: params[:status] || Order.valid_statuses).order(submitted: :desc)
     @orders = @orders.where(domain_id: cookies[:domain_id]) if q.nil?
+    @orders = @orders.where(po: params[:po] == "1") 
     
     unless q.nil?
       if q.to_i == 0

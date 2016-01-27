@@ -30,8 +30,12 @@
 </div>
 
 
-<h2><i class="fa fa-shopping-cart"></i>&nbsp; <%= current_domain %> Orders</h2>
-
+<h2>
+  <% if params[:po] == "1" %>
+    <i class="fa fa-file-text-o"></i>&nbsp; Purchase Orders</h2>
+  <% else %>
+    <i class="fa fa-shopping-cart"></i>&nbsp; <%= current_domain %> Orders</h2>
+  <% end %>
 <%= render "admin/shared/search_results_header", object: @orders %>
 
 <form id="frmBatch" action="" method="post">
@@ -40,8 +44,8 @@
   
   <% if params[:q].nil? %>
   <ul class="nav nav-tabs" style="margin-bottom: 10px;">
-    <li role="presentation" class="<%= "active" if params[:status] == "submitted" %>"><a href="<%= admin_store_orders_path(status: "submitted")%>">Pending</a></li>
-    <li role="presentation" class="<%= "active" if params[:status].blank? %>"><a href="<%= admin_store_orders_path%>">All</a></li>
+    <li role="presentation" class="<%= "active" if params[:status] == "submitted" %>"><a href="<%= admin_store_orders_path(status: "submitted", po: params[:po])%>">Pending</a></li>
+    <li role="presentation" class="<%= "active" if params[:status].blank? %>"><a href="<%= admin_store_orders_path(po: params[:po])%>">All</a></li>
   </ul>
   <% end %>
 
