@@ -105,6 +105,19 @@
       </div>
     </div>
   </div>
+  
+	<div class="panel panel-success">
+	  <div class="panel-heading">Purchase Order</div>
+    <div class="panel-body">
+      <div class="col-md-6">
+        <%= f.input :submitted, as: "datetimepicker" %>
+        <%= f.input :po, label: "Purchase Order?" %>
+        <%= f.input :payment_due, as: "datepicker" %>
+        <%= f.input :payment_method %>
+      </div>
+
+    </div>
+  </div>
 
 	
 	<div class="form-actions">
