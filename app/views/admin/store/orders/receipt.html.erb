@@ -117,7 +117,7 @@
           <%= @order.billing_city %>, <%= @order.billing_state %> <%= @order.billing_zip %></p>
       </div>
       <div class="boxright">
-      <% unless @order.sales_channel == 'Purchase Order' %>
+      <% unless @order.po %>
         <h2>Payment method:</h2>
         <p><%= @order.payment_method %><br/>
         <% if @order.payment_method == "CREDIT_CARD" %>
@@ -126,7 +126,7 @@
         </p>
       <% else %>
         <h2>Payment terms:</h2>
-        <p>30 DAYS AFTER EOM</p>
+        <p><%= @order.payment_method %></p>
       <% end %>
       </div>
       <div style="clear:both;"></div>
@@ -147,7 +147,7 @@
         <td><%= sysdate @order.submitted %></td>
         <td><%= @order.id %></td>
         <td><%= @order.status %></td>
-        <td><%= @order.sales_channel == 'Purchase Order' ? @order.external_order_id : 'n/a'  %></td>
+        <td><%= @order.po ? @order.external_order_id : 'n/a'  %></td>
         <td><%= @order.user ? @order.user.name : @order.shipping_name %></td>
       </tr>
       </tbody>
