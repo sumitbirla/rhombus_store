@@ -47,7 +47,7 @@
     <div class="panel-heading">Shipping & Billing</div>
     <div class="panel-body">
 		  <div class="col-md-6">
-			  <h4>Shipping address:</h4>
+			  <h4>Shipping address: &nbsp; <a href="#" class="small light copy-address"> &raquo; copy to billing &raquo;</a></h4>
 			  <%= f.input :shipping_name, label: 'Name' %>
         <%= f.input :shipping_company, label: 'Company'  %>
 			  <%= f.input :shipping_street1, label: 'Street1'  %>
@@ -204,6 +204,17 @@
           }
           
         });
+      });
+      
+      $("a.copy-address").click(function() {
+        $("#order_billing_name").val($("#order_shipping_name").val());
+        $("#order_billing_company").val($("#order_shipping_company").val());
+        $("#order_billing_street1").val($("#order_shipping_street1").val());
+        $("#order_billing_street2").val($("#order_shipping_street2").val());
+        $("#order_billing_city").val($("#order_shipping_city").val());
+        $("#order_billing_state").val($("#order_shipping_state").val());
+        $("#order_billing_zip").val($("#order_shipping_zip").val());
+        $("#order_billing_country").val($("#order_shipping_country").val());
       });
       
     });

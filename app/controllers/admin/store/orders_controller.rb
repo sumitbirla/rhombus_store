@@ -48,7 +48,17 @@ class Admin::Store::OrdersController < Admin::BaseController
       end
     end
     
-    @order = Order.new(user_id: params[:user_id]) if @order.nil?
+    if @order.nil?
+      @order = Order.new(
+                user_id: params[:user_id],
+                status: :submitted,
+                domain_id: cookies[:domain_id],
+                submitted: DateTime.now,
+                ) 
+                
+       ouser = User.find_by(id: params[:user_id])
+       @order.assign_attributes(contact_phone: ouser.phone, notify_email: ouser.email) unless ouser.nil?
+    end
     5.times { @order.items.build }
     
     render 'edit'
@@ -56,8 +66,9 @@ class Admin::Store::OrdersController < Admin::BaseController
 
   def create
     @order = Order.new(order_params)
-    @order.submitted = DateTime.now
     @order.cart_key = SecureRandom.hex
+    
+    Rails.logger.error ">>>>>>>>>>>>>  #{@order.items.length}"
     
     unless params[:add_more_items].blank?
       count = params[:add_more_items].to_i - @order.items.length + 5 
