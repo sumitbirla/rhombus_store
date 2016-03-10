@@ -54,7 +54,7 @@
 	<tr>
 		<th><input type="checkbox" id="chkAll" /></th>
 		<th>Order #</th>
-    <th>Sales Channel</th>
+    <th><%= params[:po] == "1" ? "PO #" : "Sales Channel" %></th>
 		<th>Date</th>
 		<th>Customer</th>
 		<th>Location</th>
@@ -72,7 +72,6 @@
       <% end %>
     </td>
     <td>
-    
     <% if order.po %>
       <%= "PO: " unless order.external_order_id.include?("PO") %><%= order.external_order_id %>
     <% elsif order.affiliate_campaign %>
