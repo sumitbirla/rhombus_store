@@ -1,6 +1,6 @@
-Setting.create(section: 'store', key: 'Order Copy Recipient', value: 'admin@example.com', value_type: 'string')
-Setting.create(section: 'store', key: 'Checkout Require Login', value: 'true', value_type: 'boolean')
-Setting.create(section: 'store', key: 'Enable PayPal', value: 'true', value_type: 'boolean')
+Setting.create(domain_id: 1, section: 'store', key: 'Order Copy Recipient', value: 'admin@example.com', value_type: 'string')
+Setting.create(domain_id: 1, section: 'store', key: 'Checkout Require Login', value: 'true', value_type: 'boolean')
+Setting.create(domain_id: 1, section: 'store', key: 'Enable PayPal', value: 'true', value_type: 'boolean')
 
 SearchPath.create(short_code: 'o', url: '/admin/store/orders', description: 'Search for an order by order ID')
 SearchPath.create(short_code: 'p', url: '/admin/store/products', description: 'Search for a product by title or SKU')
