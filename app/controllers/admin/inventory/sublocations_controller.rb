@@ -1,7 +1,7 @@
 class Admin::Inventory::SublocationsController < Admin::BaseController
   
   def new
-    @sublocation = Sublocation.new name: 'New sublocation', location_id: params[:location_id]
+    @sublocation = Sublocation.new zone: 'A', location_id: params[:location_id]
     render 'edit'
   end
 
@@ -39,7 +39,7 @@ class Admin::Inventory::SublocationsController < Admin::BaseController
   private
   
     def sublocation_params
-      params.require(:sublocation).permit(:location_id, :name, :description)
+      params.require(:sublocation).permit!
     end
   
   

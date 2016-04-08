@@ -13,5 +13,9 @@
 class Sublocation < ActiveRecord::Base
   self.table_name = 'store_sublocations'
   belongs_to :location
-  validates_presence_of :location_id, :name
+  validates_presence_of :location_id, :zone
+  
+  def to_s
+    [zone, aisle, bay, level, section].join("-")
+  end
 end
