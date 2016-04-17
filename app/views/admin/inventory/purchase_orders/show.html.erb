@@ -61,23 +61,23 @@
 	<tr>
 		<th>SKU</th>
 		<th>Description</th>
-		<th>Supplier Code</th>
-		<th>Qty Ordered</th>
-		<th>Unit Price $</th>
-		<th>Received</th>
-		<th>Subtotal</th>
-		<th>Status</th>
+		<th class="text-center">Supplier Code</th>
+		<th class="text-center">Qty Ordered</th>
+		<th class="text-center">Unit Price $</th>
+		<th class="text-center">Received</th>
+		<th class="text-center">Subtotal</th>
+		<th class="text-center">Status</th>
 	</tr>
 	<% @purchase_order.items.each do |item| %>
 	<tr>
 		<td><%= item.sku %></td>
 		<td><%= item.description %></td>
-		<td><%= item.supplier_code %></td>
-		<td class="ralign"><%= item.quantity %></td>
-		<td class="ralign"><%= number_to_currency(item.unit_price) %></td>
-		<td class="ralign"><%= item.quantity_received %></td>
-		<td class="ralign"><%= number_to_currency(item.quantity * item.unit_price) %></td>
-		<td class="ralign"><%= poi_status(item)%></td>
+		<td class="text-center"><%= item.supplier_code %></td>
+		<td class="text-center"><%= item.quantity %></td>
+		<td class="text-center"><%= number_to_currency(item.unit_price) %></td>
+		<td class="text-center"><%= item.quantity_received %></td>
+		<td class="text-center"><%= number_to_currency(item.quantity * item.unit_price) %></td>
+		<td class="text-center"><%= poi_status(item)%></td>
 	</tr>
 	<% end %>
 </table>
@@ -92,7 +92,7 @@
 
 <% content_for :breadcrumbs do %>
 	<li><a href="#">Inventory</a></li>
-	<li><%= link_to "Purchase Orders", admin_inventory_purchase_orders_path %></li>
+	<li><%= link_to "Purchase Orders", admin_inventory_purchase_orders_path(status: :open) %></li>
 	<li class="active">#<%= @purchase_order.id %></li>
 <% end %>
 

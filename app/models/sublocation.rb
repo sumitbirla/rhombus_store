@@ -16,6 +16,11 @@ class Sublocation < ActiveRecord::Base
   validates_presence_of :location_id, :zone
   
   def to_s
-    [zone, aisle, bay, level, section].join("-")
+    str = zone
+    str += '-' + aisle unless aisle.blank?
+    str += '-' + bay unless bay.blank?
+    str += '-' + level unless level.blank?
+    str += '-' + section unless section.blank?
+    str
   end
 end
