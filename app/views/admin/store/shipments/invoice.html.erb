@@ -68,7 +68,12 @@
         <tr valign="top">
           <th scope="col" style="text-align:left;">
             <%
+              if @shipment.order.po
+                loc_id = Cache.setting(@shipment.order.domain_id, "eCommerce", "Invoice Location ID")
+              else
                 loc_id = Cache.setting(@shipment.order.domain_id, :shipping, "Ship From Location ID")
+              end
+                
                 loc = Location.find(loc_id)
                 
                 if loc.pictures.length > 0
