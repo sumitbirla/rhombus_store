@@ -55,7 +55,9 @@
   <a href="#"><i class="fa fa-book fa-fw"></i> Inventory  <span class="fa arrow"></span></a>
   <ul class="nav nav-second-level">
     <li><%= link_to "Current Stock", admin_inventory_stock_index_path %></li>
-    <li><%= link_to "Purchase Orders", admin_inventory_purchase_orders_path %></li>
+    <li><%= link_to "Purchase Orders", admin_inventory_purchase_orders_path(status: :open) %></li>
+    <li><%= link_to "Suppliers", admin_system_affiliates_path(c: :suppliers) %></li>
     <li><%= link_to "Transaction History", admin_inventory_inventory_transactions_path %></li>
+    <li><%= link_to "Warehouses", admin_cms_locations_path(c: :warehouses) %></li>
   </ul>
 </li>

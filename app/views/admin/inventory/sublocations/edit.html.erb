@@ -1,24 +1,24 @@
-<h2><%= @sublocation.name %></h2>
+<h2><%= @sublocation %></h2>
 <hr/>
 
 
-<%= simple_form_for [:admin, :inventory, @sublocation], html: { class: 'form-inline' } do |f| %>
+<%= simple_form_for [:admin, :inventory, @sublocation] do |f| %>
 
 	<%= render 'admin/shared/error_messages', object: f.object %>
 	
 	<%= f.input :location_id, as: :hidden %>
-	<%= f.input :name %>
-	<%= f.input :description, as: :text, input_html: { class: 'span6', rows: 4 }  %>
+	<%= f.input :zone, collection: ('A'..'Z'), input_html: { class: 'short' } %>
+  <%= f.input :aisle, collection: (1..99).collect { |x| "%02d" % x }, input_html: { class: 'short' } %>
+  <%= f.input :bay, collection: (1..99).collect { |x| "%02d" % x }, input_html: { class: 'short' } %>
+  <%= f.input :level, collection: (1..9), input_html: { class: 'short' } %>
+  <%= f.input :section, collection: (1..5), input_html: { class: 'short' } %>
+	<%= f.input :notes, as: :text, input_html: { class: 'span6', rows: 4 }  %>
 	
 	<div class="form-actions">
 		<%= f.button :submit %>
 	</div>
 
 <% end %>
-
-<% content_for :menu do
-    render "admin/shared/web_menu"
-end %>
 
 
 <% content_for :breadcrumbs do %>

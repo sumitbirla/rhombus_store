@@ -1,17 +1,28 @@
 class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
+  # ['new', 'open', 'partial', 'received', 'cancelled']
   
   def index
     @purchase_orders = PurchaseOrder.includes(:items).page(params[:page]).order('id DESC')
     @purchase_orders = @purchase_orders.where(id: params[:q]) unless params[:q].nil?
+    
+    @purchase_orders = @purchase_orders.where(status: ['open', 'partial', 'new']) if params[:status] == 'open'
+    @purchase_orders = @purchase_orders.where(status: ['cancelled', 'received']) if params[:status] == 'closed'
   end
 
   def new
-    @purchase_order = PurchaseOrder.new issue_date: Time.now, due_date: Time.now + 1.week, status: 'new'
+    @purchase_order = PurchaseOrder.new(issue_date: Date.today, due_date: Date.today + 1.week, status: 'new')
+    20.times { @purchase_order.items.build }
     render 'edit'
   end
 
   def create
     @purchase_order = PurchaseOrder.new(purchase_order_params)
+    
+    unless params[:add_more_items].blank?
+      count = params[:add_more_items].to_i - @purchase_order.items.length + 10 
+      count.times { @purchase_order.items.build }
+      return render 'edit'
+    end
     
     if @purchase_order.save
       flash[:notice] = 'PurchaseOrder was successfully created.'
@@ -27,12 +38,20 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
 
   def edit
     @purchase_order = PurchaseOrder.find(params[:id])
+    5.times { @purchase_order.items.build }
   end
 
   def update
     @purchase_order = PurchaseOrder.find(params[:id])
+    @purchase_order.assign_attributes(purchase_order_params)
     
-    if @purchase_order.update(purchase_order_params)
+    unless params[:add_more_items].blank?
+      count = params[:add_more_items].to_i - @purchase_order.items.length + 5 
+      count.times { @purchase_order.items.build }
+      return render 'edit'
+    end
+    
+    if @purchase_order.save
       flash[:notice] = 'PurchaseOrder was successfully updated.'
       redirect_to admin_inventory_purchase_order_path(@purchase_order)
     else

@@ -1,0 +1,36 @@
+	<tr>
+		<td><input type="checkbox" name="order_id[]" class="order-chk" value="<%= order.id %>"/></td>
+		<td>
+      <%= link_to order.id, admin_store_order_path(order) %>
+      <% if order.auto_ship %>
+        &nbsp; <i class="fa text-success fa-refresh"></i>
+      <% end %>
+    </td>
+    <td>
+    <% if order.po %>
+      <%= "PO: " unless order.external_order_id.include?("PO") %><%= order.external_order_id %>
+    <% elsif order.affiliate_campaign %>
+      <%= link_to order.affiliate_campaign.affiliate, admin_system_affiliate_path(order.affiliate_campaign.affiliate_id) %>
+    <% else %>
+      <%= order.sales_channel %>
+    <% end %>
+    </td>
+		<td><%= systime order.submitted if order.submitted%></td>
+		<td>
+			<% if order.user_id.nil? %>
+				<%= order.shipping_name || order.billing_name %>
+			<% else %>
+				<%= link_to order.user, admin_system_user_path(order.user_id) %>
+			<% end %>
+		</td>
+		<td><%= order.shipping_city %>, <%= order.shipping_state %></td>
+		<td><%= number_to_currency(order.total) %></td>
+    <td>
+      <% if order.shipments.length > 0 %>
+        <%= link_to admin_store_shipment_path(order.shipments.last) do %>
+          <i class="light fa fa-truck"></i>
+        <% end %>
+      <% end%>
+    </td>
+		<td><%= order_status(order) %></td>
+	</tr>

@@ -23,6 +23,7 @@ class PurchaseOrder < ActiveRecord::Base
   belongs_to :supplier, class_name: 'Affiliate'
   has_many :items, class_name: 'PurchaseOrderItem', dependent: :destroy
   validates_presence_of :affiliate, :supplier, :issue_date, :status
+  accepts_nested_attributes_for :items, reject_if: lambda { |x| x['sku'].blank? }, allow_destroy: true
   
   def total_amount
     amt = 0.0

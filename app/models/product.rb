@@ -90,4 +90,8 @@ class Product < ActiveRecord::Base
     product_type == "warehoused"
   end
   
+  def get_attribute_value(name)
+    a = product_attributes.find { |x| x.core_attribute.name == name }
+    a.nil? ? "" : a.value
+  end
 end

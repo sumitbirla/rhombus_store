@@ -6,11 +6,11 @@ module PurchaseOrderHelper
     if po.status == 'open'
       css_class += 'label-info'
     elsif ['late', 'cancelled'].include?(po.status)
-      css_class += 'label-warning'
+      css_class += 'label-danger'
     elsif po.status == 'received'
       css_class += 'label-success'
-    elsif po.status == 'partially_received'
-      css_class += 'label-important'
+    elsif po.status == 'partial'
+      css_class += 'label-success'
     else
       css_class += 'label-default'
     end
@@ -22,7 +22,7 @@ module PurchaseOrderHelper
     css_class = css + ' '
     
     if poi.status == 'partial'
-      css_class += 'label-important'
+      css_class += 'label-success'
     elsif poi.status == 'received'
       css_class += 'label-success'
     else

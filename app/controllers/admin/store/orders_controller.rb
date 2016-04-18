@@ -16,7 +16,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     end
     
     respond_to do |format|
-      format.html { @orders = @orders.includes(:user, :affiliate_campaign).page(params[:page]) }
+      format.html { @orders = @orders.includes(:user, :affiliate_campaign, :shipments).page(params[:page]) }
       format.csv { send_data @orders.to_csv }
     end
 

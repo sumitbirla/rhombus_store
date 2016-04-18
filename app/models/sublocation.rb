@@ -13,5 +13,14 @@
 class Sublocation < ActiveRecord::Base
   self.table_name = 'store_sublocations'
   belongs_to :location
-  validates_presence_of :location_id, :name
+  validates_presence_of :location_id, :zone
+  
+  def to_s
+    str = zone
+    str += '-' + aisle unless aisle.blank?
+    str += '-' + bay unless bay.blank?
+    str += '-' + level unless level.blank?
+    str += '-' + section unless section.blank?
+    str
+  end
 end
