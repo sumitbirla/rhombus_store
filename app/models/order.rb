@@ -59,6 +59,7 @@ require 'activemerchant'
 
 class Order < ActiveRecord::Base
   include PaypalExpressHelper
+  include PaymentGateway
   
   self.table_name = "store_orders"
   attr_accessor :same_as_shipping
@@ -194,22 +195,6 @@ class Order < ActiveRecord::Base
                           comment: notify_email
 
     elsif payment_method == "CREDIT_CARD"
-      
-      active_gw = Cache.setting(domain_id, 'eCommerce', 'Payment Gateway')
-
-      if active_gw == 'Authorize.net'
-        gateway = ActiveMerchant::Billing::AuthorizeNetGateway.new(
-            :login => Cache.setting(domain_id, 'eCommerce', 'Authorize.Net Login ID'),
-            :password => Cache.setting(domain_id, 'eCommerce', 'Authorize.Net Transaction Key'),
-            :test => false
-        )
-      elsif active_gw == 'Stripe'
-        gateway = ActiveMerchant::Billing::StripeGateway.new(
-            :login => Cache.setting(domain_id, 'eCommerce', 'Stripe Secret Key')
-        )  
-      else
-        raise "Payment gateway is not set up."
-      end 
 
       customer_name = billing_name
       customer_name = user.name unless user_id.nil?
@@ -226,7 +211,8 @@ class Order < ActiveRecord::Base
           :zip      => billing_zip
       }}
 
-      response = gateway.purchase(total_cents, credit_card, purchase_options)
+      # active_gateway is defined in billing/models/concerns
+      response = active_gateway(domain_id).purchase(total_cents, credit_card, purchase_options)
 
       # credit cart authorization failed?
       raise response.message unless response.success?
@@ -263,7 +249,7 @@ class Order < ActiveRecord::Base
       
       # add order history row
       OrderHistory.create order_id: id, user_id: user_id, amount: total,
-                          event_type: 'cc_authorization', system_name: active_gw, identifier: response.authorization,
+                          event_type: 'cc_authorization', system_name: :active_merchant, identifier: response.authorization,
                           comment: "Successfully charged #{cc_number}"
 
     else # NO_BILLING
