@@ -115,6 +115,12 @@
         <%= f.input :payment_due, as: "datepicker" %>
         <%= f.input :payment_method %>
       </div>
+      
+      <div class="col-md-6">
+          <%= f.input :allow_backorder %>
+          <%= f.input :ship_earliest, as: "datepicker" %>
+          <%= f.input :ship_latest, as: "datepicker" %> 
+      </div>
 
     </div>
   </div>
