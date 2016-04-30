@@ -9,6 +9,9 @@
   <%= f.input :sku, input_html: { placeholder: @affiliate_product.product.sku } %>
   <%= f.input :price, input_html: { placeholder: @affiliate_product.product.price } %>
   <%= f.input :minimum_order_quantity %>
+  <%= f.input :category1 %>
+  <%= f.input :category2 %>
+  <%= f.input :category3 %>
   <%= f.input :description, as: :text, input_html: { rows: 15, placeholder: @affiliate_product.product.long_description } %>
   <%= f.input :data %>
   <%= f.input :images %>
