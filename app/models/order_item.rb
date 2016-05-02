@@ -13,7 +13,7 @@
 #  unit_price          :decimal(10, 2)   not null
 #  item_id             :string(32)       not null
 #  item_description    :string(255)      not null
-#  autoship_months     :integer          default(0), not null
+#  autoship_months     :integer          default("0"), not null
 #  uploaded_file       :string(255)
 #  upload_file_preview :string(255)
 #  start_x_percent     :integer

@@ -13,7 +13,7 @@
 #  ship_to       :string(255)
 #  created_at    :datetime
 #  updated_at    :datetime
-#  notes         :string(255)
+#  notes         :text(65535)
 #
 
 class PurchaseOrder < ActiveRecord::Base

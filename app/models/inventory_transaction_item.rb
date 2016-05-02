@@ -5,10 +5,10 @@
 #  id                       :integer          not null, primary key
 #  inventory_transaction_id :integer
 #  sku                      :string(255)
-#  units_per_case           :integer          default(0), not null
-#  cases                    :integer          default(0), not null
-#  loose_items              :integer          default(0), not null
 #  quantity                 :integer
+#  lot                      :string(255)      not null
+#  expiration               :integer
+#  sublocation_id           :integer          not null
 #
 
 class InventoryTransactionItem < ActiveRecord::Base

@@ -9,7 +9,8 @@
 #  slug                   :string(255)
 #  brand_id               :integer
 #  sku                    :string(255)      default(""), not null
-#  active                 :boolean          default(TRUE), not null
+#  sku2                   :string(255)
+#  active                 :boolean          default("1"), not null
 #  title                  :string(255)      not null
 #  option_title           :string(255)
 #  option_sort            :integer
@@ -19,13 +20,13 @@
 #  price                  :decimal(10, 2)   not null
 #  msrp                   :decimal(10, 2)
 #  special_price          :decimal(10, 2)
-#  free_shipping          :boolean          default(FALSE), not null
-#  tax_exempt             :boolean          default(FALSE), not null
-#  hidden                 :boolean          default(FALSE), not null
-#  featured               :boolean          default(FALSE), not null
-#  auto_ship              :boolean          default(FALSE), not null
+#  free_shipping          :boolean          default("0"), not null
+#  tax_exempt             :boolean          default("0"), not null
+#  hidden                 :boolean          default("0"), not null
+#  featured               :boolean          default("0"), not null
+#  auto_ship              :boolean          default("0"), not null
 #  affiliate_only         :boolean
-#  require_image_upload   :boolean          default(FALSE), not null
+#  require_image_upload   :boolean          default("0"), not null
 #  short_description      :text(65535)
 #  long_description       :text(65535)
 #  keywords               :string(255)
@@ -45,7 +46,7 @@
 #  country_of_origin      :string(255)
 #  minimum_order_quantity :integer
 #  low_threshold          :integer
-#  committed              :integer          default(0), not null
+#  committed              :integer          default("0"), not null
 #  shipping_lead_time     :integer
 #  item_availability      :date
 #  created_at             :datetime
