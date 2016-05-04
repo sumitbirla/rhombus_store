@@ -12,16 +12,17 @@
 #  referred_by           :integer
 #  coupon_id             :integer
 #  voucher_id            :integer
-#  combined              :boolean          default(FALSE), not null
-#  gift                  :boolean          default(FALSE), not null
-#  tax_amount            :decimal(10, 2)   default(0.0), not null
-#  tax_rate              :decimal(5, 2)    default(0.0), not null
-#  shipping_cost         :decimal(6, 2)    default(0.0), not null
+#  combined              :boolean          default("0"), not null
+#  gift                  :boolean          default("0"), not null
+#  auto_ship             :boolean          default("0"), not null
+#  tax_amount            :decimal(10, 2)   default("0.00"), not null
+#  tax_rate              :decimal(5, 2)    default("0.00"), not null
+#  shipping_cost         :decimal(6, 2)    default("0.00"), not null
 #  shipping_method       :string(255)
-#  discount_amount       :decimal(10, 2)   default(0.0), not null
-#  credit_applied        :decimal(10, 2)   default(0.0), not null
-#  subtotal              :decimal(10, 2)   default(0.0), not null
-#  total                 :decimal(10, 2)   default(0.0), not null
+#  discount_amount       :decimal(10, 2)   default("0.00"), not null
+#  credit_applied        :decimal(10, 2)   default("0.00"), not null
+#  subtotal              :decimal(10, 2)   default("0.00"), not null
+#  total                 :decimal(10, 2)   default("0.00"), not null
 #  status                :string(255)      not null
 #  submitted             :datetime
 #  shipping_name         :string(255)
@@ -43,7 +44,12 @@
 #  customer_note         :text(65535)
 #  notify_email          :string(255)
 #  contact_phone         :string(255)
+#  payment_due           :date
 #  payment_method        :string(255)      default("")
+#  po                    :boolean          default("0"), not null
+#  allow_backorder       :boolean          default("0"), not null
+#  ship_earliest         :date
+#  ship_latest           :date
 #  cc_type               :string(255)
 #  cc_number             :string(255)
 #  cc_code               :string(255)
@@ -51,6 +57,7 @@
 #  cc_expiration_year    :integer
 #  paypal_token          :string(255)
 #  paypal_payer_id       :string(255)
+#  fb_discount           :decimal(5, 2)    default("0.00"), not null
 #  created_at            :datetime
 #  updated_at            :datetime
 #

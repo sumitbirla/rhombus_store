@@ -15,7 +15,7 @@
 #  voucher_expiration         :datetime
 #  original_price             :decimal(8, 2)    not null
 #  deal_price                 :decimal(8, 2)    not null
-#  shipping_cost              :decimal(6, 2)    default(0.0), not null
+#  shipping_cost              :decimal(6, 2)    default("0.00"), not null
 #  conditions                 :text(65535)
 #  description                :text(65535)      not null
 #  short_tag_line             :string(255)      not null
@@ -32,6 +32,7 @@
 #  allow_photo_upload         :boolean          not null
 #  facebook_posts             :integer          not null
 #  facebook_clicks            :integer          not null
+#  fb_discount                :decimal(5, 2)    default("0.00"), not null
 #  created_at                 :datetime
 #  updated_at                 :datetime
 #  uuid                       :string(255)      not null
