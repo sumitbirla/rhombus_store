@@ -1,12 +1,7 @@
-class AutoShipJob < ActiveJob::Base
-  queue_as :default
+namespace :rhombus_store do
   
-  # reschedule job
-  after_perform do |job|
-    self.class.set(wait: 12.hours).perform_later
-  end
-
-  def perform(*args)
+  desc "Process auto-ship items and create orders"
+  task auto_ship_items: :environment do
     @logger = Logger.new(Rails.root.join("log", "autoship.log"))
     
     asi_list = AutoShipItem.where(status: :active).where("next_ship_date < ?", Date.today + 2.day)
@@ -20,6 +15,7 @@ class AutoShipJob < ActiveJob::Base
       end
     end
   end
+  
   
   def create_order(asi_list, user_id)
     
@@ -68,5 +64,5 @@ class AutoShipJob < ActiveJob::Base
     @logger.info "New order ##{new_order.id} created."
     
   end
-  
+
 end
