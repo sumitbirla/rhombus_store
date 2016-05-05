@@ -173,7 +173,7 @@ class CreateStoreTables < ActiveRecord::Migration
       t.integer "inventory_transaction_id", limit: 4
       t.string  "sku",                      limit: 255
       t.integer "quantity",                 limit: 4
-      t.string  "lot",                      limit: 255, null: false
+      t.string  "lot",                      limit: 255
       t.integer "expiration",               limit: 4
     end
 
