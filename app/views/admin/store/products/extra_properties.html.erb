@@ -1,22 +1,22 @@
 <h2><%= @product.name_with_option %></h2>
 
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs" style="margin-bottom: 20px;">
   <li><%= link_to "Summary", edit_admin_store_product_path(@product) %></li>
-  <li class="active"><a href="#">Pictures</a></li>
+  <li><%= link_to "Pictures", pictures_admin_store_product_path(@product) %></a></li>
   <li><%= link_to "Categories", categories_admin_store_product_path(@product) %></li>
   <li><%= link_to "Coupons", coupons_admin_store_product_path(@product) %></li>
-  <li><%= link_to "Extra Properties", extra_properties_admin_store_product_path(@product) %></li>
+  <li class="active"><a href="#">Extra Properties</a></li>
 </ul>
 
-<br>
-<%= render partial: 'admin/shared/image_list', locals: { object: @product } %>
+
+<%= render 'admin/shared/extra_properties_list', object: @product, redirect: admin_store_product_path(@product) %>
+
 
 
 
 <% content_for :title do %>
     <%= @product.title %>
 <% end %>
-
 
 
 <% content_for :breadcrumbs do %>

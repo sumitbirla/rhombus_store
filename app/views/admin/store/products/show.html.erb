@@ -226,14 +226,14 @@
 		<%= @product.long_description.gsub("\n", "<br/>").html_safe %>
 	<% end %>
 
-  <% if @product.pattributes.length > 0 %>
+  <% if @product.extra_properties.length > 0 %>
     <hr>
-    <h4>Attributes</h4>
+    <h4>Extra Properties</h4>
     <table class="table table-condensed table-bordered summary">
-      <% @product.product_attributes.each do |pattr| %>
+      <% @product.extra_properties.each do |ep| %>
           <tr>
-            <td><%= pattr.core_attribute.name %></td>
-            <td><%= pattr.value.gsub("\n", "<br/>").html_safe %></td>
+            <td><%= ep.name %></td>
+            <td><%= ep.value.gsub("\n", "<br/>").html_safe %></td>
           </tr>
       <% end %>
     </table>

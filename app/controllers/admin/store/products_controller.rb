@@ -39,7 +39,7 @@ class Admin::Store::ProductsController < Admin::BaseController
   end
 
   def show
-    @product = Product.includes(:pictures, product_attributes: :core_attribute).find(params[:id])
+    @product = Product.find(params[:id])
   end
 
   def edit
@@ -90,40 +90,10 @@ class Admin::Store::ProductsController < Admin::BaseController
     redirect_to action: 'show', id: @product.id, notice: 'Product was successfully updated.'
   end
   
-  def attributes
+  def extra_properties
     @product = Product.find(params[:id])
+    5.times { @product.extra_properties.build }
   end
-  
-  def create_attributes
-    
-    @product = Product.find(params[:id])
-    attr_list = Attribute.where(entity_type: :product)
-    
-    attr_list.each do |attr|
-      
-      prod_attr = @product.product_attributes.find { |a| a.attribute_id == attr.id }
-      attr_id = "attr-#{attr.id}"
-      
-      # DELETE
-      if params[attr_id].blank?  
-        prod_attr.destroy if prod_attr
-        next
-      end
-      
-      #ADD
-      unless prod_attr
-        prod_attr = ProductAttribute.new product_id: @product.id, attribute_id: attr.id
-      end
-      
-      prod_attr.value = params[attr_id]
-      prod_attr.save
-      
-    end
-    
-    Rails.cache.delete @product
-    redirect_to action: 'show', id: params[:id], notice: 'Product was successfully updated.'
-  end
-  
   
   def adjust_prices
     @products = Product.where(active: true)

@@ -117,11 +117,10 @@ Rails.application.routes.draw do
         member do
           get 'pictures' 
           get 'categories'
-          get 'attributes'
+          get 'extra_properties'
           get 'coupons'
           get 'clone'
           post 'categories' => 'products#create_categories'
-          post 'attributes' => 'products#create_attributes'
         end
       end
       resources :orders do

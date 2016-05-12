@@ -20,7 +20,7 @@ module StoreCache
     
   def self.product(slug) 
     Rails.cache.fetch("product:#{slug}") do 
-      Product.includes(:categories, :product_attributes, :pattributes, :brand, :pictures, :comments).find_by(slug: slug)
+      Product.includes(:categories, :extra_properties, :brand, :pictures, :comments).find_by(slug: slug)
     end
   end
   
@@ -73,7 +73,7 @@ module StoreCache
     
     Rails.cache.fetch("ap:#{affiliate.slug}:#{product_slug}") do
       AffiliateProduct
-            .includes(:product, [product: :pictures, product: :pattributes])
+            .includes(:product, [product: :pictures, product: :extra_properties])
             .find_by(affiliate_id: affiliate.id, product_id: Product.select(:id).where(slug: product_slug))
     end
   end
@@ -81,7 +81,7 @@ module StoreCache
   def self.non_affiliate_products
     Rails.cache.fetch("non-affiliate-products") do
       Product
-          .includes(:pictures, :pattributes, :categories)
+          .includes(:pictures, :extra_properties, :categories)
           .where(affiliate_only: false, hidden: false, active: true)
     end
   end

@@ -66,9 +66,7 @@ class Product < ActiveRecord::Base
   has_many :product_categories
   has_many :coupons, -> { order 'created_at desc' }
   has_many :categories, -> { order :sort }, through: :product_categories
-  has_many :product_attributes
-  has_many :pattributes, -> { order :sort }, through: :product_attributes, source: :core_attribute
-  has_many :extra_properties, as: :extra_property
+  has_many :extra_properties, -> { order "sort, name" }, as: :extra_property
   
   validates_presence_of :name, :sku, :title, :slug, :brand_id, :product_type, :price
   validates_presence_of :sku2, if: :warehoused?
@@ -92,8 +90,8 @@ class Product < ActiveRecord::Base
     product_type == "warehoused"
   end
   
-  def get_attribute_value(name)
-    a = product_attributes.find { |x| x.core_attribute.name == name }
+  def get_property(name)
+    a = extra_properties.find { |x| x.name == name }
     a.nil? ? "" : a.value
   end
 end
