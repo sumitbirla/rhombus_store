@@ -34,7 +34,7 @@
 		  <%= f.input :title %>
 		  <%= f.input :slug %>
 		  <%= f.association :brand %>
-		  <%= f.input :product_type, as: :select, collection: ['warehoused', 'dropshipped', 'electronic'] %>
+		  <%= f.input :product_type, as: :select, collection: ['stock', 'non-stock', 'consignment', 'virtual'] %>
 		  <%= f.input :sku, label: 'SKU' %>
 		  <%= f.input :price %>
 		  <%= f.input :special_price %>

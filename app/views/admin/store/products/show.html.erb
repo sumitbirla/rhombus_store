@@ -230,12 +230,12 @@
     <hr>
     <h4>Extra Properties</h4>
     <table class="table table-condensed table-bordered summary">
-      <% @product.extra_properties.each do |ep| %>
-          <tr>
-            <td><%= ep.name %></td>
-            <td><%= ep.value.gsub("\n", "<br/>").html_safe %></td>
-          </tr>
-      <% end %>
+    <% @product.extra_properties.each do |ep| %>
+      <tr>
+        <td width="160"><%= ep.name %></td>
+        <td><%= ep.value.gsub("\n", "<br/>").html_safe %></td>
+      </tr>
+    <% end %>
     </table>
   <% end %>
 
@@ -285,7 +285,7 @@
 	</ul>
 
 
-    <% if @product.product_type == 'warehoused' %>
+    <% if @product.product_type == 'stock' %>
       <hr/>
       <h4>Inventory</h4>
 
@@ -316,7 +316,7 @@
 </div>  <!-- row -->
 
 
-<%= content_for :title do %>
+<% content_for :title do %>
 	Products: <%= @product.title %>
 <% end %>
 
