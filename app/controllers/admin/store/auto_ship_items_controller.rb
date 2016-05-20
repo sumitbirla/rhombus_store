@@ -6,7 +6,7 @@ class Admin::Store::AutoShipItemsController < Admin::BaseController
   
   
   def new
-    @auto_ship_item = AutoShipItem.new(next_ship_date: Date.today)
+    @auto_ship_item = AutoShipItem.new(next_ship_date: Date.today, quantity: 1, status: :active, user_id: params[:user_id])
     render 'edit'
   end
 
