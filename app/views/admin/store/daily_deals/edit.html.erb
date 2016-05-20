@@ -20,7 +20,6 @@
   <%= f.input :facebook_clicks, as: :hidden %>
   
   <%= f.input :deal_type, as: :select, collection: ['product', 'voucher', 'coupon code'] %>
-  <%= f.association :region %>
   <%= f.input :slug %>
   <%= f.input :short_tag_line %>
   <%= f.input :title, as: :text, input_html: { rows: 2 } %>
