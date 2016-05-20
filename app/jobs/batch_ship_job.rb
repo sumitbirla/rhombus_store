@@ -28,14 +28,19 @@ class BatchShipJob < ActiveJob::Base
   	  carrier: params[:carrier],
       ship_method: params[:service],
       packaging_type: params[:packaging],
-      package_length: params[:length],
-      package_width: params[:width],
-      package_height: params[:height],
       package_weight: params[:weight],
       ship_date: params[:ship_date],
       require_signature: params[:require_signature],
       fulfilled_by_id: params[:user_id]
     )
+    
+    unless params[:package_length] == 0.0
+      shp.assign_attributes(
+        package_length: params[:length],
+        package_width: params[:width],
+        package_height: params[:height],
+      )
+    end
     
     # ship from address is already populated
     EasyPost.api_key = Cache.setting(shp.order.domain_id, :shipping, 'EasyPost API Key')
