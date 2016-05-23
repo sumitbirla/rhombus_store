@@ -46,6 +46,10 @@
 	<% end %>
 </table>
 
+<div class="table-summary">
+	<%= number_with_delimiter(@products.total_entries) %> records
+</div>
+
 
 <% content_for :title do %>
 	Products

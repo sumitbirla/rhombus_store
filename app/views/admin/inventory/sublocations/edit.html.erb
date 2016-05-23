@@ -6,18 +6,32 @@
 
 	<%= render 'admin/shared/error_messages', object: f.object %>
 	
-	<%= f.input :location_id, as: :hidden %>
-	<%= f.input :zone, collection: ('A'..'Z'), input_html: { class: 'short' } %>
-  <%= f.input :aisle, collection: (1..99).collect { |x| "%02d" % x }, input_html: { class: 'short' } %>
-  <%= f.input :bay, collection: (1..99).collect { |x| "%02d" % x }, input_html: { class: 'short' } %>
-  <%= f.input :level, collection: (1..9), input_html: { class: 'short' } %>
-  <%= f.input :section, collection: (1..5), input_html: { class: 'short' } %>
-	<%= f.input :notes, as: :text, input_html: { class: 'span6', rows: 4 }  %>
-	
-	<div class="form-actions">
-		<%= f.button :submit %>
-	</div>
-
+  <div class="row">
+    
+    <div class="col-md-7">
+    	<%= f.input :location_id, as: :hidden %>
+    	<%= f.input :row %>
+      <%= f.input :shelf %>
+      <%= f.input :segment %>
+    	<%= f.input :notes, as: :text, input_html: { rows: 4 }  %>
+	  </div>
+  
+    <div class="col-md-5">
+      <div class="panel panel-default options-panel">
+        <div class="panel-heading">Flags</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-6"><%= f.input_field :large_box %> &nbsp; Large Box</div>
+            <div class="col-md-6"><%= f.input_field :heavy_box %> &nbsp; Heavy Box</div>
+            <div class="col-md-6"><%= f.input_field :holding_area %> &nbsp; Holding Area</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  <%= f.button :submit %>
+  
 <% end %>
 
 
