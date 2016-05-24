@@ -302,12 +302,6 @@
           <td>Low threshold</td>
           <td><%= @product.low_threshold || "- not set -" %></td>
         </tr>
-        <% unless @product.primary_supplier_id.nil? %>
-            <tr>
-              <td>Supplier</td>
-              <td><%= link_to @product.supplier, admin_system_affiliate_path(@product.primary_supplier_id) %></td>
-            </tr>
-        <% end %>
       </table>
     <% end %>
 
