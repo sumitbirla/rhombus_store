@@ -58,7 +58,6 @@ class Product < ActiveRecord::Base
   belongs_to :brand
   belongs_to :affiliate
   belongs_to :fulfiller, class_name: 'Affiliate', foreign_key: 'fulfiller_id'
-  belongs_to :supplier, class_name: 'Affiliate', foreign_key: 'primary_supplier_id'
   belongs_to :label_sheet
 
   has_many :pictures, -> { order :sort }, as: :imageable
@@ -97,13 +96,17 @@ class Product < ActiveRecord::Base
   
   def set_property(name, value)
     a = extra_properties.find { |x| x.name == name }
+    if [true, false].include? value
+      value = (value ? "Yes" : "No")
+    end
+    
     if a.nil?
       self.extra_properties.build(name: name, value: value) unless value.blank?
     else
       if value.blank?
         a.destroy
       else
-        a.value = value
+        a.update(value: value)
       end
     end
   end
