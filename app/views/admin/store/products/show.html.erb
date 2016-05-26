@@ -214,6 +214,17 @@
 	<% end %>
 
 
+	<% unless @product.short_description.blank? %>
+		<h4 style="margin-top: 15px;">Short Description</h4>
+		<%= @product.short_description %>
+		<hr/>
+	<% end %>
+
+
+	<% unless @product.long_description.blank? %>
+		<h4 style="margin-top: 15px;">Long Description</h4>
+		<%= @product.long_description.gsub("\n", "<br/>").html_safe %>
+	<% end %>
 
   <% if @product.extra_properties.length > 0 %>
     <hr>
@@ -227,19 +238,6 @@
     <% end %>
     </table>
   <% end %>
-  
-	<% unless @product.short_description.blank? %>
-		<h4 style="margin-top: 15px;">Short Description</h4>
-		<%= @product.short_description %>
-		<hr/>
-	<% end %>
-
-
-	<% unless @product.long_description.blank? %>
-		<h4 style="margin-top: 15px;">Long Description</h4>
-		<%= @product.long_description.gsub("\n", "<br/>").html_safe %>
-    <hr>
-	<% end %>
 
 
   <br/><br/>
