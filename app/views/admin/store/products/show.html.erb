@@ -7,7 +7,7 @@
   <%= link_to "clone", clone_admin_store_product_path(@product), class: "btn btn-sm btn-default" %>
   <%= link_to "edit", edit_admin_store_product_path(@product), class: "btn btn-sm btn-default" %>
 </div>
-<h2><i class="fa fa-tags"></i>&nbsp; <%= @product.name_with_option %></h2>
+<h2><i class="fa fa-tags"></i>&nbsp; <%= @product.title %></h2>
 <h4>SKU: <%= @product.sku %></h4>
 <hr/>
 
@@ -214,17 +214,6 @@
 	<% end %>
 
 
-	<% unless @product.short_description.blank? %>
-		<h4 style="margin-top: 15px;">Short Description</h4>
-		<%= @product.short_description %>
-		<hr/>
-	<% end %>
-
-
-	<% unless @product.long_description.blank? %>
-		<h4 style="margin-top: 15px;">Long Description</h4>
-		<%= @product.long_description.gsub("\n", "<br/>").html_safe %>
-	<% end %>
 
   <% if @product.extra_properties.length > 0 %>
     <hr>
@@ -238,6 +227,19 @@
     <% end %>
     </table>
   <% end %>
+  
+	<% unless @product.short_description.blank? %>
+		<h4 style="margin-top: 15px;">Short Description</h4>
+		<%= @product.short_description %>
+		<hr/>
+	<% end %>
+
+
+	<% unless @product.long_description.blank? %>
+		<h4 style="margin-top: 15px;">Long Description</h4>
+		<%= @product.long_description.gsub("\n", "<br/>").html_safe %>
+    <hr>
+	<% end %>
 
 
   <br/><br/>
@@ -262,6 +264,15 @@
 	<% end %>
 
 
+	<h4>Categories</h4>
+	<ul>
+	<% @product.categories.each do |cat| %>
+	    <li><%= cat.name %></li>
+	<% end %>
+	</ul>
+  
+  <hr>
+
 
   <% unless @product.group.blank?  %>
       <h4>Products in group:</h4>
@@ -277,12 +288,7 @@
       <hr/>
   <% end %>
 	
-	<h4>Categories</h4>
-	<ul>
-	<% @product.categories.each do |cat| %>
-	    <li><%= cat.name %></li>
-	<% end %>
-	</ul>
+	
 
 
     <% if @product.product_type == 'stock' %>

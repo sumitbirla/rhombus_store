@@ -31,7 +31,7 @@
 	<tr>
 		<td><%= link_to product.sku, admin_store_product_path(product) %></td>
     <td><%= product.brand %></td>
-		<td><%= product.name_with_option %></td>
+		<td><%= product.title %></td>
     <td><%= product_status(product) %></td>
 		<td class="ralign">$<%= product.price %></td>
     <td class="calign"><%= order_count.nil? ? 0 : number_with_delimiter(order_count[1]) %></td>
