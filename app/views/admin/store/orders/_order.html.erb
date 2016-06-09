@@ -17,10 +17,12 @@
     </td>
 		<td><%= systime order.submitted if order.submitted%></td>
 		<td>
-			<% if order.user_id.nil? %>
-				<%= order.shipping_name || order.billing_name %>
-			<% else %>
-				<%= link_to order.user, admin_system_user_path(order.user_id) %>
+			<% if order.user %>
+				<%= link_to order.user, admin_system_user_path(order.user_id, q: :orders) %>
+      <% elsif order.affiliate %>
+        <%= link_to order.affiliate.name, admin_system_affiliate_path(order.affiliate_id, q: :orders) %>
+      <% else %>
+        <%= order.shipping_name.presence? || order.billing_name %>
 			<% end %>
 		</td>
 		<td><%= order.shipping_city %>, <%= order.shipping_state %></td>

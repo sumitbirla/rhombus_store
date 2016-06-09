@@ -16,22 +16,22 @@ class Admin::Store::OrdersController < Admin::BaseController
     end
     
     respond_to do |format|
-      format.html { @orders = @orders.includes(:user, :affiliate_campaign, :shipments).page(params[:page]) }
+      format.html { @orders = @orders.includes(:user, :affiliate, :affiliate_campaign, :shipments).page(params[:page]) }
       format.csv { send_data @orders.to_csv }
     end
 
   end
 
   def new
-    unless params[:user_id].nil?
-      old_order = Order.where(user_id: params[:user_id]).last
+    unless params[:user_id].nil? && params[:affiliate_id].nil?
+      old_order = Order.where(user_id: params[:user_id], affiliate_id: params[:affiliate_id]).last
       unless old_order.nil?
         @order = old_order.dup
     
         @order.assign_attributes(
           submitted: DateTime.now,
           status: 'submitted',
-          payment_method: '',
+          external_order_id: nil,
           cc_type: nil,
           cc_number: nil,
           cc_code: nil,
@@ -51,6 +51,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     if @order.nil?
       @order = Order.new(
                 user_id: params[:user_id],
+                affiliate_id: params[:affiliate_id],
                 status: :submitted,
                 domain_id: cookies[:domain_id],
                 submitted: DateTime.now,
@@ -79,6 +80,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     if @order.save
       redirect_to action: 'index', notice: 'Order was successfully created.'
     else
+      5.times { @order.items.build }
       render 'edit'
     end
   end

@@ -73,6 +73,7 @@ class Order < ActiveRecord::Base
   
   belongs_to :domain
   belongs_to :user
+  belongs_to :affiliate
   belongs_to :affiliate_campaign
   belongs_to :coupon
   belongs_to :voucher
@@ -88,6 +89,7 @@ class Order < ActiveRecord::Base
   validates_presence_of :contact_phone, :notify_email
   validates_presence_of :billing_name, :billing_street1, :billing_city, :billing_state, :billing_zip, :billing_country, if: :billing_address_required?
   validates_presence_of :cc_type, :cc_number, :cc_expiration_month, :cc_expiration_year, :cc_code, if: :paid_with_card?
+  validates_presence_of :affiliate_id, :external_order_id, if: :po
   validate :credit_card, if: :paid_with_card?
   
   def deal_items
