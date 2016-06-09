@@ -75,6 +75,15 @@ class Product < ActiveRecord::Base
     "#{sku}: #{title}"
   end
   
+  def self.to_csv(products)
+    CSV.generate do |csv|
+      csv << column_names 
+      products.each do |p|
+        csv << p.attributes.values_at(*column_names)
+      end
+    end
+  end
+  
   def name_with_option
     str = name
     str += ', ' + option_title unless option_title.blank?

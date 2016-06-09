@@ -100,12 +100,12 @@ class Order < ActiveRecord::Base
     items.select { |x| x.daily_deal_id.nil? }
   end
   
-  def self.to_csv
+  def self.to_csv(orders)
     CSV.generate do |csv|
       cols = column_names - ['paypal_token', 'cart_key']
       csv << cols
-      all.each do |product|
-        csv << product.attributes.values_at(*cols)
+      orders.each do |o|
+        csv << o.attributes.values_at(*cols)
       end
     end
   end
