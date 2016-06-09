@@ -332,7 +332,10 @@ class CartController < ApplicationController
     # affiliate credit
     unless cookies[:acid].nil?
       ac = AffiliateCampaign.find(cookies[:acid])
-      @order.affiliate_campaign_id = ac.id unless ac.nil?
+      unless ac.nil?
+        @order.affiliate_campaign_id = ac.id
+        @order.affiliate_id = ac.affiliate_id
+      end
     end
     
     # referral rewards
