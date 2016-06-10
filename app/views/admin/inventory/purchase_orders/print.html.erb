@@ -79,7 +79,7 @@
           </th>
           <th scope="col" style="text-align:right;"> <h2>PURCHASE ORDER</h2>
             <p>
-              <strong>Purchase Order Number: </strong><%= @purchase_order.id %><br>
+              <strong>PO Number: </strong><%= @purchase_order.id %><br>
               <strong>Vendor Code: </strong> <%= @purchase_order.supplier.code %><br/>
               <img src="/barcode?code=PO<%= @purchase_order.id %>" />
             </p>
@@ -133,7 +133,7 @@
       <tbody>
       <% @purchase_order.items.each do |item| %>
       <tr>
-        <td><%= item.quantity %></td>
+        <td><%= number_with_delimiter item.quantity %></td>
         <td><%= item.supplier_code %></td>
         <td><%= item.description %></td>
         <td align="right" class="textright"><%= number_to_currency(item.unit_price) %></td>
