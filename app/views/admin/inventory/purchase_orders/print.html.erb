@@ -93,10 +93,13 @@
         <h3>Purchased From</h3>
         <p><%= @purchase_order.supplier.name %><br/>
           <%= raw @purchase_order.supplier.address_as_text.gsub("\n", "<br>") %>
+        </p>
       </div>
       <div class="boxright">
         <h3>Ship To</h3>
-        <p><%= raw @purchase_order.ship_to.gsub("\n", "<br>") %></p>
+        <p><%= @purchase_order.affiliate.name %><br>
+          <%= raw @purchase_order.ship_to.gsub("\n", "<br>") %>
+        </p>
       </div>
       <div style="clear:both;"></div>
     </header>
