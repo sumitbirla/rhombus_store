@@ -1,7 +1,8 @@
 class Admin::Store::AutoShipItemsController < Admin::BaseController
   
   def index
-    @auto_ship_items = AutoShipItem.includes(:user).order(:next_ship_date).page(params[:page])
+    @auto_ship_items = AutoShipItem.joins(:user).includes(:user).order(sort_column + " " + sort_direction).page(params[:page])
+    @auto_ship_items = @auto_ship_items.where(status: :active) unless (params[:item_type] == "all" || params[:q])
   end
   
   
@@ -44,6 +45,14 @@ class Admin::Store::AutoShipItemsController < Admin::BaseController
   
     def auto_ship_item_params
       params.require(:auto_ship_item).permit!
+    end
+    
+    def sort_column
+      params[:sort] || "next_ship_date"
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
     end
   
 end

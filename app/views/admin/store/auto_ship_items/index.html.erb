@@ -2,16 +2,23 @@
 
 <h2>Autoship Items</h2>
 
+<% unless params[:q] %>
+  <select name="item_type" class="pull-right item-status">
+    <option value="active">Active Items</option>
+    <option value="all" <%= "selected" if params[:item_type] == "all" %>>All Items</option>
+  </select>
+<% end %>
+
 <%= will_paginate @auto_ship_items %>
-<table class="table table-striped table-condensed">
+<table class="table table-striped table-condensed table-sortable">
 	<tr>
-		<th>User</th>
-		<th>Item</th>
-		<th>Description</th>
-    <th class="text-center">Quantity</th>
-    <th class="text-center">Last Shipped</th>
-    <th class="text-center">Next Ship Date</th>
-    <th class="text-center">Status</th>
+		<th><%= sortable "core_users.name", "User" %></th>
+		<th><%= sortable "item_id" %></th>
+		<th><%= sortable "description" %></th>
+    <th class="text-center"><%= sortable "quantity" %></th>
+    <th class="text-center"><%= sortable "last_shipped" %></th>
+    <th class="text-center"><%= sortable "next_ship_date" %></th>
+    <th class="text-center"><%= sortable "status" %></th>
 		<th class="actions">&nbsp;</th>
 	</tr>
 	<% @auto_ship_items.each do |as| %>
@@ -34,13 +41,25 @@
 	<% end %>
 </table>
 
+<div class="table-summary">
+	<%= number_with_delimiter(@auto_ship_items.total_entries) %> records
+</div>
 
 
-<%= content_for :title do %>
+<% content_for :title do %>
 	Autoship Items
 <% end %>
 
 
+<% content_for :head do %>
+  <script>
+    $(document).ready(function() {
+      $(".item-status").change(function() {
+        window.location = "/admin/store/auto_ship_items?item_type=" + $(this).val();
+      });
+    });
+  </script>
+<% end %>
 
 
 
