@@ -1,4 +1,6 @@
-<%= link_to "new coupon", new_admin_store_coupon_path, class: 'btn btn-small btn-default pull-right' %>
+<%= link_to new_admin_store_coupon_path, class: 'btn btn-sm btn-default pull-right' do %>
+  <i class="fa fa-plus"></i> New coupon
+<% end %>
 
 <h2>Coupons</h2>
 
@@ -6,6 +8,7 @@
 <%= will_paginate @coupons %>
 <table class="table table-striped table-condensed">
 	<tr>
+    <th>ID</th>
 		<th>Code</th>
 		<th>Scope</th>
 		<th>Discount</th>
@@ -17,6 +20,7 @@
 	</tr>
 	<% @coupons.each do |coupon| %>
 	<tr>
+    <td><%= coupon.id %></td>
 		<td><%= link_to coupon.code, edit_admin_store_coupon_path(coupon) %></td>
 		<td>
 			<% if coupon.product_id.nil? && coupon.daily_deal_id.nil? %>

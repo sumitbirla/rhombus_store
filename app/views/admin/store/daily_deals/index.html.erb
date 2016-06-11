@@ -1,8 +1,11 @@
 <h2>
   <div class="pull-right">
-  	<%= link_to "setup regions", admin_cms_regions_path, class: 'btn btn-sm btn-default' %>
-  	<%= link_to "setup categories", admin_system_categories_path(type: :daily_deal), class: 'btn btn-sm btn-default' %>
-    <%= link_to "new deal", new_admin_store_daily_deal_path, class: 'btn btn-sm btn-default' %>
+    <%= link_to new_admin_store_daily_deal_path, class: 'btn btn-sm btn-default' do %>
+      <i class="fa fa-plus"></i> New deal
+    <% end %>
+  	<%= link_to admin_system_categories_path(type: :daily_deal), class: 'btn btn-sm btn-default' do %>
+      <i class="fa fa-list-ul"></i> Setup categories
+    <% end %>
   </div>
 	<i class="fa fa-star-o"></i>&nbsp; Daily Deals
 </h2>

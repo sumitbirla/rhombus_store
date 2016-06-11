@@ -1,26 +1,10 @@
 class Admin::Store::ProductsController < Admin::BaseController
   
   def index
-    @products = Product.includes(:brand).order(:name).page(params[:page])
+    @products = Product.includes(:brand).order(sort_column + " " + sort_direction).page(params[:page])
     @products = @products.where(active: true) unless (params[:product_type] == "all" || params[:q])
+    @products = @products.where(brand_id: params[:brand_id]) unless params[:brand_id].blank?
     @products = @products.where("name LIKE '%#{params[:q]}%' OR sku = '#{params[:q]}'") unless params[:q].nil?
-    
-    # get quantities sold for each product
-    @sold = []
-    pids = @products.map { |x| x.id}.join(',')
-    
-    unless pids == ''
-      sql = <<-EOF
-        select product_id, sum(quantity) 
-        from store_shipment_items si, store_shipments s
-        where si.shipment_id = s.id 
-        and s.status = 'shipped'
-        and product_id in (#{pids})
-        group by product_id;
-      EOF
-    
-      ActiveRecord::Base.connection.execute(sql).each { |row| @sold << row }
-    end
   end
 
   def new
@@ -185,6 +169,14 @@ class Admin::Store::ProductsController < Admin::BaseController
   
     def product_params
       params.require(:product).permit!
+    end
+    
+    def sort_column
+      params[:sort] || "title"
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
     end
   
 end

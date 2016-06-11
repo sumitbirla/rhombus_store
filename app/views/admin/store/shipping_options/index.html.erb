@@ -1,4 +1,6 @@
-<%= link_to "new shipping option", new_admin_store_shipping_option_path, class: 'btn btn-sm btn-default pull-right' %>
+<%= link_to new_admin_store_shipping_option_path, class: 'btn btn-sm btn-default pull-right' do %>
+  <i class="fa fa-plus"></i> New shipping option
+<% end %>
 <h2><%= current_domain %> Shipping options</h2>
 
 
