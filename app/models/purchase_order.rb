@@ -17,6 +17,8 @@
 #
 
 class PurchaseOrder < ActiveRecord::Base
+  include Exportable
+  
   self.table_name = "store_purchase_orders"
   
   belongs_to :affiliate

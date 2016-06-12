@@ -59,9 +59,7 @@
 	<% end %>
 </table>
 
-<div class="table-summary">
-	<%= number_with_delimiter(@products.total_entries) %> records
-</div>
+<%= render 'admin/shared/table_summary', data: @products %>
 
 
 <% content_for :title do %>

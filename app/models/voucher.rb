@@ -12,6 +12,7 @@
 #
 
 class Voucher < ActiveRecord::Base
+  include Exportable
   self.table_name = "store_vouchers"
   belongs_to :voucher_group
   validates_presence_of :code, :voucher_group_id

@@ -39,6 +39,7 @@
 #
 
 class DailyDeal < ActiveRecord::Base
+  include Exportable
   self.table_name = "store_daily_deals"
   
   belongs_to :affiliate

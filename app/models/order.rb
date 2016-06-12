@@ -67,6 +67,7 @@ require 'activemerchant'
 class Order < ActiveRecord::Base
   include PaypalExpressHelper
   include PaymentGateway
+  include Exportable
   
   self.table_name = "store_orders"
   attr_accessor :same_as_shipping
@@ -98,16 +99,6 @@ class Order < ActiveRecord::Base
   
   def non_deal_items
     items.select { |x| x.daily_deal_id.nil? }
-  end
-  
-  def self.to_csv(orders)
-    CSV.generate do |csv|
-      cols = column_names - ['paypal_token', 'cart_key']
-      csv << cols
-      orders.each do |o|
-        csv << o.attributes.values_at(*cols)
-      end
-    end
   end
   
   def paid_with_card?

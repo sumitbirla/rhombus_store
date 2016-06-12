@@ -54,6 +54,8 @@
 #
 
 class Product < ActiveRecord::Base
+  include Exportable
+  
   self.table_name = "store_products"
   belongs_to :brand
   belongs_to :affiliate
@@ -73,15 +75,6 @@ class Product < ActiveRecord::Base
   
   def to_s
     "#{sku}: #{title}"
-  end
-  
-  def self.to_csv(products)
-    CSV.generate do |csv|
-      csv << column_names 
-      products.each do |p|
-        csv << p.attributes.values_at(*column_names)
-      end
-    end
   end
   
   def name_with_option

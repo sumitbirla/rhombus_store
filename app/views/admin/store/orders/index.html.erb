@@ -67,9 +67,7 @@
 
 </form>
 
-<div class="table-summary">
-	<%= number_with_delimiter(@orders.total_entries) %> records | <%= link_to 'CSV', admin_store_orders_path(format: :csv) %>
-</div>
+<%= render 'admin/shared/table_summary', data: @orders %>
 
 
 

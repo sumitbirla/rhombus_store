@@ -12,8 +12,9 @@
 #
 
 class Brand < ActiveRecord::Base
-  self.table_name = "store_brands"
+  include Exportable
   
+  self.table_name = "store_brands"
   has_many :products
   validates :name, presence: true
   validates_uniqueness_of :name

@@ -19,7 +19,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     
     respond_to do |format|
       format.html { @shipments = @shipments.page(params[:page]) }
-      format.csv { send_data @shipments.to_csv }
+      format.csv { send_data Shipment.to_csv(@shipments, skip_cols: ['label_data']) }
     end
   end
 

@@ -55,6 +55,8 @@ require 'net/http'
 require 'uri'
 
 class Shipment < ActiveRecord::Base
+  include Exportable
+  
   self.table_name = "store_shipments"
   after_save :update_order
   belongs_to :order
@@ -67,15 +69,6 @@ class Shipment < ActiveRecord::Base
   validates_presence_of :recipient_name, :recipient_street1, :recipient_city, :recipient_zip, :recipient_country
   #validates_presence_of :package_weight
   
-  def self.to_csv
-    CSV.generate do |csv|
-      cols = column_names - ['label_data']
-      csv << cols
-      all.each do |shipment|
-        csv << shipment.attributes.values_at(*cols)
-      end
-    end
-  end
 
   def dimensions_available?
     !(package_length.nil? || package_width.nil? || package_height.nil?)

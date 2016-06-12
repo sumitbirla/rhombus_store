@@ -15,6 +15,8 @@
 #
 
 class Sublocation < ActiveRecord::Base
+  include Exportable
+  
   self.table_name = 'store_sublocations'
   belongs_to :location
   validates_presence_of :location_id, :row, :shelf, :segment

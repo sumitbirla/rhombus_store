@@ -15,5 +15,6 @@
 #
 
 class ZipCode < ActiveRecord::Base
-    self.table_name = "store_zip_codes"
+  include Exportable
+  self.table_name = "store_zip_codes"
 end

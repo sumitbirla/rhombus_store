@@ -13,6 +13,7 @@
 #
 
 class UserVoucherHistory < ActiveRecord::Base
+  include Exportable
   self.table_name = "store_user_voucher_history"
   belongs_to :user
   belongs_to :voucher

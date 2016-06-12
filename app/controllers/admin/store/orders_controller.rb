@@ -17,7 +17,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     
     respond_to do |format|
       format.html { @orders = @orders.includes(:user, :affiliate, :affiliate_campaign, :shipments).page(params[:page]) }
-      format.csv { send_data @orders.to_csv }
+      format.csv { send_data Order.to_csv(@orders, skip_cols: ['cart_key', 'paypal_token']) }
     end
 
   end

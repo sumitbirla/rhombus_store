@@ -21,8 +21,9 @@
 #
 
 class Coupon < ActiveRecord::Base
-  self.table_name = "store_coupons"
+  include Exportable
   
+  self.table_name = "store_coupons"
   belongs_to :product
   belongs_to :daily_deal
   validates_presence_of :code, :start_time, :expire_time, :description, :max_uses, :max_per_user, :times_used

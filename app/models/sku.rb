@@ -14,6 +14,8 @@
 #
 
 class Sku < ActiveRecord::Base
+  include Exportable
+  
   self.table_name = "store_skus"
   has_many :products
   has_many :inventory

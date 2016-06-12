@@ -20,6 +20,8 @@
 #
 
 class AffiliateProduct < ActiveRecord::Base
+  include Exportable
+  
   self.table_name = "store_affiliate_products"
   belongs_to :affiliate
   belongs_to :product
