@@ -1,7 +1,12 @@
 class Admin::Store::VoucherGroupsController < Admin::BaseController
   
   def index
-    @voucher_groups = VoucherGroup.page(params[:page]).order('created_at DESC')
+    @voucher_groups = VoucherGroup.order(created_at: :desc)
+    
+    respond_to do |format|
+      format.html  { @voucher_groups = @voucher_groups.page(params[:page]) }
+      format.csv { send_data VoucherGroup.to_csv(@voucher_groups) }
+    end
   end
 
   def new

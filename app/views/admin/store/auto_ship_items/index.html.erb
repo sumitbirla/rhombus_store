@@ -44,9 +44,7 @@
 	<% end %>
 </table>
 
-<div class="table-summary">
-	<%= number_with_delimiter(@auto_ship_items.total_entries) %> records
-</div>
+<%= render 'admin/shared/table_summary', data: @auto_ship_items %>
 
 
 <% content_for :title do %>

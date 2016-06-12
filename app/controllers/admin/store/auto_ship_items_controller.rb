@@ -2,8 +2,13 @@ class Admin::Store::AutoShipItemsController < Admin::BaseController
   
   def index
     @selected_status = params[:status].presence || "active"
-    @auto_ship_items = AutoShipItem.joins(:user).includes(:user).order(sort_column + " " + sort_direction).page(params[:page])
+    @auto_ship_items = AutoShipItem.joins(:user).includes(:user).order(sort_column + " " + sort_direction)
     @auto_ship_items = @auto_ship_items.where(status: @selected_status)
+    
+    respond_to do |format|
+      format.html  { @auto_ship_items = @auto_ship_items.page(params[:page]) }
+      format.csv { send_data AutoShipItem.to_csv(@auto_ship_items) }
+    end
   end
   
   

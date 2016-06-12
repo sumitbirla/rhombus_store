@@ -1,7 +1,12 @@
 class Admin::Store::CouponsController < Admin::BaseController
   
   def index
-    @coupons = Coupon.order("created_at DESC").page(params[:page])
+    @coupons = Coupon.order("created_at DESC")
+    
+    respond_to do |format|
+      format.html  { @coupons = @coupons.page(params[:page]) }
+      format.csv { send_data Coupon.to_csv(@coupons) }
+    end
   end
 
   def new

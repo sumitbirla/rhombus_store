@@ -3,7 +3,12 @@ require 'csv'
 class Admin::Store::DailyDealsController < Admin::BaseController
   
   def index
-    @daily_deals = DailyDeal.page(params[:page]).order('start_time DESC')
+    @daily_deals = DailyDeal.order(start_time: :desc)
+    
+    respond_to do |format|
+      format.html  { @daily_deals = @coupons.page(params[:page]) }
+      format.csv { send_data DailyDeal.to_csv(@daily_deals) }
+    end
   end
 
   def new

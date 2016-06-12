@@ -1,7 +1,12 @@
 class Admin::Store::BrandsController < Admin::BaseController
   
   def index
-    @brands = Brand.page(params[:page]).order('name')
+    @brands = Brand.order(:name)
+    
+    respond_to do |format|
+      format.html  { @brands = @brands.page(params[:page]) }
+      format.csv { send_data Brand.to_csv(@brands) }
+    end
   end
 
   def new

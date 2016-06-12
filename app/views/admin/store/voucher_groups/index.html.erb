@@ -35,14 +35,13 @@
 	<% end %>
 </table>
 
+<%= render 'admin/shared/table_summary', data: @voucher_groups %>
 
 
-<%= content_for :title do %>
+
+<% content_for :title do %>
 	Vouchers
 <% end %>
-
-
-
 
 
 <% content_for :breadcrumbs do %>

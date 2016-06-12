@@ -35,9 +35,7 @@
 </table>
 
 
-<div class="table-summary">
-	<%= number_with_delimiter(@upcs.total_entries) %> records | <%= link_to 'CSV', admin_store_upc_index_path(format: :csv) %>
-</div>
+<%= render 'admin/shared/table_summary', data: @upcs %>
 
 
 <%= content_for :title do %>

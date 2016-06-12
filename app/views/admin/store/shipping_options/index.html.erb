@@ -40,14 +40,12 @@
 	<% end %>
 </table>
 
+<%= render 'admin/shared/table_summary', data: @shipping_options %>
 
 
-<%= content_for :title do %>
-Shipping Options
+<% content_for :title do %>
+  Shipping Options
 <% end %>
-
-
-
 
 
 <% content_for :breadcrumbs do %>

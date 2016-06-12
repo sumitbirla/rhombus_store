@@ -65,14 +65,13 @@
 	<% end %>
 </table>
 
+<%= render 'admin/shared/table_summary', data: @coupons %>
 
 
-<%= content_for :title do %>
+
+<% content_for :title do %>
 	Coupons
 <% end %>
-
-
-
 
 
 <% content_for :breadcrumbs do %>

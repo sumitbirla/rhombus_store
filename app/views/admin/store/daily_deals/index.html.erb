@@ -42,11 +42,13 @@
 	<% end %>
 </table>
 
+<%= render 'admin/shared/table_summary', data: @daily_deals %>
+
+
 
 <% content_for :title do %>
 	Daily Deals
 <% end %>
-
 
 
 <% content_for :breadcrumbs do %>

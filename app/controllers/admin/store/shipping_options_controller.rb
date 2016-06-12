@@ -1,7 +1,12 @@
 class Admin::Store::ShippingOptionsController < Admin::BaseController
   
   def index
-    @shipping_options = ShippingOption.where(domain: cookies[:domain_id]).page(params[:page]).order(:name)
+    @shipping_options = ShippingOption.where(domain: cookies[:domain_id]).order(:name)
+    
+    respond_to do |format|
+      format.html  { @shipping_options = @shipping_options.page(params[:page]) }
+      format.csv { send_data ShippingOption.to_csv(@shipping_options) }
+    end
   end
 
   def new
