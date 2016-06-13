@@ -78,7 +78,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   
   def email_invoice
     @shipment = Shipment.find(params[:id])
-    SendInvoiceJob.perform_now(@shipment.id, session[:user_id])
+    SendInvoiceJob.perform_later(@shipment.id, session[:user_id])
     
     flash[:success] = "Invoice was emailed to #{@shipment.order.notify_email}"
     redirect_to :back

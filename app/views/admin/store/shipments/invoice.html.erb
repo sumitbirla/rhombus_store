@@ -136,7 +136,7 @@
         </p>
       <% else %>
         <h2>Payment terms:</h2>
-        <p><%= @shipment.order.user.affiliate.payment_terms unless @shipment.order.user.affiliate.nil? %></p>
+        <p><%= @shipment.order.affiliate.payment_terms unless @shipment.order.affiliate.nil? %></p>
       <% end %>
       </div>
       <div style="clear:both;"></div>
