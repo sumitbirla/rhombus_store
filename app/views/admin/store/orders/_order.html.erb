@@ -22,7 +22,7 @@
       <% elsif order.affiliate %>
         <%= link_to order.affiliate.name, admin_system_affiliate_path(order.affiliate_id, q: :orders) %>
       <% else %>
-        <%= order.shipping_name.presence? || order.billing_name %>
+        <%= order.shipping_name.presence || order.billing_name %>
 			<% end %>
 		</td>
 		<td><%= order.shipping_city %>, <%= order.shipping_state %></td>
