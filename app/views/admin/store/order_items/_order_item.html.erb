@@ -1,12 +1,14 @@
-<% unless order_item.daily_deal_id.nil? %>
+<% if order_item.daily_deal_id %>
   <%= link_to order_item.daily_deal.title, admin_store_daily_deal_path(order_item.daily_deal) %>
-<% else %>
+<% elsif order_item.product_id %>
   <%= link_to order_item.item_description, admin_store_product_path(order_item.product_id) %>
   
   <% unless order_item.affiliate_id.nil? %>
     &nbsp; (<span><%= order_item.affiliate %></span>)
   <% end %>
-
+  
+<% else %>
+  <span class="text-danger"><i class="fa fa-exclamation-circle"></i> <%= order_item.item_description %></span>
 <% end %>
 
 <% unless order_item.custom_text.blank? %>

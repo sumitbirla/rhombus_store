@@ -50,7 +50,13 @@
   <% end %>
 
   <% unless @order.external_order_id.blank? %>
-      &nbsp; &nbsp; [ <%= @order.sales_channel %>: <%= @order.external_order_id %> ]
+      &nbsp; &nbsp; [ 
+      <% if @order.affiliate %>
+        <%= link_to @order.affiliate.name, admin_system_affiliate_path(@order.affiliate) %>
+      <% else %>
+        <%= order.sales_channel %>
+      <% end %>
+      : <%= @order.external_order_id %> ]
   <% end %>
 
   &nbsp; <%= order_status(@order, 'large') %> <%= "<i class='icon-gift'></i>".html_safe if @order.gift %>
