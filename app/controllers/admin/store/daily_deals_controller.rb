@@ -6,7 +6,7 @@ class Admin::Store::DailyDealsController < Admin::BaseController
     @daily_deals = DailyDeal.order(start_time: :desc)
     
     respond_to do |format|
-      format.html  { @daily_deals = @coupons.page(params[:page]) }
+      format.html  { @daily_deals = @daily_deals.page(params[:page]) }
       format.csv { send_data DailyDeal.to_csv(@daily_deals) }
     end
   end
