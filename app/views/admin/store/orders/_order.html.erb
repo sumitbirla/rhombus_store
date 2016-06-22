@@ -12,7 +12,7 @@
     <% elsif order.affiliate_campaign_id 
         ac = AffiliateCampaign.find_by(id: order.affiliate_campaign_id)
         unless ac.nil?%>
-          <%= link_to order.affiliate_campaign.affiliate, admin_system_affiliate_path(order.affiliate_campaign.affiliate_id) %>
+          <%= link_to ac.affiliate, admin_system_affiliate_path(ac.affiliate_id) %>
         <% end %>
     <% else %>
       <%= order.sales_channel %>
