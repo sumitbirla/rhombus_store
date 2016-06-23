@@ -58,7 +58,7 @@
       <% if @order.affiliate %>
         <%= link_to @order.affiliate.name, admin_system_affiliate_path(@order.affiliate) %>
       <% else %>
-        <%= order.sales_channel %>
+        <%= @order.sales_channel %>
       <% end %>
       : <%= @order.external_order_id %> ]
   <% end %>
