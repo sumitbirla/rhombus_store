@@ -45,8 +45,11 @@
     &nbsp; &nbsp; <i class="fa fa-user"></i> <%= link_to @order.user.name, admin_system_user_path(@order.user, q: :orders) %>
   <% end %>
 
-  <% unless @order.affiliate_campaign_id.nil? %>
-      &nbsp; &nbsp; <i class="fa fa-building"></i> <%= link_to @order.affiliate_campaign.affiliate.name, admin_system_affiliate_path(@order.affiliate_campaign.affiliate) %>
+  <% unless @order.affiliate_campaign_id.nil?
+     ac = AffiliateCampaign.find(@order.affiliate_campaign_id)
+     unless ac.nil? %>
+      &nbsp; &nbsp; <i class="fa fa-building"></i> <%= link_to ac.affiliate.name, admin_system_affiliate_path(ac.affiliate) %>
+    <% end %>
   <% end %>
 
   <% unless @order.external_order_id.blank? %>
