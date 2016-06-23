@@ -1,3 +1,8 @@
+<%
+  status_list = Order.where(po: params[:po]).uniq(:status).pluck(:status)
+  status_list << 'submitted' unless status_list.include?('submitted')
+  status_list = status_list.sort.reverse
+%>
 <div class="pull-right">
 
   <select id="selAction" class="form-control" style="display: inline; width: 70%">
@@ -8,22 +13,9 @@
       <option method="post" value="/admin/store/orders_send_confirmation">Send Confirmation Email</option>
       <option method="post" value="/admin/store/orders_address_label">Print Address Labels</option>
       <optgroup label="Change order status to ">
-          <option method="post" value="/admin/store/orders_update_status?status=submitted">Submitted</option>
-          <option method="post" value="/admin/store/orders_update_status?status=completed">Completed</option>
-          <option method="post" value="/admin/store/orders_update_status?status=processing">Processing</option>
-          <option method="post" value="/admin/store/orders_update_status?status=shipped">Shipped</option>
-          <option method="post" value="/admin/store/orders_update_status?status=shipped_by_vendor">Shipped by Vendor</option>
-          <option method="post" value="/admin/store/orders_update_status?status=refunded">Refunded</option>
-          <option method="post" value="/admin/store/orders_update_status?status=cancelled">Cancelled</option>
-      </optgroup>
-      <optgroup label="Show orders in status ">
-          <option method="get" value="/admin/store/orders?status=submitted">Submitted</option>
-          <option method="get" value="/admin/store/orders?status=unshipped">Unshipped</option>
-          <option method="get" value="/admin/store/orders?status=shipped">Shipped</option>
-          <option method="get" value="/admin/store/orders?status=cancelled">Cancelled</option>
-          <option method="get" value="/admin/store/orders?status=refunded">Refunded</option>
-          <option method="get" value="/admin/store/orders?status=backordered">Backordered</option>
-          <option method="get" value="/admin/store/orders">All Orders</option>
+      <% Order.valid_statuses.each do |status| %>
+          <option method="post" value="/admin/store/orders_update_status?status=<%= status %>"><%= status.titlecase%></option>
+      <% end %>
       </optgroup>
   </select>
   <input type="button" class="btn btn-default btn-small" id="btnAction" value="Go" />	  
@@ -32,10 +24,11 @@
 
 <h2>
   <% if params[:po] == "1" %>
-    <i class="fa fa-file-text-o"></i>&nbsp; Purchase Orders</h2>
+    <i class="fa fa-file-text-o"></i>
   <% else %>
-    <i class="fa fa-shopping-cart"></i>&nbsp; <%= current_domain %> Orders</h2>
+    <i class="fa fa-shopping-cart"></i>
   <% end %>
+  &nbsp; <%= params[:status].titlecase %> Orders</h2>
 <%= render "admin/shared/search_results_header", object: @orders %>
 
 <form id="frmBatch" action="" method="post">
@@ -44,12 +37,16 @@
   
   <% if params[:q].nil? %>
   <ul class="nav nav-tabs" style="margin-bottom: 10px;">
-    <% Order.where(po: params[:po]).uniq(:status).pluck(:status).sort.reverse.each do |status|
+    <% status_list.each do |status|
         next if status == 'in cart'
         count = Order.where(po: params[:po], status: status).count %>
-    <li role="presentation" class="<%= "active" if params[:status] == status %>"><a href="<%= admin_store_orders_path(status: status, po: params[:po])%>"><%= tab_count(status.titlecase, count) %></a></li>
+    <li class="<%= "active" if params[:status] == status %>"><a href="<%= admin_store_orders_path(status: status, po: params[:po])%>"><%= tab_count(status.titlecase, count) %></a></li>
     <% end %>
   </ul>
+  <% end %>
+  
+  <% if @orders.length == 0 %>
+  <div class="alert alert-warning">There are no orders with status '<b><%= params[:status] %></b>'</div>
   <% end %>
 
 <%= will_paginate @orders %>
@@ -82,7 +79,7 @@
 
 <% content_for :breadcrumbs do %>
 	<li><a href="#">eCommerce</a></li>
-	<li class="active"><%= "Purchase" if params[:po] == "1" %> Orders</li>
+	<li class="active">Orders</li>
 <% end %>
 
 
