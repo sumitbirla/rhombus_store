@@ -39,12 +39,13 @@
   <% end %>
 </h2>
 
+
 <div>
   <b>Submitted: </b> <%= time_ago_in_words(@order.submitted) %> ago
   <% unless @order.user_id.nil? %>
     &nbsp; &nbsp; <i class="fa fa-user"></i> <%= link_to @order.user.name, admin_system_user_path(@order.user, q: :orders) %>
   <% end %>
-
+  
   <% unless @order.affiliate_campaign_id.nil?
      ac = AffiliateCampaign.find(@order.affiliate_campaign_id)
      unless ac.nil? %>
@@ -64,6 +65,19 @@
 
   &nbsp; <%= order_status(@order, 'large') %> <%= "<i class='icon-gift'></i>".html_safe if @order.gift %>
 </div>
+
+<% unless @order.ship_earliest.nil? %>
+<div class="alert alert-warning" style="margin-top: 20px;">
+    <b>Ship window:</b> <%= @order.ship_earliest %> &rarr; <%= @order.ship_latest %>
+    
+    <% unless @order.expected_delivery_date.nil? %>
+        &nbsp; &nbsp; &nbsp; &nbsp; <b>Expected delivery: </b> <%= @order.expected_delivery_date %>
+    <% end %>
+</div>
+<% end %>
+
+
+  
 <hr style="margin: 15px 0 20px 0;"/>
 
 
@@ -142,6 +156,8 @@
     <th>Description:</th>
     <th class="ralign">Unit price:</th>
     <th class="calign">Quantity:</th>
+    <th class="calign">Accepted:</th>
+    <th class="calign">Received:</th>
     <th class="ralign">Subtotal:</th>
   </tr>
   <% @order.items.each do |item| %>
@@ -150,28 +166,30 @@
         <td><%= render item %></td>
         <td class="ralign"><%= number_to_currency(item.unit_price)%></td>
         <td class="calign"><%= item.quantity %></td>
+        <td class="calign"><%= item.quantity_accepted %></td>
+        <td class="calign"><%= item.quantity_received %></td>
         <td class="ralign" class="ralign"><%= number_to_currency(item.quantity * item.unit_price) %></td>
       </tr>
   <% end %>
   <tr>
-    <td colspan="4" class="ralign dark-border">Subtotal:</td>
+    <td colspan="6" class="ralign dark-border">Subtotal:</td>
     <td class="ralign dark-border"><%= number_to_currency(@order.subtotal)%></td>
   </tr>
   <% if !@order.shipping_method.blank? || @order.shipping_cost > 0.0 %>
       <tr>
-        <td colspan="4" class="ralign"><%= @order.shipping_method %>:</td>
+        <td colspan="6" class="ralign"><%= @order.shipping_method %>:</td>
         <td class="ralign"><%= number_to_currency(@order.shipping_cost) %></td>
       </tr>
   <% end %>
   <% if @order.tax_amount > 0.0 %>
       <tr>
-        <td colspan="4" class="ralign">Tax:</td>
+        <td colspan="6" class="ralign">Tax:</td>
         <td class="ralign"><%= number_to_currency(@order.tax_amount)%></td>
       </tr>
   <% end %>
   <% if @order.discount_amount > 0.0 %>
       <tr>
-        <td colspan="4" class="ralign">
+        <td colspan="6" class="ralign">
           <% unless @order.coupon_id.nil? %>
               <i>Coupon: <%= link_to @order.coupon.code, edit_admin_store_coupon_path(@order.coupon) %></i> &nbsp; &raquo; &nbsp;
           <% end %>
@@ -182,7 +200,7 @@
   <% end %>
   <% if @order.credit_applied > 0.0 %>
       <tr>
-        <td colspan="4" class="ralign">
+        <td colspan="6" class="ralign">
           <% unless @order.voucher_id.nil? %>
               <i>Voucher: <%= link_to @order.voucher.code, admin_store_voucher_group_path(@order.voucher.voucher_group_id) %></i> &nbsp; &raquo; &nbsp;
           <% end %>
@@ -191,7 +209,7 @@
       </tr>
   <% end %>
   <tr>
-    <td colspan="4" class="ralign"><b>Total:</b></td>
+    <td colspan="6" class="ralign"><b>Total:</b></td>
     <td class="ralign"><b><%= number_to_currency(@order.total)%></b></td>
   </tr>
 </table>

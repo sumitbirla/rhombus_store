@@ -8,7 +8,7 @@
     </td>
     <td>
     <% if order.po %>
-      <%= "PO: " unless order.external_order_id.include?("PO") %><%= order.external_order_id %>
+      <%= order.external_order_id %>
     <% elsif order.affiliate_campaign_id 
         ac = AffiliateCampaign.find_by(id: order.affiliate_campaign_id)
         unless ac.nil?%>

@@ -17,6 +17,7 @@
           <th>Description</th>
           <th style="width: 130px;">Unit Price</th>
           <th style="width: 120px;">Quantity</th>
+          <th style="width: 120px;">Accepted</th>
           <th style="width: 50px;"></th>
         </tr>
       <%= f.fields_for :items do |itemf| %>
@@ -29,6 +30,7 @@
           </td>
           <td><%= itemf.input_field :unit_price, class: 'unit-price' %></td>
           <td><%= itemf.input_field :quantity, class: 'qty' %></td>
+          <td><%= itemf.input_field :quantity_accepted %></td>
           <td><i class="fa fa-times"></i>
             <%= itemf.hidden_field :_destroy, class: 'destroy' %>
             <%= itemf.hidden_field :product_id, class: 'product-id' %>
@@ -121,6 +123,7 @@
           <%= f.input :allow_backorder %>
           <%= f.input :ship_earliest, as: "datepicker" %>
           <%= f.input :ship_latest, as: "datepicker" %> 
+          <%= f.input :expected_delivery_date, as: "datepicker" %> 
       </div>
 
     </div>
