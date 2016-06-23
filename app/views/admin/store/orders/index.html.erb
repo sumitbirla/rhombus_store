@@ -44,8 +44,11 @@
   
   <% if params[:q].nil? %>
   <ul class="nav nav-tabs" style="margin-bottom: 10px;">
-    <li role="presentation" class="<%= "active" if params[:status] == "submitted" %>"><a href="<%= admin_store_orders_path(status: "submitted", po: params[:po])%>">Pending</a></li>
-    <li role="presentation" class="<%= "active" if params[:status].blank? %>"><a href="<%= admin_store_orders_path(po: params[:po])%>">All</a></li>
+    <% Order.where(po: params[:po]).uniq(:status).pluck(:status).sort.reverse.each do |status|
+        next if status == 'in cart'
+        count = Order.where(po: params[:po], status: status).count %>
+    <li role="presentation" class="<%= "active" if params[:status] == status %>"><a href="<%= admin_store_orders_path(status: status, po: params[:po])%>"><%= tab_count(status.titlecase, count) %></a></li>
+    <% end %>
   </ul>
   <% end %>
 
