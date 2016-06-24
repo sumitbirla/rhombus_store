@@ -1,0 +1,18 @@
+<% as = auto_ship_item %>
+	<tr>
+    <td><%= as.id %></td>
+		<td><%= link_to as.user.name, admin_system_user_path(as.user) %></td>
+		<td><%= link_to as.item_id, admin_store_product_path(as.product_id) %></td>
+		<td><%= as.description %></td>
+    <td class="text-center"><%= as.quantity %></td>
+    <td class="text-center"><%= as.last_shipped %></td>
+    <td class="text-center"><%= as.next_ship_date %></td>
+    <td class="text-center"><%= auto_ship_status(as) %></td>
+		<td class="actions">
+			<%= link_to "edit", edit_admin_store_auto_ship_item_path(as) %> &nbsp;
+			<%= link_to "delete", 
+						  { action: "destroy", id: as.id }, 
+						  method: :delete, 
+						  data: { confirm: "Are you sure?" } %>
+		</td>
+	</tr>
