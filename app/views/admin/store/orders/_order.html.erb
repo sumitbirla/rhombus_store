@@ -30,6 +30,7 @@
 		</td>
 		<td><%= order.shipping_city %>, <%= order.shipping_state %></td>
 		<td><%= number_to_currency(order.total) %></td>
+    <td><%= order.ship_latest %></td>
     <td>
       <% if order.shipments.length > 0 %>
         <%= link_to admin_store_shipment_path(order.shipments.last) do %>
