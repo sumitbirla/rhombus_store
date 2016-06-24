@@ -16,6 +16,7 @@
         <th class="calign">Expiration</th>
         <th class="calign">Ship Qty</th>
         <th class="calign">Special Status</th>
+        <th>&nbsp;</th>
       </tr>
       <%= f.fields_for :items do |itemf| %>
         <% 
@@ -38,6 +39,7 @@
             <td class="calign"><%= itemf.text_field :expiration, placeholder: "YYMM", style: 'width: 60px; text-align: center;' %></td>
             <td class="calign"><%= itemf.number_field :quantity, unit_price: (item.order_item ? item.order_item.unit_price : '0.0'), class: "item-qty", style: 'width: 80px; text-align: center;' %></td>
             <td class="calign"><%= itemf.text_field :special_status %></td>
+            <td><i class="fa fa-times light"></i><%= itemf.hidden_field :_destroy, class: 'destroy' %></td>
           </tr>
       <% end %>
     </table>
@@ -123,6 +125,7 @@
 <% content_for :head do %>
     <style>
         .form-inline .form-group { margin: 10px 0; }
+        .fa-times { cursor: pointer; }
     </style>
     
     <script>
@@ -142,6 +145,13 @@
           });
       
           $("#shipment_invoice_amount").val(total.toFixed(2));
+        });
+        
+        
+        $(".fa-times").click(function () {
+          $(this).parent().parent().hide("slow");
+          $(this).siblings(".destroy").val("true");
+          return false;
         });
         
       });
