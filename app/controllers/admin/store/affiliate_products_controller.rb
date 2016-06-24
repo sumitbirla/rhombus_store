@@ -1,11 +1,5 @@
 class Admin::Store::AffiliateProductsController < Admin::BaseController
   
-  def index
-    @affiliate = Affiliate.find(params[:affiliate_id])
-    @products = Product.order(:sku).all
-    @affiliate_products = AffiliateProduct.where(affiliate_id: @affiliate.id)
-  end
-  
   def create
     begin
       ap = AffiliateProduct.new(affiliate_product_params)
