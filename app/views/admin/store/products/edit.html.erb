@@ -36,6 +36,7 @@
 		  <%= f.association :brand %>
 		  <%= f.input :product_type, as: :select, collection: ['stock', 'non-stock', 'consignment', 'virtual'] %>
 		  <%= f.input :sku, label: 'SKU' %>
+      <%= f.input :upc, label: 'UPC' %>
 		  <%= f.input :price %>
 		  <%= f.input :special_price %>
 		  <%= f.input :distributor_price %>

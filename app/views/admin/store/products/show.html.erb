@@ -21,7 +21,7 @@
 		</tr>
 		<tr>
 			<td>Brand</td>
-			<td><%= link_to @product.brand, edit_admin_store_brand_path(@product.brand_id) %></td>
+			<td><%= link_to @product.brand, admin_store_products_path(brand_id: @product.brand_id) %></td>
 		</tr>
 
 		<% unless @product.group.blank? %>
@@ -56,6 +56,12 @@
         <td>Product type</td>
         <td><%= @product.product_type.titlecase %></td>
       </tr>
+      <% unless @product.upc.nil? %>
+          <tr>
+            <td>UPC</td>
+            <td><%= @product.upc %></td>
+          </tr>
+      <% end %>
       <% unless @product.fulfiller_id.nil? %>
           <tr>
             <td>Fulfilled by</td>
