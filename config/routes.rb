@@ -85,6 +85,7 @@ Rails.application.routes.draw do
       get 'shipments_batch' => 'shipments#batch'
       get 'shipments/choose_order'
       post 'shipments_update_status' => 'shipments#update_status'
+      post 'shipments_combine' => 'shipments#combine'
       post 'shipments_packing_slip_batch' => 'shipments#packing_slip_batch'
       post 'shipments_invoice_batch' => 'shipments#invoice_batch'
       get 'shipments/product_labels_pending'

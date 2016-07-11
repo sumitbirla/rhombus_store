@@ -1,4 +1,4 @@
-<h2>Shipment #<%= @shipment.order_id %>-<%= @shipment.sequence %></h2>
+<h2>Shipment #<%= @shipment %></h2>
 
 <%= render 'admin/shared/error_messages', object: @shipment %>
 
@@ -161,10 +161,9 @@
 
 <% content_for :breadcrumbs do %>
     <li><a href="#">eCommerce</a></li>
-    <li><%= link_to 'Orders', admin_store_orders_path %></li>
-    <li><%= link_to '#' + @shipment.order_id.to_s, admin_store_order_path(@shipment.order_id)%></li>
+    <li><%= link_to 'Shipments', admin_store_shipments_path %></li>
 	<% unless @shipment.id.nil? %>
-    <li><%= link_to "Shipment " + @shipment.to_s, admin_store_shipment_path(@shipment.id)%></li>
+    <li><%= link_to @shipment.to_s, admin_store_shipment_path(@shipment.id)%></li>
     <li class="active">edit</li>
 	<% else %>
 		<li class="active">new</li>
