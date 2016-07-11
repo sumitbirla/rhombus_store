@@ -68,7 +68,7 @@
         <tr valign="top">
           <th scope="col" style="text-align:left;">
             <%
-                loc_id = Cache.setting(@shipment.order.domain_id, :shipping, "Ship From Location ID")
+                loc_id = Cache.setting(@shipment.domain_id, :shipping, "Ship From Location ID")
                 loc = Location.find(loc_id)
                 
                 if loc.pictures.length > 0
@@ -89,7 +89,9 @@
           </th>
           <th scope="col" style="text-align:right;"> <h2>PACKING SLIP</h2>
             <p>
+              <% if @shipment.order_id %>
               <strong>Order Date: </strong><%= sysdate @shipment.order.submitted %><br>
+              <% end %>
               <strong>Shipment ID: </strong> <%= @shipment %><br/>
               <img src="/barcode?code=<%= @shipment %>" />
             </p>
@@ -103,11 +105,15 @@
       <div class="boxleft">
         <h2>
           Billing address            </h2>
+        <% if @shipment.order %>
         <p><%= @shipment.order.billing_name %><br/>
           <%= raw @shipment.order.billing_company + '<br/>' unless @shipment.order.billing_company.blank? %>
           <%= @shipment.order.billing_street1 %><br/>
           <%= raw @shipment.order.billing_street2 + '<br/>' unless @shipment.order.billing_street2.blank? %>
           <%= @shipment.order.billing_city %>, <%= @shipment.order.billing_state %> <%= @shipment.order.billing_zip %></p>
+        <% else %>
+          Multiple orders
+        <% end %>
       </div>
       <div class="boxright">
         <h2>
@@ -132,9 +138,9 @@
       </thead>
       <tbody>
       <tr>
-        <td><%= @shipment.order.submitted.strftime("%d-%^b-%Y") %></td>
+        <td><%= @shipment.order.submitted.strftime("%d-%^b-%Y") if @shipment.order %></td>
         <td><%= @shipment.order_id %></td>
-        <td><%= @shipment.order.external_order_id.blank? ? "n/a" : @shipment.order.external_order_id %></td>
+        <td><%= (@shipment.order.external_order_id.blank? ? "n/a" : @shipment.order.external_order_id) if @shipment.order %> </td>
         <td><%= @shipment.recipient_name %></td>
       </tr>
       </tbody>
@@ -184,7 +190,7 @@
   <% end %>
   
   
-  <% if ["Healthy Breeds", "Amazon.com"].include? @shipment.order.sales_channel %>
+  <% if @shipment.order && ["Healthy Breeds", "Amazon.com"].include?(@shipment.order.sales_channel) %>
   <div style="text-align: ceanter; margin-top: 40px;">
     <img src="/img/HB10_reorder_coupon.jpg" width="250" style="padding: 10px; border: dashed 3px #666;">
   </div>

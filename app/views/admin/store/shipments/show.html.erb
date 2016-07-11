@@ -77,8 +77,10 @@
 <div>
   <b>Created: </b> <%= time_ago_in_words(@shipment.created_at) %> ago
   &nbsp; <span class="label <%= 'label-warning' if @shipment.status == 'pending' %>  <%= 'label-success' if @shipment.status == 'shipped' %>"><%= @shipment.status %></span>
+  <% unless @shipment.order_id.nil? %>
   &nbsp; <%= link_to admin_store_order_path(@shipment.order) do %>
     <i class="fa fa-shopping-cart"></i> View Order
+  <% end %>
   <% end %>
 </div>
 
