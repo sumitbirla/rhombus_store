@@ -16,11 +16,11 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
-  s.add_dependency 'activemerchant'
+  s.add_dependency "rhombus_core"
+  s.add_dependency 'rhombus_billing'
   s.add_dependency 'barby'
   s.add_dependency 'easypost'
   s.add_dependency 'chunky_png'
-  s.add_dependency 'rails'
   s.add_dependency 'peddler'
   s.add_dependency 'mail'
   s.add_dependency 'net-scp'
