@@ -65,37 +65,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipment = Shipment.includes(:items, [items: :product], [items: :affiliate]).find(params[:id])
   end
 
-  def combine
-    shipments = Shipment.where(id: params[:shipment_id])
-    
-    if shipments.length < 2
-      flash[:info] = "Please select at least two shipments to combine first."
-      return redirect_to :back
-    end
-    
-    # check if any are already shipped
-    if shipments.any? { |x| x.status == 'shipped' }
-      flash[:info] = "Some of the selected shipments have already shipped."
-      return redirect_to :back
-    end
-    
-    # check if destination is same
-    if shipments.any? { |x| !x.same_destination?(shipments[0])}
-      flash[:notice] = "Not all shipments have the same destination address"
-    end
-      
-    @shipment = shipments[0].dup
-    @shipment.assign_attributes(order_id: nil, sequence: 0)
-    
-    shipments.collect(&:items).each do |item|
-      @shipment.items << item.dup
-    end
-    
-    @shipment.items.each { |x| x.id = nil }
-    @shipment.invoice_amount = 0.0
-    
-    render :edit
-  end
 
   def packing_slip
     @shipment = Shipment.includes(:items, [items: :product], [items: :affiliate], [items: :order_item]).find(params[:id])

@@ -471,8 +471,7 @@ class CreateStoreTables < ActiveRecord::Migration
     add_index "store_shipment_items", ["shipment_id"], name: "index_shipment_items_on_shipment_id", using: :btree
 
     create_table "store_shipments", force: :cascade do |t|
-      t.integer  "domain_id",            limit: 4,                                                 null: false, default: 1
-      t.integer  "order_id",             limit: 4,
+      t.integer  "order_id",             limit: 4,                                                 null: false
       t.integer  "sequence",             limit: 4,                                                 null: false
       t.integer  "fulfilled_by_id",      limit: 4
       t.decimal  "invoice_amount",                        precision: 10, scale: 2, default: 0.0,   null: false

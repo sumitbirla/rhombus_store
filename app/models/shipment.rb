@@ -69,23 +69,13 @@ class Shipment < ActiveRecord::Base
   validates_presence_of :recipient_name, :recipient_street1, :recipient_city, :recipient_zip, :recipient_country
   #validates_presence_of :package_weight
   
-  def same_destination?(s)
-    recipient_street1 == s.recipient_street1 &&
-    recipient_street2 == s.recipient_street2 &&
-    recipient_city == s.recipient_city &&
-    recipient_zip == s.recipient_zip
-  end
 
   def dimensions_available?
     !(package_length.nil? || package_width.nil? || package_height.nil?)
   end
 
   def to_s
-    unless order_id.blank?
-      "#{order_id}-#{sequence}"
-    else
-      id.nil? ? "combined" : id.to_s
-    end
+    "#{order_id}-#{sequence}"
   end
   
   def calculate_invoice_amount

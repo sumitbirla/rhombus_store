@@ -73,7 +73,7 @@ module StoreCache
     
     Rails.cache.fetch("ap:#{affiliate.slug}:#{product_slug}") do
       AffiliateProduct
-            .includes(:product, [product: [:pictures, :extra_properties]])
+            .includes(:product, [product: :pictures, product: :extra_properties])
             .find_by(affiliate_id: affiliate.id, product_id: Product.select(:id).where(slug: product_slug))
     end
   end

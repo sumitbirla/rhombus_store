@@ -2,7 +2,6 @@
   <select id="selAction" class="form-control" style="display: inline; width: 75%">
     <option> - - Select Action - - </option>
 	  <option method="get" value="<%= admin_store_shipments_choose_order_path %>">New Shipment</option>
-    <option method="post" value="/admin/store/shipments_combine">Combine</option>
     <option method="get" value="/admin/store/shipments_batch">Batch Ship</option>
     <option method="post" value="/admin/store/shipments_packing_slip_batch">Packing Slips (PDF)</option>
     <option method="post" value="/admin/store/shipments_invoice_batch">Invoices (PDF)</option>
@@ -55,13 +54,7 @@
         <td><%= shipment.recipient_name %></td>
         <td><%= shipment.recipient_city %>, <%= shipment.recipient_state %></td>
         <% if params[:status] == "pending" %>
-          <td>
-          <% if shipment.order_id %>
-            <%= time_ago shipment.order.submitted %>
-          <% else %>
-            <span class="light">- combined -</span>
-          <% end %>
-          </td>
+          <td><%= time_ago shipment.order.submitted %></td>
         <% else %>
           <td><%= shipment.ship_date ? sysdate(shipment.ship_date) : "<span class='light'>-</span>".html_safe %></td>
           <td><%= shipment.ship_method.blank? ? '<span class="light">- n/a -</span>'.html_safe : "#{shipment.carrier} #{shipment.ship_method}" %></td>
