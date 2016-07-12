@@ -2,11 +2,13 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
   # ['new', 'open', 'partial', 'received', 'cancelled']
   
   def index
-    @purchase_orders = PurchaseOrder.includes(:items).page(params[:page]).order('id DESC')
+    @purchase_orders = PurchaseOrder.includes(:items)
+                                    .joins(:supplier)
+                                    .where(status: params[:status])
+                                    .order(sort_column + " " + sort_direction)
+                                    .page(params[:page])
+                                    
     @purchase_orders = @purchase_orders.where(id: params[:q]) unless params[:q].nil?
-    
-    @purchase_orders = @purchase_orders.where(status: ['open', 'partial', 'new']) if params[:status] == 'open'
-    @purchase_orders = @purchase_orders.where(status: ['cancelled', 'received']) if params[:status] == 'closed'
   end
 
   def new
@@ -157,10 +159,18 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
     render 'print', layout: nil
   end
   
+  
   private
   
     def purchase_order_params
       params.require(:purchase_order).permit!
     end
-    
+  
+    def sort_column
+      params[:sort] || "id"
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
+    end
 end
