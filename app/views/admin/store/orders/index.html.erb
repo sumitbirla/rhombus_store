@@ -42,7 +42,7 @@
   <ul class="nav nav-tabs" style="margin-bottom: 10px;">
     <% status_list.each do |status|
         next if status == 'in cart'
-        count = Order.where(po: params[:po], status: status).count %>
+        count = Order.where(domain_id: current_domain.id, po: params[:po], status: status).count %>
     <li class="<%= "active" if params[:status] == status %>"><a href="<%= admin_store_orders_path(status: status, po: params[:po])%>"><%= tab_count(status.titlecase, count) %></a></li>
     <% end %>
   </ul>
