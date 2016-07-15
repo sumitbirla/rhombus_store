@@ -3,17 +3,17 @@
 
 <%= simple_form_for [:admin, :store, @affiliate_product] do |f| %>
 
-  <%= render 'admin/shared/error_messages', object: f.object %>
-
-  <%= f.input :title, as: :text, input_html: { rows: 2, placeholder: @affiliate_product.product.title } %>
-  <%= f.input :sku, input_html: { placeholder: @affiliate_product.product.sku } %>
-  <%= f.input :price, input_html: { placeholder: @affiliate_product.product.price } %>
+  <%= f.hidden_field :affiliate_id %>
+  <%= f.input :product_id, collection: Product.select(:id, :sku, :title).order(:sku).map { |x| ["[ #{x.sku} ] #{x.title}", x.id]} %>
+  <%= f.input :title, as: :text, input_html: { rows: 2 } %>
+  <%= f.input :sku %>
+  <%= f.input :price %>
   <%= f.input :minimum_order_quantity %>
   <%= f.input :ship_lead_time %>
   <%= f.input :category1 %>
   <%= f.input :category2 %>
   <%= f.input :category3 %>
-  <%= f.input :description, as: :text, input_html: { rows: 15, placeholder: @affiliate_product.product.long_description } %>
+  <%= f.input :description, as: :text, input_html: { rows: 15 } %>
   <%= f.input :data %>
   <%= f.input :images %>
   
@@ -22,12 +22,9 @@
 <% end %>
 
 
-
-
 <% content_for :title do %>
 	<%= @affiliate_product.affiliate.name %>
 <% end %>
-
 
 
 <% content_for :breadcrumbs do %>

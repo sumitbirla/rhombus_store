@@ -16,7 +16,10 @@ class Admin::Store::OrdersController < Admin::BaseController
     end
     
     respond_to do |format|
-      format.html { @orders = @orders.includes(:user, :affiliate, :shipments).page(params[:page]) }
+      format.html do
+         @orders = @orders.includes(:user, :affiliate, :shipments).page(params[:page]) 
+         flash.now[:notice] = "There are no orders with status '#{params[:status]}'" if @orders.length == 0
+      end
       format.csv { send_data Order.to_csv(@orders, skip_cols: ['cart_key', 'paypal_token']) }
     end
 

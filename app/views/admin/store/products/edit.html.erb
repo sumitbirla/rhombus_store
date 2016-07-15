@@ -33,7 +33,7 @@
       <%= f.input :name %>
 		  <%= f.input :title %>
 		  <%= f.input :slug %>
-		  <%= f.association :brand %>
+		  <%= f.input :brand_id, collection: Brand.order(:name).all %>
 		  <%= f.input :product_type, as: :select, collection: ['stock', 'non-stock', 'consignment', 'virtual'] %>
 		  <%= f.input :sku, label: 'SKU' %>
       <%= f.input :upc, label: 'UPC' %>
