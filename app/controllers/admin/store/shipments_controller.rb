@@ -13,12 +13,14 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
   def index
     q = params[:q]
-    @shipments = Shipment.includes(:order).all.order('created_at DESC')
+    @shipments = Shipment.includes(:order).joins(:order).all.order('store_shipments.created_at DESC')
     @shipments = @shipments.where("recipient_name LIKE '%#{q}%' OR recipient_company LIKE '%#{q}%' OR recipient_city LIKE '%#{q}%'")
     @shipments = @shipments.where(status: params[:status]) unless params[:status].blank?
+    @shipments = @shipments.where("store_orders.user_id = ?", params[:user_id]) unless params[:user_id].blank?
+    @shipments = @shipments.where("store_orders.affiliate_id = ?", params[:affiliate_id]) unless params[:affiliate_id].blank?
     
     respond_to do |format|
-      format.html { @shipments = @shipments.page(params[:page]) }
+      format.html { @shipments = @shipments.paginate(page: params[:page], per_page: params[:per_page]) }
       format.csv { send_data Shipment.to_csv(@shipments, skip_cols: ['label_data']) }
     end
   end
