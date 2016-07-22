@@ -2,7 +2,7 @@ class AffiliateProductsController < ApplicationController
   
   # GET /ap/:affiliate-slug
   def index
-    @affiliate_products = StoreCache.all_affiliate_products(params[:affiliate_slug])
+    @affiliate_products = StoreCache.all_affiliate_products(params[:affiliate_slug]).paginate(page: params[:page], per_page: params[:per_page])
   end
   
   # GET /ap/:affiliate-slug/:product-slug
