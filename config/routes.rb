@@ -29,6 +29,9 @@ Rails.application.routes.draw do
   get '/ap/:affiliate_slug/:product_slug' => 'affiliate_products#show'
   get '/ap/:affiliate_slug' => 'affiliate_products#index'
   
+  # easypost webhook (callback)
+  post '/easypost' => 'easypost#webhook'
+  
   
   namespace :account do
     resources :orders

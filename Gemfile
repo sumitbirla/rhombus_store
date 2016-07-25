@@ -12,4 +12,5 @@ gemspec
 
 # To use debugger
 # gem 'debugger'
-gem 'rails'
+gem 'rhombus_core', path: '../rhombus_core'
+gem 'rhombus_billing', path: '../rhombus_billing'
