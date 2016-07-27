@@ -313,7 +313,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     shipments.each do |s|
       s.update_attribute(:status, params[:status])
       if s.status == 'shipped' && s.ship_date.nil?
-        s.update_attribute(ship_date: Date.today)
+        s.update_attribute(:ship_date, Date.today)
       end
     end
     
