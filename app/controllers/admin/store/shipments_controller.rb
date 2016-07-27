@@ -311,7 +311,10 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   def update_status
     shipments = Shipment.where(id: params[:shipment_id]).where.not(status: params[:status])
     shipments.each do |s|
-        s.update_attribute(:status, params[:status])
+      s.update_attribute(:status, params[:status])
+      if s.status == 'shipped' && s.ship_date.nil?
+        s.update_attribute(ship_date: Date.today)
+      end
     end
     
     flash[:info] = "Status of #{shipments.length} shipment(s) updated to '#{params[:status]}'"
