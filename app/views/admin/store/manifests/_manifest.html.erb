@@ -1,0 +1,24 @@
+<% m = manifest %>
+<tr>
+  <td><%= m.day %></td>
+  <td><%= m.carrier %></td>
+  <td class="text-center"><%= link_to m.shipment_count.to_s, admin_store_shipments_path(carrier: m.carrier, ship_date: m.day, status: :shipped) %></td>
+  <td class="text-center"><%= order_status m %></td>
+  <td class="actions ralign">
+    <% if m.status == 'open' %>
+      <%= form_for [:admin, :store, m] do |f| %>
+        <%= f.hidden_field :day %>
+        <%= f.hidden_field :carrier %>
+        <button class="btn btn-sm btn-default">create manifest</button> &nbsp; 
+      <% end %>
+    <% else %>
+      <% unless m.document_url.nil? %>
+        <%= link_to "print document", m.document_url %> &nbsp; 
+      <% end %>
+    <% end %>
+    
+    <% if !m.pickup_requested %>
+      <button class="btn btn-sm btn-default">request pickup</button>
+    <% end %>
+  </td>
+</tr>

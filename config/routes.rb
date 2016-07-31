@@ -1,5 +1,11 @@
 Rails.application.routes.draw do
   
+  namespace :admin do
+  namespace :store do
+    get 'manifests/index'
+    end
+  end
+
   get 'cart/remove/:id' => 'cart#remove'
   post 'cart/update'
   get 'cart/add_deal'
@@ -151,6 +157,11 @@ Rails.application.routes.draw do
           get 'create_payment'
           get 'scan'
           post 'scan' => 'shipments#verify_scan'
+        end
+      end
+      resources :manifests do 
+        member do 
+          post 'request_pickup'
         end
       end
       resources :tax_rates

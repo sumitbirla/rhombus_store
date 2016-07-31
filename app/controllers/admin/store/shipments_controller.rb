@@ -13,15 +13,17 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
   def index
     q = params[:q]
-    @shipments = Shipment.includes(:order).joins(:order).all.order('store_shipments.created_at DESC')
-    @shipments = @shipments.where("recipient_name LIKE '%#{q}%' OR recipient_company LIKE '%#{q}%' OR recipient_city LIKE '%#{q}%'")
-    @shipments = @shipments.where(status: params[:status]) unless params[:status].blank?
-    @shipments = @shipments.where("store_orders.user_id = ?", params[:user_id]) unless params[:user_id].blank?
-    @shipments = @shipments.where("store_orders.affiliate_id = ?", params[:affiliate_id]) unless params[:affiliate_id].blank?
+    s = Shipment.includes(:order).joins(:order).all.order('store_shipments.created_at DESC')
+    s = s.where("recipient_name LIKE '%#{q}%' OR recipient_company LIKE '%#{q}%' OR recipient_city LIKE '%#{q}%'")
+    s = s.where("store_orders.user_id = ?", params[:user_id]) unless params[:user_id].blank?
+    s = s.where("store_orders.affiliate_id = ?", params[:affiliate_id]) unless params[:affiliate_id].blank?
+    s = s.where(carrier: params[:carrier]) unless params[:carrier].blank?
+    s = s.where(ship_date: params[:ship_date]) unless params[:ship_date].blank?
+    s = s.where(status: params[:status]) unless params[:status].blank?
     
     respond_to do |format|
-      format.html { @shipments = @shipments.paginate(page: params[:page], per_page: params[:per_page]) }
-      format.csv { send_data Shipment.to_csv(@shipments, skip_cols: ['label_data']) }
+      format.html { @shipments = s.paginate(page: params[:page], per_page: params[:per_page]) }
+      format.csv { send_data Shipment.to_csv(s, skip_cols: ['label_data']) }
     end
   end
 

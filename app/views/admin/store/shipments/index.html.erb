@@ -1,12 +1,13 @@
 <div class="pull-right">
   <select id="selAction" class="form-control" style="display: inline; width: 75%">
     <option> - - Select Action - - </option>
-	  <option method="get" value="<%= admin_store_shipments_choose_order_path %>">New Shipment</option>
-    <option method="get" value="/admin/store/shipments_batch">Batch Ship</option>
-    <option method="post" value="/admin/store/shipments_packing_slip_batch">Packing Slips (PDF)</option>
+	  <option method="get" value="<%= admin_store_shipments_choose_order_path %>">New shipment</option>
+    <option method="get" value="/admin/store/shipments_batch">Batch ship</option>
+    <option method="post" value="/admin/store/shipments_packing_slip_batch">Packing slips (PDF)</option>
     <option method="post" value="/admin/store/shipments_invoice_batch">Invoices (PDF)</option>
-    <option method="get" value="/admin/store/shipments/product_labels">Product Labels (selected)</option>
-    <option method="get" value="/admin/store/shipments/product_labels_pending">Product Labels (all pending)</option>
+    <option method="get" value="/admin/store/shipments/product_labels">Product labels (selected)</option>
+    <option method="get" value="/admin/store/shipments/product_labels_pending">Product labels (all pending)</option>
+    <option method="get" value="<%= admin_store_manifests_path %>">Manifest</option>
     <optgroup label="Change order status to ">
         <option method="post" value="/admin/store/shipments_update_status?status=shipped">Shipped</option>
         <option method="post" value="/admin/store/shipments_update_status?status=pending">Pending</option>
@@ -23,10 +24,17 @@
 <form id="frmBatch" action="" method="post">
 	<%= token_tag %>
   
+  <%
+    status_list = Shipment.uniq(:status).pluck(:status)
+    status_list << 'pending' unless status_list.include?('pending')
+    status_list.reverse!
+  %>
+  
   <ul class="nav nav-tabs" style="margin-bottom: 10px;">
-    <li role="presentation" class="<%= "active" if params[:status] == "pending" %>"><a href="<%= admin_store_shipments_path(status: "pending")%>">Pending</a></li>
-    <li role="presentation" class="<%= "active" if params[:status] == "shipped" %>"><a href="<%= admin_store_shipments_path(status: "shipped")%>">Shipped</a></li>
-    <li role="presentation" class="<%= "active" if params[:status].blank? %>"><a href="<%= admin_store_shipments_path%>">All</a></li>
+  <% status_list.each do |status| 
+      count = Shipment.where(status: status).count %>
+    <li role="presentation" class="<%= "active" if params[:status] == status %>"><a href="<%= admin_store_shipments_path(status: status)%>"><%= tab_count(status.titlecase, count)%></a></li>
+  <% end %>
   </ul>
 	
 <%= will_paginate @shipments %>
