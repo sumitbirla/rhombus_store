@@ -36,6 +36,7 @@ class Admin::Store::ManifestsController < Admin::BaseController
       
       batch = EasyPost::Batch.create(shipments: data)
       batch.create_scan_form()
+      manifest.batch_id = batch.id
       manifest.shipment_count = shipments.length
       manifest.status = :closed
       manifest.save!
