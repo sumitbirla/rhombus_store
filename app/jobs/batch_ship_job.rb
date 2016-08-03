@@ -68,6 +68,13 @@ class BatchShipJob < ActiveJob::Base
     shp.order.update(status: 'shipped')
     shp.update(batch_status: "complete")
     
+    # Amazon orders need to be notified about shipment
+    if shp.order.sales_channel == "Amazon.com"
+      AmazonFulfillmentJob.perform_later(shp.id)
+    else
+      shp.post_invoice
+    end
+    
     if params[:send_email]
       unless shp.order.notify_email.include?("marketplace")
         OrderMailer.order_shipped(shp).deliver_later
