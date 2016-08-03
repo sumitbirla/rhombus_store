@@ -9,7 +9,13 @@
     <%= link_to m.shipment_count.to_s, admin_store_shipments_path(manifest_id: m.id) %>
   <% end %>
   </td>
-  <td><%= m.batch_id %></td>
+  <td>
+  <% if m.batch_id %>
+    <%= m.batch_id %>
+  <% else %>
+    <span class="light">n/a</span>
+  <% end %>  
+  </td>
   <td class="text-center"><%= order_status m %></td>
   <td class="actions ralign">
     <% if m.status == 'open' %>

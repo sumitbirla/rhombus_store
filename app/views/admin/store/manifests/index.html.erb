@@ -1,18 +1,23 @@
 <h2><i class="fa fa-list-alt"></i> &nbsp;Manifests</h2>
-
+<hr>
 
 <h3>Open shipments</h3>
-<table class="table table-striped table-condensed">
-  <tr>
-    <th>Date</th>
-    <th>Courier</th>
-    <th class="text-center">Packages</th>
-    <th>Batch ID</th>
-    <th class="text-center">Status</th>
-    <th class="actions">&nbsp;</th>
-  </tr>
-  <%= render @manifests %>
-</table>
+
+<% if @manifests.length == 0 %>
+  <div class="bs-callout bs-callout-info">There are no open shipments</div>
+<% else %>
+  <table class="table table-striped table-condensed">
+    <tr>
+      <th>Date</th>
+      <th>Courier</th>
+      <th class="text-center">Packages</th>
+      <th>Batch ID</th>
+      <th class="text-center">Status</th>
+      <th class="actions">&nbsp;</th>
+    </tr>
+    <%= render @manifests %>
+  </table>
+<% end %>
 
 <hr>
 
