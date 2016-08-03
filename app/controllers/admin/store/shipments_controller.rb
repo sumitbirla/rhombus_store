@@ -20,6 +20,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     s = s.where(carrier: params[:carrier]) unless params[:carrier].blank?
     s = s.where(ship_date: params[:ship_date]) unless params[:ship_date].blank?
     s = s.where(status: params[:status]) unless params[:status].blank?
+    s = s.where(manifest_id: params[:manifest_id]) unless params[:manifest_id].blank?
     
     respond_to do |format|
       format.html { @shipments = s.paginate(page: params[:page], per_page: params[:per_page]) }

@@ -9,6 +9,7 @@ class Admin::Store::ManifestsController < Admin::BaseController
       where status = 'shipped'
       and ship_date = '#{Date.today}'
       and manifest_id IS NULL
+      and carrier <> ''
       group by carrier;
     EOF
 
@@ -17,7 +18,7 @@ class Admin::Store::ManifestsController < Admin::BaseController
       @manifests << Manifest.new(carrier: row[0], shipment_count: row[1], day: Date.today, status: :open)
     end
 
-    @recent_manifests = Manifest.where("day > ?", 1.week.ago)
+    @recent_manifests = Manifest.where("day > ?", 1.week.ago).order(created_at: :desc)
   end
   
   def create

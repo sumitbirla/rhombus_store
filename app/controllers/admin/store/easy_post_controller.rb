@@ -5,7 +5,13 @@ class Admin::Store::EasyPostController < Admin::BaseController
   def index
     @shipment = Shipment.find(params[:shipment_id])
 		@shipment.packaging_type = 'YOUR PACKAGING' if @shipment.packaging_type.blank?
-    @shipment.ship_date = Date.today
+    
+    # set ship date to tomorrow if after 7pm or Sunday
+    if @shipment.ship_date.nil?
+      t = Time.now
+      @shipment.ship_date = Date.today
+      @shipment.ship_date = Date.tomorrow if (t.wday == 7 || t.hour > 21)
+    end
   end
   
   def rates
