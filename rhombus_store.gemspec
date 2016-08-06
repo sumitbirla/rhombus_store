@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rhombus_core"
   s.add_dependency "rhombus_billing"
+  s.add_dependency "rhombus_marketing"
   s.add_dependency 'barby'
   s.add_dependency 'easypost'
   s.add_dependency 'chunky_png'

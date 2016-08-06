@@ -75,7 +75,7 @@ class Order < ActiveRecord::Base
   belongs_to :domain
   belongs_to :user
   belongs_to :affiliate
-  # belongs_to :affiliate_campaign
+  belongs_to :affiliate_campaign
   belongs_to :coupon
   belongs_to :voucher
   
