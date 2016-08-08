@@ -22,7 +22,7 @@
       <%= form_for [:admin, :store, m] do |f| %>
         <%= f.hidden_field :day %>
         <%= f.hidden_field :carrier %>
-        <a type="submit" href="#">create manifest</a> &nbsp; 
+        <button style="display: inline;">create manifest</button> &nbsp; 
       <% end %>
     <% else %>
       <% unless m.document_url.nil? %>
