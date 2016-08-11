@@ -6,7 +6,7 @@
 		<td><%= link_to p.sku, admin_store_product_path(p) %></td>
 		<td><%= p.name_with_option %></td>
 		<td><%= item.inventory_location %></td>
-		<td class="text-center"><%= item.quantity %></td>
+		<td class="text-center"><%= number_with_delimiter item.quantity %></td>
     <td class="text-center"><%= item.lot %></td>
 		<td><%= item.expiration %></td>
     <td>
