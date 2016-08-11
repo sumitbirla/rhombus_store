@@ -2,7 +2,7 @@
     .summary .label { font-weight: normal; margin-right: 6px; }
 </style>
 
-<% stock = InventoryTransactionItem.where(sku: @product.sku).sum(:quantity) %>
+<% stock = InventoryItem.where(inventoriable_type: :product, inventoriable_id: @product.id).sum(:quantity) %>
 <div class="pull-right">
   <%= link_to "clone", clone_admin_store_product_path(@product), class: "btn btn-sm btn-default" %>
   <%= link_to "edit", edit_admin_store_product_path(@product), class: "btn btn-sm btn-default" %>

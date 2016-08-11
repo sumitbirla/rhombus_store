@@ -1,5 +1,5 @@
 <%
-  status_list = Order.where(po: params[:po]).uniq(:status).pluck(:status)
+  status_list = Order.uniq(:status).pluck(:status)
   status_list << 'submitted' unless status_list.include?('submitted')
   status_list = status_list.sort.reverse
 %>
