@@ -334,9 +334,8 @@
 
 
 <% content_for :breadcrumbs do %>
-  <% prefix = (@order.po ? "Purchase " : "") %>
 	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to prefix + 'Orders', admin_store_orders_path(status: "submitted", po: @order.po ? "1" : "0") %></li>
+	<li><%= link_to "#{@order.status.titlecase} orders", admin_store_orders_path(status: @order.status) %></li>
 	<li class="active">#<%= @order.id %></li>
 <% end %>
 

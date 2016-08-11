@@ -1,18 +1,18 @@
-<h2><%= @sublocation %></h2>
+<h2><%= @inventory_location %></h2>
 <hr/>
 
 
-<%= simple_form_for [:admin, :inventory, @sublocation] do |f| %>
+<%= simple_form_for [:admin, :inventory, @inventory_location] do |f| %>
 
 	<%= render 'admin/shared/error_messages', object: f.object %>
 	
   <div class="row">
     
     <div class="col-md-7">
-    	<%= f.input :location_id, as: :hidden %>
-    	<%= f.input :row %>
-      <%= f.input :shelf %>
-      <%= f.input :segment %>
+    	<%= f.input :name %>
+      <%= f.input :depth %>
+      <%= f.input :width %>
+      <%= f.input :height %>
     	<%= f.input :notes, as: :text, input_html: { rows: 4 }  %>
 	  </div>
   
@@ -21,6 +21,7 @@
         <div class="panel-heading">Flags</div>
         <div class="panel-body">
           <div class="row">
+            <div class="col-md-6"><%= f.input_field :usable %> &nbsp; Usable</div>
             <div class="col-md-6"><%= f.input_field :large_box %> &nbsp; Large Box</div>
             <div class="col-md-6"><%= f.input_field :heavy_box %> &nbsp; Heavy Box</div>
             <div class="col-md-6"><%= f.input_field :holding_area %> &nbsp; Holding Area</div>
@@ -36,9 +37,8 @@
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">Web Content</a></li>
-	<li><%= link_to "Locations", admin_cms_locations_path %></li>
-	<li><%= link_to @sublocation.location.name, admin_cms_location_path(@sublocation.location) %></li>
-	<li class="active">edit</li>
+	<li><a href="#">Inventory</a></li>
+	<li><%= link_to "Locations", admin_inventory_inventory_locations_path %></li>
+	<li class="active"><%= @inventory_location %></li>
 <% end %>
 

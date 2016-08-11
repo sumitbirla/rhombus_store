@@ -60,8 +60,6 @@ Rails.application.routes.draw do
     end
     
     namespace :inventory do
-      resources :sublocations
-      resources :stock
       resources :purchase_orders do
         member do
           get 'items' => 'purchase_orders#items'
@@ -73,7 +71,8 @@ Rails.application.routes.draw do
         end
       end
       resources :purchase_order_items
-      resources :inventory_transactions
+      resources :inventory_items
+      resources :inventory_locations
     end
 
     # Store Routes

@@ -1,4 +1,6 @@
-<h2><% if @purchase_order.id.nil? %>
+<h2>
+  <i class="fa fa-file-text-o"></i>&nbsp; 
+  <% if @purchase_order.id.nil? %>
 	New Purchase Order
 	<% else %>
 	Purchase Order #<%= @purchase_order.id %>

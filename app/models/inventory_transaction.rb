@@ -14,7 +14,7 @@
 #
 
 class InventoryTransaction < ActiveRecord::Base
-  self.table_name = "store_inventory_transactions"
+  self.table_name = "inv_transactions"
   before_save :update_total
   belongs_to :user
   has_many :items, class_name: "InventoryTransactionItem", dependent: :destroy

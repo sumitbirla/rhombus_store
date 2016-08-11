@@ -18,7 +18,7 @@
 #
 
 class PurchaseOrderItem < ActiveRecord::Base
-  self.table_name = "store_purchase_order_items"
+  self.table_name = "inv_purchase_order_items"
   belongs_to :purchase_order
   validates_presence_of :sku, :quantity
   

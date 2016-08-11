@@ -11,9 +11,7 @@
 #  sublocation_id           :integer          not null
 #
 
-class InventoryTransactionItem < ActiveRecord::Base
-  self.table_name = "store_inventory_transaction_items"
-  belongs_to :inventory_transaction
-  belongs_to :sublocation
-  validates_presence_of :sku, :quantity
+class InventoryItem < ActiveRecord::Base
+  self.table_name = "inv_items"
+  belongs_to :inventoriable, polymophic: true
 end

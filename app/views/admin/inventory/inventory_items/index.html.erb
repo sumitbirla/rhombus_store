@@ -7,12 +7,9 @@
 		<th>In stock</th>
 		<th>Committed</th>
 		<th>Low threshold</th>
-    <th>Supplier</th>
-    <th class="ralign">Cost</th>
 	</tr>
 	<% @products.each do |p|
 		stock = InventoryTransactionItem.where(sku: p.sku).sum(:quantity) 
-    ap = AffiliateProduct.find_by(affiliate_id: p.primary_supplier_id, product_id: p.id) unless p.primary_supplier_id.nil?
     %>
 	<tr>
 		<td><%= link_to p.sku, admin_store_product_path(p) %></td>
@@ -25,14 +22,6 @@
 		<td class="calign"><%= stock %></td>
 		<td class="calign"><%= p.committed %></td>
 		<td class="calign"><%= p.low_threshold %></td>
-    <td>
-      <% unless p.primary_supplier_id.nil? %>
-          <%= link_to p.supplier, admin_system_affiliate_path(p.primary_supplier_id) %>
-      <% end %>
-    </td>
-    <td class="ralign">
-      <%= number_to_currency ap.price unless ap.nil? %>
-    </td>
 	</tr>
 	<% end %>
 </table>

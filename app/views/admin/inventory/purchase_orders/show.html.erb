@@ -1,12 +1,11 @@
 <div class="pull-right">
-  
   <%= link_to "print", print_admin_inventory_purchase_order_path(@purchase_order), class: "btn btn-sm btn-default" %>
   <%= link_to edit_admin_inventory_purchase_order_path(@purchase_order), class: "btn btn-sm btn-default" do %>
     <i class="fa fa-edit"></i> edit
   <% end %>
 </div>
 <h2>
-	Purchase Order #<%= @purchase_order.id %> &nbsp; 
+	<i class="fa fa-file-text-o"></i>&nbsp; Purchase Order #<%= @purchase_order.id %> &nbsp; 
 	<%= po_status @purchase_order, 'large' %>
 </h2>
 <hr/>

@@ -1,0 +1,17 @@
+<% loc = inventory_location %>
+<tr>
+		<td><%= loc.name %></td>
+		<td><%= inventory_location_dimensions(loc) %></td>
+		<td class="text-center"><%= tick loc.large_box %></td>
+    <td class="text-center"><%= tick loc.heavy_box %></td>
+    <td class="text-center"><%= tick loc.holding_area %></td>
+    <td class="text-center"><%= tick loc.usable %></td>
+		<td class="text-center">0</td>
+		<td class="actions">
+			<%= link_to "edit", edit_admin_inventory_inventory_location_path(loc) %> &nbsp;
+			<%= link_to "delete", 
+						  { action: "destroy", id: loc.id }, 
+						  method: :delete, 
+						  data: { confirm: "Are you sure?" } %>
+		</td>
+</tr>

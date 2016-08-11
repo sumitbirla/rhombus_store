@@ -14,14 +14,14 @@
 #  notes       :text(65535)
 #
 
-class Sublocation < ActiveRecord::Base
+class InventoryLocation < ActiveRecord::Base
   include Exportable
   
-  self.table_name = 'store_sublocations'
-  belongs_to :location
-  validates_presence_of :location_id, :row, :shelf, :segment
+  self.table_name = 'inv_locations'
+  validates_presence_of :name
   
   def to_s
-    [row, shelf, segment].join(" ")
+    name
   end
+  
 end

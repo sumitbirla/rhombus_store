@@ -5,6 +5,9 @@
       <% if order.auto_ship %>
         &nbsp; <i class="fa text-success fa-refresh"></i>
       <% end %>
+      <% if order.po %>
+        &nbsp; <i class="fa text-danger fa-file-text-o"></i>
+      <% end %>
     </td>
     <td>
     <% if order.po %>
