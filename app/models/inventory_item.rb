@@ -13,7 +13,7 @@
 
 class InventoryItem < ActiveRecord::Base
   self.table_name = "inv_items"
- #belongs_to :inventoriable, polymophic: true
+  belongs_to :inventoriable, polymorphic: true
   belongs_to :inventory_location
   belongs_to :user
 end

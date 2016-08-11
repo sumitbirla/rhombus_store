@@ -1,0 +1,32 @@
+<h2>Reports</h2>
+
+
+<table class="table table-striped">
+	<tr>
+		<th>Report</th>
+		<th>Description</th>
+	</tr>
+	<tr>
+		<td><%= link_to 'Quantities in Stock', admin_inventory_reports_quantities_in_stock_path %></td>
+		<td>Total quantities of all items in warehouse</td>
+	</tr>
+	<tr>
+		<td><%= link_to "Pending Fulfillment", admin_store_reports_pending_fulfillment_path %> </td>
+		<td>Items that need to be fulfilled currently</td>
+	</tr>
+	<tr>
+		<td><%= link_to "Product Demand", admin_store_reports_pending_fulfillment_path %> </td>
+		<td>Past trends and future projections</td>
+	</tr>
+</table>
+
+
+<%= content_for :title do %>
+	Reports
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li class="active">Reports</li>
+<% end %>

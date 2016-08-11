@@ -1,0 +1,107 @@
+<form action="" method="get" class="pull-right well">
+  Sales channel:  &nbsp; <select name="sales_channel">
+    <option value="">-- all channels --</option>
+    <% @sales_channels.each do |ch| %>
+      <option <%= "selected" if @selected_channel == ch %>><%= ch %></option>
+    <% end %> 
+  </select> &nbsp; 
+  Date range:  &nbsp; <input type="text" class="date-field" name="start_date" value="<%= @start_date %>" style="width: 120px;"/> &nbsp; to &nbsp;
+              <input type="text" class="date-field" name="end_date" value="<%= @end_date %>" style="width: 120px;"/>
+  <button class="btn btn-success btn-sm">Filter</button>
+</form>
+
+<h2>Monthly Sales</h2>
+
+<div id="graph"></div>
+
+
+<%
+qty_total = 0
+amount_total = 0.0
+%>
+
+<table class="table table-striped">
+	<tr>
+    <th>Month</th>
+    <th class="ralign">Orders</th>
+    <th class="ralign">Revenue</th>
+	</tr>
+  <% @data.each do |row| 
+    qty_total += row[1] 
+    amount_total += row[2] %>
+	<tr>
+		<td><%= row[0].strftime("%B, %Y") %></td>
+    <td class="ralign"><%= number_to_human row[1] %></td>
+    <td class="ralign"><%= number_to_currency row[2] %></td>
+	</tr>
+  <% end %>
+  <tr>
+    <td colspan="1"></td>
+    <td class="ralign"><b><%= qty_total %></b></td>
+    <td class="ralign"><b><%= number_to_currency(amount_total) %></b></td>
+  </tr>
+</table>
+
+
+<% content_for :title do %>
+	Monthly Sales
+<% end %>
+
+
+<% content_for :head do %>
+  <script src="/rhombus_core/sb-admin-2/js/plugins/flot/jquery.flot.min.js"></script>
+  <script src="/rhombus_core/sb-admin-2/js/plugins/flot/jquery.flot.time.min.js"></script>
+  <script>
+    var orders = [
+    <% @data.each do |row| %>
+      [<%= row[0].to_datetime.to_f * 1000 %>, <%= row[1] %>],
+    <% end %>
+    ];
+
+    var revenue = [
+    <% @data.each do |row| %>
+      [<%= row[0].to_datetime.to_f * 1000 %>, <%= row[2] %>],
+    <% end %>
+    ];
+    
+    function dollarFormatter(v, axis) {
+    		return "$" + v.toFixed(axis.tickDecimals);
+    }
+    
+    $(document).ready(function() {
+      $.plot("#graph", 
+      [
+        { data: revenue, label: "Revenue $", yaxis: 2, lines: { show: true, fill: true }, points: { show: true } },
+        { data: orders, label: "Orders", lines: { show: true, fill: true }, points: { show: true } }
+			], 
+      {
+				xaxes: [ { mode: "time" } ],
+				yaxes: [ {
+					// align if we are to the right
+					alignTicksWithAxis: 1,
+					position: "right",
+          max: 500			
+				}, { tickFormatter: dollarFormatter } ],
+				legend: { position: "nw" }
+			});
+    })
+  </script>
+  <style>
+    #graph { width: 100%; height: 300px; 
+        box-sizing: border-box;
+      	padding: 20px 15px 15px 15px;
+      	margin: 15px auto 30px auto;
+      	border: 1px solid #ddd;
+      	background: #fff;
+      	background: linear-gradient(#f6f6f6 0, #fff 50px);
+      	box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+       }
+  </style>
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Reports", admin_store_reports_path %></li>
+	<li class="active">Monthly Sales</li>
+<% end %>

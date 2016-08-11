@@ -1,0 +1,44 @@
+<h2>Current Stock</h2>
+
+<b>Retail Value: <%= number_to_currency @data.sum { |x| x[:quantity] * (x[:retail_price] || 0.0) }  %></b><br>
+<b>Cost: <%= number_to_currency @data.sum { |x| x[:quantity] * (x[:supplier_price] || 0.0) } %></b><br><br>
+
+
+<table class="table table-striped table-condensed">
+	<tr>
+		<th>SKU</th>
+		<th>Description</th>
+    <th class="ralign">Qty In Stock</th>
+    <th class="ralign">Retail Price</th>
+    <th class="ralign">Retail Value</th>
+    <th>Supplier</th>
+    <th class="ralign">Supplier Price</th>
+    <th class="ralign">Total Cost</th>
+	</tr>
+  <% @data.each do |row| 
+      pname = row[:name]
+      pname += ", " + row[:option_title] unless row[:option_title].blank? %>
+	<tr>
+		<td><%= row[:sku] %></td>
+		<td><%= link_to pname, admin_store_product_path(id: row[:product_id]) %></td>
+    <td class="ralign"><%= number_with_delimiter row[:quantity] %></td>
+    <td class="ralign"><%= number_to_currency row[:retail_price] %></td>
+    <td class="ralign"><%= number_to_currency(row[:quantity] * row[:retail_price]) %></td>
+    <td><%= link_to row[:supplier_name], admin_system_affiliate_path(id: row[:supplier_id]) unless row[:supplier_id].nil? %></td>
+    <td class="ralign"><%= number_to_currency row[:supplier_price] %></td>
+    <td class="ralign"><%= number_to_currency(row[:quantity] * (row[:supplier_price] || 0.0)) %></td>
+	</tr>
+  <% end %>
+</table>
+
+
+<% content_for :title do %>
+	Current Stock
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Reports", admin_store_reports_path %></li>
+	<li class="active">Current Stock</li>
+<% end %>

@@ -1,0 +1,62 @@
+<h2>
+  <span class="pull-right light"><i class="fa fa-clock-o"> <%= systime DateTime.now %></i></span>
+  Pending Fulfillment
+</h2>
+
+
+<ul class="nav nav-tabs">
+  <li role="presentation" class="active"><a href="#">By Label</a></li>
+  <li role="presentation"><a href="/admin/store/reports/inventory_required">By Inventory</a></li>
+</ul>
+
+<% total = 0 %>
+
+<table class="table table-striped table-condensed">
+	<tr>
+    <th>SKU</th>
+    <th>Item</th>
+    <th>Label</th>
+    <th class="calign">Quantity</th>
+    <th></th>
+	</tr>
+  <% @data.each do |row| 
+      total += row[5] 
+      dir = row[0].split('-')[1]
+      pdf_path = "/userfiles/images/labels/#{dir}/#{row[0]}.pdf"
+  %>
+	<tr>
+		<td><%= row[0] %></td>
+    <td><%= link_to row[2] + ", " + row[3], admin_store_product_path(row[1]) %> &nbsp;(<%= row[4]%>)</td>
+    <td>
+      <% unless row[7].nil? %>
+        <%= link_to row[6], edit_admin_store_label_sheet_path(row[7]) %>
+      <% else %>
+        <span class="light">- not set -</span>
+      <% end %>
+    </td>
+    <td class="calign"><%= number_to_human row[5] %></td>
+    <td>
+      <%= link_to Cache.setting('System', 'Static Files Url') + pdf_path, target: '_blank' do %>
+          <i class="fa fa-download"></i> pdf
+      <% end %>
+    </td>
+	</tr>
+  <% end %>
+  <tr>
+    <td colspan="3"></td>
+    <td class="calign"><b><%= number_to_human total %></b></td> 
+    <td></td>
+  </tr>
+</table>
+
+
+<%= content_for :title do %>
+	Pending Fulfillment
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Reports", admin_store_reports_path %></li>
+	<li class="active">Pending Fulfillment</li>
+<% end %>

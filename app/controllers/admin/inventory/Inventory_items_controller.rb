@@ -1,7 +1,9 @@
 class Admin::Inventory::InventoryItemsController < Admin::BaseController
   
   def index
-    @inventory_items = InventoryItem.order(sort_column + ' ' + sort_direction).page(params[:page])
+    @inventory_items = InventoryItem.includes(:inventory_location)
+                                    .order(sort_column + ' ' + sort_direction)
+                                    .page(params[:page])
   end
   
   def new
