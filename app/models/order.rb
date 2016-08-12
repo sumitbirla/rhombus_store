@@ -326,11 +326,11 @@ class Order < ActiveRecord::Base
     # update lot numbers and expirations in shipment items
     shipment.items.each do |i|
       
-      t = InventoryTransactionItem.select("sku, lot, expiration, sum(quantity) as quantity")
-                                  .where(sku: i.product.sku2)
-                                  .group(:lot)
-                                  .order(:expiration)
-                                  .having("sum(quantity) > ?", i.quantity-1).first
+      t = InventoryItem.select("lot, expiration, sum(quantity) as quantity")
+                       .where(inventoriable_id: i.product_id, inventoriable_type: :product)
+                       .group(:lot)
+                       .order(:expiration)
+                       .having("sum(quantity) > ?", i.quantity-1).first
       
       i.assign_attributes(lot: t.lot, expiration: t.expiration) unless t.nil?
     end
