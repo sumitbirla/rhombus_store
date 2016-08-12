@@ -29,4 +29,15 @@ module OrderHelper
     str.html_safe
   end
   
+  
+  def shipment_icons(order)
+    str = ''
+    h = { "pending" => "light", "shipped" => "icon-success", "void" => "icon-danger" }
+    
+    order.shipments.slice(0..2).each do |s|
+      str += "&nbsp; <a href='#{admin_store_shipment_path(s)}'><i class='#{h[s.status]} fa fa-truck'></i></a>"
+    end
+    str.html_safe
+  end
+  
 end

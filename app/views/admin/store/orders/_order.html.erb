@@ -34,12 +34,6 @@
 		<td><%= order.shipping_city %>, <%= order.shipping_state %></td>
 		<td><%= number_to_currency(order.total) %></td>
     <td><%= order.ship_latest %></td>
-    <td>
-      <% if order.shipments.length > 0 %>
-        <%= link_to admin_store_shipment_path(order.shipments.last) do %>
-          <i class="light fa fa-truck"></i>
-        <% end %>
-      <% end%>
-    </td>
+    <td class="ralign"><%= shipment_icons(order) %></td>
 		<td><%= order_status(order) %></td>
 	</tr>
