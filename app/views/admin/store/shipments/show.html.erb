@@ -147,7 +147,7 @@
         <tr>
             <td nowrap><%= item.sku %></td>
             <td>
-              <%= link_to item.product.name_with_option, admin_store_product_path(item.product_id) %>
+              <%= link_to item.product.full_name, admin_store_product_path(item.product_id) %>
               <% unless item.affiliate_id.nil? %>
                 &nbsp; (<span><%= item.affiliate %></span>)
               <% end %>

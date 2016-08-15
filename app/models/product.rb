@@ -84,6 +84,12 @@ class Product < ActiveRecord::Base
     str
   end
   
+  def full_name
+    str = name_with_option
+    str = brand.name + " " + str unless brand.nil?
+    str
+  end
+  
   def cache_key
     "product:#{slug}"
   end

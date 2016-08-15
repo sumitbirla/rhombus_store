@@ -155,7 +155,7 @@
       <tr>
         <td nowrap><input type="checkbox"> &nbsp; <%= item.sku.upcase %></td>
         <td>
-          <%= item.product.name_with_option %>
+          <%= item.product.full_name %>
           <% unless item.affiliate_id.nil? %>
             &nbsp; (<span><%= item.affiliate %></span>)
           <% end %>

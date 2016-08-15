@@ -191,7 +191,7 @@
           <% unless item.order_item.daily_deal.nil? %>
             <%= item.order_item.daily_deal.title %>
           <% else %>
-            <%= item.order_item.product.name_with_option %>
+            <%= item.order_item.product.full_name %>
             <% if item.order_item.affiliate_id %>
               &nbsp; (<%= item.order_item.affiliate %>)
             <% end %>

@@ -2,19 +2,19 @@ module StoreCache
   
   def self.new_orders_count
     Rails.cache.fetch(:new_orders_count, expires_in: 2.minutes) do 
-      Order.where("submitted > ?", DateTime.now - 2.weeks).where(status: ['unshipped', 'submitted'], po: false).count
+      Order.where(status: ['unshipped', 'submitted']).count
     end
   end
   
   def self.new_purchase_orders_count
     Rails.cache.fetch(:new_purchase_orders_count, expires_in: 2.minutes) do 
-      Order.where("submitted > ?", DateTime.now - 2.weeks).where(status: ['unshipped', 'submitted'], po: true).count
+      Order.where(status: ['unshipped', 'submitted'], po: true).count
     end
   end
   
   def self.pending_shipments_count
     Rails.cache.fetch(:pending_shipments_count, expires_in: 2.minutes) do 
-      Shipment.where("created_at > ?", DateTime.now - 2.weeks).where(status: 'pending').count
+      Shipment.where(status: 'pending').count
     end
   end
     
@@ -73,7 +73,7 @@ module StoreCache
     
     Rails.cache.fetch("ap:#{affiliate.slug}:#{product_slug}") do
       AffiliateProduct
-            .includes(:product, [product: :pictures, product: :extra_properties])
+            .includes(:product, [product: [:pictures, :extra_properties]])
             .find_by(affiliate_id: affiliate.id, product_id: Product.select(:id).where(slug: product_slug))
     end
   end
