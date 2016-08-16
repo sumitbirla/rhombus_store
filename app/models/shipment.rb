@@ -59,9 +59,11 @@ class Shipment < ActiveRecord::Base
   
   self.table_name = "store_shipments"
   after_save :update_order
+  
   belongs_to :order
   belongs_to :fulfiller, class_name: 'User', foreign_key: 'fulfilled_by_id'
   has_many :items, class_name: 'ShipmentItem', dependent: :destroy
+  has_many :invoices, as: :invoiceable
   
   accepts_nested_attributes_for :items, allow_destroy: true
 
