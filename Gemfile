@@ -14,3 +14,4 @@ gemspec
 # gem 'debugger'
 gem 'rhombus_core', path: '../rhombus_core'
 gem 'rhombus_billing', path: '../rhombus_billing'
+gem 'rhombus_marketing', path: '../rhombus_marketing'
