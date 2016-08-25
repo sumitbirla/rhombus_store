@@ -77,7 +77,7 @@ class BatchShipJob < ActiveJob::Base
     
     if params[:send_email]
       unless shp.order.notify_email.include?("marketplace")
-        OrderMailer.order_shipped(shp).deliver_later
+        OrderMailer.order_shipped(shp, params[:user_id]).deliver_later
       end
     end
     
