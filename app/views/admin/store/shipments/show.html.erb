@@ -254,9 +254,16 @@
     </div>
     
 <% else %>
-  <%= link_to admin_store_easy_post_path(shipment_id: @shipment.id), class: "btn btn-success pull-right" do %>
-    Get Rates and Ship
+
+  <div class="pull-right">
+  <%= link_to admin_store_easy_post_path(shipment_id: @shipment.id), class: "btn btn-primary" do %>
+    <i class="fa fa-arrow-right"></i> Get Rates and Ship
   <% end %>
+  
+  <%= link_to admin_store_easy_post_path(shipment_id: @shipment.id), class: "btn btn-success" do %>
+    <i class="fa fa-check"></i> Mark as shipped
+  <% end %>
+  </div>
 <% end %>
 
 

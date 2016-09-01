@@ -5,7 +5,7 @@
   <td><%= ap.product.title %></td>
   <td><%= ap.sku %></td>
   <td><%= number_to_currency ap.price %></td>
-  <td class="text-center"><%= ap.minimum_order_quantity %></td>
+  <td class="text-center"><%= number_with_delimiter ap.minimum_order_quantity %></td>
   <td class="text-center"><%= pluralize(ap.ship_lead_time, "day") %></td>
   <td class="actions ralign"><%= link_to "edit", edit_admin_store_affiliate_product_path(ap) %></td>
 </tr>
