@@ -198,7 +198,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       join store_label_sheets sheet on sheet.id = p.label_sheet_id
       where shp.id in (#{@shipments.map(&:id).join(",")})
       group by p.sku, a.code, item.variation
-      order by p.label_sheet_id;
+      order by p.label_sheet_id, p.id;
     EOF
     
     @items = []
@@ -219,7 +219,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       join store_label_sheets sheet on sheet.id = p.label_sheet_id
       where shp.id in (#{params[:shipment_id].join(",")})
       group by p.sku, a.code, item.variation, item.lot
-      order by p.label_sheet_id;
+      order by p.label_sheet_id, p.id;
     EOF
     
     @items = []
