@@ -159,19 +159,19 @@
   <tr>
     <th>Item:</th>
     <th>Description:</th>
-    <th class="ralign">Unit price:</th>
-    <th class="calign">Quantity:</th>
-    <th class="calign">Accepted:</th>
-    <th class="ralign">Subtotal:</th>
+    <th class="text-right">Unit price:</th>
+    <th class="text-right">Quantity:</th>
+    <th class="text-right">Accepted:</th>
+    <th class="text-right">Subtotal:</th>
   </tr>
   <% @order.items.each do |item| %>
       <tr>
         <td><%= item.item_id %></td>
         <td><%= render item %></td>
-        <td class="ralign"><%= number_to_currency(item.unit_price, precision: 4, strip_insignificant_zeros: true)%></td>
-        <td class="calign"><%= number_with_delimiter(item.quantity) %></td>
-        <td class="calign"><%= number_with_delimiter(item.quantity_accepted) %></td>
-        <td class="ralign" class="ralign"><%= number_to_currency(item.quantity * item.unit_price) %></td>
+        <td class="text-right"><%= number_to_currency(item.unit_price, precision: 4, strip_insignificant_zeros: true)%></td>
+        <td class="text-right"><%= number_with_delimiter(item.quantity) %></td>
+        <td class="text-right"><%= number_with_delimiter(item.quantity_accepted) %></td>
+        <td class="text-right"><%= number_to_currency(item.quantity * item.unit_price) %></td>
       </tr>
   <% end %>
   <tr>

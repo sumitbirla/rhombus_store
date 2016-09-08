@@ -139,7 +139,7 @@
         <th>Description</th>
         <th class="calign">Lot #</th>
         <th class="calign">Expiration</th>
-        <th class="calign">Ship Qty.</th>
+        <th class="text-right">Ship Qty.</th>
         <th class="calign">Status</th>
     </tr>
     <% @shipment.items.each do |item| 
@@ -158,7 +158,7 @@
             </td>
             <td class="calign"><%= item.lot %></td>
             <td class="calign"><%= item.formatted_expiration %></td>
-            <td class="calign"><%= number_with_delimiter(item.quantity) %></td>
+            <td class="text-right"><%= number_with_delimiter(item.quantity) %></td>
             <td class="calign"><%= item.special_status %></td>
         </tr>
     <% end %>
