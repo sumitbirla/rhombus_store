@@ -1,3 +1,7 @@
+<%
+  @from = Affiliate.joins(:categories).order(:name).where(active: true).where("core_categories.slug = 'purchasers'") 
+  @suppliers = Affiliate.joins(:categories).order(:name).where(active: true).where("core_categories.slug = 'suppliers'")  
+%>
 <h2>
   <i class="fa fa-file-text-o"></i>&nbsp; 
   <% if @purchase_order.id.nil? %>
@@ -16,8 +20,8 @@
   <div class="row">
     <div class="col-md-6">
       <%= f.input :status, collection: ['new', 'open', 'closed']%>
-      <%= f.association :affiliate, collection: Cache.affiliate_list('purchasers'), label: 'From' %>
-      <%= f.association :supplier, collection: Cache.affiliate_list('suppliers') %>
+      <%= f.association :affiliate, collection: @from, label: 'From' %>
+      <%= f.association :supplier, collection: @suppliers %>
       <%= f.input :issue_date, as: :datepicker %>
       <%= f.input :due_date, as: :datepicker %>
       <%= f.input :payment_terms %>
