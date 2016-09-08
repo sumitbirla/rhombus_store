@@ -67,11 +67,11 @@ packaging_types = [
         </div>
       </div>
       
-      
       <%= f.input :ship_date, as: :datepicker %>
       <%= f.input :require_signature, label: 'Signature?' %>
 		 
-      <%= f.submit 'Get Rates', class: 'btn btn-success' %>
+      <%= button_tag "Get Rates", :class => "btn btn-success", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+      
 		  <span class="label label-warning pull-right"><%= @response[:mode] unless @response.nil? %></span>
      <% end %>
    </div>
@@ -137,8 +137,10 @@ packaging_types = [
 			  <td class="calign"><%= rate[:est_delivery_days] || "<span class='light'> - n/a - </span>".html_safe %></td>
 			  <td class="calign"><%= number_to_currency(rate[:rate]) %></td>
 			  <td class="ralign">
-			    <%= link_to "purchase", admin_store_easy_post_buy_path(shipment_id: @shipment.id, rate_id: rate[:id], ep_shipment_id: @response[:id]), class: 'btn btn-sm btn-default'  %>
-			</tr>
+			    <%= link_to "purchase", admin_store_easy_post_buy_path(shipment_id: @shipment.id, rate_id: rate[:id], ep_shipment_id: @response[:id]), 
+                  class: 'btn btn-sm btn-default', data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> purchasing ..." }   %>
+			  </td>
+      </tr>
 			<% end %>
 		</table>
 	</div>

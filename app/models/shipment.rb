@@ -90,6 +90,18 @@ class Shipment < ActiveRecord::Base
     Payment.exists?(payable_type: :shipment, payable_id: id)
   end
   
+  def same_content?(shipment)
+    return false if shipment.items.length != items.length
+    
+    shipment.items.each do |i|
+      if !items.any? { |x| x.product_id == i.product_id && x.quantity == i.quantity }
+        return false
+      end
+    end
+    
+    true
+  end
+  
   def post_invoice
     return if (invoice_amount == 0.0 || invoice_posted?)
     Payment.create(user_id: order.user_id, payable_id: id, payable_type: :shipment, amount: invoice_amount * -1.0, memo: 'invoice')               

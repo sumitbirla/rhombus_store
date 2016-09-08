@@ -12,6 +12,26 @@ class Admin::Store::EasyPostController < Admin::BaseController
       @shipment.ship_date = Date.today
       @shipment.ship_date = Date.tomorrow if (t.wday == 7 || t.hour > 21)
     end
+    
+    # if identical shipment was recentely shipped with same contents, set box size and weight
+    shipments = Shipment.includes(:items)
+                        .where(status: :shipped)
+                        .where("ship_date > ?", 1.day.ago)
+                        .order(ship_date: :desc)
+    
+    shipments.each do |s|
+      if s.same_content?(@shipment)
+        @shipment.assign_attributes(
+          packaging_type: s.packaging_type,
+          package_weight: s.package_weight,
+          package_height: s.package_height,
+          package_length: s.package_length,
+          package_width: s.package_width
+        )
+        break
+      end
+    end
+    
   end
   
   def rates

@@ -279,7 +279,6 @@ class Order < ActiveRecord::Base
                              recipient_state: shipping_state,
                              recipient_zip: shipping_zip,
                              recipient_country: shipping_country,
-                             package_weight: 1.0,
                              status: 'pending')
 
      loc_id = Cache.setting(shipment.order.domain_id, :shipping, "Ship From Location ID")

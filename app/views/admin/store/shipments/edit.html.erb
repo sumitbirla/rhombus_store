@@ -34,7 +34,7 @@
               <% unless item.affiliate_id.nil? %>
                 &nbsp; (<span><%= item.affiliate %></span>)
               <% end %></td>
-            <td class="calign"><%= item.quantity %></td>
+            <td class="calign"><%= item.order_item.quantity %></td>
             <td class="calign"><%= itemf.text_field :lot, style: 'width: 120px; text-align: center;' %></td>
             <td class="calign"><%= itemf.text_field :expiration, placeholder: "YYMM", style: 'width: 60px; text-align: center;' %></td>
             <td class="calign"><%= itemf.number_field :quantity, unit_price: (item.order_item ? item.order_item.unit_price : '0.0'), class: "item-qty", style: 'width: 80px; text-align: center;' %></td>
