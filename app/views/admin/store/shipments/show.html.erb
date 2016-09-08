@@ -158,7 +158,7 @@
             </td>
             <td class="calign"><%= item.lot %></td>
             <td class="calign"><%= item.formatted_expiration %></td>
-            <td class="calign"><%= item.quantity %></td>
+            <td class="calign"><%= number_with_delimiter(item.quantity) %></td>
             <td class="calign"><%= item.special_status %></td>
         </tr>
     <% end %>
@@ -167,7 +167,7 @@
       <th></th>
       <th></th>
       <th class="ralign">Total: </th>
-      <th class="text-center"><%= total_qty %></th>
+      <th class="text-center"><%= number_with_delimiter(total_qty) %></th>
       <th></th>
     </tr>
 </table>

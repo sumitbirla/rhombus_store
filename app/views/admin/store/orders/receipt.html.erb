@@ -173,8 +173,8 @@
                 &nbsp; (<span><%= item.affiliate %></span>)
               <% end %>
             </td>
-            <td align="right" class="textright"><%= number_to_currency(item.unit_price) %></td>
-            <td align="right" class="textright"><%= item.quantity %></td>
+            <td align="right" class="textright"><%= number_to_currency(item.unit_price, precision: 4, strip_insignificant_zeros: true) %></td>
+            <td align="right" class="textright"><%= number_with_delimiter(item.quantity) %></td>
             <td align="right" class="textright"><%= number_to_currency(item.unit_price * item.quantity) %></td>
           </tr>
       <% end %>

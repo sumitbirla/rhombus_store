@@ -197,9 +197,9 @@
             <% end %>
           <% end %>
         </td>
-        <td align="right" class="textright"><%= item.order_item.quantity %></td>
+        <td align="right" class="textright"><%= number_with_delimiter(item.order_item.quantity) %></td>
         <td align="right" class="textright"><%= item.quantity unless item.quantity == 0 && !item.special_status.blank? %> <%= item.special_status %></td>
-        <td align="right" class="textright"><%= number_to_currency(item.order_item.unit_price) %></td>
+        <td align="right" class="textright"><%= number_to_currency(item.order_item.unit_price, precision: 4, strip_insignificant_zeros: true) %></td>
         <td align="right" class="textright"><%= number_to_currency(item.order_item.unit_price * item.quantity) %></td>
       </tr>
       <% end %>
