@@ -341,6 +341,27 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
   def batch
     @shipments = Shipment.where(id: params[:shipment_id])
+    
+    if @shipments.length == 0
+      flash[:error] = "No shipments selected."
+      return redirect_to :back
+    end
+    
+    @batch = Shipment.new(ship_date: Date.today)
+    
+    # try to autopopulate fields
+    shipments = Shipment.includes(:items)
+                        .where(status: :shipped)
+                        .order(ship_date: :desc)
+                        .limit(10)
+    
+    shipments.each do |s|
+      if s.same_content?(@shipments[0])
+        @batch = s.dup
+        @batch.ship_date = Date.today
+        break
+      end
+    end
   end
 
   def scan
