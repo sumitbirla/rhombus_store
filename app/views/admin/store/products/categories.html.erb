@@ -30,7 +30,7 @@
 	<% end %>
 </ul>
 <div class="form-actions">
-	<button class="btn btn-primary">Update</button>
+	<%= button_tag "Save changes", class: "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ...".html_safe } %>
 </div>
 </form>
 

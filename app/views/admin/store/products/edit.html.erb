@@ -120,7 +120,7 @@
     <h4>Long Description</h4>
   	<%= f.input_field :long_description, class: "form-control text", rows: 20  %>
 	
-  	<%= f.button :submit %>
+  	<%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
   </div>
 
 <% end %>

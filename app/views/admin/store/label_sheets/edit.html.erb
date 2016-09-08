@@ -16,7 +16,7 @@
 		<%= f.input :height, input_html: { class: 'span4' } %>
 		<%= f.input :dpi, input_html: { class: 'span4' } %>
 
-		<%= f.button :submit %>
+		<%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
 
 	<% end %>
 </div>

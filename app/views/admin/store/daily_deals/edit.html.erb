@@ -48,7 +48,7 @@
   <%= f.input :order_specifications, as: :text, input_html: { rows: 6 } %>
   
   <div class="form-actions">
-  	<%= f.button :submit %>
+  	<%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
   </div>
   
 <% end %>

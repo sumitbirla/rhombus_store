@@ -14,7 +14,7 @@
   <%= f.input :next_ship_date, as: :datepicker %>
   <%= f.input :status, collection: [:active, :billing_failed, :waiting, :cancelled ]%>
   
-  <%= f.button :submit %>
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
 
 <% end %>
 
