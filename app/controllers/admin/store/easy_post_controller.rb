@@ -16,8 +16,8 @@ class Admin::Store::EasyPostController < Admin::BaseController
     # if identical shipment was recentely shipped with same contents, set box size and weight
     shipments = Shipment.includes(:items)
                         .where(status: :shipped)
-                        .where("ship_date > ?", 1.day.ago)
                         .order(ship_date: :desc)
+                        .limit(10)
     
     shipments.each do |s|
       if s.same_content?(@shipment)
