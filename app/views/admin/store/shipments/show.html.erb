@@ -248,7 +248,7 @@
   			<%= link_to "EPL2", label_admin_store_shipment_path(@shipment, format: 'epl2'), class: "btn btn-sm btn-default" %>
   			<%= link_to "ZPL", label_admin_store_shipment_path(@shipment, format: 'zpl'), class: "btn btn-sm btn-default" %>
   			<% if @shipment.status == "shipped" && @shipment.carrier == 'USPS' && @shipment.ship_date > 1.month.ago %>
-          <%= link_to "Void Shipment", void_label_admin_store_shipment_path(@shipment), class: "btn btn-sm btn-danger pull-right" %>
+          <%= link_to "Void Shipment", void_label_admin_store_shipment_path(@shipment), class: "btn btn-sm btn-danger pull-right", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> please wait ..." }   %>
   			<% end %>
     	<% end %>
     </div>
@@ -267,7 +267,6 @@
     </form>
   </div>
 <% end %>
-
 
 
 <%= content_for :title do %>

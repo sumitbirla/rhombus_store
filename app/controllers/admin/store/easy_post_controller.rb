@@ -44,6 +44,8 @@ class Admin::Store::EasyPostController < Admin::BaseController
       @ep_shipment = create_ep_shipment(@shipment)
       @cheapest_rate = @ep_shipment[:rates].min_by { |x| x[:rate].to_d } unless @ep_shipment[:rates].nil?
       
+      puts  @ep_shipment[:rates][0].to_json
+      
       if response && params[:ship_cheapest] == "true" && @cheapest_rate
         easypost_purchase(@shipment, @cheapest_rate[:id], @ep_shipment)
         return redirect_to admin_store_shipment_path(@shipment)

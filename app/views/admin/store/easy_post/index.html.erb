@@ -133,7 +133,8 @@ packaging_types = [
 		<table class="table table-striped table-condensed">
 			<tr>
 			  <th>Service</th>
-			  <th class="calign">Est. Days</th>
+			  <th class="text-center">Est. Days</th>
+        <th class="text-center">Date</th>
 			  <th class="text-right">Rate</th>
         <th width="12"></th>
 			  <th></th>
@@ -141,7 +142,14 @@ packaging_types = [
 			<% @ep_shipment[:rates].select { |x| x[:carrier] == carrier }.each do |rate| %>
 			<tr>
 			  <td><%= rate[:service] %></td>
-			  <td class="calign"><%= rate[:delivery_days] || "<span class='light'> - n/a - </span>".html_safe %></td>
+			  <td class="text-center"><%= rate[:delivery_days] || "<span class='light'> - n/a - </span>".html_safe %></td>
+        <td class="text-center">
+          <% if rate[:delivery_date] %>
+            <%= Date.parse(rate[:delivery_date]).strftime("%m/%d") %>
+          <% else %>
+            <span class='light'> - unknown - </span>
+          <% end %>
+        </td>
 			  <td class="text-right"><%= number_to_currency(rate[:rate]) %></td>
         <td class="text-center">
           <% if rate == @cheapest_rate %>
@@ -187,7 +195,6 @@ packaging_types = [
 						});
             
             $(".btn-cheapest").click(function() {
-              alert("ahou");
               $("#ship_cheapest").val("true");
             });
 
