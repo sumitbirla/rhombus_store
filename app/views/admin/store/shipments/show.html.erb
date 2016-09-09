@@ -256,13 +256,15 @@
 <% else %>
 
   <div class="pull-right">
-  <%= link_to admin_store_easy_post_path(shipment_id: @shipment.id), class: "btn btn-primary" do %>
-    <i class="fa fa-arrow-right"></i> Get Rates and Ship
-  <% end %>
+    <%= link_to admin_store_easy_post_path(shipment_id: @shipment.id), class: "btn btn-primary" do %>
+      <i class="fa fa-arrow-right"></i> Get Rates and Ship
+    <% end %>
   
-  <%= link_to admin_store_easy_post_path(shipment_id: @shipment.id), class: "btn btn-success" do %>
-    <i class="fa fa-check"></i> Mark as shipped
-  <% end %>
+    <form style="display: inline" method="post" action="/admin/store/shipments_update_status?status=shipped">
+      <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+      <input type="hidden" name="shipment_id[]" value="<%= @shipment.id %>"/>
+      <button class="btn btn-success"><i class="fa fa-check"></i> Mark as shipped</button>
+    </form>
   </div>
 <% end %>
 

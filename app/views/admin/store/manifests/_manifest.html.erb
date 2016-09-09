@@ -26,7 +26,7 @@
       <% end %>
     <% else %>
       <% unless m.document_url.nil? %>
-        <%= link_to "print document", m.document_url %> &nbsp; 
+        <%= link_to "print document", m.document_url, target: '_new' %> &nbsp; 
       <% end %>
     <% end %>
   </td>
