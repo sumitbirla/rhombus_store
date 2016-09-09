@@ -41,65 +41,34 @@ class Admin::Store::EasyPostController < Admin::BaseController
     return render 'index' unless @shipment.valid?
 		
     begin
-      @response = create_ep_shipment(@shipment)
+      @ep_shipment = create_ep_shipment(@shipment)
+      @cheapest_rate = @ep_shipment[:rates].min_by { |x| x[:rate].to_d } unless @ep_shipment[:rates].nil?
+      
+      if response && params[:ship_cheapest] == "true" && @cheapest_rate
+        easypost_purchase(@shipment, @cheapest_rate[:id], @ep_shipment)
+        return redirect_to admin_store_shipment_path(@shipment)
+      end
     rescue => e
       flash[:error] = e.message
     end
-
+  
     render 'index'
   end
   
   # Purchases shipping for given shipment
   def buy
-    @shipment = Shipment.find(params[:shipment_id])
-    EasyPost.api_key = Cache.setting(@shipment.order.domain_id, :shipping, 'EasyPost API Key')
+    shipment = Shipment.find(params[:shipment_id])
+    EasyPost.api_key = Cache.setting(shipment.order.domain_id, :shipping, 'EasyPost API Key')
     
     begin
       ep_shipment = EasyPost::Shipment.retrieve(params[:ep_shipment_id])
-      response = ep_shipment.buy(:rate => {:id => params[:rate_id]})
+      easypost_purchase(shipment, params[:rate_id], ep_shipment)  
     rescue => e
       flash[:error] = e.message
       return redirect_to :back
     end
     
-    @shipment.copy_easy_post(response)
-    @shipment.status = 'shipped'
-    @shipment.fulfilled_by_id = session[:user_id]
-    @shipment.save!
-  
-    OrderHistory.create order_id: @shipment.order_id,
-                              user_id: current_user.id,
-                              event_type: 'package_shipped',
-                              amount: @shipment.ship_cost,
-                              system_name: response[:selected_rate][:carrier],
-                              identifier: @shipment.tracking_number,
-                              comment:  response[:selected_rate][:service]
-    
-    # Amazon orders need to be notified about shipment
-    if @shipment.order.sales_channel == "Amazon.com"
-      AmazonFulfillmentJob.perform_later(@shipment.id)
-    else
-      @shipment.post_invoice
-    end
-    
-    # auto print label if specified in settings
-    if Cache.setting(@shipment.order.domain_id, :shipping, "Auto Print EPL2") == "true"
-      ShippingLabelJob.perform_later(session[:user_id], @shipment.id, "epl2")
-      flash[:success] = "Shipping label sent to printer"
-    end
-    
-    # email customer with tracking info if specified in settings
-    if Cache.setting(@shipment.order.domain_id, :shipping, "Auto Email Tracking") == "true"
-      unless @shipment.order.sales_channel == "Amazon.com"
-        OrderMailer.order_shipped(@shipment.id, session[:user_id]).deliver_later
-        flash[:info] = "Shipment confirmation sent to #{@shipment.order.notify_email}"
-      end
-    end
-    
-    # update inventory
-    # UpdateInventoryJob.perform_later(shipment_id: @shipment.id)
-    
-    redirect_to admin_store_shipment_path(@shipment)
+    redirect_to admin_store_shipment_path(shipment)
   end
   
   # Creates an EasyPost shipment object which contains rates
@@ -138,65 +107,105 @@ class Admin::Store::EasyPostController < Admin::BaseController
     end
   end
   
-  
-  def create_ep_shipment(shipment)
-		if shipment.packaging_type == 'YOUR PACKAGING'
-			parcel = {
-          :length => shipment.package_length, 
-          :width => shipment.package_width,
-          :height => shipment.package_height,
-          :weight => shipment.package_weight * 16.0
-        }
-		else
-			parcel = {
-				:predefined_package => shipment.packaging_type,
-				:weight => shipment.package_weight * 16.0
-			}
-		end
-    
-    options = { 
-      :print_custom_1 => shipment.to_s,
-      :date_advance => (shipment.ship_date - Date.today).to_i
-    }
-    options[:delivery_confirmation] = 'SIGNATURE' if shipment.require_signature
-    
-    EasyPost.api_key = Cache.setting(shipment.order.domain_id, :shipping, 'EasyPost API Key')
-    response = EasyPost::Shipment.create(
-        :to_address => {
-          :name => shipment.recipient_name,
-          :company => shipment.recipient_company,
-          :street1 => shipment.recipient_street1,
-          :street2 => shipment.recipient_street2,
-          :city => shipment.recipient_city,
-          :state => shipment.recipient_state,
-          :zip => shipment.recipient_zip,
-          :country => shipment.recipient_country,
-          :phone => shipment.order.contact_phone,
-          :email => shipment.order.notify_email
-        },
-        :from_address => {
-          :company => shipment.ship_from_company,
-          :street1 => shipment.ship_from_street1,
-          :city => shipment.ship_from_city,
-          :state => shipment.ship_from_state,
-          :zip => shipment.ship_from_zip,
-          :country => shipment.ship_from_country,
-          :phone => shipment.ship_from_phone,
-          :email => shipment.ship_from_email
-        },
-        :parcel => parcel,
-        :options => options
-    ) 
-    
-    shipment.copy_easy_post(response)
-    response
-  end
-
 
   private
 
     def shipment_params
       params.require(:shipment).permit!
+    end
+    
+    def create_ep_shipment(shipment)
+  		if shipment.packaging_type == 'YOUR PACKAGING'
+  			parcel = {
+            :length => shipment.package_length, 
+            :width => shipment.package_width,
+            :height => shipment.package_height,
+            :weight => shipment.package_weight * 16.0
+          }
+  		else
+  			parcel = {
+  				:predefined_package => shipment.packaging_type,
+  				:weight => shipment.package_weight * 16.0
+  			}
+  		end
+    
+      options = { 
+        :print_custom_1 => shipment.to_s,
+        :date_advance => (shipment.ship_date - Date.today).to_i
+      }
+      options[:delivery_confirmation] = 'SIGNATURE' if shipment.require_signature
+    
+      EasyPost.api_key = Cache.setting(shipment.order.domain_id, :shipping, 'EasyPost API Key')
+      response = EasyPost::Shipment.create(
+          :to_address => {
+            :name => shipment.recipient_name,
+            :company => shipment.recipient_company,
+            :street1 => shipment.recipient_street1,
+            :street2 => shipment.recipient_street2,
+            :city => shipment.recipient_city,
+            :state => shipment.recipient_state,
+            :zip => shipment.recipient_zip,
+            :country => shipment.recipient_country,
+            :phone => shipment.order.contact_phone,
+            :email => shipment.order.notify_email
+          },
+          :from_address => {
+            :company => shipment.ship_from_company,
+            :street1 => shipment.ship_from_street1,
+            :city => shipment.ship_from_city,
+            :state => shipment.ship_from_state,
+            :zip => shipment.ship_from_zip,
+            :country => shipment.ship_from_country,
+            :phone => shipment.ship_from_phone,
+            :email => shipment.ship_from_email
+          },
+          :parcel => parcel,
+          :options => options
+      ) 
+    
+      shipment.copy_easy_post(response)
+      response
+    end
+    
+    def easypost_purchase(shipment, rate_id, ep_shipment)
+      
+      EasyPost.api_key = Cache.setting(shipment.order.domain_id, :shipping, 'EasyPost API Key')  
+      response = ep_shipment.buy(:rate => {:id => rate_id})
+    
+      shipment.copy_easy_post(response)
+      shipment.status = 'shipped'
+      shipment.fulfilled_by_id = session[:user_id]
+      shipment.save!
+  
+      OrderHistory.create order_id: shipment.order_id,
+                                user_id: current_user.id,
+                                event_type: 'package_shipped',
+                                amount: shipment.ship_cost,
+                                system_name: response[:selected_rate][:carrier],
+                                identifier: shipment.tracking_number,
+                                comment:  response[:selected_rate][:service]
+    
+      # Amazon orders need to be notified about shipment
+      if shipment.order.sales_channel == "Amazon.com"
+        AmazonFulfillmentJob.perform_later(shipment.id)
+      else
+        shipment.post_invoice
+      end
+    
+      # auto print label if specified in settings
+      if Cache.setting(shipment.order.domain_id, :shipping, "Auto Print EPL2") == "true"
+        ShippingLabelJob.perform_later(session[:user_id], shipment.id, "epl2")
+        flash[:success] = "Shipping label sent to printer"
+      end
+    
+      # email customer with tracking info if specified in settings
+      if Cache.setting(shipment.order.domain_id, :shipping, "Auto Email Tracking") == "true"
+        unless shipment.order.sales_channel == "Amazon.com"
+          OrderMailer.order_shipped(shipment.id, session[:user_id]).deliver_later
+          flash[:info] = "Shipment confirmation sent to #{shipment.order.notify_email}"
+        end
+      end
+      
     end
 
 end

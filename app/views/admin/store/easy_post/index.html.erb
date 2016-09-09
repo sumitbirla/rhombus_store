@@ -54,7 +54,8 @@ packaging_types = [
    <div class="col-md-7">
 
      <%= simple_form_for @shipment, url: '' do |f| %>
-
+     
+      <%= hidden_field_tag :ship_cheapest, false %>
 		  <%= f.input :packaging_type, collection: packaging_types, label: 'Packaging' %>
       <%= f.input :package_weight, label: 'Weight (lbs)' %>
 
@@ -70,9 +71,14 @@ packaging_types = [
       <%= f.input :ship_date, as: :datepicker %>
       <%= f.input :require_signature, label: 'Signature?' %>
 		 
-      <%= button_tag "Get Rates", :class => "btn btn-success", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+      <%= button_tag :class => "btn btn-success", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } do %>
+        <i class="fa fa-dollar"></i> &nbsp; Get Rates
+      <% end %>
+      <%= button_tag :class => "btn btn-primary btn-cheapest", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } do %>
+        <i class="fa fa-truck"></i> &nbsp; Ship Cheapest
+      <% end %>
       
-		  <span class="label label-warning pull-right"><%= @response[:mode] unless @response.nil? %></span>
+		  <span class="label label-warning pull-right"><%= @ep_shipment[:mode] unless @ep_shipment.nil? %></span>
      <% end %>
    </div>
 
@@ -107,9 +113,9 @@ packaging_types = [
 
 <%= render partial: 'admin/shared/error_messages', locals: {object: @shipment} %>
 
-<% if @response and @response[:messages].length > 0 %>
+<% if @ep_shipment and @ep_shipment[:messages].length > 0 %>
 	<ul class="alert alert-info">
-		<% @response[:messages].each do |msg| %>
+		<% @ep_shipment[:messages].each do |msg| %>
 		<li><b><%= msg[:carrier] %>:</b> <%= msg[:message] %></li>
 		<% end %>
 	</ul>
@@ -117,8 +123,8 @@ packaging_types = [
 
 
 
-<% unless @response.nil? || @response[:rates].nil?
-		carriers = @response[:rates].map { |x| x[:carrier] }.uniq 
+<% unless @ep_shipment.nil? || @ep_shipment[:rates].nil?
+		carriers = @ep_shipment[:rates].map { |x| x[:carrier] }.uniq 
 		carriers.each do |carrier| %>
 
 	<div class="col-md-6">
@@ -128,16 +134,22 @@ packaging_types = [
 			<tr>
 			  <th>Service</th>
 			  <th class="calign">Est. Days</th>
-			  <th class="calign">Rate</th>
+			  <th class="text-right">Rate</th>
+        <th width="12"></th>
 			  <th></th>
 			</tr>
-			<% @response[:rates].select { |x| x[:carrier] == carrier }.each do |rate| %>
+			<% @ep_shipment[:rates].select { |x| x[:carrier] == carrier }.each do |rate| %>
 			<tr>
 			  <td><%= rate[:service] %></td>
-			  <td class="calign"><%= rate[:est_delivery_days] || "<span class='light'> - n/a - </span>".html_safe %></td>
-			  <td class="calign"><%= number_to_currency(rate[:rate]) %></td>
-			  <td class="ralign">
-			    <%= link_to "purchase", admin_store_easy_post_buy_path(shipment_id: @shipment.id, rate_id: rate[:id], ep_shipment_id: @response[:id]), 
+			  <td class="calign"><%= rate[:delivery_days] || "<span class='light'> - n/a - </span>".html_safe %></td>
+			  <td class="text-right"><%= number_to_currency(rate[:rate]) %></td>
+        <td class="text-center">
+          <% if rate == @cheapest_rate %>
+            <i class="fa fa-star-o text-danger"></i>
+          <% end %>
+        </td>
+			  <td class="text-right">
+			    <%= link_to "purchase", admin_store_easy_post_buy_path(shipment_id: @shipment.id, rate_id: rate[:id], ep_shipment_id: @ep_shipment[:id]), 
                   class: 'btn btn-sm btn-default', data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> purchasing ..." }   %>
 			  </td>
       </tr>
@@ -159,6 +171,7 @@ packaging_types = [
         .dimensions .numeric { width: 45px; text-align: center;}
         .add-on { background-color: #dfeaef; color: #666; text-shadow: none; font-weight: normal; display: inline-block; width: 120px; margin-bottom: 4px; }
         th { background-color: #ddd; padding: 0; }
+        .cheapest { background-color: #bbffaa; }
     </style>
     <script>
         $(document).ready(function() {
@@ -172,6 +185,11 @@ packaging_types = [
 								$('.shipment_dimensions').hide();
 							}
 						});
+            
+            $(".btn-cheapest").click(function() {
+              alert("ahou");
+              $("#ship_cheapest").val("true");
+            });
 
         });
     </script>

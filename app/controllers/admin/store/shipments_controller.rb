@@ -152,7 +152,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     courier_data = JSON.parse(shipment.courier_data)
     
     begin
-      EasyPost.api_key = Cache.setting('Shipping', 'EasyPost API Key')
+      EasyPost.api_key = Cache.setting(shipment.order.domain_id, 'Shipping', 'EasyPost API Key')
       ep_shipment = EasyPost::Shipment.retrieve(courier_data['id'])
       response = ep_shipment.label({'file_format' => params[:format]})
       
@@ -170,15 +170,15 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
 
   def void_label
-    EasyPost.api_key = Cache.setting('Shipping', 'EasyPost API Key')
     shipment = Shipment.find(params[:id])
+    EasyPost.api_key = Cache.setting(shipment.order.domain_id, 'Shipping', 'EasyPost API Key')
     courier_data = JSON.parse(shipment.courier_data)
     
     begin
       ep_shipment = EasyPost::Shipment.retrieve(courier_data['id'])
       response = ep_shipment.refund
-      flash[:info] = "Refund status: #{response[:status]} - / - Tracking: #{response[:tracking_code]} - / - Confirmation: #{response[:confirmation_number] || "n/a"}"
-      shipment.update_attribute(:status, 'void') if response[:status] == 'submitted'
+      flash[:info] = "Refund status: #{response[:refund_status]} - / - Tracking: #{response[:tracking_code]} - / - Confirmation: #{response[:confirmation_number] || "n/a"}"
+      shipment.update_attribute(:status, 'void') if response[:refund_status] == 'submitted'
     rescue => e
       flash[:error] = e.message
     end
