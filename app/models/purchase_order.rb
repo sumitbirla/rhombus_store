@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: store_purchase_orders
+# Table name: inv_purchase_orders
 #
 #  id            :integer          not null, primary key
 #  affiliate_id  :integer

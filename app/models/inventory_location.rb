@@ -1,17 +1,19 @@
 # == Schema Information
 #
-# Table name: store_sublocations
+# Table name: inv_locations
 #
-#  id          :integer          not null, primary key
-#  location_id :integer
-#  created_at  :datetime
-#  updated_at  :datetime
-#  zone        :string(255)      not null
-#  aisle       :string(255)
-#  bay         :string(255)
-#  level       :string(255)
-#  section     :string(255)
-#  notes       :text(65535)
+#  id           :integer          not null, primary key
+#  name         :string(255)      default(""), not null
+#  depth        :integer
+#  height       :integer
+#  width        :integer
+#  large_box    :boolean          default(FALSE), not null
+#  heavy_box    :boolean          default(FALSE), not null
+#  holding_area :boolean          default(FALSE), not null
+#  usable       :boolean          default(TRUE), not null
+#  notes        :text(65535)
+#  created_at   :datetime
+#  updated_at   :datetime
 #
 
 class InventoryLocation < ActiveRecord::Base

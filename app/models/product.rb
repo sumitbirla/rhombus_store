@@ -9,8 +9,9 @@
 #  slug                   :string(255)
 #  brand_id               :integer
 #  sku                    :string(255)      default(""), not null
+#  upc                    :string(255)
 #  sku2                   :string(255)
-#  active                 :boolean          default("1"), not null
+#  active                 :boolean          default(TRUE), not null
 #  title                  :string(255)      not null
 #  option_title           :string(255)
 #  option_sort            :integer
@@ -20,18 +21,17 @@
 #  price                  :decimal(10, 2)   not null
 #  msrp                   :decimal(10, 2)
 #  special_price          :decimal(10, 2)
-#  free_shipping          :boolean          default("0"), not null
-#  tax_exempt             :boolean          default("0"), not null
-#  hidden                 :boolean          default("0"), not null
-#  featured               :boolean          default("0"), not null
-#  auto_ship              :boolean          default("0"), not null
+#  free_shipping          :boolean          default(FALSE), not null
+#  tax_exempt             :boolean          default(FALSE), not null
+#  hidden                 :boolean          default(FALSE), not null
+#  featured               :boolean          default(FALSE), not null
+#  auto_ship              :boolean          default(FALSE), not null
 #  affiliate_only         :boolean
-#  require_image_upload   :boolean          default("0"), not null
+#  require_image_upload   :boolean          default(FALSE), not null
 #  short_description      :text(65535)
 #  long_description       :text(65535)
 #  keywords               :string(255)
 #  warranty               :string(255)
-#  primary_supplier_id    :integer
 #  fulfiller_id           :integer
 #  label_sheet_id         :integer
 #  item_length            :decimal(10, 3)
@@ -46,11 +46,12 @@
 #  country_of_origin      :string(255)
 #  minimum_order_quantity :integer
 #  low_threshold          :integer
-#  committed              :integer          default("0"), not null
+#  committed              :integer          default(0), not null
 #  shipping_lead_time     :integer
 #  item_availability      :date
 #  created_at             :datetime
 #  updated_at             :datetime
+#  harmonized_code        :string(255)
 #
 
 class Product < ActiveRecord::Base

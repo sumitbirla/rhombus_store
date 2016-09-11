@@ -7,7 +7,7 @@
 #  product_id             :integer          not null
 #  sku                    :string(255)
 #  price                  :decimal(10, 2)
-#  minimum_order_quantity :integer          default("1"), not null
+#  minimum_order_quantity :integer          default(1), not null
 #  title                  :string(255)
 #  description            :text(65535)
 #  data                   :string(255)
@@ -17,6 +17,7 @@
 #  category1              :string(255)
 #  category2              :string(255)
 #  category3              :string(255)
+#  ship_lead_time         :integer          default(14), not null
 #
 
 class AffiliateProduct < ActiveRecord::Base

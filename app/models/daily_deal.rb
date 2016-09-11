@@ -3,7 +3,6 @@
 # Table name: store_daily_deals
 #
 #  id                         :integer          not null, primary key
-#  region_id                  :integer          not null
 #  affiliate_id               :integer
 #  affiliate_remittance       :decimal(8, 2)
 #  affiliate_paid             :boolean          not null
@@ -15,7 +14,7 @@
 #  voucher_expiration         :datetime
 #  original_price             :decimal(8, 2)    not null
 #  deal_price                 :decimal(8, 2)    not null
-#  shipping_cost              :decimal(6, 2)    default("0.00"), not null
+#  shipping_cost              :decimal(6, 2)    default(0.0), not null
 #  conditions                 :text(65535)
 #  description                :text(65535)      not null
 #  short_tag_line             :string(255)      not null
@@ -32,7 +31,7 @@
 #  allow_photo_upload         :boolean          not null
 #  facebook_posts             :integer          not null
 #  facebook_clicks            :integer          not null
-#  fb_discount                :decimal(5, 2)    default("0.00"), not null
+#  fb_discount                :decimal(5, 2)    default(0.0), not null
 #  created_at                 :datetime
 #  updated_at                 :datetime
 #  uuid                       :string(255)      not null

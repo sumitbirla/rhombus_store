@@ -11,7 +11,7 @@
 #  latitude         :decimal(10, 7)
 #  longitude        :decimal(10, 7)
 #  tax_rate         :decimal(6, 2)    not null
-#  shipping_taxable :boolean          default("0"), not null
+#  shipping_taxable :boolean          default(FALSE), not null
 #
 
 class ZipCode < ActiveRecord::Base

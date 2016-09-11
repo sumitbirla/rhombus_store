@@ -10,10 +10,10 @@
 #  external_id         :string(255)
 #  variation           :string(255)
 #  quantity            :integer          not null
-#  unit_price          :decimal(10, 2)   not null
+#  unit_price          :decimal(12, 4)   not null
 #  item_id             :string(32)       not null
 #  item_description    :string(255)      not null
-#  autoship_months     :integer          default("0"), not null
+#  autoship_months     :integer          default(0), not null
 #  uploaded_file       :string(255)
 #  upload_file_preview :string(255)
 #  start_x_percent     :integer
@@ -23,6 +23,8 @@
 #  custom_text         :string(255)
 #  created_at          :datetime
 #  updated_at          :datetime
+#  quantity_accepted   :integer          default(0), not null
+#  quantity_received   :integer          default(0), not null
 #
 
 class OrderItem < ActiveRecord::Base

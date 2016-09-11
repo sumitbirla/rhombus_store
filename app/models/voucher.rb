@@ -6,7 +6,7 @@
 #  voucher_group_id :integer          not null
 #  code             :string(255)      not null
 #  issued           :boolean
-#  amount_used      :decimal(10, 2)   default("0.00"), not null
+#  amount_used      :decimal(10, 2)   default(0.0), not null
 #  created_at       :datetime
 #  updated_at       :datetime
 #

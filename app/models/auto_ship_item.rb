@@ -10,7 +10,7 @@
 #  variation      :string(255)
 #  description    :string(255)      not null
 #  quantity       :integer          not null
-#  days           :integer          default("30"), not null
+#  days           :integer          default(30), not null
 #  last_shipped   :date
 #  next_ship_date :date
 #  status         :string(255)      not null

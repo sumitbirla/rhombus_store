@@ -1,0 +1,32 @@
+<% 
+  t = inventory_transaction
+  actions = [] 
+  actions << 'replenish' if t.items.any? { |x| x.quantity > 0 }
+  actions << 'remove' if t.items.any? { |x| x.quantity < 0 }
+%>
+
+<tr>
+  <td><%= systime t.created_at %></td>
+  <td>
+    <% if t.entity_type == 'Shipment' %>
+      <% s = Shipment.find_by(id: t.entity_id) %>
+      <%= link_to "Shipment #{s}", admin_store_shipment_path(s) unless s.nil? %>
+    <% elsif t.entity_type == 'PurchaseOrder' %>
+      <% po = PurchaseOrder.find_by(id: t.entity_id) %>
+      <%= link_to "PO #{po.id}", admin_inventory_purchase_order_path(po) unless po.nil? %>
+    <% else %>
+      <%= t.entity_type %>
+    <% end %>
+  </td>
+  <td><%= actions.join(" / ") %></td>
+  <td class="text-center"><%= link_to pluralize(t.items.length, "item"), edit_admin_inventory_inventory_transaction_path(t) %></td>
+  <td class="text-right"><%= number_with_delimiter(t.items.sum(:quantity)) %></td>
+	<td class="text-center"><%= link_to t.user, admin_system_user_path(t.user) %></td>
+	<td class="text-right actions">
+    <%= link_to :edit, edit_admin_inventory_inventory_transaction_path(t) %> &nbsp; 
+		<%= link_to :delete, 
+					  { action: "destroy", id: t.id }, 
+					  method: :delete, 
+					  data: { confirm: "Are you sure? All items items in this transaction will be deleted." } %>
+	</td>
+</tr>

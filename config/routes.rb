@@ -77,6 +77,7 @@ Rails.application.routes.draw do
       resources :purchase_order_items
       resources :inventory_items
       resources :inventory_locations
+      resources :inventory_transactions
     end
 
     # Store Routes

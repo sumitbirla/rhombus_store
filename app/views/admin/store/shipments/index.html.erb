@@ -42,9 +42,9 @@
   <tr>
 	  <th><input type="checkbox" id="chkAll" /></th>
     <th>ID</th>
-    <th>Created</th>
     <th>Ship to</th>
     <th>Destination</th>
+    <th>Item(s)</th>
     <% if params[:status] == "pending" %>
       <th>Age</th>
     <% else %>
@@ -58,9 +58,15 @@
       <tr>
 		<td><input type="checkbox" name="shipment_id[]" class="shipment-chk" value="<%= shipment.id %>"/></td>
         <td nowrap><%= link_to shipment, admin_store_shipment_path(shipment, status: params[:status]) %></td>
-        <td nowrap class="light"><%= systime shipment.created_at %></td>
         <td><%= shipment.recipient_name %></td>
         <td><%= shipment.recipient_city %>, <%= shipment.recipient_state %></td>
+        <td class="small">
+        <% if shipment.items.length == 1%>
+          <b><%= shipment.items[0].order_item.item_id %></b> (<%= shipment.items.sum(:quantity) %>)
+        <% else %>
+          - <%= shipment.items.sum(:quantity) %> items -
+        <% end %>
+        </td>
         <% if params[:status] == "pending" %>
           <td><%= time_ago shipment.order.submitted %></td>
         <% else %>

@@ -3,10 +3,10 @@
 # Table name: store_shipments
 #
 #  id                   :integer          not null, primary key
-#  order_id             :integer          not null
+#  order_id             :integer
 #  sequence             :integer          not null
 #  fulfilled_by_id      :integer
-#  invoice_amount       :decimal(10, 2)   default("0.00"), not null
+#  invoice_amount       :decimal(10, 2)   default(0.0), not null
 #  status               :string(255)      not null
 #  ship_from_company    :string(255)      default(""), not null
 #  ship_from_street1    :string(255)      default(""), not null
@@ -37,18 +37,19 @@
 #  notes                :text(65535)
 #  packaging_type       :string(255)
 #  require_signature    :boolean
-#  insurance            :decimal(8, 2)    default("0.00"), not null
+#  insurance            :decimal(8, 2)    default(0.0), not null
 #  drop_off_type        :string(255)
 #  label_data           :binary(16777215)
 #  label_format         :string(255)
 #  courier_name         :string(255)
 #  courier_data         :text(16777215)
-#  fulfiller_notified   :boolean          default("0"), not null
-#  inventory_updated    :boolean          default("0"), not null
-#  created_at           :datetime
-#  updated_at           :datetime
+#  fulfiller_notified   :boolean          default(FALSE), not null
+#  inventory_updated    :boolean          default(FALSE), not null
 #  batch_status         :string(255)
 #  batch_status_message :string(255)
+#  created_at           :datetime
+#  updated_at           :datetime
+#  manifest_id          :integer
 #
 
 require 'net/http'
