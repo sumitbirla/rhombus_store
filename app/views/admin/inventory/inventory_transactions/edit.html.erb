@@ -13,7 +13,7 @@
     <div class="panel-body">
       <table class="table">
         <tr>
-          <th style="width: 200px;">Item</th>
+          <th style="width: 200px;">Type</th>
           <th>Description</th>
           <th style="width: 130px;">Unit Price</th>
           <th style="width: 120px;">Quantity</th>
@@ -21,22 +21,13 @@
           <th style="width: 50px;"></th>
         </tr>
       <%= f.fields_for :items do |itemf| %>
-        <% item = @transaction.items[itemf.index] %>
         <tr>
-          <td><%= itemf.input_field :item_id, class: 'item-id' %></td>
-          <td>
-            <%= itemf.input_field :item_description, style: 'width: 70%', class: 'item-desc' %>&nbsp; 
-            <span class="light affiliate-name"><%= item.affiliate %></span>
-          </td>
-          <td><%= itemf.input_field :unit_price, class: 'unit-price' %></td>
-          <td><%= itemf.input_field :quantity, class: 'qty' %></td>
-          <td><%= itemf.input_field :quantity_accepted %></td>
+          <td><%= itemf.input_field :inventoriable_type, class: 'item-id' %></td>
+          <td><%= itemf.input_field :inventoriable_id, class: 'unit-price' %></td>
+          <td><%= itemf.input_field :inventory_location_id, class: 'qty' %></td>
+          <td><%= itemf.input_field :quantity %></td>
           <td><i class="fa fa-times"></i>
             <%= itemf.hidden_field :_destroy, class: 'destroy' %>
-            <%= itemf.hidden_field :product_id, class: 'product-id' %>
-            <%= itemf.hidden_field :affiliate_id, class: 'affiliate-id' %>
-            <%= itemf.hidden_field :variation, class: 'variation' %>
-            <%= itemf.hidden_field :daily_deal_id, class: 'daily-deal-id' %>
           </td>
         </tr>
       <% end %>
@@ -52,7 +43,7 @@
 
 
 <%= content_for :title do %>
-	Orders: <%= @order.id %>
+	Inventory Transaction: <%= @transaction.id %>
 <% end %>
 
 <% content_for :head do %>
@@ -71,42 +62,10 @@
       });
       
       $(".add-more-items").click(function() {
-        $("input[name='add_more_items']").val(<%= @order.items.length %>);
+        $("input[name='add_more_items']").val(<%= @transaction.items.length %>);
         $("form.form-horizontal").submit();
       });
-      
-      $(".update-total").click(function(e) {
-        
-        e.preventDefault();
-        var subtotal = 0.0;
-        
-        // calculate subtotal first
-        $(".unit-price").each(function() { 
-          if ($(this).is(":visible")) {
-            var unit_price = parseFloat($(this).val());
-            var quantity = parseFloat($(this).parent().parent().find(".qty").val());
-          
-            if (!isNaN(unit_price) && !isNaN(quantity))
-              subtotal += unit_price * quantity; 
-          }
-        });
-        
-        var shipping_cost = parseFloat($("#order_shipping_cost").val());
-        var discount_amount = parseFloat($("#order_discount_amount").val());
-        var credit_applied = parseFloat($("#order_credit_applied").val());
-        var fb_discount = parseFloat($("#order_fb_discount").val());
-        var tax_rate = parseFloat($("#order_tax_rate").val());
-        var tax_amount = (subtotal - discount_amount - credit_applied) * tax_rate / 100.0;
-        var total = subtotal + shipping_cost + tax_amount - discount_amount - credit_applied - fb_discount;
-        
-        $("#order_subtotal").val(subtotal);
-        $("#order_tax_amount").val(tax_amount.toFixed(2));
-        $("#order_total").val(total.toFixed(2));
-        
-      });
-      
-      
-      
+
       $(".item-id").change(function() {
         var item = $(this);
         
@@ -130,17 +89,6 @@
         });
       });
       
-      $("a.copy-address").click(function() {
-        $("#order_billing_name").val($("#order_shipping_name").val());
-        $("#order_billing_company").val($("#order_shipping_company").val());
-        $("#order_billing_street1").val($("#order_shipping_street1").val());
-        $("#order_billing_street2").val($("#order_shipping_street2").val());
-        $("#order_billing_city").val($("#order_shipping_city").val());
-        $("#order_billing_state").val($("#order_shipping_state").val());
-        $("#order_billing_zip").val($("#order_shipping_zip").val());
-        $("#order_billing_country").val($("#order_shipping_country").val());
-      });
-      
     });
     </script>
 <% end %>
@@ -149,13 +97,7 @@
 
 
 <% content_for :breadcrumbs do %>
-  <% prefix = (@order.po ? "Purchase " : "") %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to prefix + 'Orders', admin_store_orders_path(status: "submitted", po: @order.po ? "1" : "0") %></li>
-	<% unless @order.id.nil? %>
-		<li><%= link_to '#' + @order.id.to_s, admin_store_order_path(@order)%></li>
-		<li class="active">edit</li>
-	<% else %>
-		<li class="active">new</li>
-	<% end %>
+  <li><a href="#">Invenotry</a></li>
+	<li><%= link_to "Inventory Transactions", admin_inventory_inventory_transactions_path %></li>
+	<li class="active">edit</li>
 <% end %>
