@@ -7,8 +7,9 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
   end
   
   def new
-    @transaction = InventoryTransaction.new(user_id: session[:user_id])
-    10.times.do { @transaction.items.build }
+    @transaction = InventoryTransaction.new(user_id: session[:user_id], entity_type: 'Manual')
+    10.times { @transaction.items.build }
+    render 'edit'
   end
   
   def create
@@ -21,7 +22,7 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
     end
   
     if @transaction.save
-      redirect_to action: 'index', notice: 'Order was successfully created.'
+      redirect_to action: 'index', notice: 'Inventory transaction was successfully created.'
     else
       5.times { @transaction.items.build }
       render 'edit'
@@ -37,7 +38,7 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
     @transaction = InventoryTransaction.find(params[:id])
     item_count = @transaction.items.length
 
-    @transaction.assign_attributes(order_params)
+    @transaction.assign_attributes(inventory_transaction_params)
     
     unless params[:add_more_items].blank?
       count = params[:add_more_items].to_i - item_count + 5 
@@ -46,7 +47,7 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
     end
 
     if @transaction.save(validate: false)
-      redirect_to action: 'show', id: @transaction.id, notice: 'Transaction was successfully updated.'
+      redirect_to action: 'index', notice: 'Transaction was successfully updated.'
     else
       render 'edit'
     end

@@ -15,7 +15,8 @@
 class InventoryTransaction < ActiveRecord::Base
   self.table_name = "inv_transactions"
   
-  has_many :items, class_name: "InventoryItem", dependent: :destroy
   belongs_to :user
+  has_many :items, class_name: "InventoryItem", dependent: :destroy
+  accepts_nested_attributes_for :items, reject_if: lambda { |x| x['inventoriable_id'].blank? }, allow_destroy: true
   
 end

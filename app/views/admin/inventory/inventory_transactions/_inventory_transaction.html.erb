@@ -19,9 +19,15 @@
     <% end %>
   </td>
   <td><%= actions.join(" / ") %></td>
-  <td class="text-center"><%= link_to pluralize(t.items.length, "item"), edit_admin_inventory_inventory_transaction_path(t) %></td>
-  <td class="text-right"><%= number_with_delimiter(t.items.sum(:quantity)) %></td>
-	<td class="text-center"><%= link_to t.user, admin_system_user_path(t.user) %></td>
+  <td class="text-center"><%= pluralize(t.items.length, "item") %></td>
+  <td class="text-right"><%= number_with_delimiter(t.items.sum(:quantity).abs) %></td>
+	<td class="text-center">
+    <% if t.user_id %>
+      <%= link_to t.user, admin_system_user_path(t.user) %>
+    <% else %>
+      <span class="light">- system -</span>
+    <% end %>
+  </td>
 	<td class="text-right actions">
     <%= link_to :edit, edit_admin_inventory_inventory_transaction_path(t) %> &nbsp; 
 		<%= link_to :delete, 

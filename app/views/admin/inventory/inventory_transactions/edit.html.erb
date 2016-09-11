@@ -1,8 +1,46 @@
 <h2>Transaction #<%= @transaction.id %></h2>
 
+<div class="row" style="margin-left: 0;">
+  <div class="col-md-6">
+	<table class="table table-bordered table-condensed summary">
+		<tr>
+			<td class="key">Entity: </td>
+			<td>
+        <% t = @transaction
+         if t.entity_type == 'Shipment' %>
+          <% s = Shipment.find_by(id: t.entity_id) %>
+          <%= link_to "Shipment #{s}", admin_store_shipment_path(s) unless s.nil? %>
+        <% elsif t.entity_type == 'PurchaseOrder' %>
+          <% po = PurchaseOrder.find_by(id: t.entity_id) %>
+          <%= link_to "PO #{po.id}", admin_inventory_purchase_order_path(po) unless po.nil? %>
+        <% else %>
+          <%= t.entity_type %>
+        <% end %>
+			</td>
+		</tr>
+    <% unless @transaction.created_at.nil? %>
+		<tr class="key">
+			<td>Transaction time: </td>
+			<td><%= systime @transaction.created_at %></td>
+		</tr>
+    <% end %>
+		<tr>
+			<td class="key">Created by: </td>
+			<td>
+      <% if t.user_id %>
+        <%= link_to t.user, admin_system_user_path(t.user) %>
+      <% else %>
+        <span class="light">- system -</span>
+      <% end %>
+      </td>
+		</tr>
+	</table>
+  </div>
+</div>
+
 <%= simple_form_for [:admin, :inventory, @transaction] do |f| %>
   <input type="hidden" name="add_more_items" value=""/>
-  
+
 	<%= render 'admin/shared/error_messages', object: f.object %>
 	
 	 <div class="panel panel-info">
@@ -13,20 +51,32 @@
     <div class="panel-body">
       <table class="table">
         <tr>
-          <th style="width: 200px;">Type</th>
+          <th>SKU / UPC</th>
           <th>Description</th>
-          <th style="width: 130px;">Unit Price</th>
-          <th style="width: 120px;">Quantity</th>
-          <th style="width: 120px;">Accepted</th>
-          <th style="width: 50px;"></th>
+          <th>Quantity</th>
+          <th>Location</th>
+          <th >Lot #</th>
+          <th>Expiration</th>
+          <th></th>
         </tr>
-      <%= f.fields_for :items do |itemf| %>
+      <%= f.simple_fields_for :items do |itemf| %>
+         <% 
+           item = @transaction.items[itemf.index] 
+           p = Product.find_by(id: item.inventoriable_id)
+         %>
         <tr>
-          <td><%= itemf.input_field :inventoriable_type, class: 'item-id' %></td>
-          <td><%= itemf.input_field :inventoriable_id, class: 'unit-price' %></td>
-          <td><%= itemf.input_field :inventory_location_id, class: 'qty' %></td>
-          <td><%= itemf.input_field :quantity %></td>
-          <td><i class="fa fa-times"></i>
+          <td>
+            <input type="text" class="item-id" value="<%= p.sku2 unless p.nil? %>"/>
+            <%= itemf.hidden_field :inventoriable_type, value: 'Product' %>
+            <%= itemf.hidden_field :inventoriable_id, class: 'inventoriable-id' %>
+          </td>
+          <td class="item-desc"><%= p.name_with_option unless p.nil? %></td>
+          <td><%= itemf.input_field :quantity, class: "text-right" %></td>
+          <td><%= itemf.input_field :inventory_location_id, collection: InventoryLocation.order(:name) %></td>
+          <td><%= itemf.input_field :lot %></td>
+          <td><%= itemf.input_field :expiration, class: "text-center" , placeholder: 'YYMM' %></td>
+          <td>
+            <i class="fa fa-times"></i>
             <%= itemf.hidden_field :_destroy, class: 'destroy' %>
           </td>
         </tr>
@@ -71,18 +121,14 @@
         
         $.get('/admin/store/products/item_info?sku=' + $(this).val(), function(data) {
           
-          item.parent().parent().find('.product-id').val(data.product_id);
-          item.parent().parent().find('.affiliate-id').val(data.affiliate_id);
-          item.parent().parent().find('.affiliate-name').html(data.affiliate_name || '');
-          item.parent().parent().find('.variation').val(data.variation);
-          item.parent().parent().find('.item-desc').val(data.description);
-          item.parent().parent().find('.unit-price').val(data.dealer_price);
-          item.parent().parent().find('.daily-deal-id').val(data.daily_deal_id);
+          item.parent().parent().find('.inventoriable-id').val(data.product_id);
+          item.parent().parent().find('.item-desc').html(data.description);
+
             
           if (data.status == 'ok') { 
             item.parent().parent().find('.qty').focus();
           } else {
-            item.parent().parent().find('.item-desc').val('ITEM NOT FOUND!');
+            item.parent().parent().find('.item-desc').html('ITEM NOT FOUND!');
             item.parent().parent().find('.item-id').select();
           }
           

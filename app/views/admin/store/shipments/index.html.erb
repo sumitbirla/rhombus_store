@@ -62,9 +62,9 @@
         <td><%= shipment.recipient_city %>, <%= shipment.recipient_state %></td>
         <td class="small">
         <% if shipment.items.length == 1%>
-          <b><%= shipment.items[0].order_item.item_id %></b> (<%= shipment.items.sum(:quantity) %>)
+          <b><%= shipment.items[0].order_item.item_id %></b> (<%= shipment.items.collect(&:quantity).sum %>)
         <% else %>
-          - <%= shipment.items.sum(:quantity) %> items -
+          - <%= shipment.items.collect(&:quantity).sum %> items -
         <% end %>
         </td>
         <% if params[:status] == "pending" %>
