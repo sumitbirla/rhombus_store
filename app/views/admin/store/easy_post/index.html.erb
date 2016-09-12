@@ -70,6 +70,20 @@ packaging_types = [
       
       <%= f.input :ship_date, as: :datepicker %>
       <%= f.input :require_signature, label: 'Signature?' %>
+      
+      <% aff = @shipment.order.affiliate  
+        unless aff.nil? 
+          acct = aff.get_property("Shipping Account") 
+          unless acct.blank? %>
+          <div class="form-group string optional shipment_dimensions" style="<%= 'display: none' unless @shipment.packaging_type == 'YOUR PACKAGING' %>">
+            <label class="string optional control-label col-sm-3" for="shipment_dimensions">3P Billing:</label>
+            <div class="col-sm-9">
+              <%= f.input_field :third_party_billing %>
+              <%= link_to aff.name, admin_system_affiliate_path(aff) %> <%= aff.get_property("Shipping Account").split(":").join(" / ") %>
+            </div>
+          </div>
+          <% end %>
+      <% end %>
 		 
       <%= button_tag :class => "btn btn-success", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } do %>
         <i class="fa fa-dollar"></i> &nbsp; Get Rates

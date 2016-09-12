@@ -136,7 +136,15 @@ class Admin::Store::EasyPostController < Admin::BaseController
         :date_advance => (shipment.ship_date - Date.today).to_i
       }
       options[:delivery_confirmation] = 'SIGNATURE' if shipment.require_signature
-    
+      
+      # 3rd party billing  eg - "UPS:X823X4:US:07090"
+      if shipment.third_party_billing
+        carrier, acct, country, zip = shipment.order.affiliate.get_property("Shipping Account").split(":")
+        options[:bill_third_party_account] = acct
+        options[:bill_third_party_country] = country
+        options[:bill_third_party_postal_code] = zip
+      end
+      
       EasyPost.api_key = Cache.setting(shipment.order.domain_id, :shipping, 'EasyPost API Key')
       response = EasyPost::Shipment.create(
           :to_address => {
