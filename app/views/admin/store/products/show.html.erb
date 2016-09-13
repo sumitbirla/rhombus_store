@@ -2,7 +2,7 @@
     .summary .label { font-weight: normal; margin-right: 6px; }
 </style>
 
-<% stock = InventoryItem.where(inventoriable_type: :product, inventoriable_id: @product.id).sum(:quantity) %>
+<% stock = InventoryItem.where(sku: @product.sku).sum(:quantity) %>
 <div class="pull-right">
   <%= link_to "clone", clone_admin_store_product_path(@product), class: "btn btn-sm btn-default" %>
   <%= link_to "edit", edit_admin_store_product_path(@product), class: "btn btn-sm btn-default" %>
@@ -50,7 +50,7 @@
         <td>Product type</td>
         <td><%= @product.product_type.titlecase %></td>
       </tr>
-      <% unless @product.upc.nil? %>
+      <% unless @product.upc.blank? %>
           <tr>
             <td>UPC</td>
             <td><%= @product.upc %></td>
@@ -113,12 +113,6 @@
             <td><%= link_to @product.label_sheet.name, edit_admin_store_label_sheet_path(@product.label_sheet) %></td>
           </tr>
         <% end %>
-        <% unless @product.keywords.blank? %>
-          <tr>
-            <td>Keywords</td>
-            <td><%= @product.keywords %></td>
-          </tr>
-        <% end %>
         <% unless @product.warranty.blank? %>
           <tr>
             <td>Warranty</td>
@@ -165,6 +159,12 @@
           </td>
         </tr>
 	</table>
+  
+  <% unless @product.keywords.blank? %>
+  <h4>Keywords</h4>
+  <%= @product.keywords %>
+  <hr>
+  <% end %>
 
 
 

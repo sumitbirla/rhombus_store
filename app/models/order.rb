@@ -324,20 +324,8 @@ class Order < ActiveRecord::Base
 
     end
     
+    # TODO: check inventory and create inventory_transaction
     
-    # update lot numbers and expirations in shipment items
-    shipment.items.each do |i|
-      
-      t = InventoryItem.select("lot, expiration, sum(quantity) as quantity")
-                       .where(inventoriable_id: i.product_id, inventoriable_type: :product)
-                       .group(:lot)
-                       .order(:expiration)
-                       .having("sum(quantity) > ?", i.quantity-1).first
-      
-      i.assign_attributes(lot: t.lot, expiration: t.expiration) unless t.nil?
-    end
-    
-
     if save_to_db && shipment.save  
       OrderHistory.create(order_id: id, user_id: user_id, event_type: :shipment_created,
                     system_name: 'Rhombus', identifier: shipment.id, comment: "shipment created: #{shipment}") 

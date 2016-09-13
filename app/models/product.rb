@@ -65,11 +65,11 @@ class Product < ActiveRecord::Base
   has_many :coupons, -> { order 'created_at desc' }
   has_many :categories, -> { order :sort }, through: :product_categories
   has_many :extra_properties, -> { order "sort, name" }, as: :extra_property
-  has_many :inventory_items, as: :inventoriable
   
-  validates_presence_of :name, :item_number, :title, :slug, :brand_id, :product_type, :price
+  validates_presence_of :name, :item_number, :product_type
+  validates_presence_of :title, :slug, :brand_id, :price, unless: lambda { |x| x.product_type == 'not_for_sale' }
   validates_presence_of :sku, if: :warehoused?
-  validates_uniqueness_of :slug
+  validates_uniqueness_of :slug, allow_blank: true
   
   def to_s
     "#{sku}: #{title}"

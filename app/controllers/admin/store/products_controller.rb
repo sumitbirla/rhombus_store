@@ -114,7 +114,7 @@ class Admin::Store::ProductsController < Admin::BaseController
   
   
   def item_info
-    p = Product.find_by(item_number: params[:sku])
+    p = Product.find_by("item_number = ? OR upc = ?", params[:sku], params[:sku])
     dd = DailyDeal.find_by(id: params[:sku].sub("DEAL", "").to_i) unless p
     
     if p
@@ -131,7 +131,8 @@ class Admin::Store::ProductsController < Admin::BaseController
                             product_id: p.id, 
                             description: p.name_with_option, 
                             price: p.price,
-                            case_quantity: p.case_quantity }
+                            case_quantity: p.case_quantity,
+                            sku: p.sku }
       end
         
     elsif dd
@@ -152,7 +153,9 @@ class Admin::Store::ProductsController < Admin::BaseController
                               affiliate_name: aff.name, 
                               variation: variant, 
                               description: p.name_with_option, 
-                              price: p.price }
+                              price: p.price,
+                              sku: p.sku
+                             }
       end
     end
     

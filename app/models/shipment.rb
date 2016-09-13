@@ -66,6 +66,7 @@ class Shipment < ActiveRecord::Base
   belongs_to :fulfiller, class_name: 'User', foreign_key: 'fulfilled_by_id'
   has_many :items, class_name: 'ShipmentItem', dependent: :destroy
   has_many :invoices, as: :invoiceable
+  has_many :inventory_transactions
   
   accepts_nested_attributes_for :items, allow_destroy: true
 

@@ -6,15 +6,12 @@
 		<tr>
 			<td class="key">Entity: </td>
 			<td>
-        <% t = @transaction
-         if t.entity_type == 'Shipment' %>
-          <% s = Shipment.find_by(id: t.entity_id) %>
-          <%= link_to "Shipment #{s}", admin_store_shipment_path(s) unless s.nil? %>
-        <% elsif t.entity_type == 'PurchaseOrder' %>
-          <% po = PurchaseOrder.find_by(id: t.entity_id) %>
-          <%= link_to "PO #{po.id}", admin_inventory_purchase_order_path(po) unless po.nil? %>
+        <% if @transaction.shipment %>
+          <%= link_to @transaction.shipment.to_s, admin_store_shipment_path(@transaction.shipment) %>
+        <% elsif @transaction.purchase_order %>
+          <%= link_to "PO #{@transaction.purchase_order.id}", admin_inventory_purchase_order_path(po) %>
         <% else %>
-          <%= t.entity_type %>
+          Manual
         <% end %>
 			</td>
 		</tr>
@@ -27,8 +24,8 @@
 		<tr>
 			<td class="key">Created by: </td>
 			<td>
-      <% if t.user_id %>
-        <%= link_to t.user, admin_system_user_path(t.user) %>
+      <% if @transaction.user_id %>
+        <%= link_to @transaction.user, admin_system_user_path(@transaction.user) %>
       <% else %>
         <span class="light">- system -</span>
       <% end %>
@@ -40,6 +37,9 @@
 
 <%= simple_form_for [:admin, :inventory, @transaction] do |f| %>
   <input type="hidden" name="add_more_items" value=""/>
+  <%= f.hidden_field :user_id %>
+  <%= f.hidden_field :shipment_id %>
+  <%= f.hidden_field :purchase_order_id %>
 
 	<%= render 'admin/shared/error_messages', object: f.object %>
 	
@@ -62,16 +62,12 @@
       <%= f.simple_fields_for :items do |itemf| %>
          <% 
            item = @transaction.items[itemf.index] 
-           p = Product.find_by(id: item.inventoriable_id)
+           p = Product.find_by(sku: item.sku)
          %>
         <tr>
-          <td>
-            <input type="text" class="item-id" value="<%= p.sku2 unless p.nil? %>"/>
-            <%= itemf.hidden_field :inventoriable_type, value: 'Product' %>
-            <%= itemf.hidden_field :inventoriable_id, class: 'inventoriable-id' %>
-          </td>
+          <td><%= itemf.input_field :sku, class: "item-id" %></td>
           <td class="item-desc"><%= p.name_with_option unless p.nil? %></td>
-          <td><%= itemf.input_field :quantity, class: "text-right" %></td>
+          <td><%= itemf.input_field :quantity, class: "text-right qty" %></td>
           <td><%= itemf.input_field :inventory_location_id, collection: InventoryLocation.order(:name) %></td>
           <td><%= itemf.input_field :lot %></td>
           <td><%= itemf.input_field :expiration, class: "text-center" , placeholder: 'YYMM' %></td>
@@ -116,16 +112,15 @@
         $("form.form-horizontal").submit();
       });
 
-      $(".item-id").change(function() {
+      $(".item-id").on("change", function() {
         var item = $(this);
         
         $.get('/admin/store/products/item_info?sku=' + $(this).val(), function(data) {
           
-          item.parent().parent().find('.inventoriable-id').val(data.product_id);
           item.parent().parent().find('.item-desc').html(data.description);
-
-            
+           
           if (data.status == 'ok') { 
+            item.parent().parent().find('.item-id').val(data.sku);
             item.parent().parent().find('.qty').focus();
           } else {
             item.parent().parent().find('.item-desc').html('ITEM NOT FOUND!');
@@ -133,6 +128,13 @@
           }
           
         });
+      });
+      
+      $(".item-id").keypress(function(e) {
+        if(e.which == 13) {
+          e.preventDefault();
+          return $(e.target).blur();
+        }
       });
       
     });

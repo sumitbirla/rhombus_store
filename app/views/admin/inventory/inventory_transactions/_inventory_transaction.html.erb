@@ -8,14 +8,12 @@
 <tr>
   <td><%= systime t.created_at %></td>
   <td>
-    <% if t.entity_type == 'Shipment' %>
-      <% s = Shipment.find_by(id: t.entity_id) %>
-      <%= link_to "Shipment #{s}", admin_store_shipment_path(s) unless s.nil? %>
-    <% elsif t.entity_type == 'PurchaseOrder' %>
-      <% po = PurchaseOrder.find_by(id: t.entity_id) %>
-      <%= link_to "PO #{po.id}", admin_inventory_purchase_order_path(po) unless po.nil? %>
+    <% if t.shipment %>
+      <%= link_to t.shipment.to_s, admin_store_shipment_path(t.shipment) %>
+    <% elsif t.purchase_order %>
+      <%= link_to "PO #{t.purchase_order.id}", admin_inventory_purchase_order_path(po) %>
     <% else %>
-      <%= t.entity_type %>
+      Manual
     <% end %>
   </td>
   <td><%= actions.join(" / ") %></td>

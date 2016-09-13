@@ -24,24 +24,13 @@ class ShipmentItem < ActiveRecord::Base
   belongs_to :order_item
   belongs_to :product
   belongs_to :affiliate
+  belongs_to :inventory_location
   
   def sku
     str = product.sku
     str += "-" + affiliate.code unless affiliate.nil?
     str += "-" + variation unless variation.blank?
     str 
-  end
-  
-  def formatted_expiration
-    
-    str = " - "
-    
-    unless expiration.nil?
-      s = expiration.to_s
-      str = (s[2..3] + " / " + s[0..1]).html_safe
-    end
-    
-    str
   end
   
 end

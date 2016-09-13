@@ -30,12 +30,12 @@
 
   <div class="row">
 		<div class="col-md-7">
+		  <%= f.input :product_type, as: :select, collection: ['stock', 'non-stock', 'consignment', 'virtual', 'not_for_sale'], label: 'Type' %>
       <%= f.input :name %>
 		  <%= f.input :title %>
 		  <%= f.input :slug %>
 		  <%= f.input :brand_id, collection: Brand.order(:name).all %>
-		  <%= f.input :product_type, as: :select, collection: ['stock', 'non-stock', 'consignment', 'virtual'] %>
-		  <%= f.input :item_number %>
+		  <%= f.input :item_number, label: 'Item #' %>
       <%= f.input :upc, label: 'UPC' %>
       <%= f.input :harmonized_code %>
 		  <%= f.input :price %>
