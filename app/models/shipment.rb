@@ -177,4 +177,13 @@ class Shipment < ActiveRecord::Base
     end
     
   end
+  
+  
+  def create_inventory_transaction(user_id = nil)
+    tran = InventoryTransaction.new(shipment_id: id, user_id: user_id)
+    items.each { |i|  tran.items << InventoryItem.get(i.order_item.product.sku, i.quantity) }
+    
+    tran
+  end
+  
 end

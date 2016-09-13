@@ -20,4 +20,29 @@ class InventoryItem < ActiveRecord::Base
 
   belongs_to :inventory_location
   belongs_to :inventory_transaction
+  
+  
+  # given a SKU and quantity,  this method returns locations from where product can be pulled, oldest ones first
+  def self.get(sku, count)
+    items = InventoryItem.where(sku: sku).group(:inventory_location_id).order(:expiration)
+    raise "Not enough inventory" if items.collect { |x| x.quantity }.sum < count
+    
+    ret = []
+    remaining = count
+    
+    items.each do |i|
+      ret_item = InventoryItem.new(
+                    sku: sku,
+                    lot: i.lot,
+                    expiration: i.expiration,
+                    inventory_location_id: i.inventory_location_id,
+                    quantity: [i.quantity, remaining].min * -1)
+                    
+      ret << ret_item
+      remaining = count - ret.collect{ |x| x.quantity }.sum.abs
+      break if remaining == 0
+    end
+    
+    ret
+  end
 end
