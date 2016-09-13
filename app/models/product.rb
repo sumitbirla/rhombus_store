@@ -8,7 +8,7 @@
 #  product_type           :string(255)
 #  slug                   :string(255)
 #  brand_id               :integer
-#  sku                    :string(255)      default(""), not null
+#  item_number                    :string(255)      default(""), not null
 #  upc                    :string(255)
 #  sku2                   :string(255)
 #  active                 :boolean          default(TRUE), not null
@@ -71,8 +71,8 @@ class Product < ActiveRecord::Base
   has_many :extra_properties, -> { order "sort, name" }, as: :extra_property
   has_many :inventory_items, as: :inventoriable
   
-  validates_presence_of :name, :sku, :title, :slug, :brand_id, :product_type, :price
-  validates_presence_of :sku2, if: :warehoused?
+  validates_presence_of :name, :item_number, :title, :slug, :brand_id, :product_type, :price
+  validates_presence_of :sku, if: :warehoused?
   validates_uniqueness_of :slug
   
   def to_s

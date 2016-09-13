@@ -32,7 +32,7 @@
 <%= will_paginate @products %>
 <table class="table table-striped table-condensed">
 	<tr>
-		<th><%= sortable "sku", "Item" %></th>
+		<th><%= sortable "item_number", "Item" %></th>
     <th><%= sortable "store_brands.name", "Brand" %></th>
 		<th><%= sortable "title" %></th>
     <th><%= sortable "product_type", "Type" %></th>
@@ -42,7 +42,7 @@
 	</tr>
 	<% @products.each do |product| %>
 	<tr>
-		<td><%= link_to product.sku, admin_store_product_path(product) %></td>
+		<td><%= link_to product.item_number, admin_store_product_path(product) %></td>
     <td><%= product.brand %></td>
 		<td><%= product.name_with_option %></td>
     <td><%= product.product_type %></td>

@@ -10,7 +10,7 @@
 </div>
 
 
-<% upc_list = Upc.where(item: @shipment.items.collect { |x| x.sku })%>
+<% upc_list = Upc.where(item: @shipment.items.collect { |x| x.item_number })%>
 
 <div class="row">
   <div class="col-md-9">
@@ -22,9 +22,9 @@
             <th class="calign">Scanned</th>
         </tr>
         <% @shipment.items.each do |item| 
-            upc = upc_list.find { |x| x.item == item.sku } %>
+            upc = upc_list.find { |x| x.item == item.item_number } %>
             <tr>
-                <td nowrap><%= item.sku %></td>
+                <td nowrap><%= item.item_number %></td>
                 <td>
                   <%= link_to item.product.name_with_option, admin_store_product_path(item.product_id) %>
                   <% unless item.affiliate_id.nil? %>

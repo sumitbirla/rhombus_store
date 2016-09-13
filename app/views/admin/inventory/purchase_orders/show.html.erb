@@ -69,7 +69,7 @@
 	</tr>
 	<% @purchase_order.items.each do |item| %>
 	<tr>
-		<td><%= item.sku %></td>
+		<td><%= item.item_number %></td>
 		<td><%= item.description %></td>
 		<td class="text-center"><%= item.supplier_code %></td>
 		<td class="text-center"><%= item.quantity %></td>

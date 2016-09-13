@@ -43,7 +43,7 @@ namespace :rhombus_store do
       
       OrderItem.create(
         order_id: new_order.id,
-        item_id: i.item_id,
+        item_number: i.item_number,
         product_id: i.product_id,
         affiliate_id: i.affiliate_id,
         variation: i.variation,

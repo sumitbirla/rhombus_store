@@ -166,7 +166,7 @@
       <tbody>
       <% @order.items.each do |item| %>
           <tr>
-            <td><%= item.item_id.upcase %></td>
+            <td><%= item.item_number.upcase %></td>
             <td>
               <%= item.item_description %>
               <% unless item.affiliate.nil? %>

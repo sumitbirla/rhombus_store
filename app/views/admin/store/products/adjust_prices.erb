@@ -8,8 +8,6 @@
 		<tr>
 			<th>Item</th>
 			<th>Title</th>
-			<th>Distributor $</th>
-			<th>Retailer $</th>
       <th>Web $</th>
       <th>MSRP $</th>
       <th>MAP $</th>
@@ -18,8 +16,6 @@
 		<tr>
 			<td><%= link_to product.sku, admin_store_product_path(product) %></td>
 			<td><%= product.name_with_option %></td>
-			<td><input name="distributor-<%= product.id %>" value="<%= product.distributor_price %>"></td>
-			<td><input name="retailer-<%= product.id %>" value="<%= product.retailer_price %>"></td>
       <td><input name="web-<%= product.id %>" value="<%= product.price %>"></td>
       <td><input name="msrp-<%= product.id %>" value="<%= product.msrp %>"></td>
       <td><input name="map-<%= product.id %>" value="<%= product.retail_map %>"></td>

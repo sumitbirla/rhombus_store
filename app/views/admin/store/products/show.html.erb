@@ -8,7 +8,7 @@
   <%= link_to "edit", edit_admin_store_product_path(@product), class: "btn btn-sm btn-default" %>
 </div>
 <h2><i class="fa fa-tags"></i>&nbsp; <%= @product.title %></h2>
-<h4>SKU: <%= @product.sku %></h4>
+<h4>SKU: <%= @product.item_number %></h4>
 <hr/>
 
 <div class="row">
@@ -36,12 +36,6 @@
         <span class="label label-default price">Web: $<%= @product.price %></span>
         <% unless @product.special_price.nil? %>
           <span class="label label-default price">Promo: $<%= @product.special_price %></span>
-        <% end %>
-        <% unless @product.distributor_price.nil? %>
-            <span class="label label-default price">Distributor: $<%= @product.distributor_price %></span>
-        <% end %>
-        <% unless @product.retailer_price.nil? %>
-            <span class="label label-default price">Retailer: $<%= @product.retailer_price %></span>
         <% end %>
         <% unless @product.retail_map.nil? %>
             <span class="label label-default price">MAP: $<%= @product.retail_map %></span>

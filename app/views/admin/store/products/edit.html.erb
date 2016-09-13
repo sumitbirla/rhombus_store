@@ -35,12 +35,11 @@
 		  <%= f.input :slug %>
 		  <%= f.input :brand_id, collection: Brand.order(:name).all %>
 		  <%= f.input :product_type, as: :select, collection: ['stock', 'non-stock', 'consignment', 'virtual'] %>
-		  <%= f.input :sku, label: 'SKU' %>
+		  <%= f.input :item_number %>
       <%= f.input :upc, label: 'UPC' %>
+      <%= f.input :harmonized_code %>
 		  <%= f.input :price %>
 		  <%= f.input :special_price %>
-		  <%= f.input :distributor_price %>
-      <%= f.input :retailer_price %>
       <%= f.input :retail_map, label: 'Retail MAP' %>
       <%= f.input :msrp, label: 'MSRP' %>
       <%= f.input :group %>
@@ -72,8 +71,7 @@
       <div class="panel panel-default">
         <div class="panel-heading">Inventory</div>
         <div class="panel-body">
-          <%= f.input :sku2, label: 'SKU2' %>
-          <%= f.input :harmonized_code %>
+          <%= f.input :sku, label: 'SKU' %>
           <%= f.association :fulfiller, collection: dropshippers %>
           <%= f.input :low_threshold %>
           <%= f.input :committed %>

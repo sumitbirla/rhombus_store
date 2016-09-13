@@ -26,7 +26,7 @@
 
             <% @order.items.each do |item| %>
             <tr>
-              <td style="border-bottom: solid 1px #999; padding-right: 15px; padding: 4px;"><%= item.item_id %></td>
+              <td style="border-bottom: solid 1px #999; padding-right: 15px; padding: 4px;"><%= item.item_number %></td>
               <td style="border-bottom: solid 1px #999; padding-right: 15px; padding: 4px;">
                 <%= item.item_description %>
                 <% if item.affiliate_id %>

@@ -4,7 +4,7 @@ class Admin::Store::ProductsController < Admin::BaseController
     @products = Product.includes(:brand).order(sort_column + " " + sort_direction)
     @products = @products.where(active: true) unless (params[:product_type] == "all" || params[:q])
     @products = @products.where(brand_id: params[:brand_id]) unless params[:brand_id].blank?
-    @products = @products.where("name LIKE '%#{params[:q]}%' OR sku = '#{params[:q]}'") unless params[:q].nil?
+    @products = @products.where("name LIKE '%#{params[:q]}%' OR item_number = '#{params[:q]}'") unless params[:q].nil?
     
     respond_to do |format|
       format.html  { @products = @products.page(params[:page]) }
@@ -103,8 +103,6 @@ class Admin::Store::ProductsController < Admin::BaseController
       product = @products.find { |p| p.id == product_id }
       
       product.update_attribute(:price, value) if tokens[0] == 'web' unless product.price == value
-      product.update_attribute(:distributor_price, value) if tokens[0] == 'distributor' unless product.distributor_price == value
-      product.update_attribute(:retailer_price, value) if tokens[0] == 'retailer' unless product.retailer_price == value
       product.update_attribute(:retail_map, value) if tokens[0] == 'map' unless product.retail_map == value
       product.update_attribute(:msrp, value) if tokens[0] == 'msrp' unless product.msrp == value
       
@@ -116,7 +114,7 @@ class Admin::Store::ProductsController < Admin::BaseController
   
   
   def item_info
-    p = Product.find_by(sku: params[:sku])
+    p = Product.find_by(item_number: params[:sku])
     dd = DailyDeal.find_by(id: params[:sku].sub("DEAL", "").to_i) unless p
     
     if p
@@ -124,7 +122,7 @@ class Admin::Store::ProductsController < Admin::BaseController
       
       if ap
         return render json: { status: 'ok', 
-                            sku: ap.sku || p.sku, 
+                            sku: ap.item_number || p.sku, 
                             description: ap.description.presence || p.name_with_option, 
                             price: ap.price,
                             moc: ap.minimum_order_quantity }
@@ -132,8 +130,7 @@ class Admin::Store::ProductsController < Admin::BaseController
         return render json: { status: 'ok', 
                             product_id: p.id, 
                             description: p.name_with_option, 
-                            price: p.price, 
-                            dealer_price: p.distributor_price,
+                            price: p.price,
                             case_quantity: p.case_quantity }
       end
         
@@ -155,8 +152,7 @@ class Admin::Store::ProductsController < Admin::BaseController
                               affiliate_name: aff.name, 
                               variation: variant, 
                               description: p.name_with_option, 
-                              price: p.price, 
-                              dealer_price: p.distributor_price }
+                              price: p.price }
       end
     end
     

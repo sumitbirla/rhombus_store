@@ -98,7 +98,7 @@
         </thead>
       </table>
 
-      <% upc_list = Upc.where(item: @shipment.items.collect { |x| x.order_item.item_id }) %>
+      <% upc_list = Upc.where(item: @shipment.items.collect { |x| x.order_item.item_number }) %>
 
       <div class="boxleft">
         <h2>
@@ -151,7 +151,7 @@
       </thead>
       <tbody>
       <% @shipment.items.each do |item| 
-          upc = upc_list.find { |x| x.item == item.sku } %>
+          upc = upc_list.find { |x| x.item == item.item_number } %>
       <tr>
         <td nowrap><input type="checkbox"> &nbsp; <%= item.sku.upcase %></td>
         <td>

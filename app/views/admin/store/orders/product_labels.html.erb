@@ -33,18 +33,18 @@
     <td>PDF:</td>
   </tr>
   <% @order.items.each do |item|
-        dir = item.item_id.split('-')[1]
-        image_path = "/userfiles/images/thumbnails/#{dir}/#{item.item_id}.jpg"
-        pdf_path = "/userfiles/images/labels/#{dir}/#{item.item_id}.pdf"
+        dir = item.item_number.split('-')[1]
+        image_path = "/userfiles/images/thumbnails/#{dir}/#{item.item_number}.jpg"
+        pdf_path = "/userfiles/images/labels/#{dir}/#{item.item_number}.pdf"
   %>
       <tr>
-        <td><%= item.item_id.upcase %></td>
+        <td><%= item.item_number.upcase %></td>
         <td class="calign"><%= item.quantity %></td>
         <td><img src="<%= cdn_image_url image_path, 400, 200, 0 %>" class="img-polaroid"/></a>
         </td>
         <td>
           <%= link_to Cache.setting('System', 'Static Files Url') + pdf_path, class: 'btn btn-default', target: '_blank' do %>
-              <i class="icon-download-alt fa-o"></i> <%= item.item_id + ".pdf" %>
+              <i class="icon-download-alt fa-o"></i> <%= item.item_number + ".pdf" %>
           <% end %>
         </td>
       </tr>

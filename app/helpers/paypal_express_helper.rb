@@ -68,7 +68,7 @@ module PaypalExpressHelper
       item = line_item
       {
           :name => item.item_description,
-          :number => item.item_id,
+          :number => item.item_number,
           :quantity => item.quantity,
           :amount => to_cents(item.unit_price),
       }

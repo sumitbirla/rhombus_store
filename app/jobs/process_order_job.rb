@@ -42,11 +42,11 @@ class ProcessOrderJob < ActiveJob::Base
     # set up auto_ship items
     order_items = o.items.select { |x| x.autoship_months > 0 }
     order_items.each do |item|
-      autoship = AutoShipItem.find_by(user_id: o.user_id, item_id: item.item_id)
+      autoship = AutoShipItem.find_by(user_id: o.user_id, item_number: item.item_number)
       if autoship.nil?
         autoship = AutoShipItem.new(
                     user_id: o.user_id,
-                    item_id: item.item_id,
+                    item_number: item.item_number,
                     description: item.item_description,
                     product_id: item.product_id,
                     affiliate_id: item.affiliate_id,

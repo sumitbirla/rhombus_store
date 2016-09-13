@@ -42,20 +42,20 @@
     <% end %>
   <%
     pdf_path = nil
-    item_id = item[:sku]
+    item_number = item[:sku]
     unless item[:code].blank?
-      item_id += "-" + item[:code] + "-" + item[:variation]
+      item_number += "-" + item[:code] + "-" + item[:variation]
       pdf_path = "/userfiles/images/labels/#{item[:code]}/.pdf"
     end
   %>
       <tr>
-        <td><%= item_id %></td>
+        <td><%= item_number %></td>
         <td><%= item[:name] %>, <%= item[:option_title] %></td>
         <td><%= item[:lot] %></td>
         <td><%= item[:expiration] %></td>
         <td class="calign">
-          <input type="hidden" name="lot-<%= item_id %>" value="<%= item[:lot] %>-<%= item[:expiration] %>">
-          <input style="width: 60px; text-align: center;" type="numeric" name="item-<%= item_id %>" value="<%= item[:quantity] %>">
+          <input type="hidden" name="lot-<%= item_number %>" value="<%= item[:lot] %>-<%= item[:expiration] %>">
+          <input style="width: 60px; text-align: center;" type="numeric" name="item-<%= item_number %>" value="<%= item[:quantity] %>">
         </td>
         <td class="calign"><a class="print-single" href="#"><i class="fa fa-print"></i> print</a></td>
         <td class="calign"> 

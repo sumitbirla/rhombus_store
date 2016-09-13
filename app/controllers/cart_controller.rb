@@ -76,9 +76,9 @@ class CartController < ApplicationController
                 item_description: p.name_with_option,
                 autoship_months: params[:autoship_months].blank? ? 0 : params[:autoship_months]
 
-        item.item_id = p.sku
-        item.item_id += "-" + Affiliate.find(affiliate_id).code unless affiliate_id.nil?
-        item.item_id += "-" + variation unless variation.nil?
+        item.item_number = p.sku
+        item.item_number += "-" + Affiliate.find(affiliate_id).code unless affiliate_id.nil?
+        item.item_number += "-" + variation unless variation.nil?
 
         order.items << item
       else
@@ -130,7 +130,7 @@ class CartController < ApplicationController
               quantity: params[:qty],
               unit_price: dd.deal_price,
               item_description: dd.short_tag_line,
-              item_id: "DEAL#{dd.id}",
+              item_number: "DEAL#{dd.id}",
               custom_text: params[:order_specifications]
 
       order.items << item
@@ -206,7 +206,7 @@ class CartController < ApplicationController
         
         # special check for daily deals
         if item.daily_deal && item.daily_deal.max_per_user && (item.quantity > item.daily_deal.max_per_user)
-          flash[:error] = "Sorry, #{item.item_id} is limited to #{item.daily_deal.max_per_user} per customer."
+          flash[:error] = "Sorry, #{item.item_number} is limited to #{item.daily_deal.max_per_user} per customer."
           item.quantity = item.daily_deal.max_per_user
         end
         

@@ -4,7 +4,7 @@
 #
 #  id             :integer          not null, primary key
 #  user_id        :integer          not null
-#  item_id        :string(255)      not null
+#  item_number        :string(255)      not null
 #  product_id     :integer          not null
 #  affiliate_id   :integer
 #  variation      :string(255)

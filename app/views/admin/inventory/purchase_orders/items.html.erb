@@ -25,7 +25,7 @@
 	</tr>
 	<% @purchase_order.items.each do |item| %>
 	<tr>
-		<td><%= item.sku %></td>
+		<td><%= item.item_number %></td>
 		<td><input type="text" name="desc-<%= item.id %>" value="<%= item.description %>" style="width: 95%;"/></td>
 		<td class="col-md-1"><input type="text" name="sup-<%= item.id %>" value="<%= item.supplier_code %>" style="width: 120px;"/></td>
 		<td class="col-md-1"><input type="text" name="price-<%= item.id %>" value="<%= item.unit_price %>" style="width: 80px; text-align: right;"/></td>

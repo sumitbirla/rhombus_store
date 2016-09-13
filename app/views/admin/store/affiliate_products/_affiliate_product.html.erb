@@ -3,7 +3,7 @@
   <td><input type="checkbox" name="affiliate_product_id[]" value="<%= ap.id %>"></td>
   <td><%= link_to ap.product.sku, admin_store_product_path(ap.product)%></td>
   <td><%= ap.product.title %></td>
-  <td><%= ap.sku %></td>
+  <td><%= ap.item_number %></td>
   <td><%= number_to_currency ap.price %></td>
   <td class="text-center"><%= number_with_delimiter ap.minimum_order_quantity %></td>
   <td class="text-center"><%= pluralize(ap.ship_lead_time, "day") %></td>

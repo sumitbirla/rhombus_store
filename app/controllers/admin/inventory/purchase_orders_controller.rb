@@ -81,8 +81,8 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
       tokens = key.split('-')
       next unless tokens.length == 2 || val.blank?
       
-      item_id = tokens[1].to_i
-      item = @purchase_order.items.find { |i| i.id == item_id }
+      item_number = tokens[1].to_i
+      item = @purchase_order.items.find { |i| i.id == item_number }
       
       case tokens[0]
       when 'qty'
@@ -125,8 +125,8 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
         qty = val.to_i
         next if qty == 0
       
-        item_id = tokens[1].to_i
-        item = @purchase_order.items.find { |i| i.id == item_id }
+        item_number = tokens[1].to_i
+        item = @purchase_order.items.find { |i| i.id == item_number }
       
         item.increment!(:quantity_received, val.to_i)
         Adjustment.create transaction_id: transaction_id, user_id: current_user.id,

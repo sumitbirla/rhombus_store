@@ -23,7 +23,7 @@
       <%= f.fields_for :items do |itemf| %>
         <% item = @order.items[itemf.index] %>
         <tr>
-          <td><%= itemf.input_field :item_id, class: 'item-id' %></td>
+          <td><%= itemf.input_field :item_number, class: 'item-id' %></td>
           <td>
             <%= itemf.input_field :item_description, style: 'width: 70%', class: 'item-desc' %>&nbsp; 
             <span class="light affiliate-name"><%= item.affiliate %></span>
@@ -203,7 +203,7 @@
           item.parent().parent().find('.affiliate-name').html(data.affiliate_name || '');
           item.parent().parent().find('.variation').val(data.variation);
           item.parent().parent().find('.item-desc').val(data.description);
-          item.parent().parent().find('.unit-price').val(data.dealer_price);
+          item.parent().parent().find('.unit-price').val(data.price);
           item.parent().parent().find('.daily-deal-id').val(data.daily_deal_id);
             
           if (data.status == 'ok') { 

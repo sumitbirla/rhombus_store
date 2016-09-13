@@ -32,9 +32,9 @@
     <tr>
       <td>
         <% unless item.product.nil? %>
-          <%= item.item_id %>
+          <%= item.item_number %>
         <% else %>
-          <%= text_field_tag :item_id, item.item_id, class: 'item-id' %>
+          <%= text_field_tag :item_number, item.item_number, class: 'item-id' %>
         <% end %>
       </td>
       <td>

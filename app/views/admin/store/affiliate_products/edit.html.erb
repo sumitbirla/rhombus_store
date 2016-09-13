@@ -6,7 +6,7 @@
   <%= f.hidden_field :affiliate_id %>
   <%= f.input :product_id, collection: Product.select(:id, :sku, :title).order(:sku).map { |x| ["[ #{x.sku} ] #{x.title}", x.id]} %>
   <%= f.input :title, as: :text, input_html: { rows: 2 } %>
-  <%= f.input :sku %>
+  <%= f.input :item_number %>
   <%= f.input :price %>
   <%= f.input :minimum_order_quantity %>
   <%= f.input :ship_lead_time %>

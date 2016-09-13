@@ -19,9 +19,9 @@ class DailyDealItem < ActiveRecord::Base
   belongs_to :product
   belongs_to :affiliate
   
-  def item_id
+  def item_number
     str = ""
-    str += product.sku unless product_id.nil?
+    str += product.item_number unless product_id.nil?
     str += "-" + affiliate.code unless affiliate_id.nil?
     str += "-" + variation unless variation.blank?
     str

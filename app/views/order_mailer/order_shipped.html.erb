@@ -23,7 +23,7 @@
 
             <% @shipment.items.each do |item| %>
             <tr>
-              <td style="border-bottom: solid 1px #999; padding-right: 15px; padding: 4px;"><%= item.order_item.item_id %></td>
+              <td style="border-bottom: solid 1px #999; padding-right: 15px; padding: 4px;"><%= item.order_item.item_number %></td>
               <td style="border-bottom: solid 1px #999; padding-right: 15px; padding: 4px;">
                 <%= item.order_item.item_description %>
                 <% if item.order_item.affiliate_id %>

@@ -8,14 +8,14 @@ class Admin::Store::ReportsController < Admin::BaseController
   def product_sales
     
     sql = <<-EOF
-      select o.sales_channel, item_id, CONCAT(p.name, ' ', p.option_title), sum(quantity), unit_price, sum(quantity) * unit_price 
+      select o.sales_channel, item_number, CONCAT(p.name, ' ', p.option_title), sum(quantity), unit_price, sum(quantity) * unit_price 
       from store_order_items i 
       join store_orders o on o.id = i.order_id
       join store_products p on i.product_id = p.id
       where o.status in ('submitted', 'completed', 'shipped', 'unshipped')
       and o.submitted > '#{@start_date}' and o.submitted < '#{@end_date}'
       and o.sales_channel LIKE '#{@selected_channel}'
-      group by #{@group_channel} item_id
+      group by #{@group_channel} item_number
       order by sum(quantity) desc;
     EOF
     
@@ -139,14 +139,14 @@ class Admin::Store::ReportsController < Admin::BaseController
   def pending_fulfillment
     
     sql = <<-EOF
-      select oi.item_id, p.id, p.name, p.option_title, a.name, sum(quantity), s.name, s.id
+      select oi.item_number, p.id, p.name, p.option_title, a.name, sum(quantity), s.name, s.id
       from store_order_items oi
       join store_orders o on oi.order_id = o.id
       join store_products p on oi.product_id = p.id
       join core_affiliates a on a.id = oi.affiliate_id
       left join store_label_sheets s on p.label_sheet_id = s.id
       where o.status in ('unshipped', 'submitted')
-      group by oi.item_id;
+      group by oi.item_number;
     EOF
     
     @data = []
@@ -159,7 +159,7 @@ class Admin::Store::ReportsController < Admin::BaseController
       select p.id as product_id, p.sku, p.name, p.option_title, p.price as 'retail_price', sum(i.quantity) as 'quantity', 
         aff.id as 'supplier_id', aff.name as 'supplier_name', ap.price as 'supplier_price'
       from store_inventory_transaction_items i
-      join store_products p on p.sku = i.sku
+      join store_products p on p.item_number = i.sku
       left join core_affiliates aff on aff.id = p.primary_supplier_id
       left join store_affiliate_products ap on ap.affiliate_id = aff.id and ap.product_id = p.id 
       group by sku
