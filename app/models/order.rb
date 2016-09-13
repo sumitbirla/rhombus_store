@@ -306,7 +306,7 @@ class Order < ActiveRecord::Base
       
       # regular order item, not a daily deal
       if item.product_id
-        shipment.items.build(order_item_number: item.id, 
+        shipment.items.build(order_item_id: item.id, 
                              product_id: item.product_id,
                              affiliate_id: item.affiliate_id,
                              variation: item.variation, 
@@ -314,7 +314,7 @@ class Order < ActiveRecord::Base
 
       elsif item.daily_deal_id
         item.daily_deal.items.each do |di|
-          shipment.items.build(order_item_number: item.id, 
+          shipment.items.build(order_item_id: item.id, 
                                product_id: di.product_id,
                                affiliate_id: di.affiliate_id,
                                variation: di.variation, 
