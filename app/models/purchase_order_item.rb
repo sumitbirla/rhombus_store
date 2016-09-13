@@ -4,7 +4,7 @@
 #
 #  id                :integer          not null, primary key
 #  purchase_order_id :integer          not null
-#  item_number               :string(32)       default(""), not null
+#  sku               :string(32)       default(""), not null
 #  quantity          :integer          default(1), not null
 #  description       :string(255)
 #  supplier_code     :string(255)

@@ -68,12 +68,6 @@
             <td><%= @product.country_of_origin %></td>
           </tr>
         <% end %>
-        <% unless @product.shipping_lead_time.nil? %>
-          <tr>
-            <td>Shipping lead time</td>
-            <td><%= @product.shipping_lead_time %> days</td>
-          </tr>
-        <% end %>
         <% unless @product.item_availability.nil? %>
           <tr>
             <td>Item availability</td>
@@ -248,7 +242,7 @@
 	<% if @product.pictures.length > 0 %>
       <h4>Pictures</h4>
       <a href="<%= cdn_image_url @product.pictures[0], 800, 700, 0 %>" data-lightbox="image-1">
-          <img src="<%= cdn_image_url @product.pictures[0], 300, 300, 0 %>" class="img-responsive" title="<%= @product.pictures[0].caption %>" style="width: 100%;"/>
+          <img src="<%= cdn_image_url @product.pictures[0], 300, 300, 0 %>" title="<%= @product.pictures[0].caption %>" />
       </a>
       <% if @product.pictures.length > 1 %>
           <br/>
@@ -294,10 +288,6 @@
       <h4>Inventory</h4>
 
       <table class="table table-condensed summary">
-        <tr>
-          <td>Committed</td>
-          <td><%= @product.committed %></td>
-        </tr>
         <tr>
           <td>In stock</td>
           <td><%= stock %></td>

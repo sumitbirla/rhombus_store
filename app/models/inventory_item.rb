@@ -9,7 +9,7 @@
 #  inventory_location_id    :integer          not null
 #  quantity                 :integer          not null
 #  lot                      :string(255)
-#  expiration               :date
+#  expiration               :integer
 #  cost                     :decimal(8, 2)
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null

@@ -4,7 +4,7 @@
 #
 #  id             :integer          not null, primary key
 #  shipment_id    :integer          not null
-#  order_item_number  :integer          not null
+#  order_item_id  :integer          not null
 #  product_id     :integer          not null
 #  affiliate_id   :integer
 #  variation      :string(255)

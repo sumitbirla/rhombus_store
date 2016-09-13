@@ -5,7 +5,7 @@
 #  id                     :integer          not null, primary key
 #  affiliate_id           :integer          not null
 #  product_id             :integer          not null
-#  item_number                    :string(255)
+#  item_number            :string(255)
 #  price                  :decimal(10, 2)
 #  minimum_order_quantity :integer          default(1), not null
 #  title                  :string(255)

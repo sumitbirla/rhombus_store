@@ -50,6 +50,7 @@
 #  created_at           :datetime
 #  updated_at           :datetime
 #  manifest_id          :integer
+#  third_party_billing  :boolean          default(FALSE), not null
 #
 
 require 'net/http'

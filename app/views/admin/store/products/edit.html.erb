@@ -74,9 +74,7 @@
           <%= f.input :sku, label: 'SKU' %>
           <%= f.association :fulfiller, collection: dropshippers %>
           <%= f.input :low_threshold %>
-          <%= f.input :committed %>
           <%= f.input :country_of_origin, label: "Origin" %>
-          <%= f.input :shipping_lead_time %>
           <%= f.input :item_availability, as: :datepicker, label: "Date avail." %>
         </div>
       </div>

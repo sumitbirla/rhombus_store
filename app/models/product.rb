@@ -8,15 +8,13 @@
 #  product_type           :string(255)
 #  slug                   :string(255)
 #  brand_id               :integer
-#  item_number                    :string(255)      default(""), not null
+#  item_number            :string(255)      default(""), not null
 #  upc                    :string(255)
-#  sku2                   :string(255)
+#  sku                    :string(255)
 #  active                 :boolean          default(TRUE), not null
 #  title                  :string(255)      not null
 #  option_title           :string(255)
 #  option_sort            :integer
-#  distributor_price      :decimal(10, 2)
-#  retailer_price         :decimal(8, 2)
 #  retail_map             :decimal(10, 2)
 #  price                  :decimal(10, 2)   not null
 #  msrp                   :decimal(10, 2)
@@ -46,12 +44,10 @@
 #  country_of_origin      :string(255)
 #  minimum_order_quantity :integer
 #  low_threshold          :integer
-#  committed              :integer          default(0), not null
-#  shipping_lead_time     :integer
 #  item_availability      :date
+#  harmonized_code        :string(255)
 #  created_at             :datetime
 #  updated_at             :datetime
-#  harmonized_code        :string(255)
 #
 
 class Product < ActiveRecord::Base
