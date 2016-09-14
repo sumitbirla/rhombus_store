@@ -252,8 +252,23 @@
   
   <div class="col-md-6">
     <div class="panel panel-info">
-      <div class="panel-heading">Shipments</div>
+      <div class="panel-heading"><%= @order.shipments.length == 0 ? 'Inventory Required' : 'Shipments' %></div>
       <div class="panel-body">
+        
+        <% if @order.shipments.length == 0 %>
+        <% products = @order.items.group(:product_id).sum(:quantity) %>
+        <table class="table table-condensed light">
+          <% products.each do |product_id, quantity| 
+              p = Product.find(product_id) %>
+          <tr>
+            <td><%= p.sku %></td>
+            <td><%= p.name_with_option %></td>
+            <td class="text-right">req: <%= number_with_delimiter quantity %></td>
+            <td class="text-right">avl: <%= number_with_delimiter InventoryItem.where(sku: p.sku).sum(:quantity) %></td>
+          </tr>
+          <% end %>
+        </table>
+        <% end %>
         
         <table class="table table-condensed">
         <% @order.shipments.each do |shipment| %>
@@ -326,8 +341,7 @@
 </table>
 
 
-
-<%= content_for :title do %>
+<% content_for :title do %>
 	Orders: <%= @order.id %>
 <% end %>
 

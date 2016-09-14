@@ -24,13 +24,19 @@ class InventoryItem < ActiveRecord::Base
   
   # given a SKU and quantity,  this method returns locations from where product can be pulled, oldest ones first
   def self.get(sku, count)
-    items = InventoryItem.where(sku: sku).group(:inventory_location_id).order(:expiration)
-    raise "Not enough inventory" if items.collect { |x| x.quantity }.sum < count
+    items = InventoryItem.where(sku: sku)
+                         .group(:inventory_location_id)
+                         .order("expiration, quantity")
+                         .select("lot, expiration, inventory_location_id, sum(quantity) as quantity")
+                         
+    available = items.collect { |x| x.quantity }.sum
+    raise "Insufficient inventory for SKU:#{sku}.  Requested: #{count}   available: #{available}" if available < count
     
     ret = []
     remaining = count
     
     items.each do |i|
+      next if i.quantity == 0
       ret_item = InventoryItem.new(
                     sku: sku,
                     lot: i.lot,
@@ -44,5 +50,10 @@ class InventoryItem < ActiveRecord::Base
     end
     
     ret
+  end
+  
+  def formatted_expiration
+    s = expiration.to_s
+    s[2,2] + "/" + s[0,2]
   end
 end

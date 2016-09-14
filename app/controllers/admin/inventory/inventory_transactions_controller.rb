@@ -7,7 +7,16 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
   end
   
   def new
-    @transaction = InventoryTransaction.new(user_id: session[:user_id], entity_type: 'Manual')
+    @transaction = InventoryTransaction.new( 
+                      user_id: session[:user_id], 
+                      shipment_id: params[:shipment_id],
+                      purchase_order_id: params[:purchase_order_id] )
+                      
+    unless @transaction.purchase_order_id.nil?
+      po = PurchaseOrder.find(@transaction.purchase_order_id)
+      po.items.each { |i| @transaction.items.build(sku: i.sku, quantity: i.quantity) }
+    end
+                        
     10.times { @transaction.items.build }
     render 'edit'
   end
@@ -47,7 +56,18 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
     end
 
     if @transaction.save(validate: false)
-      redirect_to action: 'index', notice: 'Transaction was successfully updated.'
+      
+      if @transaction.purchase_order_id
+        PurchaseOrder.find(@transaction.purchase_order_id).update_received_counts
+        redirect_to admin_inventory_purchase_order_path(@transaction.purchase_order_id)
+      
+      elsif @transaction.shipment_id
+        redirect_to admin_store_shipment_path(@transaction.shipment_id)
+      
+      else
+        redirect_to action: 'index', notice: 'Transaction was successfully updated.'
+      end
+      
     else
       render 'edit'
     end

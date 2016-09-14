@@ -10,8 +10,8 @@
   <td>
     <% if t.shipment %>
       <%= link_to t.shipment.to_s, admin_store_shipment_path(t.shipment) %>
-    <% elsif t.purchase_order %>
-      <%= link_to "PO #{t.purchase_order.id}", admin_inventory_purchase_order_path(po) %>
+    <% elsif t.purchase_order_id %>
+      <%= link_to "PO #{t.purchase_order_id}", admin_inventory_purchase_order_path(t.purchase_order_id) %>
     <% else %>
       Manual
     <% end %>

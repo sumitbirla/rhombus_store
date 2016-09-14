@@ -9,7 +9,7 @@
         <% if @transaction.shipment %>
           <%= link_to @transaction.shipment.to_s, admin_store_shipment_path(@transaction.shipment) %>
         <% elsif @transaction.purchase_order %>
-          <%= link_to "PO #{@transaction.purchase_order.id}", admin_inventory_purchase_order_path(po) %>
+          <%= link_to "PO #{@transaction.purchase_order_id}", admin_inventory_purchase_order_path(@transaction.purchase_order_id) %>
         <% else %>
           Manual
         <% end %>

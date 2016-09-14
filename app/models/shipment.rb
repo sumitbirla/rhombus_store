@@ -66,7 +66,7 @@ class Shipment < ActiveRecord::Base
   belongs_to :fulfiller, class_name: 'User', foreign_key: 'fulfilled_by_id'
   has_many :items, class_name: 'ShipmentItem', dependent: :destroy
   has_many :invoices, as: :invoiceable
-  has_many :inventory_transactions
+  has_one :inventory_transaction
   
   accepts_nested_attributes_for :items, allow_destroy: true
 
@@ -181,7 +181,12 @@ class Shipment < ActiveRecord::Base
   
   def create_inventory_transaction(user_id = nil)
     tran = InventoryTransaction.new(shipment_id: id, user_id: user_id)
-    items.each { |i|  tran.items << InventoryItem.get(i.order_item.product.sku, i.quantity) }
+    products = items.group(:product_id).sum(:quantity)
+    
+    products.each do |product_id, quantity|  
+      p = Product.find(product_id)
+      tran.items << InventoryItem.get(p.sku, quantity)
+    end
     
     tran
   end

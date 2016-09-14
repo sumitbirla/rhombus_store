@@ -161,6 +161,7 @@ Rails.application.routes.draw do
           get 'create_payment'
           get 'scan'
           post 'scan' => 'shipments#verify_scan'
+          get 'create_inventory_transaction'
         end
       end
       resources :manifests do 

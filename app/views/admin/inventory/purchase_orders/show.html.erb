@@ -54,7 +54,7 @@
   </div>
 </div>
 
-<%= link_to "Receiving Worksheet", receiving_admin_inventory_purchase_order_path(@purchase_order), class: 'btn btn-sm btn-default pull-right' %></a>
+<%= link_to "Receiving Worksheet", new_admin_inventory_inventory_transaction_path(purchase_order_id: @purchase_order.id), class: 'btn btn-sm btn-default pull-right' %></a>
 <h4>Items:</h4>
 <table class="table table-striped table-condensed">
 	<tr>
@@ -76,15 +76,34 @@
 		<td class="text-center"><%= number_to_currency(item.unit_price) %></td>
 		<td class="text-center"><%= item.quantity_received %></td>
 		<td class="text-center"><%= number_to_currency(item.quantity * item.unit_price) %></td>
-		<td class="text-center"><%= poi_status(item)%></td>
+		<td class="text-center"><%= poi_status(item) %></td>
 	</tr>
 	<% end %>
 </table>
 
+<hr>
+
+<h4>Receiving history:</h4>
+<table class="table table-striped table-condensed">
+	<tr>
+		<th>Timestamp</th>
+		<th>Entity</th>
+    <th>Action</th>
+		<th class="text-center">Items</th>
+    <th class="text-right">Quantity</th>
+		<th class="text-center">Entered by</th>
+    <th></th>
+	</tr>
+	<%= render @purchase_order.inventory_transactions %>
+</table>
 
 
+<% if @purchase_order.inventory_transactions.length == 0 %>
+  <div class="alert alert-info"><i class="fa fa-info-circle"></i> No items received thus far.</div>
+<% end %>
 
-<%= content_for :title do %>
+
+<% content_for :title do %>
 	Purchase Order #<%= @purchase_order.id %>
 <% end %>
 

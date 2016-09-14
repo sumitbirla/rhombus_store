@@ -35,7 +35,7 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
   end
 
   def show
-    @purchase_order = PurchaseOrder.find(params[:id])
+    @purchase_order = PurchaseOrder.includes(:inventory_transactions, [inventory_transactions: :items]).find(params[:id])
   end
 
   def edit

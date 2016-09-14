@@ -380,6 +380,19 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     
     render 'scan'
   end
+  
+  def create_inventory_transaction
+    @shipment = Shipment.includes(:items, [items: :product]).find(params[:id])
+    
+    begin
+      tran = @shipment.create_inventory_transaction(session[:user_id])
+      tran.save!
+    rescue => e
+      flash[:error] = e.message
+    end
+    
+    redirect_to :back
+  end
 
 
   private

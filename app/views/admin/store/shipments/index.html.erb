@@ -51,6 +51,7 @@
       <th>Shipped</th>
       <th>Method</th>
     <% end %>
+    <th></th>
     <th>Status</th>
     <th class="actions">&nbsp;</th>
   </tr>
@@ -73,6 +74,13 @@
           <td><%= shipment.ship_date ? sysdate(shipment.ship_date) : "<span class='light'>-</span>".html_safe %></td>
           <td><%= shipment.ship_method.blank? ? '<span class="light">- n/a -</span>'.html_safe : "#{shipment.carrier} #{shipment.ship_method}" %></td>
         <% end %>
+        <td>
+          <% if shipment.inventory_transaction %>
+            <%= link_to edit_admin_inventory_inventory_transaction_path(shipment.inventory_transaction) do %>
+              <i class="light fa fa-dropbox"></i>
+            <% end %>
+          <% end%>
+        </td>
         <td><%= shipment_status(shipment)%></td>
         <td class="actions ralign">
           <% if shipment.status == "pending" %>
