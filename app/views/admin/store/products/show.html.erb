@@ -283,19 +283,26 @@
 	
 
 
-    <% if @product.product_type == 'stock' %>
-      <hr/>
+    <% if @product.product_type == 'stock' 
+          items = InventoryItem.includes(:inventory_location)
+                               .where(sku: @product.sku)
+                               .group(:inventory_location_id)
+                               .order("expiration, quantity")
+                               .select("lot, expiration, inventory_location_id, sum(quantity) as quantity")
+    %>
+      <span class="pull-right light">Low: <%= @product.low_threshold %></span>
       <h4>Inventory</h4>
 
-      <table class="table table-condensed summary">
+      <table class="table table-condensed">
+      <% items.each do |i| 
+          next if i.quantity == 0 %>
         <tr>
-          <td>In stock</td>
-          <td><%= stock %></td>
+          <td><%= i.inventory_location %></td>
+          <td>lot# <%= i.lot %></td>
+          <td>exp: <%= i.formatted_expiration %></td>
+          <td class="text-right"><%= number_with_delimiter(i.quantity) %></td>
         </tr>
-        <tr>
-          <td>Low threshold</td>
-          <td><%= @product.low_threshold || "- not set -" %></td>
-        </tr>
+      <% end %>
       </table>
     <% end %>
 

@@ -168,45 +168,6 @@
 
 <br/>
 
-<% if @shipment.inventory_transaction.nil? %>
-<div class="alert alert-warning">
-  <i class="fa fa-exclamation-triangle"></i> There is no corresponding inventory transaction.  
-  <%= link_to "Create one", create_inventory_transaction_admin_store_shipment_path(@shipment) %>
-</div>
-<% else %>
-
-<div class="col-md-6 pull-left">
-  
-  <div class="panel panel-success">
-    <div class="panel-heading">Inventory:</div>
-    <div class="panel-body">
-      <table class="table table-condensed small light">
-        <tr>
-          <th>Location</th>
-          <th>SKU</th>
-          <th>Name</th>
-          <th class="text-center">Lot #</th>
-          <th class="text-center">Exp.</th>
-          <th class="text-right">Qty.</th>  
-        </tr>
-        <% @shipment.inventory_transaction.items.each do |item| %>
-        <tr>
-          <td class="text-center"><%= item.inventory_location.name %></td>
-          <td><%= item.sku %></td>
-          <td><%= Product.find_by(sku: item.sku).name_with_option %></td>
-          <td class="text-center"><%= item.lot %></td>
-          <td class="text-center"><%= item.formatted_expiration %></td>
-          <td class="text-right"><%= number_with_delimiter(item.quantity.abs) %></td>
-        </tr>
-        <% end %>
-      </table>
-      <%= link_to "edit", edit_admin_inventory_inventory_transaction_path(@shipment.inventory_transaction), class: "btn btn-default btn-xs"%>
-    </div>
-  </div>
-</div>
-
-<% end %>
-
 
 <% if @shipment.status == 'shipped' %>
 	<div class="col-md-4" style="padding-left: 0;">
@@ -219,7 +180,7 @@
     <% end %>
 	</div>
 	
-	<div class="col-md-8">
+	<div class="col-md-8" style="margin-bottom: 40px;">
 	    <%= carrier_image @shipment.ship_method.split[0] unless @shipment.ship_method.blank? %>
 	    <table class="table table-condensed table-bordered summary" style="margin-bottom: 10px;">
       <% unless @shipment.fulfilled_by_id.nil? %>
@@ -300,6 +261,47 @@
     </form>
   </div>
 <% end %>
+
+
+<% if @shipment.inventory_transaction.nil? %>
+<div class="alert alert-warning">
+  <i class="fa fa-exclamation-triangle"></i> There is no corresponding inventory transaction.  
+  <%= link_to "Create one", create_inventory_transaction_admin_store_shipment_path(@shipment) %>
+</div>
+<% else %>
+
+<div class="col-md-6 pull-left">
+  
+  <div class="panel panel-success">
+    <div class="panel-heading">Inventory:</div>
+    <div class="panel-body">
+      <table class="table table-condensed small light">
+        <tr>
+          <th>Location</th>
+          <th>SKU</th>
+          <th>Name</th>
+          <th class="text-center">Lot #</th>
+          <th class="text-center">Exp.</th>
+          <th class="text-right">Qty.</th>  
+        </tr>
+        <% @shipment.inventory_transaction.items.each do |item| %>
+        <tr>
+          <td class="text-center"><%= item.inventory_location.name %></td>
+          <td><%= item.sku %></td>
+          <td><%= Product.find_by(sku: item.sku).name_with_option %></td>
+          <td class="text-center"><%= item.lot %></td>
+          <td class="text-center"><%= item.formatted_expiration %></td>
+          <td class="text-right"><%= number_with_delimiter(item.quantity.abs) %></td>
+        </tr>
+        <% end %>
+      </table>
+      <%= link_to "edit", edit_admin_inventory_inventory_transaction_path(@shipment.inventory_transaction), class: "btn btn-default btn-xs"%>
+    </div>
+  </div>
+</div>
+
+<% end %>
+
 
 
 <% content_for :title do %>
