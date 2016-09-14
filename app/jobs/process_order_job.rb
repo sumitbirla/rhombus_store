@@ -9,7 +9,7 @@ class ProcessOrderJob < ActiveJob::Base
     OrderMailer.order_submitted(o.id, nil).deliver_later
     
     # create shipment if requested
-    if Cache.setting(o.domain_id, :shipping, "Auto Create Shipment")
+    if Cache.setting(o.domain_id, :shipping, "Auto Create Shipment") == "true"
       CreateShipmentJob.perform_later(o.id)
     end
     
