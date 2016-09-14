@@ -211,14 +211,14 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipments = Shipment.where(status: params[:shipment_id])
     
     sql = <<-EOF
-      select sheet.name as label, p.sku, a.code, item.variation, item.lot, item.expiration, p.name, p.option_title, sum(quantity) as quantity
+      select sheet.name as label, p.sku, a.code, item.variation, p.name, p.option_title, sum(quantity) as quantity
       from store_shipment_items item
       join store_shipments shp on shp.id = item.shipment_id
       join store_products p on p.id = item.product_id
       left join core_affiliates a on a.id = item.affiliate_id
       join store_label_sheets sheet on sheet.id = p.label_sheet_id
       where shp.id in (#{params[:shipment_id].join(",")})
-      group by p.sku, a.code, item.variation, item.lot
+      group by p.sku, a.code, item.variation
       order by p.label_sheet_id, p.id;
     EOF
     

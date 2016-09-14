@@ -33,8 +33,6 @@
         <tr>
           <th class="col-md-2">Item</th>
           <th class="col-md-5">Description</th>
-          <th>Lot</th>
-          <th>Expiration</th>
           <th class="col-md-1 calign">Quantity</th>
           <th class="col-md-1 calign">&nbsp;</th>
           <th class="col-md-1 calign">&nbsp;</th>
@@ -51,8 +49,6 @@
       <tr>
         <td><%= item_number %></td>
         <td><%= item[:name] %>, <%= item[:option_title] %></td>
-        <td><%= item[:lot] %></td>
-        <td><%= item[:expiration] %></td>
         <td class="calign">
           <input type="hidden" name="lot-<%= item_number %>" value="<%= item[:lot] %>-<%= item[:expiration] %>">
           <input style="width: 60px; text-align: center;" type="numeric" name="item-<%= item_number %>" value="<%= item[:quantity] %>">
