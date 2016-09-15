@@ -43,7 +43,7 @@
 	<% @products.each do |product| %>
 	<tr>
 		<td><%= link_to product.item_number, admin_store_product_path(product) %></td>
-    <td><%= product.brand %></td>
+    <td><%= product.brand || "<span class='light'>- generic -</span>".html_safe %></td>
 		<td><%= product.name_with_option %></td>
     <td><%= product.product_type %></td>
     <td><%= product_status(product) %></td>

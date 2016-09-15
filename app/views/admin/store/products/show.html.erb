@@ -7,7 +7,7 @@
   <%= link_to "clone", clone_admin_store_product_path(@product), class: "btn btn-sm btn-default" %>
   <%= link_to "edit", edit_admin_store_product_path(@product), class: "btn btn-sm btn-default" %>
 </div>
-<h2><i class="fa fa-tags"></i>&nbsp; <%= @product.title %></h2>
+<h2><i class="fa fa-tags"></i>&nbsp; <%= @product.name_with_option %></h2>
 <h4>SKU: <%= @product.item_number %></h4>
 <hr/>
 
@@ -15,14 +15,19 @@
 	<div class="col-md-8">
 
 	<table class="table table-condensed table-bordered summary">
+    <% unless @product.slug.blank? %>
 		<tr>
 			<td>Slug</td>
 			<td><%= @product.slug %></td>
 		</tr>
+    <% end %>
+    
+    <% unless @product.brand.nil? %>
 		<tr>
 			<td>Brand</td>
 			<td><%= link_to @product.brand, admin_store_products_path(brand_id: @product.brand_id) %></td>
 		</tr>
+    <% end %>
 
 		<% unless @product.group.blank? %>
 		<tr>
