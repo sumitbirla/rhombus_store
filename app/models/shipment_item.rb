@@ -9,8 +9,6 @@
 #  affiliate_id   :integer
 #  variation      :string(255)
 #  quantity       :integer          not null
-#  lot            :string(255)
-#  expiration     :integer
 #  special_status :string(64)       default("")
 #  created_at     :datetime
 #  updated_at     :datetime

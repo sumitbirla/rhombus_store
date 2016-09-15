@@ -12,11 +12,11 @@
 #  upc                    :string(255)
 #  sku                    :string(255)
 #  active                 :boolean          default(TRUE), not null
-#  title                  :string(255)      not null
+#  title                  :string(255)
 #  option_title           :string(255)
 #  option_sort            :integer
 #  retail_map             :decimal(10, 2)
-#  price                  :decimal(10, 2)   not null
+#  price                  :decimal(10, 2)
 #  msrp                   :decimal(10, 2)
 #  special_price          :decimal(10, 2)
 #  free_shipping          :boolean          default(FALSE), not null

@@ -5,7 +5,11 @@ class Admin::Inventory::InventoryItemsController < Admin::BaseController
                                     .order(sort_column + ' ' + sort_direction)
                                     .group(:inventory_location_id, :sku, :lot)
                                     .select("sku, sum(quantity) as quantity, lot, expiration, inventory_location_id")
-                                    .page(params[:page])
+                                    
+    respond_to do |format|
+      format.html  { @inventory_items = @inventory_items.page(params[:page]) }
+      format.csv { send_data InventoryItem.to_csv(@inventory_items) }
+    end
   end
   
   def new

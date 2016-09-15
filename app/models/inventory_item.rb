@@ -4,8 +4,7 @@
 #
 #  id                       :integer          not null, primary key
 #  inventory_transaction_id :integer          not null
-#  inventoriable_type       :string(255)      default(""), not null
-#  inventoriable_id         :integer          not null
+#  sku                      :string(255)      not null
 #  inventory_location_id    :integer          not null
 #  quantity                 :integer          not null
 #  lot                      :string(255)
@@ -16,10 +15,21 @@
 #
 
 class InventoryItem < ActiveRecord::Base
+  
   self.table_name = "inv_items"
-
   belongs_to :inventory_location
   belongs_to :inventory_transaction
+  
+  
+  def self.to_csv(list, opts = {})
+  
+    CSV.generate do |csv|
+      cols = [:sku, :lot, :expiration, :location]
+      csv << cols
+      list.each { |x| csv << [x.sku, x.lot, x.formatted_expiration, x.inventory_location.name] }
+    end
+  
+  end
   
   
   # given a SKU and quantity,  this method returns locations from where product can be pulled, oldest ones first

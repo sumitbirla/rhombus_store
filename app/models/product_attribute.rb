@@ -1,13 +1,19 @@
 # == Schema Information
 #
-# Table name: store_product_attributes
+# Table name: ProductAttributes
 #
-#  id           :integer          not null, primary key
-#  product_id   :integer          not null
-#  attribute_id :integer          not null
-#  value        :text(65535)      not null
-#  created_at   :datetime
-#  updated_at   :datetime
+#  ProdAttributeID   :integer          not null
+#  ProdAttribute     :string(20)
+#  ProdAttributeDesc :string(100)
+#  MaxLength         :integer
+#  SystemType        :boolean          default(FALSE)
+#  Mod_Date          :datetime
+#  Mod_User          :string(15)
+#  AtributeTypeID    :integer
+#  ItemDescription   :string(50)
+#  InventoryAcctIndx :integer
+#  COGAcctIndx       :integer
+#  ITMCLSCD          :string(11)
 #
 
 class ProductAttribute < ActiveRecord::Base

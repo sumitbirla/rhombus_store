@@ -17,7 +17,7 @@
     <% end %>
   </td>
   <td><%= actions.join(" / ") %></td>
-  <td class="text-center"><%= pluralize(t.items.length, "item") %></td>
+  <td class="text-center small">- <%= pluralize(t.items.length, "item") %> -</td>
   <td class="text-right"><%= number_with_delimiter(t.items.sum(:quantity).abs) %></td>
 	<td class="text-center">
     <% if t.user_id %>
