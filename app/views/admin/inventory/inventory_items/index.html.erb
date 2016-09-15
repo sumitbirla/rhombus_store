@@ -15,14 +15,12 @@
 <%= will_paginate @inventory_items %>
 <table class="table table-striped table-condensed">
 	<tr>
-		<th>SKU</th>
+		<th><%= sortable 'sku', 'SKU' %></th>
 		<th>Description</th>
-		<th>Location</th>
-		<th class="text-center">Quantity</th>
-    <th class="text-center">Lot</th>
-		<th>Expiration</th>
-    <th>Transaction</th>
-		<th>Entered by</th>
+		<th><%= sortable 'inventory_location_id', 'Location' %></th>
+    <th><%= sortable 'lot' %></th>
+		<th class="text-center"><%= sortable 'expiration' %></th>
+    <th class="text-right"><%= sortable 'quantity' %></th>
 	</tr>
 	<%= render @inventory_items %>
 </table>

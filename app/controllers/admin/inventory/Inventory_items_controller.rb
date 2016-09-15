@@ -3,6 +3,8 @@ class Admin::Inventory::InventoryItemsController < Admin::BaseController
   def index
     @inventory_items = InventoryItem.includes(:inventory_location)
                                     .order(sort_column + ' ' + sort_direction)
+                                    .group(:inventory_location_id, :sku, :lot)
+                                    .select("sku, sum(quantity) as quantity, lot, expiration, inventory_location_id")
                                     .page(params[:page])
   end
   
@@ -50,11 +52,11 @@ class Admin::Inventory::InventoryItemsController < Admin::BaseController
     end
     
     def sort_column
-      params[:sort] || "created_at"
+      params[:sort] || "sku"
     end
 
     def sort_direction
-      %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
     end
   
   

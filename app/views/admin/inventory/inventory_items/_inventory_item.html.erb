@@ -1,20 +1,12 @@
 <% 
   item = inventory_item
-  p = Product.find_by(id: item.inventoriable_id)
+  p = Product.find_by(sku: item.sku)
 %>
 	<tr>
 		<td><%= link_to p.sku, admin_store_product_path(p) %></td>
 		<td><%= p.name_with_option %></td>
 		<td><%= item.inventory_location %></td>
-		<td class="text-center"><%= number_with_delimiter item.quantity %></td>
-    <td class="text-center"><%= item.lot %></td>
-		<td><%= item.expiration %></td>
-    <td>
-    <% if item.transaction_type == 'order' %>
-      <%= link_to "Order ##{item.transaction_id}", admin_store_order_path(id: item.transaction_id)%>
-    <% elsif item.transaction_type == 'purchase_order' %>
-      <%= link_to "PO ##{item.transaction_id}", admin_inventory_purchase_order_path(id: item.transaction_id)%>
-    <% end %>
-    </td>
-    <td><%= item.user %></td>
+    <td><%= item.lot %></td>
+		<td class="text-center"><%= item.formatted_expiration %></td>
+    <td class="text-right"><%= number_with_delimiter item.quantity %></td>
 	</tr>
