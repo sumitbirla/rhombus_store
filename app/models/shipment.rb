@@ -60,13 +60,14 @@ class Shipment < ActiveRecord::Base
   include Exportable
   
   self.table_name = "store_shipments"
+  before_save :check_inventory
   after_save :update_order
   
   belongs_to :order
   belongs_to :fulfiller, class_name: 'User', foreign_key: 'fulfilled_by_id'
   has_many :items, class_name: 'ShipmentItem', dependent: :destroy
   has_many :invoices, as: :invoiceable
-  has_one :inventory_transaction
+  has_one :inventory_transaction, dependent: :destroy
   
   accepts_nested_attributes_for :items, allow_destroy: true
 
@@ -176,6 +177,22 @@ class Shipment < ActiveRecord::Base
       )
     end
     
+  end
+  
+  
+  # if there isn't enough inventory, cancel the save
+  def check_inventory
+    products = Product.where(id: items.map(&:product_id).uniq).select(:id, :sku)
+    
+    products.each do |p|
+      quantity = items.select { |x| x.product_id == p.id }.sum(&:quantity)
+      avl = InventoryItem.where(sku: p.sku).sum(:quantity)
+      
+      if avl < quantity
+        errors.add(:base, "Not enough inventory.")
+        return false
+      end
+    end
   end
   
   

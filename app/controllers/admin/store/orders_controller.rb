@@ -269,7 +269,7 @@ EOF
     orders.each do |o|
       if o.shipments.length == 0
         shipment = o.create_shipment(session[:user_id])
-        count += 1                
+        count += 1 if shipment               
       end
     end
     
