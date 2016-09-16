@@ -1,39 +1,5 @@
 <h2>Transaction #<%= @transaction.id %></h2>
 
-<div class="row" style="margin-left: 0;">
-  <div class="col-md-6">
-	<table class="table table-bordered table-condensed summary">
-		<tr>
-			<td class="key">Entity: </td>
-			<td>
-        <% if @transaction.shipment %>
-          <%= link_to @transaction.shipment.to_s, admin_store_shipment_path(@transaction.shipment) %>
-        <% elsif @transaction.purchase_order %>
-          <%= link_to "PO #{@transaction.purchase_order_id}", admin_inventory_purchase_order_path(@transaction.purchase_order_id) %>
-        <% else %>
-          Manual
-        <% end %>
-			</td>
-		</tr>
-    <% unless @transaction.created_at.nil? %>
-		<tr class="key">
-			<td>Transaction time: </td>
-			<td><%= systime @transaction.created_at %></td>
-		</tr>
-    <% end %>
-		<tr>
-			<td class="key">Created by: </td>
-			<td>
-      <% if @transaction.user_id %>
-        <%= link_to @transaction.user, admin_system_user_path(@transaction.user) %>
-      <% else %>
-        <span class="light">- system -</span>
-      <% end %>
-      </td>
-		</tr>
-	</table>
-  </div>
-</div>
 
 <%= simple_form_for [:admin, :inventory, @transaction] do |f| %>
   <input type="hidden" name="add_more_items" value=""/>
@@ -42,7 +8,46 @@
   <%= f.hidden_field :purchase_order_id %>
 
 	<%= render 'admin/shared/error_messages', object: f.object %>
-	
+
+  <div class="row" style="margin-left: 0;">
+    <div class="col-md-6">
+  	<table class="table table-bordered table-condensed summary">
+  		<tr>
+  			<td class="key">Entity: </td>
+  			<td>
+          <% if @transaction.shipment %>
+            <%= link_to @transaction.shipment.to_s, admin_store_shipment_path(@transaction.shipment) %>
+          <% elsif @transaction.purchase_order %>
+            <%= link_to "PO #{@transaction.purchase_order_id}", admin_inventory_purchase_order_path(@transaction.purchase_order_id) %>
+          <% else %>
+            Manual
+          <% end %>
+  			</td>
+  		</tr>
+      <% unless @transaction.created_at.nil? %>
+  		<tr class="key">
+  			<td>Transaction time: </td>
+  			<td><%= systime @transaction.created_at %></td>
+  		</tr>
+      <% end %>
+  		<tr>
+  			<td class="key">Created by: </td>
+  			<td>
+        <% if @transaction.user_id %>
+          <%= link_to @transaction.user, admin_system_user_path(@transaction.user) %>
+        <% else %>
+          <span class="light">- system -</span>
+        <% end %>
+        </td>
+  		</tr>
+  	</table>
+    </div>
+    <div class="col-md-6">
+      <%= f.input_field :notes, placeholder: 'Notes...', style: "width: 100%; height: 100px;" %>
+    </div>
+  </div>
+
+
 	 <div class="panel panel-info">
     <div class="panel-heading">
       <%= link_to '+ add more items', '#', class: 'add-more-items pull-right' %>
