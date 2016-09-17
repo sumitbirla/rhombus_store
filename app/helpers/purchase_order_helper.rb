@@ -4,7 +4,7 @@ module PurchaseOrderHelper
     css_class = css + ' '
     
     if po.status == 'new'
-      css_class += 'label-info'
+      css_class += 'label-warning'
     elsif ['late', 'canceled'].include?(po.status)
       css_class += 'label-danger'
     elsif po.status == 'received'
@@ -12,7 +12,7 @@ module PurchaseOrderHelper
     elsif po.status == 'released'
       css_class += 'label-success'
     elsif po.status == 'closed'
-      css_class += 'label-primary'
+      css_class += 'label-info'
     else
       css_class += 'label-primary'
     end

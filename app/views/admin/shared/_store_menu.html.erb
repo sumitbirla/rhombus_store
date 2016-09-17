@@ -1,6 +1,7 @@
 <% 
 	new_orders = StoreCache.new_orders_count
 	new_shipments = StoreCache.pending_shipments_count
+  new_pos = StoreCache.new_purchase_orders_count
   max = [new_orders, new_shipments].max
   
 %>
@@ -45,11 +46,22 @@
 </li>
 
 <li class="<%= 'active' if request.original_url.include? 'admin/inventory' %>">
-  <a href="#"><i class="fa fa-book fa-fw"></i> Inventory  <span class="fa arrow"></span></a>
+  <a href="#"><i class="fa fa-book fa-fw"></i> Inventory 
+    <% if new_pos > 0 %>
+    &nbsp; &nbsp; <span class="badge"><%= new_pos %></span>
+    <% end %>
+    <span class="fa arrow"></span></a>
   <ul class="nav nav-second-level">
     <li><%= link_to "Items", admin_inventory_inventory_items_path %></li>
     <li><%= link_to "Transactions", admin_inventory_inventory_transactions_path %></li>
-    <li><%= link_to "Purchase Orders", admin_inventory_purchase_orders_path %></li>
+    <li>
+      <%= link_to admin_inventory_purchase_orders_path do %>
+      Purchase Orders
+      <% if new_pos > 0 %>
+      	<span class="badge pull-right"><%= new_pos %></span>
+      <% end %>
+      <% end %>
+    </li>
     <li><%= link_to "Reports", admin_inventory_reports_path %></li>
     <li><%= link_to "Suppliers", admin_system_affiliates_path(c: :suppliers) %></li>
     <li><%= link_to "Warehouse setup", admin_inventory_inventory_locations_path %></li>
