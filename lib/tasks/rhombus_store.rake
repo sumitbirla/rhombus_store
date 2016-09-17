@@ -4,7 +4,7 @@ namespace :rhombus_store do
   desc "Create shipments (or mark as backordered) for newly submitted orders"
   task create_shipments: :environment do 
     
-    Order.where(status: :submitted).each do |o|
+    Order.where(status: [:backordered, :submitted]).order(:submitted).each do |o|
   	  next if Cache.setting(o.domain_id, :shipping, "Auto Create Shipment") != "true"
       
       begin

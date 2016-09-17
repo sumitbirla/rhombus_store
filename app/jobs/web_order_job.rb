@@ -3,10 +3,7 @@ class WebOrderJob < ActiveJob::Base
 
   def perform(h)
     o = Order.find(h[:order_id])
-    
-    # email order confirmation
-    OrderMailer.order_submitted(o.id, nil).deliver_later
-    
+
     # order result of email blast?
     EmailBlast.where(uuid: h[:email_blast_uuid]).update_all("sales = sales + 1") unless h[:email_blast_uuid].blank?
     
@@ -74,6 +71,9 @@ class WebOrderJob < ActiveJob::Base
       autoship.next_ship_date = Date.today + autoship.days.days
       autoship.save
     end
+    
+    # email order confirmation
+    OrderMailer.order_submitted(o.id, nil).deliver_later
     
   end
 end
