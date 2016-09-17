@@ -146,7 +146,7 @@ class Order < ActiveRecord::Base
   end
   
   def self.valid_statuses
-    [ 'accepted', 'backordered', 'cancelled', 'shipped', 'submitted' ]
+    [ 'accepted', 'backordered', 'cancelled', 'shipped', 'submitted', 'awaiting_shipment' ]
   end
   
   # create a dummy user if one doesn't exist and assign user_id
