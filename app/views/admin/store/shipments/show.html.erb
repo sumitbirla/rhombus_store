@@ -262,6 +262,12 @@
   </div>
 <% end %>
 
+<pre>
+<%= cookies.class %>
+
+<%= cookies.inspect %>
+</pre>
+
 
 <% if @shipment.inventory_transaction.nil? %>
 <div class="alert alert-warning">
@@ -295,6 +301,11 @@
         </tr>
         <% end %>
       </table>
+      <%= link_to "delete",
+                  admin_inventory_inventory_transaction_path(@shipment.inventory_transaction),
+                  method: :delete,
+                  data: { confirm: "Are you sure? You will need to create a new inventory transaction before shipping this order." }, 
+                  class: 'btn btn-danger btn-xs pull-right' %>
       <%= link_to "edit", edit_admin_inventory_inventory_transaction_path(@shipment.inventory_transaction), class: "btn btn-default btn-xs"%>
     </div>
   </div>

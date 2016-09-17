@@ -42,6 +42,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     end
 
     @shipment = @order.create_shipment(session[:user_id], false)
+    @shipment.sufficient_inventory?
     
     # set invoice amount
     @shipment.invoice_amount = @order.total if @shipment.sequence == 1
@@ -385,7 +386,8 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipment = Shipment.includes(:items, [items: :product]).find(params[:id])
     
     begin
-      tran = @shipment.create_inventory_transaction(session[:user_id])
+      tran = @shipment.new_inventory_transaction
+      tran.shipment_id = @shipment.id
       tran.save!
     rescue => e
       flash[:error] = e.message

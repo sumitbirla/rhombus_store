@@ -60,8 +60,7 @@ class Shipment < ActiveRecord::Base
   include Exportable
   
   self.table_name = "store_shipments"
-  before_save :check_inventory
-  after_save :update_order
+  after_save :update_order, :save_inventory_transaction
   
   belongs_to :order
   belongs_to :fulfiller, class_name: 'User', foreign_key: 'fulfilled_by_id'
@@ -73,6 +72,7 @@ class Shipment < ActiveRecord::Base
 
   validates_presence_of :ship_from_company, :ship_from_street1, :ship_from_city, :ship_from_state, :ship_from_zip, :ship_from_country
   validates_presence_of :recipient_name, :recipient_street1, :recipient_city, :recipient_zip, :recipient_country
+  validate :sufficient_inventory?
   #validates_presence_of :package_weight
   
 
@@ -180,28 +180,31 @@ class Shipment < ActiveRecord::Base
   end
   
   
-  # if there isn't enough inventory, cancel the save
-  def check_inventory
+  # INVENTORY METHODS
+  
+  # standard model validation for shipment
+  def sufficient_inventory?
+    begin
+      new_inventory_transaction
+    rescue => e
+      errors.add(:base, e.message)
+    end
+  end
+  
+  # called by after_save filter
+  def save_inventory_transaction
+    tran = new_inventory_transaction
+    tran.shipment_id = id
+    tran.save
+  end
+  
+  # creates a new transaction without saving to DB
+  def new_inventory_transaction
+    tran = InventoryTransaction.new
     products = Product.where(id: items.map(&:product_id).uniq).select(:id, :sku)
     
     products.each do |p|
       quantity = items.select { |x| x.product_id == p.id }.sum(&:quantity)
-      avl = InventoryItem.where(sku: p.sku).sum(:quantity)
-      
-      if avl < quantity
-        errors.add(:base, "Not enough inventory.")
-        return false
-      end
-    end
-  end
-  
-  
-  def create_inventory_transaction(user_id = nil)
-    tran = InventoryTransaction.new(shipment_id: id, user_id: user_id)
-    products = items.group(:product_id).sum(:quantity)
-    
-    products.each do |product_id, quantity|  
-      p = Product.find(product_id)
       tran.items << InventoryItem.get(p.sku, quantity)
     end
     
