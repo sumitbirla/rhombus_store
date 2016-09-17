@@ -31,7 +31,16 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
     end
   
     if @transaction.save
-      redirect_to action: 'index', notice: 'Inventory transaction was successfully created.'
+      if @transaction.purchase_order_id
+        PurchaseOrder.find(@transaction.purchase_order_id).update_received_counts
+        redirect_to admin_inventory_purchase_order_path(@transaction.purchase_order_id)
+      
+      elsif @transaction.shipment_id
+        redirect_to admin_store_shipment_path(@transaction.shipment_id)
+      
+      else
+        redirect_to action: 'index', notice: 'Inventory transaction was successfully created.'
+      end
     else
       5.times { @transaction.items.build }
       render 'edit'

@@ -4,6 +4,9 @@
     <i class="fa fa-edit"></i> edit
   <% end %>
 </div>
+
+<%= @purchase_order.items[0].status %>
+
 <h2>
 	<i class="fa fa-file-text-o"></i>&nbsp; Purchase Order #<%= @purchase_order.id %> &nbsp; 
 	<%= po_status @purchase_order, 'large' %>
@@ -64,7 +67,7 @@
 		<th class="text-center">Qty Ordered</th>
 		<th class="text-center">Unit Price $</th>
 		<th class="text-center">Received</th>
-		<th class="text-center">Subtotal</th>
+		<th class="text-right">Subtotal</th>
 		<th class="text-center">Status</th>
 	</tr>
 	<% @purchase_order.items.each do |item| %>
@@ -73,10 +76,10 @@
 		<td><%= item.description %></td>
 		<td class="text-center"><%= item.supplier_code %></td>
 		<td class="text-center"><%= item.quantity %></td>
-		<td class="text-center"><%= number_to_currency(item.unit_price) %></td>
+		<td class="text-center"><%= number_to_currency(item.unit_price, precision: 4, strip_insignificant_zeros: true) %></td>
 		<td class="text-center"><%= item.quantity_received %></td>
-		<td class="text-center"><%= number_to_currency(item.quantity * item.unit_price) %></td>
-		<td class="text-center"><%= poi_status(item) %></td>
+		<td class="text-right"><%= number_to_currency(item.quantity * item.unit_price) %></td>
+		<td class="text-center"><%= item.status.presence || '-' %></td>
 	</tr>
 	<% end %>
 </table>
@@ -84,18 +87,13 @@
 <hr>
 
 <h4>Receiving history:</h4>
-<table class="table table-striped table-condensed">
-	<tr>
-		<th>Timestamp</th>
-		<th>Entity</th>
-    <th>Action</th>
-		<th class="text-center">Items</th>
-    <th class="text-right">Quantity</th>
-		<th class="text-center">Entered by</th>
-    <th></th>
-	</tr>
-	<%= render @purchase_order.inventory_transactions %>
-</table>
+<% @purchase_order.inventory_transactions.each do |tran| %>
+<div class="row">
+  <div class="col-md-6">
+    <%= render partial: 'admin/inventory/inventory_transactions/box', locals: { inventory_transaction: tran } %>
+  </div>
+</div>
+<% end%>
 
 
 <% if @purchase_order.inventory_transactions.length == 0 %>
@@ -110,7 +108,7 @@
 
 <% content_for :breadcrumbs do %>
 	<li><a href="#">Inventory</a></li>
-	<li><%= link_to "Purchase Orders", admin_inventory_purchase_orders_path(status: :open) %></li>
+	<li><%= link_to "Purchase Orders", admin_inventory_purchase_orders_path %></li>
 	<li class="active">#<%= @purchase_order.id %></li>
 <% end %>
 

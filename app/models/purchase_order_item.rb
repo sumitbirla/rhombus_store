@@ -20,15 +20,15 @@
 class PurchaseOrderItem < ActiveRecord::Base
   self.table_name = "inv_purchase_order_items"
   belongs_to :purchase_order
-  validates_presence_of :sku, :quantity
+  validates_presence_of :sku, :quantity, :unit_price
   
-  def status
-    if quantity_received == 0
-      "open"
-    elsif quantity_received >= quantity
-      "received"
+  def update_status
+    if quantity_received >= quantity
+      self.status = 'closed'
+    elsif quantity_received == 0
+      self.status = 'open'
     else
-      "partial"
+      self.status = 'received'
     end
   end
   

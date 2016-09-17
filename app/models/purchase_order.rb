@@ -41,14 +41,25 @@ class PurchaseOrder < ActiveRecord::Base
   end
   
   def update_received_counts
+    
     items.each do |i| 
-      i.quantity_received = 0
+      i.quantity_received = 0 
       inventory_transactions.each do |t|
-        t.items.each { |ti| i.quantity_received += ti.quantity if ti.sku == i.sku }
+        t.items.each { |ti| i.quantity_received += ti.quantity if ti.sku == i.sku }    
       end
+      i.update_status
     end
     
+    update_status
     save
+  end
+  
+  def update_status
+    if items.all? { |x| x.status == 'closed' }
+      self.status = 'closed'
+    elsif items.any? { |x| x.status == 'received' }
+      self.status = 'received'
+    end
   end
   
 end

@@ -1,13 +1,13 @@
 class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
-  # ['new', 'open', 'partial', 'received', 'cancelled']
+  # ['new', 'release', 'change_order', 'received', 'cancelled', 'closed']
   
   def index
     @purchase_orders = PurchaseOrder.includes(:items)
                                     .joins(:supplier)
-                                    .where(status: params[:status])
                                     .order(sort_column + " " + sort_direction)
                                     .page(params[:page])
                                     
+    @purchase_orders = @purchase_orders.where(status: params[:status]) unless params[:status].blank?                             
     @purchase_orders = @purchase_orders.where(id: params[:q]) unless params[:q].nil?
   end
 
