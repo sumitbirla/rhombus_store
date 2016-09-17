@@ -328,30 +328,15 @@ class CartController < ApplicationController
       @order.errors.add :base, e.message
       return render "review"
     end
-    
-    # affiliate credit
-    unless cookies[:acid].nil?
-      ac = AffiliateCampaign.find(cookies[:acid])
-      unless ac.nil?
-        @order.affiliate_campaign_id = ac.id
-        @order.affiliate_id = ac.affiliate_id
-      end
-    end
-    
-    # referral rewards
-    unless cookies[:refkey].nil?
-      referrer = User.find_by(referral_key: cookies[:refkey])
-      @order.referred_by = referrer.id unless referrer.nil?
-    end
-    
+  
     # IMPORTANT:  save the order!
     @order.save validate: false
-        
-    # order result of email blast?
-    EmailBlast.where(uuid: cookies[:ebuuid]).update_all("sales = sales + 1") unless cookies[:ebuuid].nil?
     
-    # Do other stuff like creating ships, deal counter updates, affiliate commission etc.
-    ProcessOrderJob.perform_later(@order.id)
+    # Do other stuff like deal counter updates, affiliate commission etc.
+    WebOrderJob.perform_later(order_id: @order.id, 
+                              email_blast_uuid: cookies[:ebuuid], 
+                              referral_key: cookies[:refkey],
+                              affiliate_campaign_id: cookies[:acid])
     
     # delete cart cookie and display confirmation
     cookies.delete :cart

@@ -1,5 +1,24 @@
 namespace :rhombus_store do
   
+  
+  desc "Create shipments (or mark as backordered) for newly submitted orders"
+  task create_shipments: :environment do 
+    
+    Order.where(status: :submitted).each do |o|
+  	  next if Cache.setting(o.domain_id, :shipping, "Auto Create Shipment") != "true"
+      
+      begin
+  		  o.create_shipment(nil)
+        o.update_attribute(:status, :awaiting_shipment)
+      rescue => e
+        Rails.logger.info e.message
+        o.update_attribute(:status, :backordered)
+      end
+    end
+      
+  end
+  
+  
   desc "Process auto-ship items and create orders"
   task auto_ship_items: :environment do
     @logger = Logger.new(Rails.root.join("log", "autoship.log"))

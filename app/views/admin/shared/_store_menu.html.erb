@@ -20,7 +20,7 @@
     <li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
     <li><%= link_to "Invoice Images", admin_store_invoice_images_path %></li>
     <li>
-    <%= link_to admin_store_orders_path(status: "submitted") do %>
+    <%= link_to admin_store_orders_path do %>
     Orders
     <% if new_orders > 0 %>
     	<span class="badge pull-right"><%= new_orders %></span>

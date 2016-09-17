@@ -324,9 +324,7 @@ class Order < ActiveRecord::Base
 
     end
     
-    # TODO: check inventory and create inventory_transaction
-    
-    if save_to_db && shipment.save  
+    if save_to_db && shipment.save! 
       OrderHistory.create(order_id: id, user_id: user_id, event_type: :shipment_created,
                     system_name: 'Rhombus', identifier: shipment.id, comment: "shipment created: #{shipment}") 
     end
