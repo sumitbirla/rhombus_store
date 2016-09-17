@@ -288,7 +288,7 @@
 	
 
 
-    <% if @product.product_type == 'stock' 
+    <% unless @product.product_type == 'virtual' 
           items = InventoryItem.includes(:inventory_location)
                                .where(sku: @product.sku)
                                .group(:inventory_location_id)
