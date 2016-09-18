@@ -13,7 +13,7 @@
       <%= number_with_delimiter po.items.collect(&:quantity_received).sum %> / 
       <%= number_with_delimiter po.items.collect(&:quantity).sum %>
     </td>
-		<td class="text-center"><%= number_to_currency po.items.collect { |i| i.quantity * (i.unit_price || 0.0) }.sum  %></td>
+		<td class="text-right"><%= number_to_currency po.items.collect { |i| i.quantity * (i.unit_price || 0.0) }.sum  %></td>
 		<td class="text-center"><%= po_status(po) %></td>
 		<td>
 			<%= link_to "edit", edit_admin_inventory_purchase_order_path(po) %> &nbsp;
