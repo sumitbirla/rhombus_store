@@ -16,43 +16,19 @@
 <div class="row" style="margin-left: 0;">
   <div class="col-md-6">
 	<table class="table table-bordered table-condensed summary">
-		<tr>
-			<td class="key">Supplier</td>
-			<td><%= link_to @purchase_order.supplier.name, admin_system_affiliate_path(@purchase_order.supplier) %></td>
-		</tr>
-		<tr class="key">
-			<td>Issue Date</td>
-			<td><%= sysdate @purchase_order.issue_date %></td>
-		</tr>
-		<tr>
-			<td class="key">Due Date</td>
-			<td><%= sysdate @purchase_order.due_date %></td>
-		</tr>
-		<tr>
-			<td class="key">Ship via</td>
-			<td><%= @purchase_order.ship_method %></td>
-		</tr>
-		<tr>
-			<td class="key">Payment Terms</td>
-			<td><%= @purchase_order.payment_terms %></td>
-		</tr>
+    <%= obj_property(@purchase_order, :supplier) { |x| link_to(x.name, admin_system_affiliate_path(x)) } %>
+    <%= obj_property @purchase_order, :issue_date %>
+    <%= obj_property @purchase_order, :due_date %>
+    <%= obj_property @purchase_order, :ship_method %>
+    <%= obj_property @purchase_order, :payment_terms %>
 	</table>
   </div>
 
   <div class="col-md-6">
 	<table class="table table-bordered table-condensed summary">
-		<tr>
-			<td class="key">Total Amount:</td>
-			<td><%= number_to_currency(@purchase_order.total_amount) %></td>
-		</tr>
-		<tr>
-			<td class="key">Currently Owed:</td>
-			<td><%= number_to_currency(@purchase_order.amount_owed) %></td>
-		</tr>
-		<tr>
-			<td class="key">Ship To</td>
-			<td><%= raw @purchase_order.ship_to.gsub("\n", "<br/>") %></td>
-		</tr>
+    <%= obj_property @purchase_order, :total_amount %>
+    <%= obj_property @purchase_order, :amount_owed %>
+    <%= obj_property(@purchase_order, :ship_to) { |x| x.gsub("\n", "<br>") } %>
 	</table>
   </div>
 </div>

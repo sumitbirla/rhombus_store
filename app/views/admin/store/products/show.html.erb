@@ -15,26 +15,10 @@
 	<div class="col-md-8">
 
 	<table class="table table-condensed table-bordered summary">
-    <% unless @product.slug.blank? %>
-		<tr>
-			<td>Slug</td>
-			<td><%= @product.slug %></td>
-		</tr>
-    <% end %>
+    <%= obj_property @product, :slug %>
+    <%= obj_property(@product, :brand) { |x| link_to x.name, admin_store_products_path(brand_id: x.id) } %>
+    <%= obj_property @product, :group %>
     
-    <% unless @product.brand.nil? %>
-		<tr>
-			<td>Brand</td>
-			<td><%= link_to @product.brand, admin_store_products_path(brand_id: @product.brand_id) %></td>
-		</tr>
-    <% end %>
-
-		<% unless @product.group.blank? %>
-		<tr>
-			<td>Group</td>
-			<td><%= @product.group %></td>
-		</tr>
-		<% end %>
 		<tr>
 			<td>Price</td>
 			<td>
@@ -50,119 +34,85 @@
         <% end %>
       </td>
 		</tr>
+    
+    <%= obj_property(@product, :product_type) { |x| x.titlecase } %>
+    <%= obj_property @product, :upc %>
+    <%= obj_property(@product, :fulfiller) { |x| link_to x.name, admin_system_affiliate_path(x.id) } %>
+    <%= obj_property @product, :country_of_origin %>
+    <%= obj_property @product, :harmonized_code %>
+    <%= obj_property @product, :item_availability %>
 
+    <% unless @product.item_weight.nil? %>
       <tr>
-        <td>Product type</td>
-        <td><%= @product.product_type.titlecase %></td>
+        <td>Item size</td>
+        <td>
+          <% unless @product.item_length.nil? %>
+            <%= @product.item_length %>" x
+            <%= @product.item_width %>" x
+            <%= @product.item_height %>"
+          <% end %>
+          <b>&nbsp; (<%= @product.item_weight %> lbs.)</b>
+        </td>
       </tr>
-      <% unless @product.upc.blank? %>
-          <tr>
-            <td>UPC</td>
-            <td><%= @product.upc %></td>
-          </tr>
-      <% end %>
-      <% unless @product.fulfiller_id.nil? %>
-          <tr>
-            <td>Fulfilled by</td>
-            <td><%= link_to @product.fulfiller, admin_system_affiliate_path(@product.fulfiller_id) %></td>
-          </tr>
-      <% end %>
-        <% unless @product.country_of_origin.blank? %>
-          <tr>
-            <td>Country of origin</td>
-            <td><%= @product.country_of_origin %></td>
-          </tr>
+    <% end %>
+    
+    <% unless @product.case_weight.nil? %>
+      <tr>
+        <td>Case size</td>
+        <td>
+          <% unless @product.case_length.nil? %>
+              <%= @product.case_length %>" x
+              <%= @product.case_width %>" x
+              <%= @product.case_height %>"
+          <% end %>
+          <b>&nbsp; (<%= @product.case_weight %> lbs.)</b>
+          <i>&nbsp; &nbsp; <%= @product.case_quantity %> in a case</i>
+        </td>
+      </tr>
+    <% end %>
+    
+    <%= obj_property(@product, :label_sheet) { |x| link_to x.name, edit_admin_store_label_sheet_path(x.id) } %>
+    <%= obj_property @product, :warranty %>
+    
+    <tr>
+      <td>Flags</td>
+      <td>
+        <% if @product.active %>
+            <span class="label label-success">active</span>
         <% end %>
-        <% unless @product.item_availability.nil? %>
-          <tr>
-            <td>Item availability</td>
-            <td><%= @product.item_availability.to_date %></td>
-          </tr>
+        <% if @product.hidden %>
+            <span class="label label-warning">hidden</span>
         <% end %>
-        <% unless @product.minimum_order_quantity.nil? %>
-          <tr>
-            <td>Min. order quantity</td>
-            <td><%= @product.minimum_order_quantity %></td>
-          </tr>
-        <% end %>
-        <% unless @product.item_weight.nil? %>
-          <tr>
-            <td>Item size</td>
-            <td>
-              <% unless @product.item_length.nil? %>
-                <%= @product.item_length %>" x
-                <%= @product.item_width %>" x
-                <%= @product.item_height %>"
-              <% end %>
-              <b>&nbsp; (<%= @product.item_weight %> lbs.)</b>
-            </td>
-          </tr>
-        <% end %>
-        <% unless @product.case_weight.nil? %>
-          <tr>
-            <td>Case size</td>
-            <td>
-              <% unless @product.case_length.nil? %>
-                  <%= @product.case_length %>" x
-                  <%= @product.case_width %>" x
-                  <%= @product.case_height %>"
-              <% end %>
-              <b>&nbsp; (<%= @product.case_weight %> lbs.)</b>
-              <i>&nbsp; &nbsp; <%= @product.case_quantity %> in a case</i>
-            </td>
-          </tr>
-        <% end %>
-        <% unless @product.label_sheet.nil? %>
-          <tr>
-            <td>Label Template</td>
-            <td><%= link_to @product.label_sheet.name, edit_admin_store_label_sheet_path(@product.label_sheet) %></td>
-          </tr>
-        <% end %>
-        <% unless @product.warranty.blank? %>
-          <tr>
-            <td>Warranty</td>
-            <td><%= @product.warranty %></td>
-          </tr>
-        <% end %>
-        <tr>
-          <td>Flags</td>
-          <td>
-            <% if @product.active %>
-                <span class="label label-success">active</span>
-            <% end %>
-            <% if @product.hidden %>
-                <span class="label label-warning">hidden</span>
-            <% end %>
 
-            <% if @product.free_shipping %>
-                <span class="label label-info">free shipping</span>
-            <% end %>
+        <% if @product.free_shipping %>
+            <span class="label label-info">free shipping</span>
+        <% end %>
 
-            <% if @product.tax_exempt %>
-                <span class="label label-info">tax exempt</span>
-            <% end %>
+        <% if @product.tax_exempt %>
+            <span class="label label-info">tax exempt</span>
+        <% end %>
 
-            <% if @product.require_image_upload %>
-                <span class="label label-info">personalized</span>
-            <% end %>
-            
-            <% if @product.auto_ship %>
-                <span class="label label-info">auto ship</span>
-            <% end %>
+        <% if @product.require_image_upload %>
+            <span class="label label-info">personalized</span>
+        <% end %>
+        
+        <% if @product.auto_ship %>
+            <span class="label label-info">auto ship</span>
+        <% end %>
 
-            <% if @product.featured %>
-                <span class="label label-info">featured</span>
-            <% end %>
-            
-            <% if @product.affiliate_only %>
-                <span class="label label-warning">affiliate</span>
-            <% end %>
+        <% if @product.featured %>
+            <span class="label label-info">featured</span>
+        <% end %>
+        
+        <% if @product.affiliate_only %>
+            <span class="label label-warning">affiliate</span>
+        <% end %>
 
-            <% if !@product.low_threshold.nil? && stock <= @product.low_threshold %>
-                <span class="label label-danger">low inventory</span>
-            <% end %>
-          </td>
-        </tr>
+        <% if !@product.low_threshold.nil? && stock <= @product.low_threshold %>
+            <span class="label label-danger">low inventory</span>
+        <% end %>
+      </td>
+    </tr>
 	</table>
   
   <% unless @product.keywords.blank? %>
@@ -232,7 +182,7 @@
     <% @product.extra_properties.each do |ep| %>
       <tr>
         <td width="160"><%= ep.name %></td>
-        <td><%= ep.value.gsub("\n", "<br/>").html_safe %></td>
+        <td><%= raw ep.value.gsub("\n", "<br/>") %></td>
       </tr>
     <% end %>
     </table>
