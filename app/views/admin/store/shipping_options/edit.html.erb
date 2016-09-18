@@ -1,7 +1,7 @@
 <h2><%= @shipping_option.name%></h2>
 <hr/>
 
-<%= simple_form_for [:admin, :store, @shipping_option], html: { class: 'form-inline' } do |f| %>
+<%= simple_form_for [:admin, :store, @shipping_option] do |f| %>
 
 	<%= render 'admin/shared/error_messages', object: f.object %>
 	

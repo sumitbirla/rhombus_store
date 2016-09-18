@@ -41,7 +41,7 @@
 		<th>Description</th>
 		<th class="text-center">Supplier Code</th>
 		<th class="text-center">Qty Ordered</th>
-		<th class="text-center">Unit Price $</th>
+		<th class="text-right">Unit Price $</th>
 		<th class="text-center">Received</th>
 		<th class="text-right">Subtotal</th>
 		<th class="text-center">Status</th>
@@ -52,7 +52,7 @@
 		<td><%= item.description %></td>
 		<td class="text-center"><%= item.supplier_code %></td>
 		<td class="text-center"><%= item.quantity %></td>
-		<td class="text-center"><%= number_to_currency(item.unit_price, precision: 4, strip_insignificant_zeros: true) %></td>
+		<td class="text-right"><%= number_to_currency(item.unit_price, precision: 4, strip_insignificant_zeros: true) %></td>
 		<td class="text-center"><%= item.quantity_received %></td>
 		<td class="text-right"><%= number_to_currency(item.quantity * item.unit_price) %></td>
 		<td class="text-center"><%= item.status.presence || '-' %></td>

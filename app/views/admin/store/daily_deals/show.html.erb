@@ -78,66 +78,17 @@
       <td>PermaLink</td>
       <td><i class="fa fa-globe"></i> <a tager="_new" href="<%= web_url %>/deals/<%= @daily_deal.slug %>"><%= web_url %>/deals/<%= @daily_deal.slug %></a></td>
     </tr>
-  	<tr>
-  		<td>Start time</td>
-  		<td><i class="fa fa-clock-o"></i> <%= systime @daily_deal.start_time %></td>
-  	</tr>
-  	<tr>
-  		<td>End time</td>
-  		<td><i class="fa fa-clock-o"></i> <%= systime @daily_deal.end_time %></td>
-  	</tr>
-  	<tr>
-  		<td>Type</td>
-  		<td><%= @daily_deal.deal_type.titlecase %></td>
-  	</tr>
-  	<tr>
-  		<td>Slug</td>
-  		<td><%= @daily_deal.slug %></td>
-  	</tr>
-  	<tr>
-  		<td>Theme</td>
-  		<td><%= @daily_deal.theme %></td>
-  	</tr>
-  	<% unless @daily_deal.shipping_cost.blank? %>
-  	<tr>
-  		<td>Shipping cost</td>
-  		<td><%= number_to_currency @daily_deal.shipping_cost %></td>
-  	</tr>
-  	<% end %>
-  	<% unless @daily_deal.fb_discount == 0.0 %>
-  	<tr>
-  		<td>Facebook discount</td>
-  		<td><%= number_to_currency @daily_deal.fb_discount %></td>
-  	</tr>
-  	<% end %>
-  	<tr>
-  		<td>Max sales</td>
-  		<td><%= @daily_deal.max_sales %></td>
-  	</tr>
-  	<% unless @daily_deal.max_per_user.blank? %>
-  	<tr>
-  		<td>Max per user</td>
-  		<td><%= @daily_deal.max_per_user %></td>
-  	</tr>
-  	<% end %>
-  	<tr>
-  		<td>Number sold</td>
-  		<td><%= @daily_deal.number_sold %></td>
-  	</tr>
-  	<% unless @daily_deal.affiliate_id.nil? %>
-  	<tr>
-  		<td>Affiliate</td>
-  		<td><%= link_to @daily_deal.affiliate, admin_system_affiliate_path(@daily_deal.affiliate) %></td>
-  	</tr>
-  	<tr>
-  		<td>Remittance</td>
-  		<td>$<%= @daily_deal.affiliate_remittance %></td>
-  	</tr>
-  	<tr>
-  		<td>Paid</td>
-  		<td><%= @daily_deal.affiliate_paid %></td>
-  	</tr>
-  	<% end %>
+    <%= obj_property @daily_deal, :start_time %>
+    <%= obj_property @daily_deal, :end_time %>
+  	<%= obj_property(@daily_deal, :deal_type) { |x| x.titlecase } %>
+    <%= obj_property @daily_deal, :slug %>
+    <%= obj_property @daily_deal, :theme %>
+  	<%= obj_property @daily_deal, :shipping_cost %>
+  	<%= obj_property @daily_deal, :fb_discount %>
+  	<%= obj_property @daily_deal, :max_sales %>
+    <%= obj_property @daily_deal, :max_per_user %>
+  	<%= obj_property @daily_deal, :number_sold %>
+  	<%= obj_property(@daily_deal, :affiliate) { |x| link_to x.name, admin_system_affiliate_path(x) } %>
   </table>
 
 
