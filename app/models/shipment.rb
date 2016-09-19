@@ -60,7 +60,8 @@ class Shipment < ActiveRecord::Base
   include Exportable
   
   self.table_name = "store_shipments"
-  after_save :update_order, :save_inventory_transaction
+  after_save :update_order
+  after_create :save_inventory_transaction
   
   belongs_to :order
   belongs_to :fulfiller, class_name: 'User', foreign_key: 'fulfilled_by_id'
@@ -192,7 +193,7 @@ class Shipment < ActiveRecord::Base
     end
   end
   
-  # called by after_save filter
+  # called by after_create filter
   def save_inventory_transaction
     tran = new_inventory_transaction
     tran.shipment_id = id
