@@ -67,6 +67,7 @@ class Shipment < ActiveRecord::Base
   has_many :items, class_name: 'ShipmentItem', dependent: :destroy
   has_many :invoices, as: :invoiceable
   has_one :inventory_transaction, dependent: :destroy
+  has_many :logs, as: :loggable
   
   accepts_nested_attributes_for :items, allow_destroy: true
 

@@ -86,6 +86,7 @@ class Order < ActiveRecord::Base
   has_many :history, class_name: 'OrderHistory', dependent: :destroy
   has_many :shipments, -> { order(created_at: :desc) }, dependent: :destroy
   has_many :payments, as: :payable, dependent: :destroy
+  has_many :logs, as: :loggable
   
   accepts_nested_attributes_for :items, reject_if: lambda { |x| x['product_id'].blank? && x['daily_deal_id'].blank?}, allow_destroy: true
   
