@@ -74,7 +74,7 @@ class Shipment < ActiveRecord::Base
 
   validates_presence_of :ship_from_company, :ship_from_street1, :ship_from_city, :ship_from_state, :ship_from_zip, :ship_from_country
   validates_presence_of :recipient_name, :recipient_street1, :recipient_city, :recipient_zip, :recipient_country
-  validate :sufficient_inventory?
+  validate :sufficient_inventory?, unless: :persisted?
   #validates_presence_of :package_weight
   
 
