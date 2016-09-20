@@ -2,8 +2,9 @@ class Admin::Store::OrdersController < Admin::BaseController
   
   def index
     q = params[:q]
+    @selected_status = params[:status].presence || 'awaiting_shipment'
     
-    @orders = Order.where(status: params[:status] || Order.valid_statuses).order(submitted: :desc)
+    @orders = Order.where(status: @selected_status).order(submitted: :desc)
     @orders = @orders.where(domain_id: cookies[:domain_id]) if q.nil?
     @orders = @orders.where(po: params[:po] == "1") if (params[:po] && q.nil?)
     

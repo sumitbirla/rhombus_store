@@ -215,7 +215,7 @@
       <table class="table table-condensed">
         <% Product.where(group: @product.group).order(:option_sort).each do |v| %>
             <tr>
-              <td><%= link_to v.sku, admin_store_product_path(v) %></td>
+              <td><%= link_to v.item_number, admin_store_product_path(v) %></td>
               <td><%= v.option_title %></td>
               <td class="ralign">$<%= v.price %></td>
             </tr>

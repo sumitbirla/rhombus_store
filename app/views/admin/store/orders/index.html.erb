@@ -1,5 +1,6 @@
 <%
   status_list = Order.uniq(:status).pluck(:status)
+  status_list << 'awaiting_shipment' if !status_list.include?('awaiting_shipment')
   status_list = status_list.sort
 %>
 <div class="pull-right">
@@ -39,11 +40,10 @@
   
   <% if params[:q].nil? %>
   <ul class="nav nav-tabs" style="margin-bottom: 10px;">
-    <li class="<%= "active" if params[:status].blank? %>"><a href="<%= admin_store_orders_path %>">All</a></li>
     <% status_list.each do |status|
         next if status == 'in cart'
         count = Order.where(domain_id: current_domain.id, status: status).count %>
-    <li class="<%= "active" if params[:status] == status %>"><a href="<%= admin_store_orders_path(status: status)%>"><%= tab_count(status.titlecase, count) %></a></li>
+    <li class="<%= "active" if @selected_status == status %>"><a href="<%= admin_store_orders_path(status: status)%>"><%= tab_count(status.titlecase, count) %></a></li>
     <% end %>
   </ul>
   <% end %>

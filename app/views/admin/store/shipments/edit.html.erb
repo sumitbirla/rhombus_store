@@ -19,8 +19,11 @@
       </tr>
       <%= f.simple_fields_for :items do |itemf| %>
         <% 
-          item = @shipment.items[itemf.index] 
+        item = @shipment.items[itemf.index] 
+        avl = item.quantity
+        if @shipment.inventory_transaction.nil?
           avl = InventoryItem.where(sku: item.product.sku).sum(:quantity) 
+        end
         %>
           <tr class="<%= 'text-danger bold' if avl < item.quantity %>">
             <td nowrap>
@@ -30,7 +33,7 @@
               <%= itemf.hidden_field :variation %>
               <%= item.sku %></td>
             <td>
-              <%= link_to item.product.name_with_option, admin_store_product_path(item.product_id) %>
+              <%= link_to item.product.full_name, admin_store_product_path(item.product_id) %>
               <% unless item.affiliate_id.nil? %>
                 &nbsp; (<span><%= item.affiliate %></span>)
               <% end %></td>
