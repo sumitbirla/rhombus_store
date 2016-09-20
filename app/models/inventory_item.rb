@@ -63,6 +63,7 @@ class InventoryItem < ActiveRecord::Base
   end
   
   def formatted_expiration
+    return "n/a" if expiration.blank?
     s = expiration.to_s
     s[2,2] + "/" + s[0,2]
   end

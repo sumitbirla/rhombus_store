@@ -60,7 +60,8 @@ class Shipment < ActiveRecord::Base
   include Exportable
   
   self.table_name = "store_shipments"
-  after_save :update_order, :save_inventory_transaction
+  after_save :update_order
+  after_create :save_inventory_transaction
   
   belongs_to :order
   belongs_to :fulfiller, class_name: 'User', foreign_key: 'fulfilled_by_id'
@@ -73,7 +74,7 @@ class Shipment < ActiveRecord::Base
 
   validates_presence_of :ship_from_company, :ship_from_street1, :ship_from_city, :ship_from_state, :ship_from_zip, :ship_from_country
   validates_presence_of :recipient_name, :recipient_street1, :recipient_city, :recipient_zip, :recipient_country
-  validate :sufficient_inventory?
+  validate :sufficient_inventory?, unless: :persisted?
   #validates_presence_of :package_weight
   
 
@@ -192,7 +193,7 @@ class Shipment < ActiveRecord::Base
     end
   end
   
-  # called by after_save filter
+  # called by after_create filter
   def save_inventory_transaction
     tran = new_inventory_transaction
     tran.shipment_id = id
