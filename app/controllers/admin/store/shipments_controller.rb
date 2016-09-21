@@ -42,9 +42,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     end
 
     @shipment = @order.create_shipment(session[:user_id], false)
-    @shipment.sufficient_inventory?
-    
-    # set invoice amount
     @shipment.invoice_amount = @order.total if @shipment.sequence == 1
                     
     render 'edit'
