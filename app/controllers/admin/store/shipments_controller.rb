@@ -51,6 +51,8 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   def create
     @shipment = Shipment.new(shipment_params)
     @shipment.fulfilled_by_id = current_user.id
+    
+    puts ">>>>>>>>>>>  #{@shipment.skip_inventory}"
 
     if @shipment.save
       # create order history item

@@ -60,9 +60,9 @@ class Shipment < ActiveRecord::Base
   include Exportable
   
   self.table_name = "store_shipments"
-  attr_accessor :override_inventory_validation
+
   after_save :update_order
-  after_create :save_inventory_transaction
+  after_create :save_inventory_transaction, unless: :skip_inventory
   
   belongs_to :order
   belongs_to :fulfiller, class_name: 'User', foreign_key: 'fulfilled_by_id'
@@ -75,8 +75,16 @@ class Shipment < ActiveRecord::Base
 
   validates_presence_of :ship_from_company, :ship_from_street1, :ship_from_city, :ship_from_state, :ship_from_zip, :ship_from_country
   validates_presence_of :recipient_name, :recipient_street1, :recipient_city, :recipient_zip, :recipient_country
-  validate :sufficient_inventory?, unless: Proc.new { |s| s.persisted? || s.override_inventory_validation == "1" }
+  validate :sufficient_inventory?, unless: Proc.new { |s| s.persisted? || s.skip_inventory }
   #validates_presence_of :package_weight
+  
+  def skip_inventory
+    @skip_inventory
+  end
+  
+  def skip_inventory=(str)
+    @skip_inventory = (str == "1")
+  end
   
 
   def dimensions_available?
@@ -120,6 +128,10 @@ class Shipment < ActiveRecord::Base
       if Shipment.where(order_id: order_id).where.not(status: "shipped").length == 0
         Order.find(order_id).update_attribute(:status, "shipped")
       end
+    end
+    
+    if status == "pending"
+      Order.find(order_id).update_attribute(:status, "awaiting_shipment")
     end
   end
   
