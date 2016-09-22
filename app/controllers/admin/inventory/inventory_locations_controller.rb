@@ -1,7 +1,7 @@
 class Admin::Inventory::InventoryLocationsController < Admin::BaseController
   
   def index
-    @inventory_locations = InventoryLocation.order(sort_column + ' ' + sort_direction).page(params[:page])
+    @inventory_locations = InventoryLocation.order(sort_column + ' ' + sort_direction).paginate(page: params[:page], per_page: @per_page)
   end
   
   def new

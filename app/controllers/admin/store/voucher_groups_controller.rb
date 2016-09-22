@@ -4,7 +4,7 @@ class Admin::Store::VoucherGroupsController < Admin::BaseController
     @voucher_groups = VoucherGroup.order(created_at: :desc)
     
     respond_to do |format|
-      format.html  { @voucher_groups = @voucher_groups.page(params[:page]) }
+      format.html  { @voucher_groups = @voucher_groups.paginate(page: params[:page], per_page: @per_page) }
       format.csv { send_data VoucherGroup.to_csv(@voucher_groups) }
     end
   end

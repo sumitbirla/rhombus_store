@@ -1,7 +1,7 @@
 class Admin::Store::LabelSheetsController < Admin::BaseController
   
   def index
-    @label_sheets = LabelSheet.page(params[:page]).order('name')
+    @label_sheets = LabelSheet.paginate(page: params[:page], per_page: @per_page).order('name')
   end
 
   def new

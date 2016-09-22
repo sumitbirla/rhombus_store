@@ -4,7 +4,7 @@ class Admin::Store::BrandsController < Admin::BaseController
     @brands = Brand.order(:name)
     
     respond_to do |format|
-      format.html  { @brands = @brands.page(params[:page]) }
+      format.html  { @brands = @brands.paginate(page: params[:page], per_page: @per_page) }
       format.csv { send_data Brand.to_csv(@brands) }
     end
   end

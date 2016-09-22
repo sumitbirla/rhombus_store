@@ -3,7 +3,7 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
   def index
     @transactions = InventoryTransaction.includes(:user, :items)
                                         .order(created_at: :desc)
-                                        .page(params[:page])
+                                        .paginate(page: params[:page], per_page: @per_page)
   end
   
   def new

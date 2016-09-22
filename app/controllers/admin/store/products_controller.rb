@@ -7,7 +7,7 @@ class Admin::Store::ProductsController < Admin::BaseController
     @products = @products.where("name LIKE '%#{params[:q]}%' OR item_number = '#{params[:q]}'") unless params[:q].nil?
     
     respond_to do |format|
-      format.html  { @products = @products.page(params[:page]) }
+      format.html  { @products = @products.paginate(page: params[:page], per_page: @per_page) }
       format.csv { send_data Product.to_csv(@products) }
     end
   end

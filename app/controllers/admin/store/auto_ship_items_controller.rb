@@ -6,7 +6,7 @@ class Admin::Store::AutoShipItemsController < Admin::BaseController
     @auto_ship_items = @auto_ship_items.where(status: @selected_status)
     
     respond_to do |format|
-      format.html  { @auto_ship_items = @auto_ship_items.page(params[:page]) }
+      format.html  { @auto_ship_items = @auto_ship_items.paginate(page: params[:page], per_page: @per_page) }
       format.csv { send_data AutoShipItem.to_csv(@auto_ship_items) }
     end
   end

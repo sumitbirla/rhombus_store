@@ -5,7 +5,7 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
     @purchase_orders = PurchaseOrder.includes(:items)
                                     .joins(:supplier)
                                     .order(sort_column + " " + sort_direction)
-                                    .page(params[:page])
+                                    .paginate(page: params[:page], per_page: @per_page)
                                     
     @purchase_orders = @purchase_orders.where(status: params[:status]) unless params[:status].blank?                             
     @purchase_orders = @purchase_orders.where(id: params[:q]) unless params[:q].nil?

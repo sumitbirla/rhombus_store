@@ -4,7 +4,7 @@ class Admin::Store::CouponsController < Admin::BaseController
     @coupons = Coupon.order("created_at DESC")
     
     respond_to do |format|
-      format.html  { @coupons = @coupons.page(params[:page]) }
+      format.html  { @coupons = @coupons.paginate(page: params[:page], per_page: @per_page) }
       format.csv { send_data Coupon.to_csv(@coupons) }
     end
   end

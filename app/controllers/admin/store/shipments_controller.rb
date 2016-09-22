@@ -23,7 +23,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     s = s.where(manifest_id: params[:manifest_id]) unless params[:manifest_id].blank?
     
     respond_to do |format|
-      format.html { @shipments = s.paginate(page: params[:page], per_page: params[:per_page]) }
+      format.html { @shipments = s.paginate(page: params[:page], per_page: @per_page) }
       format.csv { send_data Shipment.to_csv(s, skip_cols: ['label_data']) }
     end
   end

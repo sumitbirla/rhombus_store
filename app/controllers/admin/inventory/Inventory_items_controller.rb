@@ -7,7 +7,7 @@ class Admin::Inventory::InventoryItemsController < Admin::BaseController
                                     .select("sku, sum(quantity) as quantity, lot, expiration, inventory_location_id")
                                     
     respond_to do |format|
-      format.html  { @inventory_items = @inventory_items.page(params[:page]) }
+      format.html  { @inventory_items = @inventory_items.paginate(page: params[:page], per_page: @per_page) }
       format.csv { send_data InventoryItem.to_csv(@inventory_items) }
     end
   end

@@ -4,7 +4,7 @@ class Admin::Store::ShippingOptionsController < Admin::BaseController
     @shipping_options = ShippingOption.where(domain: cookies[:domain_id]).order(:name)
     
     respond_to do |format|
-      format.html  { @shipping_options = @shipping_options.page(params[:page]) }
+      format.html  { @shipping_options = @shipping_options.paginate(page: params[:page], per_page: @per_page) }
       format.csv { send_data ShippingOption.to_csv(@shipping_options) }
     end
   end
