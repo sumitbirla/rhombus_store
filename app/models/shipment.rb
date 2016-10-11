@@ -67,7 +67,6 @@ class Shipment < ActiveRecord::Base
   belongs_to :order
   belongs_to :fulfiller, class_name: 'User', foreign_key: 'fulfilled_by_id'
   has_many :items, class_name: 'ShipmentItem', dependent: :destroy
-  has_many :invoices, as: :invoiceable
   has_one :inventory_transaction, dependent: :destroy
   has_many :logs, as: :loggable
   
