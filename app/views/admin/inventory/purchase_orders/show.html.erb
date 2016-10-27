@@ -49,9 +49,9 @@
 		<td><%= item.sku %></td>
 		<td><%= item.description %></td>
 		<td class="text-center"><%= item.supplier_code %></td>
-		<td class="text-center"><%= item.quantity %></td>
+		<td class="text-center"><%= number_with_delimiter(item.quantity) %></td>
 		<td class="text-right"><%= number_to_currency(item.unit_price, precision: 4, strip_insignificant_zeros: true) %></td>
-		<td class="text-center"><%= item.quantity_received %></td>
+		<td class="text-center"><%= number_with_delimiter(item.quantity_received) %></td>
 		<td class="text-right"><%= number_to_currency(item.quantity * item.unit_price) %></td>
 		<td class="text-center"><%= item.status.presence || '-' %></td>
 	</tr>

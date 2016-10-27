@@ -16,10 +16,9 @@
           <i class="fa fa-print"></i> Product Labels
       <% end %>
     </li>
-    <% if @shipment.invoice_amount > 0.0 %>
     <li>
-      <%= link_to create_payment_admin_store_shipment_path(@shipment) do %>
-          <i class="fa fa-file-o"></i> Post Invoice
+      <%= link_to new_admin_billing_invoice_path(shipment_id: @shipment.id) do %>
+          <i class="fa fa-file-o"></i> Create Invoice
       <% end %>
       <li>
         <%= link_to email_invoice_admin_store_shipment_path(@shipment) do %>
@@ -27,7 +26,6 @@
         <% end %>
       </li>
     </li>
-    <% end %>
     <li>
       <%= link_to invoice_admin_store_shipment_path(@shipment), target: "_blank" do %>
           <i class="fa fa-print"></i> Print Invoice
