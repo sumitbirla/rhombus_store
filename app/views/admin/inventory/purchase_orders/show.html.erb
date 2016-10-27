@@ -5,8 +5,6 @@
   <% end %>
 </div>
 
-<%= @purchase_order.items[0].status %>
-
 <h2>
 	<i class="fa fa-file-text-o"></i>&nbsp; Purchase Order #<%= @purchase_order.id %> &nbsp; 
 	<%= po_status @purchase_order, 'large' %>
