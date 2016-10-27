@@ -20,16 +20,6 @@
       <%= link_to new_admin_billing_invoice_path(shipment_id: @shipment.id) do %>
           <i class="fa fa-file-o"></i> Create Invoice
       <% end %>
-      <li>
-        <%= link_to email_invoice_admin_store_shipment_path(@shipment) do %>
-            <i class="fa fa-envelope"></i> Email Invoice
-        <% end %>
-      </li>
-    </li>
-    <li>
-      <%= link_to invoice_admin_store_shipment_path(@shipment), target: "_blank" do %>
-          <i class="fa fa-print"></i> Print Invoice
-      <% end %>
     </li>
     <li>
       <%= link_to packing_slip_admin_store_shipment_path(@shipment), target: "_blank" do %>
