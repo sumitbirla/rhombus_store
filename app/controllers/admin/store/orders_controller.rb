@@ -278,6 +278,21 @@ EOF
     redirect_to :back           
   end
   
+  def create_invoices
+    orders = Order.includes(:shipments).where(id: params[:order_id])
+    count = 0
+    
+    orders.each do |o|
+      if o.invoices.length == 0
+        invoice = o.create_invoice(session[:user_id])
+        count += 1 if invoice               
+      end
+    end
+    
+    flash[:info] = "#{count} new invoices created"
+    redirect_to :back           
+  end
+  
   def batch_ship
     orders = Order.includes(:shipments).where(id: params[:order_id])
     shipment_ids = []
