@@ -3,6 +3,7 @@ class Admin::Inventory::InventoryItemsController < Admin::BaseController
   def index
     @inventory_items = InventoryItem.includes(:inventory_location)
                                     .order(sort_column + ' ' + sort_direction)
+                                    .having("sum(quantity) > 0")
                                     .group(:inventory_location_id, :sku, :lot)
                                     .select("sku, sum(quantity) as quantity, lot, expiration, inventory_location_id")
                                     
