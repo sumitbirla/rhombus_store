@@ -121,6 +121,7 @@ Rails.application.routes.draw do
       post 'orders_send_confirmation' => 'orders#send_confirmation'
       post 'orders_create_shipment' => 'orders#create_shipment'
       post 'orders_create_invoices' => 'orders#create_invoices'
+      post 'orders_email_invoices' => 'orders#email_invoices'
       
       
       get 'products/item_info' => 'products#item_info'
