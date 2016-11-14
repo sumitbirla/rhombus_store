@@ -146,6 +146,28 @@ class Admin::Store::EasyPostController < Admin::BaseController
       end
       
       EasyPost.api_key = Cache.setting(shipment.order.domain_id, :shipping, 'EasyPost API Key')
+      
+      # create customs information if required
+      if shipment.recipient_city == 'APO'
+        customs_info = EasyPost::CustomsInfo.create(eel_pfc: 'NOEEI 30.37(a)',
+                                                    customs_certify: true,
+                                                    customs_signer: 'Tim Ackerman',
+                                                    contents_type: 'merchandise',
+                                                    contents_explanation: '',
+                                                    restriction_type: 'none',
+                                                    restriction_comments: '',
+                                                    non_delivery_option: 'abandon',
+                                                    customs_items: [{
+                                                      description: 'Dog Treats',
+                                                      quantity: 2,
+                                                      weight: 6,
+                                                      value: 80,
+                                                      hs_tariff_number: 230910,
+                                                      origin_country: 'US'
+                                                    }]
+                                                    )
+      end
+      
       response = EasyPost::Shipment.create(
           :to_address => {
             :name => shipment.recipient_name,
@@ -170,7 +192,8 @@ class Admin::Store::EasyPostController < Admin::BaseController
             :email => shipment.ship_from_email
           },
           :parcel => parcel,
-          :options => options
+          :options => options,
+          :customs_info => customs_info
       ) 
     
       shipment.copy_easy_post(response)
@@ -181,6 +204,8 @@ class Admin::Store::EasyPostController < Admin::BaseController
       
       EasyPost.api_key = Cache.setting(shipment.order.domain_id, :shipping, 'EasyPost API Key')  
       response = ep_shipment.buy(:rate => {:id => rate_id})
+      
+      puts response.inspect
     
       shipment.copy_easy_post(response)
       shipment.status = 'shipped'

@@ -193,7 +193,7 @@ class Order < ActiveRecord::Base
     end
     
     if shipments.length > 0
-      invoice.post_date = shipments.last.ship_date
+      invoice.post_date = shipments.last.ship_date || Date.today
       invoice.due_date = invoice.post_date + 1.month
       return invoice.save
     end
