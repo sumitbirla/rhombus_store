@@ -21,4 +21,10 @@ class ProductsController < ApplicationController
     @affiliates = Affiliate.where(id: AffiliateProduct.where(product_id: @product.id).select(:affiliate_id))
   end
   
+  
+  def category
+    @category = Cache.category(params[:category], :product)
+    @products = StoreCache.product_list(params[:category])
+  end
+  
 end
