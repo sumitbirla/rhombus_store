@@ -344,12 +344,18 @@ class Order < ActiveRecord::Base
                              quantity: item.quantity)
 
       elsif item.daily_deal_id
-        item.daily_deal.items.each do |di|
-          shipment.items.build(order_item_id: item.id, 
+        unless item.custom_text.blank?  
+          item.daily_deal.items.each do |di|
+            shipment.items.build(order_item_id: item.id, 
                                product_id: di.product_id,
                                affiliate_id: di.affiliate_id,
                                variation: di.variation, 
                                quantity: item.quantity * di.quantity)
+          end
+        else
+          # user may have selected a specific item from drowndown
+          p = Product.find_by(item_number: item.custom_text.split(":").first)
+          shipment.items.build(order_item_id: item.id, product_id: p.product_id, quantity: item.quantity)
         end
       end
 
