@@ -109,10 +109,10 @@ class CartController < ApplicationController
   def add_deal
     dd = DailyDeal.find(params[:daily_deal_id])
     
-    #unless dd.active && dd.start_time < DateTime.now && dd.end_time > DateTime.now
-     # flash[:error] = "This deal is not currently active."
-     # return redirect_to action: 'index'
-    #end
+    unless dd.active && dd.start_time < DateTime.now && dd.end_time > DateTime.now
+      flash[:error] = "This deal is not currently active."
+      return redirect_to action: 'index'
+    end
     
     if dd.number_sold >= dd.max_sales
       flash[:error] = "Sorry, this deal is sold out."
