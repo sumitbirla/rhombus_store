@@ -153,7 +153,11 @@
       <% @shipment.items.each do |item| 
           upc = upc_list.find { |x| x.item == item.order_item.item_number } %>
       <tr>
-        <td nowrap><input type="checkbox"> &nbsp; <%= item.order_item.item_number %></td>
+        <td nowrap><input type="checkbox"> &nbsp; <% if item.order_item.daily_deal_id %>
+              <%= item.product.item_number %>
+            <% else %>
+              <%= item.order_item.item_number %>
+            <% end %></td>
         <td>
           <%= item.product.full_name %>
           <% unless item.affiliate_id.nil? %>

@@ -256,7 +256,7 @@
       <div class="panel-body">
         
         <% if @order.shipments.length == 0 %>
-        <% products = @order.items.group(:product_id).sum(:quantity) %>
+        <% products = @order.items.where.not(product_id: nil).group(:product_id).sum(:quantity) %>
         <table class="table table-condensed light">
           <% products.each do |product_id, quantity| 
               p = Product.find(product_id) 
