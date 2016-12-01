@@ -8,6 +8,10 @@ class Admin::Store::OrdersController < Admin::BaseController
     @orders = @orders.where(domain_id: cookies[:domain_id]) if q.nil?
     @orders = @orders.where(po: params[:po] == "1") if (params[:po] && q.nil?)
     
+    unless params[:item_number].blank?
+      @orders = @orders.joins(:items).where("store_order_items.item_number = ?", params[:item_number])
+    end
+    
     unless q.nil?
       if q.to_i == 0
         @orders = @orders.where("billing_name LIKE '%#{q}%' OR shipping_name LIKE '%#{q}%' OR external_order_id = '#{q}'")
