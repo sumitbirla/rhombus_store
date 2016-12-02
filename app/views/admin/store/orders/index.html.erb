@@ -43,7 +43,7 @@
     <% status_list.each do |status|
         next if status == 'in cart'
         count = Order.where(domain_id: current_domain.id, status: status).count %>
-    <li class="<%= "active" if @selected_status == status %>"><a href="<%= admin_store_orders_path(status: status)%>"><%= tab_count(status.titlecase, count) %></a></li>
+    <li class="<%= "active" if params[:status] == status %>"><a href="<%= admin_store_orders_path(status: status)%>"><%= tab_count(status.titlecase, count) %></a></li>
     <% end %>
   </ul>
   <% end %>
