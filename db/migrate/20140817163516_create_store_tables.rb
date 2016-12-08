@@ -1,76 +1,12 @@
 class CreateStoreTables < ActiveRecord::Migration
   def change
     
-    create_table "inv_items", force: :cascade do |t|
-      t.string   "transaction_type",      limit: 32,                                       null: false
-      t.integer  "transaction_id",        limit: 4
-      t.string   "inventoriable_type",    limit: 255,                         default: "", null: false
-      t.integer  "inventoriable_id",      limit: 4,                                        null: false
-      t.integer  "inventory_location_id", limit: 4,                                        null: false
-      t.integer  "quantity",              limit: 4,                                        null: false
-      t.string   "lot",                   limit: 255
-      t.integer  "expiration",            limit: 4
-      t.decimal  "cost",                              precision: 8, scale: 2
-      t.datetime "created_at"
-      t.datetime "updated_at"
-    end
-
-    add_index "inv_items", ["inventoriable_type", "inventoriable_id"], name: "inventoriable_type", using: :btree
-
-    create_table "inv_locations", force: :cascade do |t|
-      t.string   "name",         limit: 255,   default: "",    null: false
-      t.integer  "depth",        limit: 4
-      t.integer  "height",       limit: 4
-      t.integer  "width",        limit: 4
-      t.boolean  "large_box",                  default: false, null: false
-      t.boolean  "heavy_box",                  default: false, null: false
-      t.boolean  "holding_area",               default: false, null: false
-      t.boolean  "usable",                     default: true,  null: false
-      t.text     "notes",        limit: 65535
-      t.datetime "created_at"
-      t.datetime "updated_at"
-    end
-
-    create_table "inv_purchase_order_items", force: :cascade do |t|
-      t.integer  "purchase_order_id", limit: 4,                                         null: false
-      t.string   "sku",               limit: 32,                           default: "", null: false
-      t.integer  "quantity",          limit: 4,                            default: 1,  null: false
-      t.string   "description",       limit: 255
-      t.string   "supplier_code",     limit: 255
-      t.string   "upc",               limit: 255
-      t.decimal  "unit_price",                    precision: 10, scale: 2
-      t.decimal  "discount",                      precision: 10, scale: 2
-      t.integer  "quantity_received", limit: 4,                            default: 0,  null: false
-      t.string   "status",            limit: 255
-      t.datetime "created_at"
-      t.datetime "updated_at"
-    end
-
-    add_index "inv_purchase_order_items", ["sku"], name: "index_purchase_order_items_on_sku_id", using: :btree
-
-    create_table "inv_purchase_orders", force: :cascade do |t|
-      t.integer  "affiliate_id",  limit: 4
-      t.integer  "supplier_id",   limit: 4
-      t.string   "status",        limit: 255
-      t.date     "issue_date"
-      t.date     "due_date"
-      t.string   "ship_method",   limit: 255
-      t.string   "payment_terms", limit: 255
-      t.string   "ship_to",       limit: 255
-      t.datetime "created_at"
-      t.datetime "updated_at"
-      t.text     "notes",         limit: 65535
-    end
-
-    add_index "inv_purchase_orders", ["affiliate_id"], name: "index_store_purchase_orders_on_affiliate_id", using: :btree
-    
-    
     create_table "store_affiliate_products", force: :cascade do |t|
-      t.integer  "affiliate_id",           limit: 4,                                           null: false
-      t.integer  "product_id",             limit: 4,                                           null: false
-      t.string   "sku",                    limit: 255
-      t.decimal  "price",                                precision: 10, scale: 2
-      t.integer  "minimum_order_quantity", limit: 4,                              default: 1,  null: false
+      t.integer  "affiliate_id",           limit: 4,                                              null: false
+      t.integer  "product_id",             limit: 4,                                              null: false
+      t.string   "item_number",            limit: 255
+      t.decimal  "price",                                precision: 10, scale: 4
+      t.integer  "minimum_order_quantity", limit: 4,                              default: 1,     null: false
       t.string   "title",                  limit: 255
       t.text     "description",            limit: 65535
       t.string   "data",                   limit: 255
@@ -80,7 +16,8 @@ class CreateStoreTables < ActiveRecord::Migration
       t.string   "category1",              limit: 255
       t.string   "category2",              limit: 255
       t.string   "category3",              limit: 255
-      t.integer  "ship_lead_time",         limit: 4,                              default: 14, null: false
+      t.integer  "ship_lead_time",         limit: 4,                              default: 14,    null: false
+      t.boolean  "hidden",                                                        default: false, null: false
     end
 
     add_index "store_affiliate_products", ["affiliate_id"], name: "index_affiliate_products_on_affiliate_id", using: :btree
@@ -88,7 +25,7 @@ class CreateStoreTables < ActiveRecord::Migration
 
     create_table "store_auto_ship_items", force: :cascade do |t|
       t.integer  "user_id",        limit: 4,                null: false
-      t.string   "item_id",        limit: 255,              null: false
+      t.string   "item_number",    limit: 255,              null: false
       t.integer  "product_id",     limit: 4,                null: false
       t.integer  "affiliate_id",   limit: 4
       t.string   "variation",      limit: 255
@@ -324,8 +261,8 @@ class CreateStoreTables < ActiveRecord::Migration
       t.string   "external_id",         limit: 255
       t.string   "variation",           limit: 255
       t.integer  "quantity",            limit: 4,                                        null: false
-      t.decimal  "unit_price",                      precision: 10, scale: 2,             null: false
-      t.string   "item_id",             limit: 32,                                       null: false
+      t.decimal  "unit_price",                      precision: 12, scale: 4,             null: false
+      t.string   "item_number",         limit: 32,                                       null: false
       t.string   "item_description",    limit: 255,                                      null: false
       t.integer  "autoship_months",     limit: 4,                            default: 0, null: false
       t.string   "uploaded_file",       limit: 255
@@ -420,55 +357,50 @@ class CreateStoreTables < ActiveRecord::Migration
     add_index "store_product_categories", ["product_id"], name: "index_product_categories_on_product_id", using: :btree
 
     create_table "store_products", force: :cascade do |t|
-      t.string   "name",                   limit: 255,                                            null: false
-      t.string   "group",                  limit: 255
-      t.string   "product_type",           limit: 255
-      t.string   "slug",                   limit: 255
-      t.integer  "brand_id",               limit: 4
-      t.string   "sku",                    limit: 255,                            default: "",    null: false
-      t.string   "upc",                    limit: 255
-      t.string   "sku2",                   limit: 255
-      t.boolean  "active",                                                        default: true,  null: false
-      t.string   "title",                  limit: 255,                                            null: false
-      t.string   "option_title",           limit: 255
-      t.integer  "option_sort",            limit: 4
-      t.decimal  "distributor_price",                    precision: 10, scale: 2
-      t.decimal  "retailer_price",                       precision: 8,  scale: 2
-      t.decimal  "retail_map",                           precision: 10, scale: 2
-      t.decimal  "price",                                precision: 10, scale: 2,                 null: false
-      t.decimal  "msrp",                                 precision: 10, scale: 2
-      t.decimal  "special_price",                        precision: 10, scale: 2
-      t.boolean  "free_shipping",                                                 default: false, null: false
-      t.boolean  "tax_exempt",                                                    default: false, null: false
-      t.boolean  "hidden",                                                        default: false, null: false
-      t.boolean  "featured",                                                      default: false, null: false
-      t.boolean  "auto_ship",                                                     default: false, null: false
+      t.string   "name",                 limit: 255,                                            null: false
+      t.string   "group",                limit: 255
+      t.string   "product_type",         limit: 255
+      t.string   "slug",                 limit: 255
+      t.integer  "brand_id",             limit: 4
+      t.string   "item_number",          limit: 255,                            default: "",    null: false
+      t.string   "upc",                  limit: 255
+      t.string   "sku",                  limit: 255
+      t.boolean  "active",                                                      default: true,  null: false
+      t.string   "title",                limit: 255
+      t.string   "option_title",         limit: 255
+      t.integer  "option_sort",          limit: 4
+      t.decimal  "retail_map",                         precision: 10, scale: 2
+      t.decimal  "price",                              precision: 10, scale: 2
+      t.decimal  "msrp",                               precision: 10, scale: 2
+      t.decimal  "special_price",                      precision: 10, scale: 2
+      t.boolean  "free_shipping",                                               default: false, null: false
+      t.boolean  "tax_exempt",                                                  default: false, null: false
+      t.boolean  "hidden",                                                      default: false, null: false
+      t.boolean  "featured",                                                    default: false, null: false
+      t.boolean  "auto_ship",                                                   default: false, null: false
       t.boolean  "affiliate_only"
-      t.boolean  "require_image_upload",                                          default: false, null: false
-      t.text     "short_description",      limit: 65535
-      t.text     "long_description",       limit: 65535
-      t.string   "keywords",               limit: 255
-      t.string   "warranty",               limit: 255
-      t.integer  "fulfiller_id",           limit: 4
-      t.integer  "label_sheet_id",         limit: 4
-      t.decimal  "item_length",                          precision: 10, scale: 3
-      t.decimal  "item_width",                           precision: 10, scale: 3
-      t.decimal  "item_height",                          precision: 10, scale: 3
-      t.decimal  "item_weight",                          precision: 10, scale: 3
-      t.decimal  "case_length",                          precision: 10, scale: 3
-      t.decimal  "case_width",                           precision: 10, scale: 3
-      t.decimal  "case_height",                          precision: 10, scale: 3
-      t.decimal  "case_weight",                          precision: 10, scale: 3
-      t.integer  "case_quantity",          limit: 4
-      t.string   "country_of_origin",      limit: 255
-      t.integer  "minimum_order_quantity", limit: 4
-      t.integer  "low_threshold",          limit: 4
-      t.integer  "committed",              limit: 4,                              default: 0,     null: false
-      t.integer  "shipping_lead_time",     limit: 4
+      t.boolean  "require_image_upload",                                        default: false, null: false
+      t.text     "short_description",    limit: 65535
+      t.text     "long_description",     limit: 65535
+      t.string   "keywords",             limit: 255
+      t.string   "warranty",             limit: 255
+      t.integer  "fulfiller_id",         limit: 4
+      t.integer  "label_sheet_id",       limit: 4
+      t.decimal  "item_length",                        precision: 10, scale: 3
+      t.decimal  "item_width",                         precision: 10, scale: 3
+      t.decimal  "item_height",                        precision: 10, scale: 3
+      t.decimal  "item_weight",                        precision: 10, scale: 3
+      t.decimal  "case_length",                        precision: 10, scale: 3
+      t.decimal  "case_width",                         precision: 10, scale: 3
+      t.decimal  "case_height",                        precision: 10, scale: 3
+      t.decimal  "case_weight",                        precision: 10, scale: 3
+      t.integer  "case_quantity",        limit: 4
+      t.string   "country_of_origin",    limit: 255
+      t.integer  "low_threshold",        limit: 4
       t.date     "item_availability"
+      t.string   "harmonized_code",      limit: 255
       t.datetime "created_at"
       t.datetime "updated_at"
-      t.string   "harmonized_code",        limit: 255
     end
 
     add_index "store_products", ["brand_id"], name: "index_products_on_brand_id", using: :btree
@@ -481,8 +413,6 @@ class CreateStoreTables < ActiveRecord::Migration
       t.integer  "affiliate_id",   limit: 4
       t.string   "variation",      limit: 255
       t.integer  "quantity",       limit: 4,                null: false
-      t.string   "lot",            limit: 255
-      t.integer  "expiration",     limit: 4
       t.string   "special_status", limit: 64,  default: ""
       t.datetime "created_at"
       t.datetime "updated_at"
@@ -539,6 +469,7 @@ class CreateStoreTables < ActiveRecord::Migration
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "manifest_id",          limit: 4
+      t.boolean  "third_party_billing",                                            default: false, null: false
     end
 
     add_index "store_shipments", ["order_id"], name: "index_shipments_on_order_id", using: :btree
@@ -624,5 +555,73 @@ class CreateStoreTables < ActiveRecord::Migration
       t.boolean "shipping_taxable",                                     default: false, null: false
     end
     
+    create_table "inv_items", force: :cascade do |t|
+      t.integer  "inventory_transaction_id", limit: 4,                           null: false
+      t.string   "sku",                      limit: 255,                         null: false
+      t.integer  "inventory_location_id",    limit: 4,                           null: false
+      t.integer  "quantity",                 limit: 4,                           null: false
+      t.string   "lot",                      limit: 255
+      t.integer  "expiration",               limit: 4
+      t.decimal  "cost",                                 precision: 8, scale: 2
+      t.datetime "created_at",                                                   null: false
+      t.datetime "updated_at",                                                   null: false
+    end
+
+    create_table "inv_locations", force: :cascade do |t|
+      t.string   "name",         limit: 255,   default: "",    null: false
+      t.integer  "depth",        limit: 4
+      t.integer  "height",       limit: 4
+      t.integer  "width",        limit: 4
+      t.boolean  "large_box",                  default: false, null: false
+      t.boolean  "heavy_box",                  default: false, null: false
+      t.boolean  "holding_area",               default: false, null: false
+      t.boolean  "usable",                     default: true,  null: false
+      t.text     "notes",        limit: 65535
+      t.datetime "created_at"
+      t.datetime "updated_at"
+    end
+
+    create_table "inv_transactions", force: :cascade do |t|
+      t.integer  "user_id",           limit: 4
+      t.integer  "shipment_id",       limit: 4
+      t.integer  "purchase_order_id", limit: 4
+      t.text     "notes",             limit: 65535
+      t.datetime "created_at",                      null: false
+      t.datetime "updated_at",                      null: false
+    end
+    
+    create_table "inv_purchase_order_items", force: :cascade do |t|
+      t.integer  "purchase_order_id", limit: 4,                                          null: false
+      t.string   "sku",               limit: 32,                           default: "",  null: false
+      t.integer  "quantity",          limit: 4,                            default: 1,   null: false
+      t.string   "description",       limit: 255
+      t.string   "supplier_code",     limit: 255
+      t.string   "upc",               limit: 255
+      t.decimal  "unit_price",                    precision: 12, scale: 4, default: 0.0, null: false
+      t.decimal  "discount",                      precision: 10, scale: 2
+      t.integer  "quantity_received", limit: 4,                            default: 0,   null: false
+      t.string   "status",            limit: 255
+      t.datetime "created_at"
+      t.datetime "updated_at"
+    end
+
+    add_index "inv_purchase_order_items", ["sku"], name: "index_purchase_order_items_on_sku_id", using: :btree
+
+    create_table "inv_purchase_orders", force: :cascade do |t|
+      t.integer  "affiliate_id",  limit: 4
+      t.integer  "supplier_id",   limit: 4
+      t.string   "status",        limit: 255
+      t.date     "issue_date"
+      t.date     "due_date"
+      t.string   "ship_method",   limit: 255
+      t.string   "payment_terms", limit: 255
+      t.string   "ship_to",       limit: 255
+      t.datetime "created_at"
+      t.datetime "updated_at"
+      t.text     "notes",         limit: 65535
+    end
+
+    add_index "inv_purchase_orders", ["affiliate_id"], name: "index_store_purchase_orders_on_affiliate_id", using: :btree
+  
   end
 end
