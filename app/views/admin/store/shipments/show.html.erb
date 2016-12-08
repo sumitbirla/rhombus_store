@@ -131,7 +131,13 @@
     <% @shipment.items.each do |item| 
         upc = upc_list.find { |x| x.item == item.order_item.item_number } %>
         <tr>
-            <td nowrap><%= item.order_item.item_number %></td>
+            <td nowrap>
+            <% if item.order_item.daily_deal_id %>
+              <%= item.product.item_number %>
+            <% else %>
+              <%= item.order_item.item_number %>
+            <% end %>
+            </td>
             <td>
               <%= link_to item.product.full_name, admin_store_product_path(item.product_id) %>
               <% unless item.affiliate_id.nil? %>

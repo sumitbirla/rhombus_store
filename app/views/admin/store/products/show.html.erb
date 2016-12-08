@@ -4,6 +4,7 @@
 
 <% stock = InventoryItem.where(sku: @product.sku).sum(:quantity) %>
 <div class="pull-right">
+  <%= link_to "orders", admin_store_orders_path(status: :shipped, item_number: @product.item_number), class: "btn btn-sm btn-default" %>
   <%= link_to "clone", clone_admin_store_product_path(@product), class: "btn btn-sm btn-default" %>
   <%= link_to "edit", edit_admin_store_product_path(@product), class: "btn btn-sm btn-default" %>
 </div>

@@ -2,13 +2,13 @@ class Admin::Store::OrdersController < Admin::BaseController
   
   def index
     q = params[:q]
-    @selected_status = params[:status].presence || 'awaiting_shipment'
     
-    @orders = Order.where(status: @selected_status).order(submitted: :desc)
-    @orders = @orders.where(domain_id: cookies[:domain_id]) if q.nil?
-    @orders = @orders.where(po: params[:po] == "1") if (params[:po] && q.nil?)
+    @orders = Order.order(submitted: :desc)
+    @orders = @orders.where(status: params[:status]) unless params[:status].blank?
+    @orders = @orders.joins(:items).where("store_order_items.item_number = ?", params[:item_number]) unless params[:item_number].blank?
+    @orders = @orders.where(domain_id: cookies[:domain_id]) if q.blank?
     
-    unless q.nil?
+    unless q.blank?
       if q.to_i == 0
         @orders = @orders.where("billing_name LIKE '%#{q}%' OR shipping_name LIKE '%#{q}%' OR external_order_id = '#{q}'")
       else
