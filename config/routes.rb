@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   get 'cart/add'
   post 'cart/applycode'
   get 'cart/apply_fb_discount'
+  get 'cart/personalize'
   get 'cart/checkout'
   get 'cart/review'
   post 'cart/review' => 'cart#submit'
@@ -133,6 +134,7 @@ Rails.application.routes.draw do
           get 'pictures' 
           get 'categories'
           get 'extra_properties'
+          get 'label_elements'
           get 'coupons'
           get 'clone'
           post 'categories' => 'products#create_categories'
@@ -186,6 +188,7 @@ Rails.application.routes.draw do
       resources :affiliate_products
       resources :label_sheets
       resources :label_areas
+      resources :label_elements
 
       resources :daily_deals do
         member do

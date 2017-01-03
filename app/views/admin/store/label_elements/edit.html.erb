@@ -1,0 +1,58 @@
+<h2><%= @label_element.name %></h2>
+<hr/>
+
+
+<div class="col-md-6">
+
+<%= simple_form_for [:admin, :store, @label_element] do |f| %>
+
+	<input type="hidden" name="redirect" value="<%= @redirect %>" />
+	<%= render 'admin/shared/error_messages', object: f.object %>
+	
+	<%= f.hidden_field :product_id %>
+	<%= f.input :name %>
+  <%= f.input :text_or_image, collection: [:text, :image] %>
+  <%= f.input :web_or_print, collection: [:web, :print] %>
+  <%= f.input :top %>
+  <%= f.input :left %>
+  <%= f.input :width %>
+  <%= f.input :height %>
+  <%= f.input :font_family %>
+  <%= f.input :font_style %>
+  <%= f.input :font_color %>
+  <%= f.input :font_size, collection: (5..48), label: "Font size (pts.)" %>
+  <%= f.input :background_color %>
+  <%= f.input :horizontal_alignment, collection: [:left, :center, :right ] %>
+  <%= f.input :vertical_alignment, collection: [:top, :middle, :bottom ] %>
+  <%= f.input :max_chars %>
+	
+	<div class="form-actions">
+		<%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+	</div>
+
+<% end %>
+
+</div>
+
+
+<div class="col-md-6">
+<% if @label_element.product.pictures.length > 0 %>
+  <img class="img-responsive" src="<%= cdn_image_url @label_element.product.pictures[0], 600, 600, 0 %>" />
+<% end %>
+</div>
+
+
+
+<% content_for :title do %>
+	<%= @label_element.name %>
+<% end %>
+
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Products", admin_store_products_path %></li>
+	<li><%= link_to @label_element.product.name_with_option, admin_store_product_path(@label_element.product)%> </li>
+	<li class="active">edit</li>
+<% end %>

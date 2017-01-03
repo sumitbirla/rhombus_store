@@ -84,6 +84,10 @@ class Admin::Store::ProductsController < Admin::BaseController
     5.times { @product.extra_properties.build }
   end
   
+  def label_elements
+    @product = Product.find(params[:id])
+  end
+  
   def adjust_prices
     @products = Product.where(active: true)
   end

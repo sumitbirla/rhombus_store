@@ -1,0 +1,58 @@
+<h2><%= @product.name_with_option %></h2>
+
+<%= link_to 'new element', new_admin_store_label_element_path(product_id: @product.id, redirect: request.fullpath), class: 'pull-right btn btn-small'%>
+
+<ul class="nav nav-tabs">
+  <li><%= link_to "Summary", edit_admin_store_product_path(@product) %></li>
+  <li><%= link_to "Pictures", pictures_admin_store_product_path(@product) %></a></li>
+  <li><%= link_to "Categories", categories_admin_store_product_path(@product) %></li>
+  <li><%= link_to "Coupons", coupons_admin_store_product_path(@product) %></li>
+  <li><%= link_to "Extra Properties", extra_properties_admin_store_product_path(@product) %></li>
+  <li class="active"><a href="#">Label Elements</a></li>
+</ul>
+
+
+<table class="table table-striped table-condensed">
+	<tr>
+		<th>Name</th>
+		<th>Type</th>
+		<th>Location</th>
+		<th>Size</th>
+		<th>Font</th>
+		<th>Max. Chars</th>
+		<th>&nbsp;</th>
+	</tr>
+	<% @product.label_elements.each do |le| %>
+	<tr>
+		<td><%= le.name %></td>
+		<td><%= le.text_or_image %></td>
+		<td>(<%= le.left %>, <%= le.left %>)</td>
+		<td><%= le.width %> x <%= le.height %></td>
+		<td><%= le.font_family %> (<%= le.font_size%> pts.)</td>
+		<td><%= le.max_chars %></td>
+		<td>
+			<%= link_to "edit", edit_admin_store_label_element_path(le, redirect: request.fullpath) %> &nbsp;
+			<%= link_to "delete", 
+						  { controller: "label_elements", action: "destroy", id: le.id }, 
+						  method: :delete, 
+						  data: { confirm: "Are you sure?" } %>
+		</td>
+	</tr>
+	<% end %>
+</table>
+
+
+<% content_for :title do %>
+    <%= @product.title %>
+<% end %>
+
+
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Products", admin_store_products_path %></li>
+	<li><%= link_to @product.name_with_option, admin_store_product_path(@product)%> </li>
+	<li class="active">edit</li>
+<% end %>

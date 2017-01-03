@@ -41,9 +41,7 @@ class CartController < ApplicationController
 
 
   # GET /cart/add
-
   def add
-    
     order = load_or_create_order
     
     # iterate through multiple items being added to cart
@@ -64,7 +62,14 @@ class CartController < ApplicationController
       p = Product.find(product_id)
       
       #check if item already exists
-      item = order.items.find { |i| i.product_id == product_id && i.affiliate_id == affiliate_id && i.variation == variation }
+      item = order.items.find do |i| 
+        i.product_id == product_id && 
+        i.affiliate_id == affiliate_id && 
+        i.variation == variation && 
+        i.custom_text == params[:custom_text] &&
+        i.uploaded_file = params[:uploaded_file]
+      end
+      
       if item.nil?
 
         item = OrderItem.new order_id: order.id,
@@ -74,6 +79,12 @@ class CartController < ApplicationController
                 quantity: quantity,
                 unit_price: p.special_price || p.price,
                 item_description: p.name_with_option,
+                uploaded_file: params[:uploaded_file],
+                start_x_percent: params[:start_x_percent],
+                start_y_percent: params[:start_y_percent],
+                width_percent: params[:width_percent],
+                height_percent: params[:height_percent],
+                custom_text: params[:custom_text],
                 autoship_months: params[:autoship_months].blank? ? 0 : params[:autoship_months]
 
         item.item_number = p.sku
@@ -226,6 +237,11 @@ class CartController < ApplicationController
     
     flash[:notice] = 'Your shopping cart has been updated.'
     redirect_to :back
+  end
+  
+  # GET /cart/personalize?item=ITEM_NUMBER
+  def personalize
+    @product = Product.find_by(item_number: params[:item])
   end
   
   

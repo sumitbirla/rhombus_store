@@ -26,4 +26,5 @@
 class LabelElement < ActiveRecord::Base
   self.table_name = "store_label_elements"
   belongs_to :product
+  validates_presence_of :name, :text_or_image, :web_or_print, :top, :left, :width, :height
 end
