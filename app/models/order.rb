@@ -88,6 +88,7 @@ class Order < ActiveRecord::Base
   has_many :payments, as: :payable, dependent: :destroy
   has_many :invoices, as: :invoiceable
   has_many :logs, as: :loggable
+  has_many :pictures, -> { order :sort }, as: :imageable  # used for product personalization
   
   accepts_nested_attributes_for :items, reject_if: lambda { |x| x['product_id'].blank? && x['daily_deal_id'].blank?}, allow_destroy: true
   

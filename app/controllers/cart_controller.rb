@@ -71,6 +71,8 @@ class CartController < ApplicationController
       end
       
       if item.nil?
+        
+        puts "ORDER ITEMS = NEW!!"
 
         item = OrderItem.new order_id: order.id,
                 product_id: product_id,
@@ -93,11 +95,15 @@ class CartController < ApplicationController
 
         order.items << item
       else
+        puts "ORDER ITEMS = EXISTS!!"
+        
         item.quantity += quantity
         item.autoship_months = params[:autoship_months].blank? ? 0 : item.autoship_months
         item.save
       end
     end
+    
+    puts "ORDER ITEMS = #{order.items.length}"
     
     update_totals order
     order.save validate: false
@@ -241,9 +247,30 @@ class CartController < ApplicationController
   
   # GET /cart/personalize?item=ITEM_NUMBER
   def personalize
+    @order = load_or_create_order
     @product = Product.find_by(item_number: params[:item])
   end
   
+  # POST /cart/upload_picture
+  def upload_picture
+    uploaded_io = params[:file]
+    ext = uploaded_io.original_filename.split('.').last.downcase
+    
+    unless uploaded_io.nil? || ['jpg', 'jpeg', 'tiff', 'gif', 'bmp'].include?(ext) == false
+      file_path = Rails.root.join('tmp', SecureRandom.hex(6) + '.' + ext)
+     
+      File.open(file_path, 'wb') do |file|
+        file.write(uploaded_io.read)
+      end
+      
+      order = load_or_create_order
+      order.pictures.create(file_path: file_path, user_id: session[:user_id], caption: 'user upload') 
+      
+      return render json: { status: 'ok', file_path: file_path }
+    end
+    
+    render json: { status: 'error', message: "Not a valid image file" }
+  end
   
   def checkout
       @order = Order.includes(:items).find_by(cart_key: cookies[:cart]) unless cookies[:cart].nil?

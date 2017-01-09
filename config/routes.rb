@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   post 'cart/applycode'
   get 'cart/apply_fb_discount'
   get 'cart/personalize'
+  post 'cart/upload_picture'
   get 'cart/checkout'
   get 'cart/review'
   post 'cart/review' => 'cart#submit'
