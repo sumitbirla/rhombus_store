@@ -1,5 +1,6 @@
 <style>
     .summary .label { font-weight: normal; margin-right: 6px; }
+    .panel-body table { margin-bottom: 0;}
 </style>
 
 <% stock = InventoryItem.where(sku: @product.sku).sum(:quantity) %>
@@ -201,18 +202,29 @@
 	<% end %>
 
 
-	<h4>Categories</h4>
-	<ul>
-	<% @product.categories.each do |cat| %>
-	    <li><%= cat.name %></li>
-	<% end %>
-	</ul>
-  
-  <hr>
+  <% if @product.categories.length > 0 %>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Categories</h3>
+    </div>
+    <div class="panel-body">
+    	<ul>
+    	<% @product.categories.each do |cat| %>
+    	    <li><%= cat.name %></li>
+    	<% end %>
+    	</ul>
+    </div>
+  </div>
+  <% end %>
+
 
 
   <% unless @product.group.blank?  %>
-      <h4>Products in group:</h4>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Products in group:</h3>
+    </div>
+    <div class="panel-body">
       <table class="table table-condensed">
         <% Product.where(group: @product.group).order(:option_sort).each do |v| %>
             <tr>
@@ -222,34 +234,63 @@
             </tr>
         <% end %>
       </table>
-      <hr/>
+    </div>
+  </div>
   <% end %>
 	
 	
 
-
     <% unless @product.product_type == 'virtual' 
-          items = InventoryItem.includes(:inventory_location)
+          inv_items = InventoryItem.includes(:inventory_location)
                                .where(sku: @product.sku)
                                .group(:inventory_location_id)
                                .order("expiration, quantity")
                                .select("lot, expiration, inventory_location_id, sum(quantity) as quantity")
     %>
-      <span class="pull-right light">Low: <%= @product.low_threshold %></span>
-      <h4>Inventory</h4>
-
-      <table class="table table-condensed">
-      <% items.each do |i| 
-          next if i.quantity == 0 %>
-        <tr>
-          <td><%= i.inventory_location %></td>
-          <td>lot# <%= i.lot %></td>
-          <td>exp: <%= i.formatted_expiration %></td>
-          <td class="text-right"><%= number_with_delimiter(i.quantity) %></td>
-        </tr>
-      <% end %>
-      </table>
+    
+    <% if inv_items.length > 0 %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><span class="pull-right light">Low: <%= @product.low_threshold %></span>Inventory</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table table-condensed">
+        <% inv_items.each do |i| 
+            next if i.quantity == 0 %>
+          <tr>
+            <td><%= i.inventory_location %></td>
+            <td>lot# <%= i.lot %></td>
+            <td>exp: <%= i.formatted_expiration %></td>
+            <td class="text-right"><%= number_with_delimiter(i.quantity) %></td>
+          </tr>
+        <% end %>
+        </table>
+      </div>
+    </div>
     <% end %>
+    
+    <% po_items = PurchaseOrderItem.joins(:purchase_order)
+                                   .includes(purchase_order: :supplier)
+                                   .where(sku: @product.sku)
+                                   .group("inv_purchase_orders.affiliate_id") %>
+    <% if po_items.length > 0 %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Suppliers</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table table-condensed">
+        <% po_items.each do |item| %>
+        <tr>
+          <td><%= link_to item.purchase_order.supplier.name, admin_system_affiliate_path(item.purchase_order.supplier) %></td>
+          <td class="text-right"><%= number_to_currency(item.unit_price) %></td>
+        </tr>
+        <% end %>
+        </table>
+      </div>
+    </div>
+    <% end %>
+  <% end %>
 
 </div>
 

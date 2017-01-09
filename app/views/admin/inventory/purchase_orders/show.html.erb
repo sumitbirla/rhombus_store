@@ -44,9 +44,17 @@
 		<th class="text-right">Subtotal</th>
 		<th class="text-center">Status</th>
 	</tr>
-	<% @purchase_order.items.each do |item| %>
+	<% @purchase_order.items.each do |item| 
+      p = Product.find_by(item_number: item.sku)
+  %>
 	<tr>
-		<td><%= item.sku %></td>
+		<td>
+      <% if p.nil? %>
+        <% item.sku %>
+      <% else %>
+        <%= link_to item.sku, admin_store_product_path(p) %>
+      <% end %>
+    </td>
 		<td><%= item.description %></td>
 		<td class="text-center"><%= item.supplier_code %></td>
 		<td class="text-center"><%= number_with_delimiter(item.quantity) %></td>
