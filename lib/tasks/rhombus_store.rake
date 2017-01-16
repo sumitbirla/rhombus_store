@@ -50,7 +50,7 @@ namespace :rhombus_store do
     
     new_order.assign_attributes(
       submitted: DateTime.now,
-      status: :submitted,
+      status: :payment_pending,
       payment_method: 'CREDIT_CARD',
       auto_ship: true
     )
@@ -84,5 +84,27 @@ namespace :rhombus_store do
     @logger.info "New order ##{new_order.id} created."
     
   end
+  
+  
+  desc "Invoice purchase orders that were shipped today"
+  task create_invoices: :environment do
+    @logger = Logger.new(Rails.root.join("log", "invoice.log"))
+    
+    shipments = Shipment.joins(:order)
+            .joins(order: :affiliate)
+            .includes(:items, :order)
+            .where(status: :shipped, ship_date: Date.today)
+            .where("store_orders.sales_channel = ?", "Purchase Order")
+            .order("store_orders.affiliate_id, store_orders.external_order_id")
+            
+    prev_affiliate_id = nil
+    invoice = nil
+    
+    shipments.each do |s|
+      
+    end
+    
+  end
+  
 
 end
