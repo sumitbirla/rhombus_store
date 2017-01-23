@@ -57,7 +57,7 @@
   </tr>
   <% @shipments.each do |shipment|  %>
       <tr>
-		<td><input type="checkbox" name="shipment_id[]" class="shipment-chk" value="<%= shipment.id %>"/></td>
+		    <td><input type="checkbox" name="shipment_id[]" class="shipment-chk" value="<%= shipment.id %>"/></td>
         <td nowrap><%= link_to shipment, admin_store_shipment_path(shipment, status: params[:status]) %></td>
         <td><%= shipment.recipient_name %></td>
         <td><%= shipment.recipient_city %>, <%= shipment.recipient_state %></td>

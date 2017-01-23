@@ -160,6 +160,17 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
   end
   
   
+  def update_status
+    pos = PurchaseOrder.where(id: params[:purchase_order_id]).where.not(status: params[:status])
+    pos.each do |po|
+      po.update_attribute(:status, params[:status])
+    end
+    
+    flash[:info] = "Status of #{pos.length} purchase order(s) updated to '#{params[:status]}'"
+    redirect_to :back
+  end
+  
+  
   private
   
     def purchase_order_params
