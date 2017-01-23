@@ -25,7 +25,7 @@
           avl = InventoryItem.where(sku: item.product.sku).sum(:quantity) 
         end
         %>
-          <tr class="<%= 'text-danger bold' if avl < item.quantity %>">
+          <tr class="<%= 'danger' if avl < item.quantity %>">
             <td nowrap>
               <%= itemf.hidden_field :order_item_id %>
               <%= itemf.hidden_field :product_id %>

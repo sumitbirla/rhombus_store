@@ -30,8 +30,7 @@
   <% end %>
   &nbsp;<%= (params[:status].presence || '').titlecase %> orders</h2>
   
-  
-<hr>
+
 <%= render "admin/shared/search_results_header", object: @orders %>
 
 <form id="frmBatch" action="" method="post">

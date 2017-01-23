@@ -197,6 +197,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       left join core_affiliates a on a.id = item.affiliate_id
       join store_label_sheets sheet on sheet.id = p.label_sheet_id
       where shp.id in (#{@shipments.map(&:id).join(",")})
+      and item.quantity > 0
       group by p.sku, a.code, item.variation
       order by p.label_sheet_id, p.id;
     EOF
