@@ -145,7 +145,7 @@ class Admin::Store::ReportsController < Admin::BaseController
       join store_products p on oi.product_id = p.id
       join core_affiliates a on a.id = oi.affiliate_id
       left join store_label_sheets s on p.label_sheet_id = s.id
-      where o.status in ('unshipped', 'submitted')
+      where o.status in ('backordered', 'awaiting_shipment')
       group by oi.item_number;
     EOF
     
@@ -156,14 +156,12 @@ class Admin::Store::ReportsController < Admin::BaseController
   def current_stock
     
     sql = <<-EOF
-      select p.id as product_id, p.sku, p.name, p.option_title, p.price as 'retail_price', sum(i.quantity) as 'quantity', 
-        aff.id as 'supplier_id', aff.name as 'supplier_name', ap.price as 'supplier_price'
-      from store_inventory_transaction_items i
+      select p.id as product_id, p.sku, p.name, p.option_title, sum(i.quantity) as 'quantity', loc.name as 'location' 
+      from inv_items i
       join store_products p on p.item_number = i.sku
-      left join core_affiliates aff on aff.id = p.primary_supplier_id
-      left join store_affiliate_products ap on ap.affiliate_id = aff.id and ap.product_id = p.id 
-      group by sku
-      order by sku;
+      join inv_locations loc on loc.id = i.inventory_location_id
+      group by i.sku, i.inventory_location_id having sum(i.quantity) > 0
+      order by i.sku;
     EOF
     
     @data = []
@@ -178,13 +176,16 @@ class Admin::Store::ReportsController < Admin::BaseController
       join store_orders o on oi.order_id = o.id
       join store_products p on oi.product_id = p.id
       left join store_label_sheets s on p.label_sheet_id = s.id
-      where o.status in ('unshipped', 'submitted')
+      where o.status in ('backordered', 'awaiting_shipment')
       group by oi.product_id
       order by sum(quantity) desc;
     EOF
     
     @data = []
     ActiveRecord::Base.connection.execute(sql).each { |row| @data << row } 
+    
+    @inventory = InventoryItem.where(sku: @data.map { |x| x[1]} )
+                              .group(:sku).select("sku, sum(quantity) as quantity")
   end
   
   
