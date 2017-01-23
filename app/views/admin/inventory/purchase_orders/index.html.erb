@@ -24,12 +24,11 @@
 
 <% if params[:q].nil? %>
 <ul class="nav nav-tabs" style="margin-bottom: 10px;">
-  <li class="<%= "active" if params[:status].blank? %>"><a href="<%= admin_inventory_purchase_orders_path %>">All</a></li>
-  
   <% status_list.each do |status|
       count = PurchaseOrder.where(status: status).count %>
   <li class="<%= "active" if params[:status] == status %>"><a href="<%= admin_inventory_purchase_orders_path(status: status)%>"><%= tab_count(status.titlecase, count) %></a></li>
   <% end %>
+  <li class="<%= "active" if params[:status].blank? %>"><a href="<%= admin_inventory_purchase_orders_path %>">All</a></li>
 </ul>
 <% end %>
 

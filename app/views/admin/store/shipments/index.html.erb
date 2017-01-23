@@ -33,8 +33,9 @@
   <ul class="nav nav-tabs" style="margin-bottom: 10px;">
   <% status_list.each do |status| 
       count = Shipment.where(status: status).count %>
-    <li role="presentation" class="<%= "active" if params[:status] == status %>"><a href="<%= admin_store_shipments_path(status: status)%>"><%= tab_count(status.titlecase, count)%></a></li>
+    <li class="<%= "active" if params[:status] == status %>"><a href="<%= admin_store_shipments_path(status: status)%>"><%= tab_count(status.titlecase, count)%></a></li>
   <% end %>
+  <li class="<%= "active" if params[:status].blank? %>"><a href="<%= admin_store_shipments_path %>">All</a></li>
   </ul>
 	
 <%= will_paginate @shipments %>

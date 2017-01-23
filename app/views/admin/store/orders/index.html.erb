@@ -44,6 +44,7 @@
         count = Order.where(domain_id: current_domain.id, status: status).count %>
     <li class="<%= "active" if params[:status] == status %>"><a href="<%= admin_store_orders_path(status: status)%>"><%= tab_count(status.titlecase, count) %></a></li>
     <% end %>
+    <li class="<%= "active" if params[:status].blank? %>"><a href="<%= admin_store_orders_path %>">All</a></li>
   </ul>
   <% end %>
   

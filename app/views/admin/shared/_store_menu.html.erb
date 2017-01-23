@@ -55,7 +55,7 @@
     <li><%= link_to "Items", admin_inventory_inventory_items_path %></li>
     <li><%= link_to "Transactions", admin_inventory_inventory_transactions_path %></li>
     <li>
-      <%= link_to admin_inventory_purchase_orders_path do %>
+      <%= link_to admin_inventory_purchase_orders_path(status: :released) do %>
       Purchase Orders
       <% if new_pos > 0 %>
       	<span class="badge pull-right"><%= new_pos %></span>
