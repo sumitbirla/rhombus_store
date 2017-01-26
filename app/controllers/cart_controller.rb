@@ -257,16 +257,17 @@ class CartController < ApplicationController
     ext = uploaded_io.original_filename.split('.').last.downcase
     
     unless uploaded_io.nil? || ['jpg', 'jpeg', 'tiff', 'gif', 'bmp'].include?(ext) == false
-      file_path = Rails.root.join('tmp', SecureRandom.hex(6) + '.' + ext)
+      file_name = SecureRandom.hex(6) + '.' + ext
+      file_path = Rails.root.join('public', 'uploads', file_name)
      
       File.open(file_path, 'wb') do |file|
         file.write(uploaded_io.read)
       end
       
       order = load_or_create_order
-      order.pictures.create(file_path: file_path, user_id: session[:user_id], caption: 'user upload') 
+      order.pictures.create(file_path: '/uploads/' + file_name, user_id: session[:user_id], caption: 'user upload') 
       
-      return render json: { status: 'ok', file_path: file_path }
+      return render json: { status: 'ok', file_path: '/uploads/' + file_name }
     end
     
     render json: { status: 'error', message: "Not a valid image file" }
