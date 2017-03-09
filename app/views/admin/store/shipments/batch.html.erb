@@ -124,20 +124,16 @@ packaging_types = [
 <table class="table table-striped table-condensed">
   <tr>
     <th>ID</th>
-    <th>Created</th>
     <th>Ship to</th>
     <th>Destination</th>
+    <th>Item(s)</th>
+    <th>Age</th>
+    <th>Shipped</th>
+    <th>Method</th>
+    <th></th>
     <th>Status</th>
   </tr>
-  <% @shipments.each do |shipment|  %>
-    <tr>
-      <td nowrap><%= link_to shipment, admin_store_shipment_path(shipment) %></td>
-      <td nowrap class="light"><%= systime shipment.created_at %></td>
-      <td><%= shipment.recipient_name %></td>
-      <td><%= shipment.recipient_city %>, <%= shipment.recipient_state %></td>
-      <td><span class="label <%= 'label-warning' if shipment.status == 'pending' %>  <%= 'label-success' if shipment.status == 'shipped' %> <%= 'label-danger' if shipment.status == 'void' %>"><%= shipment.status %></span></td>
-    </tr>
-  <% end %>
+  <%= render partial: 'shipment', collection: @shipments, locals: { readonly: true } %>
 </table>
 
 

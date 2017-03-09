@@ -67,7 +67,7 @@ class CartController < ApplicationController
         i.affiliate_id == affiliate_id && 
         i.variation == variation && 
         i.custom_text == params[:custom_text] &&
-        i.uploaded_file = params[:uploaded_file]
+        i.uploaded_file == params[:uploaded_file]
       end
       
       if item.nil?

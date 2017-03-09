@@ -1,0 +1,40 @@
+<% readonly ||= false %>
+
+<tr>
+  <% unless readonly %>
+    <td><input type="checkbox" name="shipment_id[]" class="shipment-chk" value="<%= shipment.id %>"/></td>
+  <% end %>
+  <td nowrap><%= link_to shipment, admin_store_shipment_path(shipment, status: shipment.status) %></td>
+  <td><%= shipment.recipient_name %></td>
+  <td><%= shipment.recipient_city %>, <%= shipment.recipient_state %></td>
+  <td class="small">
+  <% if shipment.items.length == 1%>
+    <b><%= shipment.items[0].order_item.item_number %></b> (<%= shipment.items.collect(&:quantity).sum %>)
+  <% else %>
+    - <%= shipment.items.collect(&:quantity).sum %> items -
+  <% end %>
+  </td>
+  <td><%= time_ago shipment.order.submitted %></td>
+  <td><%= shipment.ship_date ? sysdate(shipment.ship_date) : "<span class='light'>-</span>".html_safe %></td>
+  <td><%= shipment.ship_method.blank? ? '<span class="light">- n/a -</span>'.html_safe : "#{shipment.carrier} #{shipment.ship_method}" %></td>
+  <td>
+    <% if shipment.inventory_transaction %>
+      <%= link_to edit_admin_inventory_inventory_transaction_path(shipment.inventory_transaction) do %>
+        <i class="light fa fa-dropbox"></i>
+      <% end %>
+    <% end%>
+  </td>
+  <td><%= shipment_status(shipment)%></td>
+  <% unless readonly %>
+    <td class="actions ralign">
+      <% if shipment.status == "pending" %>
+        <%= link_to "ship", admin_store_easy_post_path(shipment_id: shipment.id) %> &nbsp;
+      <% end %>
+      <%= link_to "edit", edit_admin_store_shipment_path(shipment) %> &nbsp;
+      <%= link_to "delete",
+                  { action: "destroy", id: shipment.id },
+                  method: :delete,
+                  data: { confirm: "Are you sure?" } %>
+    </td>
+  <% end %>
+</tr>
