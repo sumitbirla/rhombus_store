@@ -8,7 +8,7 @@
   <td><%= shipment.recipient_name %></td>
   <td><%= shipment.recipient_city %>, <%= shipment.recipient_state %></td>
   <td class="small">
-  <% if shipment.items.length == 1%>
+  <% if shipment.items.length == 1 && shipment.items[0].order_item %>
     <b><%= shipment.items[0].order_item.item_number %></b> (<%= shipment.items.collect(&:quantity).sum %>)
   <% else %>
     - <%= shipment.items.collect(&:quantity).sum %> items -
