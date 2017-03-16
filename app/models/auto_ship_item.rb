@@ -25,4 +25,7 @@ class AutoShipItem < ActiveRecord::Base
   belongs_to :user
   belongs_to :product
   belongs_to :affiliate
+  
+  validates_presence_of :user_id, :item_number, :product_id, :quantity, :days, :next_ship_date, :status
+  validates_numericality_of :quantity, greater_than: 0
 end
