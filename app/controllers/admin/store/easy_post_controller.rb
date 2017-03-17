@@ -148,7 +148,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
       EasyPost.api_key = Cache.setting(shipment.order.domain_id, :shipping, 'EasyPost API Key')
       
       # create customs information if required
-      if (shipment.recipient_city == 'APO' || shipment.recipient_country != 'US')
+      if (['APO', 'FPO', 'DPO'].include?(shipment.recipient_city) || shipment.recipient_country != 'US')
         customs_info = EasyPost::CustomsInfo.create(eel_pfc: 'NOEEI 30.37(a)',
                                                     customs_certify: true,
                                                     customs_signer: 'Tim Ackerman',
