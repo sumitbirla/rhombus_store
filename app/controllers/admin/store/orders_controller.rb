@@ -345,7 +345,7 @@ EOF
       cc_expiration_month: nil,
       cc_expiration_year: nil,
       paypal_token: nil,
-      cart_key: nil
+      cart_key: ''
     })
     new_order.save(validate: false)
     
