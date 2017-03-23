@@ -30,6 +30,12 @@ class OrderMailer < ActionMailer::Base
     bcc = Cache.setting(@shipment.order.domain_id, 'eCommerce', 'Order Copy Recipient')
     from_name = Cache.setting(@shipment.order.domain_id, :system, 'From Email Name')
     from_email = Cache.setting(@shipment.order.domain_id, :system, 'From Email Address')
+    
+    if @shipment.order.auto_ship
+      subject = "Autoship ##{@shipment.order.id} is on its way"
+    else
+      subject = "Order ##{@shipment.order.id} has shipped"
+    end
 
     options = {
         address: Cache.setting(@shipment.order.domain_id, :system, 'SMTP Server'),

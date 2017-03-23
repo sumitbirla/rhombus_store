@@ -36,7 +36,7 @@
     
           </table>
 
-          <p style="text-align: center; margin-top: 20px;">Please note that tracking information may not be available online until later at night.</p>
+          <p style="text-align: center; margin-top: 20px;">Please note that tracking information may not be available online until the end of day.</p>
 
           <p style="text-align: center;"><b>Tracking #</b> <%= @shipment.carrier %> <%= @shipment.tracking_number %></p>
 
@@ -49,6 +49,11 @@
             <a href="<%= url %>" style="font-size: 100%; line-height: 2; color: #FFF; text-decoration: none; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 25px; background-color: #348eda; margin: 20px 10px 0 0; padding: 0; border-color: #348eda; border-style: solid; border-width: 10px 20px;">Track Shipment</a>
           </p>
           
+          <% if @shipment.order.auto_ship %>
+          <p>
+            <a href="https://www.healthybreeds.com/account/auto_ship_items">Please log into your Healthy Breeds web account to manage autoship items.</a>
+          </p>
+          <% end %>
           
     		</td>
     	</tr>
