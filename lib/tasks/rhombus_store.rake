@@ -52,7 +52,17 @@ namespace :rhombus_store do
       submitted: DateTime.now,
       status: :payment_pending,
       payment_method: 'CREDIT_CARD',
-      auto_ship: true
+      auto_ship: true,
+      external_order_id: nil,
+      ship_earliest: Date.today,
+      payment_due: nil,
+      cc_type: nil,
+      cc_number: nil,
+      cc_code: nil,
+      cc_expiration_month: nil,
+      cc_expiration_year: nil,
+      paypal_token: nil,
+      cart_key: nil
     )
     new_order.save(validate: false)
     
