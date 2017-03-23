@@ -5,6 +5,7 @@
 		<td><%= link_to as.item_number, admin_store_product_path(as.product_id) %></td>
 		<td><%= as.description %></td>
     <td class="text-center"><%= as.quantity %></td>
+    <td class="text-center"><%= as.days %></td>
     <td class="text-center"><%= as.last_shipped %></td>
     <td class="text-center"><%= as.next_ship_date %></td>
     <td class="text-center"><%= auto_ship_status(as) %></td>

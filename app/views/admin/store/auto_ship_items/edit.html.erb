@@ -9,6 +9,7 @@
   <%= f.input :user_id, collection: User.where.not(status: 'Z').order(:name).map { |x| ["#{x.name}  (#{x.email})", x.id]} %>
   <%= f.input :item_number %>
   <%= f.input :quantity %>
+  <%= f.input :days %>
   <%= f.input :description %>
   <%= f.input :last_shipped, as: :datepicker %>
   <%= f.input :next_ship_date, as: :datepicker %>
