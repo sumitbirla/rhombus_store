@@ -44,7 +44,7 @@ class OrderMailer < ActionMailer::Base
     mail(from: "#{from_name} <#{from_email}>",
          to: @shipment.order.notify_email,
          bcc: bcc,
-         subject: "Order ##{@shipment.order.id} has shipped",
+         subject: subject,
          delivery_method_options: options)
          
     OrderHistory.create(order_id: @shipment.order.id, 
