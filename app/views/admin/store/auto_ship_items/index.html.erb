@@ -11,18 +11,18 @@
 
 
 <%= will_paginate @auto_ship_items %>
-<table class="table table-striped table-condensed table-sortable">
+<table class="table table-striped table-condensed table-sortable footable">
 	<tr>
-    <th><%= sortable "store_auto_ship_items.id", "ID" %></th>
+    <th data-breakpoints="xs"><%= sortable "store_auto_ship_items.id", "ID" %></th>
 		<th><%= sortable "core_users.name", "User" %></th>
 		<th><%= sortable "item_number" %></th>
-		<th><%= sortable "description" %></th>
-    <th class="text-center"><%= sortable "quantity" %></th>
+		<th data-breakpoints="xs"><%= sortable "description" %></th>
+    <th data-breakpoints="xs" class="text-center"><%= sortable "quantity" %></th>
     <th class="text-center"><%= sortable :days, "frequency" %></th>
-    <th class="text-center"><%= sortable "last_shipped" %></th>
-    <th class="text-center"><%= sortable "next_ship_date" %></th>
+    <th data-breakpoints="xs" class="text-center"><%= sortable "last_shipped" %></th>
+    <th data-breakpoints="xs" class="text-center"><%= sortable "next_ship_date" %></th>
     <th class="text-center"><%= sortable "status" %></th>
-		<th class="actions">&nbsp;</th>
+		<th data-breakpoints="xs" class="actions">&nbsp;</th>
 	</tr>
   <%= render @auto_ship_items %>
 </table>
