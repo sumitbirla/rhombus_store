@@ -2,7 +2,7 @@
 
 <tr>
   <% unless readonly %>
-    <td><input type="checkbox" name="shipment_id[]" class="shipment-chk" value="<%= shipment.id %>"/></td>
+    <td><input type="checkbox" name="shipment_id[]" class="shipment-chk hidden-xs" value="<%= shipment.id %>"/></td>
   <% end %>
   <td nowrap><%= link_to shipment, admin_store_shipment_path(shipment, status: shipment.status) %></td>
   <td><%= shipment.recipient_name %></td>
@@ -17,7 +17,7 @@
   <td><%= time_ago shipment.order.submitted %></td>
   <td><%= shipment.ship_date ? sysdate(shipment.ship_date) : "<span class='light'>-</span>".html_safe %></td>
   <td><%= shipment.ship_method.blank? ? '<span class="light">- n/a -</span>'.html_safe : "#{shipment.carrier} #{shipment.ship_method}" %></td>
-  <td>
+  <td class="hidden-xs">
     <% if shipment.inventory_transaction %>
       <%= link_to edit_admin_inventory_inventory_transaction_path(shipment.inventory_transaction) do %>
         <i class="light fa fa-dropbox"></i>
@@ -26,7 +26,7 @@
   </td>
   <td><%= shipment_status(shipment)%></td>
   <% unless readonly %>
-    <td class="actions ralign">
+    <td class="actions ralign hidden-xs">
       <% if shipment.status == "pending" %>
         <%= link_to "ship", admin_store_easy_post_path(shipment_id: shipment.id) %> &nbsp;
       <% end %>

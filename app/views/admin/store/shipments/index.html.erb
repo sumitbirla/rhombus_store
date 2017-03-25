@@ -39,21 +39,25 @@
   </ul>
 	
 <%= will_paginate @shipments %>
-<table class="table table-striped table-condensed">
-  <tr>
-	  <th><input type="checkbox" id="chkAll" /></th>
-    <th>ID</th>
-    <th>Ship to</th>
-    <th>Destination</th>
-    <th>Item(s)</th>
-    <th>Age</th>
-    <th>Shipped</th>
-    <th>Method</th>
-    <th></th>
-    <th>Status</th>
-    <th class="actions">&nbsp;</th>
-  </tr>
-  <%= render @shipments %>
+<table class="table table-striped table-condensed footable">
+  <thead>
+    <tr>
+  	  <th><input type="checkbox" id="chkAll" class="hidden-xs" /></th>
+      <th data-breakpoints="xs">ID</th>
+      <th>Ship to</th>
+      <th>Destination</th>
+      <th data-breakpoints="xs">Item(s)</th>
+      <th data-breakpoints="xs">Age</th>
+      <th data-breakpoints="xs">Shipped</th>
+      <th data-breakpoints="xs">Method</th>
+      <th class="hidden-xs" ></th>
+      <th>Status</th>
+      <th class="actions hidden-xs">&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render @shipments %>
+  </tbody>
 </table>
 </form>
 
