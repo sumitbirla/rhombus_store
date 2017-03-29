@@ -9,7 +9,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     @orders = @orders.where(domain_id: cookies[:domain_id]) if q.blank?
     
     unless q.blank?
-      if q.to_i == 0
+      if (q.to_i == 0 || q.include?('-'))
         @orders = @orders.where("billing_name LIKE '%#{q}%' OR shipping_name LIKE '%#{q}%' OR external_order_id = '#{q}'")
       else
         @orders = @orders.where(id: q)
