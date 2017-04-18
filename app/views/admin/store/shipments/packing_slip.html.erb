@@ -82,7 +82,9 @@
               <%= loc.to_text(skip_country: true, new_line: "<br>").html_safe %>
             </p>
             <p>
+              <% unless loc.website.blank? %>
               <strong>Web:</strong> <%= loc.website %><br/>
+              <% end %>
               <strong>Phone:</strong> <%= loc.phone %><br/>
               <strong>Email:</strong> <%= loc.email %>
             </p>
@@ -154,7 +156,8 @@
       <% @shipment.items.each do |item| 
           upc = upc_list.find { |x| x.item == item.order_item.item_number } %>
       <tr>
-        <td nowrap><input type="checkbox"> &nbsp; <% if item.order_item.daily_deal_id %>
+        <td nowrap>
+          <% if item.order_item.daily_deal_id %>
               <%= item.product.item_number %>
             <% else %>
               <%= item.order_item.item_number %>
@@ -167,7 +170,7 @@
             &nbsp; (<span><%= item.affiliate %></span>)
           <% end %>
           
-          <% if upc && !upc.flags.include?("P") %>
+          <% if false && upc && !upc.flags.include?("P") %>
             &nbsp; &nbsp; <i style="color: #ccc;">P</i>
           <% end %>
         </td>
