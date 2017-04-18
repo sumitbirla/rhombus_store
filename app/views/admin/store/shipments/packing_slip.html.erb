@@ -144,6 +144,7 @@
       <thead>
       <tr>
         <th scope="col" style="text-align:left;"><strong>Item</strong></th>
+        <th scope="col" style="text-align:left;"><strong>UPC</strong></th>
         <th scope="col" style="text-align:left;"><strong>Description</strong></th>
         <th scope="col" style="text-align:right;"><strong>Order Quantity</strong></th>
         <th scope="col" style="text-align:right;"><strong>Ship Quantity</strong></th>
@@ -157,7 +158,9 @@
               <%= item.product.item_number %>
             <% else %>
               <%= item.order_item.item_number %>
-            <% end %></td>
+            <% end %>
+        </td>
+        <td><%= upc.code unless upc.nil? %></td>
         <td>
           <%= item.product.full_name %>
           <% unless item.affiliate_id.nil? %>
@@ -172,9 +175,9 @@
         <td align="right" class="textright"><%= item.quantity unless item.quantity == 0 && !item.special_status.blank? %> <%= item.special_status %></td>
       </tr>
       <% end %>
-      <tr style="height: 10<%= "0" if @shipment.items.length < 9 %>px;"><td colspan="4"></td></tr>
+      <tr style="height: 10<%= "0" if @shipment.items.length < 9 %>px;"><td colspan="5"></td></tr>
       <tr style="border-top: solid 1px black;">
-        <td align="right" class="textright" colspan="3"><b>Total Items</b></td>
+        <td align="right" class="textright" colspan="4"><b>Total Items</b></td>
         <td align="right" class="textright"><b><%= @shipment.items.sum(:quantity) %></b></td>
       </tr>
       </tbody>
