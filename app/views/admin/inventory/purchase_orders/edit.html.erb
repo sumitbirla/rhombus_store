@@ -123,6 +123,8 @@
     
     $(".item-id").change(function() {
       var item = $(this);
+      if (item.val() == '')
+        return;
       
       $.get('/admin/store/products/item_info', { 'sku': $(this).val(), 'affiliate_id' : $("#purchase_order_supplier_id").val() } , function(data) {
         
