@@ -124,6 +124,7 @@
 <table class="table table-striped table-condensed table-bordered">
     <tr>
         <th>Item</th>
+        <th>UPC</th>
         <th>Description</th>
         <th class="text-right">Ship Qty.</th>
         <th class="calign">Status</th>
@@ -131,13 +132,8 @@
     <% @shipment.items.each do |item| 
         upc = upc_list.find { |x| x.item == item.order_item.item_number } %>
         <tr>
-            <td nowrap>
-            <% if item.order_item.daily_deal_id %>
-              <%= item.product.item_number %>
-            <% else %>
-              <%= item.order_item.item_number %>
-            <% end %>
-            </td>
+            <td nowrap><%= item.order_item.item_number %></td>
+            <td><%= upc.nil? ? item.product.upc : upc %></td>
             <td>
               <%= link_to item.product.full_name, admin_store_product_path(item.product_id) %>
               <% unless item.affiliate_id.nil? %>
@@ -154,7 +150,7 @@
     <% end %>
     <tr>
       <th><%= pluralize item_count, "item" %></th>
-      <th class="ralign">Total: </th>
+      <th class="ralign" colspan="2">Total: </th>
       <th class="text-right"><%= number_with_delimiter(total_qty) %></th>
       <th></th>
     </tr>
