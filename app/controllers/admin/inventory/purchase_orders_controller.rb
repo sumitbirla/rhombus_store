@@ -159,7 +159,14 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
     render 'print', layout: nil
   end
   
+  # used when releasing or closing PO
+  def set_status
+    po = PurchaseOrder.find(params[:id])
+    po.update(status: params[:status])
+    redirect_to :back
+  end
   
+  # batch updates
   def update_status
     pos = PurchaseOrder.where(id: params[:purchase_order_id]).where.not(status: params[:status])
     pos.each do |po|

@@ -41,7 +41,6 @@ class PurchaseOrder < ActiveRecord::Base
   end
   
   def update_received_counts
-    
     items.each do |i| 
       i.quantity_received = 0 
       inventory_transactions.each do |t|

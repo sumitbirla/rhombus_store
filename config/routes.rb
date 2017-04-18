@@ -75,6 +75,7 @@ Rails.application.routes.draw do
           post 'items' => 'purchase_orders#update_items'
           post 'receiving' => 'purchase_orders#update_receiving'
           get 'print'
+          get 'set_status'
         end
       end
       resources :purchase_order_items

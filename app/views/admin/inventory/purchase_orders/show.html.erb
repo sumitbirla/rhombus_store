@@ -68,20 +68,27 @@
 
 <hr>
 
-<h4>Receiving history:</h4>
-<% @purchase_order.inventory_transactions.each do |tran| %>
-<div class="row">
-  <div class="col-md-6">
-    <%= render partial: 'admin/inventory/inventory_transactions/box', locals: { inventory_transaction: tran } %>
+<% if @purchase_order.status == 'new' %>
+
+  <%= link_to set_status_admin_inventory_purchase_order_path(@purchase_order, status: :released), class: "btn btn-large btn-success" do %>
+    <i class="fa fa-check"></i> Approve purchase order
+  <% end %>
+  
+<% else %>
+  <h4>Receiving history:</h4>
+  <% @purchase_order.inventory_transactions.each do |tran| %>
+  <div class="row">
+    <div class="col-md-6">
+      <%= render partial: 'admin/inventory/inventory_transactions/box', locals: { inventory_transaction: tran } %>
+    </div>
   </div>
-</div>
-<% end%>
+  <% end%>
 
 
-<% if @purchase_order.inventory_transactions.length == 0 %>
-  <div class="alert alert-info"><i class="fa fa-info-circle"></i> No items received thus far.</div>
+  <% if @purchase_order.inventory_transactions.length == 0 %>
+    <div class="alert alert-info"><i class="fa fa-info-circle"></i> No items received thus far.</div>
+  <% end %>
 <% end %>
-
 
 <% content_for :title do %>
 	Purchase Order #<%= @purchase_order.id %>
