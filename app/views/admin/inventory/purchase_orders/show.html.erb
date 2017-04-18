@@ -38,9 +38,9 @@
 		<th>SKU</th>
 		<th>Description</th>
 		<th class="text-center">Supplier Code</th>
-		<th class="text-center">Qty Ordered</th>
+		<th class="text-right">Qty Ordered</th>
 		<th class="text-right">Unit Price $</th>
-		<th class="text-center">Received</th>
+		<th class="text-right">Received</th>
 		<th class="text-right">Subtotal</th>
 		<th class="text-center">Status</th>
 	</tr>
@@ -50,16 +50,16 @@
 	<tr>
 		<td>
       <% if p.nil? %>
-        <% item.sku %>
+        <%= item.sku %>  <i class="fa fa-question-circle text-danger"></i>
       <% else %>
         <%= link_to item.sku, admin_store_product_path(p) %>
       <% end %>
     </td>
 		<td><%= item.description %></td>
 		<td class="text-center"><%= item.supplier_code %></td>
-		<td class="text-center"><%= number_with_delimiter(item.quantity) %></td>
-		<td class="text-right"><%= number_to_currency(item.unit_price, precision: 4, strip_insignificant_zeros: true) %></td>
-		<td class="text-center"><%= number_with_delimiter(item.quantity_received) %></td>
+		<td class="text-right"><%= number_with_delimiter(item.quantity) %></td>
+		<td class="text-right"><%= number_to_currency(item.unit_price, precision: 2, strip_insignificant_zeros: false) %></td>
+		<td class="text-right"><%= number_with_delimiter(item.quantity_received) %></td>
 		<td class="text-right"><%= number_to_currency(item.quantity * item.unit_price) %></td>
 		<td class="text-center"><%= item.status.presence || '-' %></td>
 	</tr>

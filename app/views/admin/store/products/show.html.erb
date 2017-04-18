@@ -269,21 +269,23 @@
     </div>
     <% end %>
     
-    <% po_items = PurchaseOrderItem.joins(:purchase_order)
-                                   .includes(purchase_order: :supplier)
-                                   .where(sku: @product.sku)
-                                   .group("inv_purchase_orders.affiliate_id") %>
-    <% if po_items.length > 0 %>
+    <%
+
+      ap_list = AffiliateProduct.includes(:affiliate)
+                                .joins(affiliate: :categories)
+                                .where("core_categories.slug = 'suppliers'")
+                                .where(product_id: @product) %>
+    <% if ap_list.length > 0 %>
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">Suppliers</h3>
       </div>
       <div class="panel-body">
         <table class="table table-condensed">
-        <% po_items.each do |item| %>
+        <% ap_list.each do |ap| %>
         <tr>
-          <td><%= link_to item.purchase_order.supplier.name, admin_system_affiliate_path(item.purchase_order.supplier) %></td>
-          <td class="text-right"><%= number_to_currency(item.unit_price) %></td>
+          <td><%= link_to ap.affiliate.name, admin_system_affiliate_path(ap.affiliate, q: :products) %></td>
+          <td class="text-right"><%= number_to_currency(ap.price) %></td>
         </tr>
         <% end %>
         </table>

@@ -62,4 +62,15 @@ class PurchaseOrder < ActiveRecord::Base
     end
   end
   
+  def update_affiliate_products
+    items.each do |item|
+      p = Product.find_by(sku: item.sku)
+      next if (item.supplier_code.blank? || p.nil?)
+      
+      ap = AffiliateProduct.find_or_initialize_by(affiliate_id: supplier_id, product_id: p.id)
+      ap.assign_attributes(item_number: item.supplier_code, price: item.unit_price, description: item.description)
+      ap.save
+    end
+  end
+  
 end
