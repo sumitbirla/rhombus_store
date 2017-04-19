@@ -67,7 +67,7 @@
       <%= f.simple_fields_for :items do |itemf| %>
          <% 
            item = @transaction.items[itemf.index] 
-           p = Product.find_by(sku: item.sku)
+           p = Product.find_by(sku: item.sku) unless item.sku.blank?
          %>
         <tr>
           <td><%= itemf.input_field :sku, class: "item-id" %></td>
@@ -119,6 +119,12 @@
 
       $(".item-id").on("change", function() {
         var item = $(this);
+        if (item.val() == '') {
+          item.parent().parent().find('.item-desc').html('');
+          item.parent().parent().find('.item-id').html('');
+          item.parent().parent().find('.qty').html('');
+          return;
+        }
         
         $.get('/admin/store/products/item_info?sku=' + $(this).val(), function(data) {
           
