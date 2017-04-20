@@ -19,8 +19,8 @@ class ShippingLabelJob < ActiveJob::Base
       label_url = response[:postage_label]["label_#{format}_url"]
       label_data = Net::HTTP.get(URI.parse(label_url))
       
-      ip_addr = Cache.setting(shipment.order.domain_id, :shipping, 'Thermal Printer IP')
-      s = TCPSocket.new(ip_addr, 9100)
+      uri = URI(Cache.setting(shipment.order.domain_id, :shipping, 'Thermal Printer URI'))
+      s = TCPSocket.new(uri.host, uri.port)
       s.send label_data, 0
       s.close
       
