@@ -260,14 +260,11 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     tmp_file = "/tmp/" + Time.now.strftime("%Y-%m-%d-%H%M%S") + ".acf"
     File.write(tmp_file, str)
     
-    host = Setting.get(:kiaro, "SCP Host")
-    port = Setting.get(:kiaro, "SCP Port")
-    user = Setting.get(:kiaro, "SCP Username")
-    pass = Setting.get(:kiaro, "SCP Password")
-    dir = Setting.get(:kiaro, "SCP Directory")
+    # example  scp://user:pass@server1.mydomain.com:/home/kiaro/monitor/
+    uri = URI(Setting.get(:kiaro, "Print Job URI"))
     
     begin
-      Net::SCP.upload!(host, user, tmp_file, dir, :ssh => { :password => pass, :port => port })
+      Net::SCP.upload!(uri.host, uri.user, tmp_file, uri.path, :ssh => { :password => uri.password, :port => uri.port || 22 })
       flash[:success] = "#{label_count} labels submitted for printing"
     rescue => e
       flash[:error] = e.message
