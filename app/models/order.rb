@@ -111,6 +111,10 @@ class Order < ActiveRecord::Base
     payment_method == "CREDIT_CARD"
   end
   
+  def total_items
+    items.map(&:quantity).sum
+  end
+  
   def billing_address_required?
     same_as_shipping == '0' && paid_with_card?
   end
@@ -298,6 +302,8 @@ class Order < ActiveRecord::Base
   
   # create shipment for the order.  doesn't take inventory into consideration currently
   def create_shipment(user_id, save_to_db = true)
+    
+    raise "There are no items in this order" if total_items == 0
     
     seq = 1
     max_seq = shipments.maximum(:sequence)
