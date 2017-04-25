@@ -67,12 +67,14 @@ class CartController < ApplicationController
         i.affiliate_id == affiliate_id && 
         i.variation == variation && 
         i.custom_text == params[:custom_text] &&
-        i.uploaded_file == params[:uploaded_file]
+        i.uploaded_file == params[:uploaded_file] && 
+        i.start_x_percent == params[:start_x_percent] &&
+        i.start_y_percent == params[:start_y_percent] &&
+        i.width_percent == params[:width_percent] &&
+        i.height_percent == params[:height_percent]
       end
       
       if item.nil?
-        
-        puts "ORDER ITEMS = NEW!!"
 
         item = OrderItem.new order_id: order.id,
                 product_id: product_id,
@@ -94,16 +96,16 @@ class CartController < ApplicationController
         item.item_number += "-" + variation unless variation.nil?
 
         order.items << item
+        
+        # create image preview if this is a personalized product
+        ImagePreviewJob.new(item.id).perform_later unless item.uploaded_file.nil?
       else
-        puts "ORDER ITEMS = EXISTS!!"
         
         item.quantity += quantity
         item.autoship_months = params[:autoship_months].blank? ? 0 : item.autoship_months
         item.save
       end
     end
-    
-    puts "ORDER ITEMS = #{order.items.length}"
     
     update_totals order
     order.save validate: false
