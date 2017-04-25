@@ -15,7 +15,7 @@ class WebOrderJob < ActiveJob::Base
     
     # affiliate credit
     unless h[:affiliate_campaign_id].blank?
-      ac = AffiliateCampaign.find(h[:affiliate_campaign_id:])
+      ac = AffiliateCampaign.find(h[:affiliate_campaign_id])
       
       unless ac.nil?
         o.affiliate_campaign_id = ac.id
