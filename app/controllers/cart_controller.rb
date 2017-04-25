@@ -253,12 +253,13 @@ class CartController < ApplicationController
   
   # POST /cart/upload_picture
   def upload_picture
+    file_path = Cache.setting(Rails.configuration.domain_id, "System", "Static Files Path")
     uploaded_io = params[:file]
     ext = uploaded_io.original_filename.split('.').last.downcase
     
     unless uploaded_io.nil? || ['jpg', 'jpeg', 'tiff', 'gif', 'bmp'].include?(ext) == false
       file_name = SecureRandom.hex(6) + '.' + ext
-      file_path = Rails.root.join('public', 'uploads', file_name)
+      file_path = file_path + '/uploads/' + file_name
      
       File.open(file_path, 'wb') do |file|
         file.write(uploaded_io.read)
