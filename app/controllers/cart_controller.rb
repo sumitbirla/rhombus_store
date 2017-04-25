@@ -98,7 +98,7 @@ class CartController < ApplicationController
         order.items << item
         
         # create image preview if this is a personalized product
-        ImagePreviewJob.new(item.id).perform_later unless item.uploaded_file.nil?
+        ImagePreviewJob.perform_later(item.id) unless item.uploaded_file.nil?
       else
         
         item.quantity += quantity
