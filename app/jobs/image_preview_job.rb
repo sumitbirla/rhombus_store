@@ -38,7 +38,7 @@ class ImagePreviewJob < ActiveJob::Base
     final = bg.composite(buffer, elem.left, elem.top, Magick::OverCompositeOp)
     final.write(static_files_path + output_file)
     
-    Rails.logger.debug "PREVIEW image writtem to #{user_upload_path + output_file}"
+    Rails.logger.debug "PREVIEW image writtem to #{static_files_path + output_file}"
     i.update(upload_file_preview: output_file)
   end
 end
