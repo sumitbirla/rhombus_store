@@ -36,7 +36,7 @@ class ImagePreviewJob < ActiveJob::Base
     # copy backfill (with dog on it) to the main product image
     output_file = "/previews/" + i.uploaded_file.split("/").last
     final = bg.composite(buffer, elem.left, elem.top, Magick::OverCompositeOp)
-    final.write(user_upload_path + output_file)
+    final.write(static_files_path + output_file)
     
     Rails.logger.debug "PREVIEW image writtem to #{user_upload_path + output_file}"
     i.update(upload_file_preview: output_file)
