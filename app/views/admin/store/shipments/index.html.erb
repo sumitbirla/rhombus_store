@@ -22,7 +22,7 @@
 
 <form id="frmBatch" action="" method="post">
 	<%= token_tag %>
-  <% printer_id = 2 %>
+  <input type="hidden" name="printer_id" value="2"/>
   
   <%
     status_list = Shipment.uniq(:status).pluck(:status)
