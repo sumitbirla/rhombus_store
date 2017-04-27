@@ -291,24 +291,23 @@ class Admin::Store::ShipmentsController < Admin::BaseController
                           comment: "Packing slip printed")
     end
     
-    system "wkhtmltopdf -q #{urls} /tmp/packing_slips.pdf"
-    send_file "/tmp/packing_slips.pdf"
-  end
-  
-  def invoice_batch
-    urls = ''
-    token = Cache.setting('System', 'Security Token')
-    website_url = Cache.setting('System', 'Website URL')
+    output_file = "/tmp/#{SecureRandom.hex(6)}.pdf"
+    ret = system("wkhtmltopdf -q #{urls} #{output_file}")
     
-    Shipment.where(id: params[:shipment_id]).each do |s|
-      digest = Digest::MD5.hexdigest(s.id.to_s + token) 
-      urls += " " + website_url + invoice_admin_store_shipment_path(s, digest: digest) 
+    unless File.exists?(output_file)
+      flash[:error] = "Unable to generate PDF [Debug: #{$?}]"
+      return redirect_to :back
     end
     
-    system "wkhtmltopdf -q #{urls} /tmp/receipts.pdf"
-    send_file "/tmp/receipts.pdf"
+    if params[:printer_id].nil?
+      send_file output_file
+    else
+      printer = Printer.find(params[:printer_id])
+      job = printer.print_file(output_file)
+      flash[:info] = "Print job submitted to '#{printer.name} [#{printer.location}]'. #{job}"
+      redirect_to :back
+    end
   end
-  
   
   def update_status
     shipments = Shipment.where(id: params[:shipment_id]).where.not(status: params[:status])
