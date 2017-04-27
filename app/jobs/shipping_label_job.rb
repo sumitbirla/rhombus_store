@@ -23,8 +23,6 @@ class ShippingLabelJob < ActiveJob::Base
       job = printer.print_data(label_data, 'text/plain')
       
       memo = "Shipping label sent to printer '#{printer.name}, Job ID: #{job}"
-    rescue => e
-      memo = e.message
     end
     
     OrderHistory.create(order_id: shipment.order_id, user_id: user_id, event_type: :shipping_label_print, system_name: 'Rhombus', comment: memo)
