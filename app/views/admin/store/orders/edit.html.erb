@@ -132,6 +132,9 @@
 	
 	<div class="form-actions">
 		<%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+    <% if @order.po %>
+      <input type="checkbox" name="update_price_list" value="1" />  Update price list
+    <% end %>
 	</div>
 
 <% end %>

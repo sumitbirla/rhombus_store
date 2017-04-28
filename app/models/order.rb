@@ -378,5 +378,16 @@ class Order < ActiveRecord::Base
     shipment
   end
   
+  # when an affiliate places a PO,  this method updates the store_affiliate_product listings with 
+  # prices specified on this order.   New entries created if they don't already exist.
+  def update_price_list
+    
+    items.each do |i|
+      ap = AffiliateProduct.find_or_initialize_by(affiliate_id: affiliate_id, product_id: i.product_id)
+      ap.price = i.unit_price
+      ap.save
+    end
+    
+  end
   
 end

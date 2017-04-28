@@ -108,6 +108,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     end
 
     if @order.save(validate: false)
+      @order.update_price_list if (@order.po && @order.affiliate_id && params[:update_price_list] == "1")
       redirect_to action: 'show', id: @order.id, notice: 'Order was successfully updated.'
     else
       render 'edit'
