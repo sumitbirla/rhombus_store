@@ -1,12 +1,28 @@
+<%
+    if order_item.daily_deal
+    	image_path = order_item.daily_deal.pictures[0].file_path unless order_item.daily_deal.pictures.length == 0
+    elsif order_item.affiliate_id.nil?
+      image_path = order_item.product.pictures[0].file_path unless order_item.product.pictures.length == 0
+      image_path = order_item.upload_file_preview unless order_item.upload_file_preview.nil?
+    else
+      image_path = "/images/products/#{order_item.affiliate.code}/#{order_item.item_number}.jpg"
+    end
+%>
+
+<a href="<%= cdn_image_url image_path, 800, 700, 0 %>" data-lightbox="image-1">
+  <img src="<%= cdn_image_url image_path, 50, 50, 0 %>" title="personalized" height="50" />
+</a>
+
 <% if order_item.daily_deal_id %>
   <%= link_to order_item.daily_deal.title, admin_store_daily_deal_path(order_item.daily_deal) %>
 <% elsif order_item.product_id %>
   <%= link_to order_item.product.full_name, admin_store_product_path(order_item.product_id) %>
-  
   <% unless order_item.affiliate_id.nil? %>
     &nbsp; (<span><%= order_item.affiliate %></span>)
   <% end %>
-  
+  <% unless order_item.uploaded_file.nil? %>
+    <span> &nbsp; &nbsp; <a target="_new" href="<%= cdn_download_url order_item.uploaded_file %>"><i class="fa fa-download text-danger"></i></a></span>
+  <% end %>
 <% else %>
   <span class="text-danger"><i class="fa fa-exclamation-circle"></i> <%= order_item.item_description %></span>
 <% end %>
