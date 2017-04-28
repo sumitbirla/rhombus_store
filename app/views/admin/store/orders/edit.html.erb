@@ -199,7 +199,7 @@
       $(".item-id").change(function() {
         var item = $(this);
         
-        $.get('/admin/store/products/item_info?sku=' + $(this).val(), function(data) {
+        $.get('/admin/store/products/item_info?affiliate_id=<%= @order.affiliate_id%>&sku=' + $(this).val(), function(data) {
           
           item.parent().parent().find('.product-id').val(data.product_id);
           item.parent().parent().find('.affiliate-id').val(data.affiliate_id);
@@ -208,6 +208,7 @@
           item.parent().parent().find('.item-desc').val(data.description);
           item.parent().parent().find('.unit-price').val(data.price);
           item.parent().parent().find('.daily-deal-id').val(data.daily_deal_id);
+          item.parent().parent().find('.qty').val(data.moc);
             
           if (data.status == 'ok') { 
             item.parent().parent().find('.qty').focus();

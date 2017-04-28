@@ -118,53 +118,44 @@ class Admin::Store::ProductsController < Admin::BaseController
   
   
   def item_info
-    p = Product.find_by("item_number = ? OR upc = ?", params[:sku], params[:sku])
-    dd = DailyDeal.find_by(id: params[:sku].sub("DEAL", "").to_i) unless p
+    sku = params[:sku]
+    aff_id = params[:affiliate_id]
     
-    if p
-      ap = AffiliateProduct.find_by(affiliate_id: params[:affiliate_id], product_id: p.id) unless params[:affiliate_id].blank?
+    # handle daily deals first
+    if sku.starts_with?('DEAL')
+      dd = DailyDeal.find_by(id: sku.sub("DEAL", "").to_i)
+      render json: { status: 'not found' } if dd.nil?
       
-      if ap
-        return render json: { status: 'ok', 
-                            sku: ap.item_number || p.sku, 
-                            description: ap.description.presence || p.name_with_option, 
-                            price: ap.price,
-                            moc: ap.minimum_order_quantity }
-      else
-        return render json: { status: 'ok', 
-                            product_id: p.id, 
-                            description: p.name_with_option, 
-                            price: p.price,
-                            case_quantity: p.case_quantity,
-                            sku: p.sku }
-      end
-        
-    elsif dd
       return render json: { status: 'ok', 
                             daily_deal_id: dd.id, 
                             description: dd.title, 
                             price: dd.deal_price, 
-                            dealer_price: dd.deal_price }
-    else
-      sku, affiliate_code, variant = params[:sku].split('-')
-      p = Product.find_by(sku: sku)
-      aff = Affiliate.find_by(code: affiliate_code)
-      
-      unless p.nil? || aff.nil?
-        return render json: { status: 'ok', 
-                              product_id: p.id, 
-                              affiliate_id: aff.id, 
-                              affiliate_name: aff.name, 
-                              variation: variant, 
-                              description: p.name_with_option, 
-                              price: p.price,
-                              sku: p.sku
-                             }
-      end
+                            dealer_price: dd.deal_price,
+                            moc: 1 }
     end
     
-    render json: { status: 'not found' }
+    # check if this is an itemnum-affcode-variant format SKU  
+    if sku.count('-') == 2
+      sku, affiliate_code, variant = sku.split('-')
+      aff = Affiliate.find_by(code: affiliate_code)
+    end
+    
+    p = Product.find_by(item_number: sku)
+    render json: { status: 'not found' } if p.nil?
+    
+    ap = AffiliateProduct.find_by(affiliate_id: aff_id, product_id: p.id) unless aff_id.blank?
+  
+    render json: { status: 'ok', 
+                   product_id: p.id, 
+                   affiliate_id: (aff ? aff.id : nil), 
+                   affiliate_name: (aff ? aff.name : nil), 
+                   variation: variant, 
+                   sku: (ap ? (ap.item_number || p.sku) : p.sku), 
+                   description: (ap ? (ap.description.presence || p.name_with_option) : p.name_with_option), 
+                   price: (ap ? ap.price : p.price),
+                   moc: (ap ? ap.minimum_order_quantity : 1) }
   end
+  
   
   def clone
     @product = Product.find(params[:id]).dup
