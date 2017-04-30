@@ -8,7 +8,7 @@ class Admin::Store::ReportsController < Admin::BaseController
   def product_sales
     
     sql = <<-EOF
-      select o.sales_channel, item_number, CONCAT(p.name, ' ', p.option_title), sum(quantity), unit_price, sum(quantity) * unit_price 
+      select o.sales_channel, i.item_number, CONCAT(p.name, ' ', p.option_title), sum(quantity), unit_price, sum(quantity) * unit_price 
       from store_order_items i 
       join store_orders o on o.id = i.order_id
       join store_products p on i.product_id = p.id
@@ -37,7 +37,7 @@ class Admin::Store::ReportsController < Admin::BaseController
       and o.submitted > '#{@start_date}' and o.submitted < '#{@end_date}'
       and o.sales_channel LIKE '#{@selected_channel}'
       group by #{@group_channel} product_id
-      order by sum(`quantity`) desc;
+      order by sum(si.quantity) desc;
     EOF
     
     @data = []
@@ -57,7 +57,7 @@ class Admin::Store::ReportsController < Admin::BaseController
       and s.status = 'shipped'
       and o.submitted > '#{@start_date}' and o.submitted < '#{@end_date}'
       and o.sales_channel LIKE '#{@selected_channel}'
-      group by #{@group_channel} affiliate_id
+      group by #{@group_channel} si.affiliate_id
       order by sum(`quantity`) desc;
     EOF
     
