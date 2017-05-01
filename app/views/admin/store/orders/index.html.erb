@@ -41,8 +41,9 @@
   <ul class="nav nav-tabs" style="margin-bottom: 10px;">
     <% status_list.each do |status|
         next if status == 'in cart'
-        count = Order.where(domain_id: current_domain.id, status: status).count %>
-    <li class="<%= "active" if params[:status] == status %>"><a href="<%= admin_store_orders_path(status: status)%>"><%= tab_count(status.titlecase, count) %></a></li>
+        count = Order.where(domain_id: current_domain.id, status: status).count
+        alert = (status == 'backordered' && count > 0) %>
+    <li class="<%= "active" if params[:status] == status %>"><a href="<%= admin_store_orders_path(status: status)%>"><%= tab_count(status.titlecase, count, alert) %></a></li>
     <% end %>
     <li class="<%= "active" if params[:status].blank? %>"><a href="<%= admin_store_orders_path %>">All</a></li>
   </ul>
