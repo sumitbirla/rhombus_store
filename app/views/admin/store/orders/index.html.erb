@@ -9,7 +9,7 @@
       <option> - - Select Action - - </option>
       <option method="get" value="/admin/store/orders/new">New Order</option>
 	    <option method="post" value="/admin/store/orders_create_shipment">Create Shipments</option>
-      <option method="post" value="/admin/store/orders_print_receipts">Print Receipts (PDF)</option>
+      <option method="post" value="/admin/store/orders_print_receipts" print-dialog="true">Print Receipts (PDF)</option>
       <option method="post" value="/admin/store/orders_send_confirmation">Send Confirmation Email</option>
       <option method="post" value="/admin/store/orders_address_label">Print Address Labels</option>
       <optgroup label="Change order status to ">
@@ -35,6 +35,7 @@
 
 <form id="frmBatch" action="" method="post">
 	<%= token_tag %>
+  <input type="hidden" name="printer_id" value=""/>
   <% shipments = Shipment.where(order_id: @orders.map { |o| o.id }) %>
   
   <% if params[:q].nil? %>
@@ -70,7 +71,7 @@
 </form>
 
 <%= render 'admin/shared/table_summary', data: @orders %>
-
+<%= render 'admin/shared/print_dialog' %>
 
 
 <% content_for :title do %>
@@ -90,18 +91,25 @@
 	<script type="text/javascript">
 	    $(document).ready(function () {
 
-	        $("#btnAction").click(function () {
-            var url = $("#selAction").val();
-            var method = $("#selAction option:selected").attr("method");
-            
-            if (method == "post") {
-	            $("#frmBatch").attr("action", url);
-	            $("#frmBatch").attr("method", method);
-	            $("#frmBatch").submit();
-            } else {
-              window.location = url;
-            }
-	        });
+          $("#btnAction").click(function () {
+              var selectedOption = $("#selAction option:selected");
+          
+              if (selectedOption.attr("print-dialog") == "true") {
+                $("#print-dialog").modal();
+                return;
+              }
+              $("#frmBatch").attr("action", $("#selAction").val());
+              $("#frmBatch").attr("method", selectedOption.attr("method"));
+              $("#frmBatch").submit();
+          });
+          
+          /* capture action in print-dialog */
+          $("#print-dialog a").click(function() {
+            $("input[name='printer_id']").val($(this).attr("printer_id"));
+            $("#frmBatch").attr("action", $("#selAction").val());
+            $("#frmBatch").attr("method", $("#selAction option:selected").attr("method"));
+            $("#frmBatch").submit();
+          });
 
           $("#chkAll").change(function() {
 

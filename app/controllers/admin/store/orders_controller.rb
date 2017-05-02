@@ -191,8 +191,22 @@ class Admin::Store::OrdersController < Admin::BaseController
                           comment: "Printed invoice")
     end
     
-    system "wkhtmltopdf -q #{urls} /tmp/receipts.pdf"
-    send_file "/tmp/receipts.pdf"
+    output_file = "/tmp/#{SecureRandom.hex(6)}.pdf"
+    ret = system("wkhtmltopdf -q #{urls} #{output_file}")
+    
+    unless File.exists?(output_file)
+      flash[:error] = "Unable to generate PDF [Debug: #{$?}]"
+      return redirect_to :back
+    end
+    
+    if params[:printer_id].blank?
+      send_file output_file
+    else
+      printer = Printer.find(params[:printer_id])
+      job = printer.print_file(output_file)
+      flash[:info] = "Print job submitted to '#{printer.name} [#{printer.location}]'. CUPS JobID: #{job.id}"
+      redirect_to :back
+    end
   end
   
   
