@@ -284,11 +284,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       digest = Digest::MD5.hexdigest(s.id.to_s + token) 
       urls += " " + website_url + packing_slip_admin_store_shipment_path(s, digest: digest) 
       
-      OrderHistory.create(order_id: s.order_id, 
-                          user_id: session[:user_id], 
-                          event_type: :packing_slip_print,
-                          system_name: 'Rhombus',
-                          comment: "Packing slip printed")
+      OrderHistory.create(order_id: s.order_id, user_id: session[:user_id], event_type: :packing_slip_print,system_name: 'Rhombus',comment: "Packing slip printed")
     end
     
     output_file = "/tmp/#{SecureRandom.hex(6)}.pdf"
@@ -299,15 +295,16 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       return redirect_to :back
     end
     
-    if params[:printer_id].nil?
+    if params[:printer_id].blank?
       send_file output_file
     else
       printer = Printer.find(params[:printer_id])
       job = printer.print_file(output_file)
-      flash[:info] = "Print job submitted to '#{printer.name} [#{printer.location}]'. #{job}"
+      flash[:info] = "Print job submitted to '#{printer.name} [#{printer.location}]'. CUPS JobID: #{job.id}"
       redirect_to :back
     end
   end
+  
   
   def update_status
     shipments = Shipment.where(id: params[:shipment_id]).where.not(status: params[:status])

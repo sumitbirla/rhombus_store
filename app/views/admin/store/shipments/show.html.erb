@@ -22,7 +22,7 @@
       <% end %>
     </li>
     <li>
-      <%= link_to packing_slip_admin_store_shipment_path(@shipment), target: "_blank" do %>
+      <%= link_to packing_slip_admin_store_shipment_path(@shipment), class: "print-link" do %>
           <i class="fa fa-print"></i> Print Packing Slip
       <% end %>
     </li>
@@ -268,17 +268,37 @@
 <% end %>
 
 
+<form id="frmBatch" action="/admin/store/shipments_packing_slip_batch" method="post">
+	<%= token_tag %>
+  <input type="hidden" name="printer_id" value=""/>
+  <input type="hidden" name="shipment_id[]" value="<%= @shipment.id %>"/>
+</form>
+
+
 
 <% content_for :title do %>
     Shipment <%= @shipment.order_id %>-<%= @shipment.sequence %>
 <% end %>
 
 
-
-
-
 <% content_for :breadcrumbs do %>
     <li><a href="#">eCommerce</a></li>
     <li><%= link_to 'Shipments', admin_store_shipments_path(status: :pending) %></li>
     <li class="active"><%= @shipment %></li>
+<% end %>
+
+<%= render 'admin/shared/print_dialog'%>
+
+
+<% content_for :head do %>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#print-dialog a").click(function() {
+          $("input[name='printer_id']").val($(this).attr("printer_id"));
+          $("#frmBatch").submit();
+        });
+    });
+</script>
+
 <% end %>
