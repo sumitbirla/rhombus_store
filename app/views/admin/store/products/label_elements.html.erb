@@ -19,8 +19,9 @@
 		<th>Type</th>
 		<th>Location</th>
 		<th>Size</th>
-		<th>Font</th>
-		<th>Max. Chars</th>
+    <th class="text-center">Aspect (w/h)</th>
+		<th class="text-center">Font</th>
+		<th class="text-center">Max. Chars</th>
 		<th>&nbsp;</th>
 	</tr>
 	<% @product.label_elements.each do |le| %>
@@ -28,11 +29,12 @@
 		<td><%= le.name %></td>
     <td><%= le.web_or_print %></td>
 		<td><%= le.text_or_image %></td>
-		<td>(<%= le.left %>, <%= le.top %>)</td>
+		<td>x:<%= le.left %> &nbsp; y:<%= le.top %></td>
 		<td><%= le.width %> x <%= le.height %></td>
-		<td><%= le.font_family %> (<%= le.font_size%> pts.)</td>
-		<td><%= le.max_chars %></td>
-		<td>
+    <td class="text-center"><%= (le.width.to_d / le.height.to_d).round(2) %></td>
+		<td class="text-center"><%= le.font_family %> (<%= le.font_size%> pts.)</td>
+		<td class="text-center"><%= le.max_chars %></td>
+		<td class="text-right">
 			<%= link_to "edit", edit_admin_store_label_element_path(le, redirect: request.fullpath) %> &nbsp;
 			<%= link_to "delete", 
 						  { controller: "label_elements", action: "destroy", id: le.id }, 
