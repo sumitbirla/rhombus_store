@@ -34,9 +34,9 @@ class PersonalizedLabelJob < ActiveJob::Base
     buffer = buffer.composite(resized_dog, Magick::ForgetGravity, elem.width * i.start_x_percent / 100.0, elem.height * i.start_y_percent / 100.0, Magick::OverCompositeOp)
 
     # copy backfill (with dog on it) to the main product image
-    output_file = "/previews/" + SecureRandom.hex(6) + ".jpg"
+    output_file = "/personalized_labels/" + SecureRandom.hex(6) + ".jpg"
     final = bg.composite(buffer, elem.left, elem.top, Magick::OverCompositeOp)
-    final.write(static_files_path + output_file)
+    final.write(static_files_path + output_file) { self.quality = 100 }
     
     Rails.logger.debug "PREVIEW image writtem to #{static_files_path + output_file}"
     
