@@ -1,17 +1,17 @@
 require 'rmagick'
 require 'awesome_print'
 
-class ImagePreviewJob < ActiveJob::Base
+class PersonalizedLabelJob < ActiveJob::Base
   queue_as :image_processing
 
-  def perform(order_item_id)
+  def perform(order_item_id, medium)
     static_files_path = Setting.get('System', 'Static Files Path')
     
     i = OrderItem.find(order_item_id)
     p = i.product
     
-    bg_image_path = static_files_path + p.pictures.find { |x| x.purpose == 'web_background' }.file_path
-    elem = p.label_elements.find { |x| x.text_or_image == 'image' && x.web_or_print == 'web' }
+    bg_image_path = static_files_path + p.pictures.find { |x| x.purpose == "#{medium}_background" }.file_path
+    elem = p.label_elements.find { |x| x.text_or_image == 'image' && x.web_or_print == medium }
     
     # read the product image with space for dog photo
     bg = Magick::Image::read(bg_image_path)[0]
@@ -39,6 +39,11 @@ class ImagePreviewJob < ActiveJob::Base
     final.write(static_files_path + output_file)
     
     Rails.logger.debug "PREVIEW image writtem to #{static_files_path + output_file}"
-    i.update(upload_file_preview: output_file)
+    
+    if medium == 'print'
+      i.update(rendered_file: output_file)
+    else
+      i.update(upload_file_preview: output_file)
+    end
   end
 end
