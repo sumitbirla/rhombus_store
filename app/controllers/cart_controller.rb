@@ -249,8 +249,8 @@ class CartController < ApplicationController
   
   # GET /cart/personalize?item=ITEM_NUMBER
   def personalize
+    @product = Product.find_by!(item_number: params[:item])
     @order = load_or_create_order
-    @product = Product.find_by(item_number: params[:item])
   end
   
   # POST /cart/upload_picture
