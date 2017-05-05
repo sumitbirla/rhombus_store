@@ -9,9 +9,11 @@
     end
 %>
 
-<a href="<%= cdn_image_url image_path, 800, 700, 0 %>" data-lightbox="image-1">
-  <img src="<%= cdn_image_url image_path, 50, 50, 0 %>" title="product" height="50" />
-</a>
+<span class="order-item-thumbnail">
+  <a href="<%= cdn_image_url image_path, 800, 700, 0 %>" data-lightbox="image-1">
+    <img src="<%= cdn_image_url image_path, 50, 50, 0 %>" title="product" height="50"/>
+  </a>
+</span>
 
 <% if order_item.daily_deal_id %>
   <%= link_to order_item.daily_deal.title, admin_store_daily_deal_path(order_item.daily_deal) %>

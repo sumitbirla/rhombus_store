@@ -22,7 +22,7 @@
       <% end %>
     </li>
     <li>
-      <%= link_to packing_slip_admin_store_shipment_path(@shipment), class: "print-link" do %>
+      <%= link_to admin_store_shipments_packing_slip_batch_path, class: "print-link" do %>
           <i class="fa fa-print"></i> Print Packing Slip
       <% end %>
     </li>
@@ -229,12 +229,15 @@
 	    </table>
 
     	<% unless @shipment.courier_data.nil? %>
-  			<%= link_to "PDF",  label_admin_store_shipment_path(@shipment, format: 'pdf'), class: "btn btn-sm btn-default" %>
-  			<%= link_to "EPL2", label_admin_store_shipment_path(@shipment, format: 'epl2'), class: "btn btn-sm btn-default" %>
-  			<%= link_to "ZPL", label_admin_store_shipment_path(@shipment, format: 'zpl'), class: "btn btn-sm btn-default" %>
-  			<% if @shipment.status == "shipped" && @shipment.carrier == 'USPS' && @shipment.ship_date > 1.month.ago %>
+			      
+        <% if @shipment.status == "shipped" && @shipment.carrier == 'USPS' && @shipment.ship_date > 1.month.ago %>
           <%= link_to "Void Shipment", void_label_admin_store_shipment_path(@shipment), class: "btn btn-sm btn-danger pull-right", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> please wait ..." }   %>
-  			<% end %>
+			  <% end %>
+        
+        <%= link_to admin_store_shipments_shipping_label_batch_path, class: 'btn btn-primary print-link' do %>
+          <i class="fa fa-print fa-fw"></i> Reprint Label
+        <% end %>
+        
     	<% end %>
     </div>
     
@@ -268,7 +271,7 @@
 <% end %>
 
 
-<form id="frmBatch" action="/admin/store/shipments_packing_slip_batch" method="post">
+<form id="frmBatch" action="" method="post">
 	<%= token_tag %>
   <input type="hidden" name="printer_id" value=""/>
   <input type="hidden" name="shipment_id[]" value="<%= @shipment.id %>"/>
@@ -289,16 +292,3 @@
 
 <%= render 'admin/shared/print_dialog'%>
 
-
-<% content_for :head do %>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#print-dialog a").click(function() {
-          $("input[name='printer_id']").val($(this).attr("printer_id"));
-          $("#frmBatch").submit();
-        });
-    });
-</script>
-
-<% end %>

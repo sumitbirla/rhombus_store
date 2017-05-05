@@ -140,6 +140,8 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
 
   def label
+    return render text: :ok
+    
     # used background processing for printing to thermal printer as it can take a few seconds
     if ['epl2','zpl'].include?(params[:format])
       ShippingLabelJob.perform_later(session[:user_id], params[:id], params[:format])
@@ -303,6 +305,45 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       flash[:info] = "Print job submitted to '#{printer.name} [#{printer.location}]'. CUPS JobID: #{job.id}"
       redirect_to :back
     end
+  end
+  
+  def shipping_label_batch
+    EasyPost.api_key = Cache.setting(Rails.configuration.domain_id, 'Shipping', 'EasyPost API Key')
+    
+    if params[:printer_id].blank?
+      file_format = 'pdf'
+    else
+      p = Printer.find(params[:printer_id])
+      file_format = p.preferred_format
+      mime_type = (file_format == 'pdf' ? 'application/pdf' : 'text/plain')
+    end
+    
+    count = 0
+
+    begin
+      Shipment.where(id: params[:shipment_id]).each do |s|
+        courier_data = JSON.parse(s.courier_data)
+        ep_shipment = EasyPost::Shipment.retrieve(courier_data['id'])
+        response = ep_shipment.label({'file_format' => file_format})
+      
+        # download label
+        label_url = response[:postage_label]["label_#{file_format}_url"]
+        label_data = Net::HTTP.get(URI.parse(label_url))
+    
+        if params[:printer_id].blank?
+          return send_data label_data, filename: s.to_s + "." + file_format
+        else
+          p.print_data(label_data, mime_type)
+          count += 1
+        end
+      end
+    rescue => e
+      flash[:error] = e.message
+      return redirect_to :back
+    end
+    
+    flash[:info] = "#{count} label(s) sent to #{p.name} [#{p.location}]"
+    redirect_to :back
   end
   
   
