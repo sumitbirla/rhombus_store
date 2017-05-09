@@ -43,7 +43,7 @@
   <%
     item_number = item[:sku]
     item_number += "-" + item[:code] + "-" + item[:variation] unless item[:code].blank?
-    pdf_path = "/userfiles/images/labels/#{item_number}.pdf"
+    pdf_path = "/images/labels/#{item_number}.pdf"
   %>
     <tr>
       <td><%= item_number %></td>
