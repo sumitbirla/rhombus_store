@@ -211,7 +211,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   end
 
   def product_labels
-    @shipments = Shipment.where(status: params[:shipment_id])
+    @shipments = Shipment.where(id: params[:shipment_id])
     
     sql = <<-EOF
       select sheet.name as label, p.sku, a.code, item.variation, p.name, p.option_title, sum(quantity) as quantity
@@ -231,6 +231,12 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   end
   
   def label_print
+    p = Printer.find_by(id: params[:printer_id])
+    if p.nil?
+      flash[:error] = "Printer not found"
+      return redirect_to :back
+    end
+    
     label_prefix = Setting.get(:kiaro, "Label Prefix")
     label = params[:label].split(" ", 2)[1] + ".alf"
     label_count = 0
@@ -246,7 +252,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
           str << "LABELNAME=#{label}\r\n"
           str << "FIELD 001=#{label_prefix}\\#{breed}\\#{sku}-#{breed}-#{variant}.pdf\r\n"
           str << "LABELQUANTITY=#{qty}\r\n"
-          str << "PRINTER=QuickLabel Kiaro;Kiaro!\r\n\r\n"
+          str << "PRINTER=#{p.name}\r\n\r\n"
         end
       end
     end

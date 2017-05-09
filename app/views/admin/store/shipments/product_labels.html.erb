@@ -15,6 +15,7 @@
   <% end %>
 </div>
 
+<hr>
 
   <%
     prev_label = nil
@@ -25,11 +26,12 @@
       </form>
       <form action="/admin/store/shipments/product_labels" method="post">
         <input type="hidden" name="label" value="<%= item[:label] %>">
-      <h3>  
-        <%= item[:label] || "- not set -" %>  &nbsp; 
-        <button class="btn btn-xs btn-default"><i class="fa fa-print"></i> print</button>
-      </h3>
-      <table id="item-table" class="table table-striped table-condensed tablesorter">
+        <div class="pull-right" style="margin-top: 6px;">
+          <%= select_tag(:printer_id, options_from_collection_for_select(Printer.where(preferred_format: :kiaro), :id, :name), style: "font-size: 10pt;")%> 
+          <button class="btn btn-xs btn-default"><i class="fa fa-print"></i> print</button>
+        </div>
+      <h3><%= item[:label] || "- not set -" %></h3> 
+      <table id="item-table" class="table table-striped table-condensed table-bordered" style="margin-bottom: 30px;">
         <tr>
           <th class="col-md-2">Item</th>
           <th class="col-md-5">Description</th>
@@ -75,9 +77,6 @@
 
 
 <% content_for :head do %>
-  <link href="/rhombus_store/tablesorter.css" rel="stylesheet">
-  <script src="/rhombus_store/jquery.tablesorter.min.js"></script> 
-
   <script>
     $(document).ready(function() {
       
