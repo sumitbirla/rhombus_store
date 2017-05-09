@@ -43,7 +43,7 @@
   <%
     item_number = item[:sku]
     item_number += "-" + item[:code] + "-" + item[:variation] unless item[:code].blank?
-    pdf_path = "/images/labels/#{item_number}.pdf"
+    pdf_path = "/images/labels/#{item_number}.jpg"
   %>
     <tr>
       <td><%= item_number %></td>
@@ -53,13 +53,7 @@
         <input style="width: 60px; text-align: center;" type="numeric" name="item-<%= item_number %>" value="<%= item[:quantity] %>">
       </td>
       <td class="calign"><a class="print-single" href="#"><i class="fa fa-print"></i> print</a></td>
-      <td class="calign"> 
-        <% unless pdf_path.nil? %>
-          <%= link_to Cache.setting('System', 'Static Files Url') + pdf_path, target: '_blank' do %>
-            <i class="fa fa-file-pdf-o"></i> pdf
-          <% end %>
-        <% end %>
-      </td>
+      <td class="calign"><a href="<%= cdn_image_url(pdf_path, 800, 700, 0) %>" data-lightbox="image-1"><i class="fa fa-image"></i> view</a></td>
     </tr>
   <% end %>
 
