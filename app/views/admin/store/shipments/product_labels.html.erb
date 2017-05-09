@@ -28,7 +28,7 @@
         <input type="hidden" name="label" value="<%= item[:label] %>">
         <div class="pull-right" style="margin-top: 6px;">
           <%= select_tag(:printer_id, options_from_collection_for_select(Printer.where(preferred_format: :kiaro), :id, :name), style: "font-size: 10pt;")%> 
-          <button class="btn btn-xs btn-default"><i class="fa fa-print"></i> print</button>
+          <button class="btn btn-xs btn-default"><i class="fa fa-print"></i> print all</button>
         </div>
       <h3><%= item[:label] || "- not set -" %></h3> 
       <table id="item-table" class="table table-striped table-condensed table-bordered" style="margin-bottom: 30px;">
@@ -41,29 +41,26 @@
         </tr> 
     <% end %>
   <%
-    pdf_path = nil
     item_number = item[:sku]
-    unless item[:code].blank?
-      item_number += "-" + item[:code] + "-" + item[:variation]
-      pdf_path = "/userfiles/images/labels/#{item[:code]}/.pdf"
-    end
+    item_number += "-" + item[:code] + "-" + item[:variation] unless item[:code].blank?
+    pdf_path = "/userfiles/images/labels/#{item_number}.pdf"
   %>
-      <tr>
-        <td><%= item_number %></td>
-        <td><%= item[:name] %>, <%= item[:option_title] %></td>
-        <td class="calign">
-          <input type="hidden" name="lot-<%= item_number %>" value="<%= item[:lot] %>-<%= item[:expiration] %>">
-          <input style="width: 60px; text-align: center;" type="numeric" name="item-<%= item_number %>" value="<%= item[:quantity] %>">
-        </td>
-        <td class="calign"><a class="print-single" href="#"><i class="fa fa-print"></i> print</a></td>
-        <td class="calign"> 
-          <% unless pdf_path.nil? %>
-            <%= link_to Cache.setting('System', 'Static Files Url') + pdf_path, target: '_blank' do %>
-                <i class="fa fa-file-pdf-o"></i> pdf
-            <% end %>
+    <tr>
+      <td><%= item_number %></td>
+      <td><%= item[:name] %>, <%= item[:option_title] %></td>
+      <td class="calign">
+        <input type="hidden" name="lot-<%= item_number %>" value="<%= item[:lot] %>-<%= item[:expiration] %>">
+        <input style="width: 60px; text-align: center;" type="numeric" name="item-<%= item_number %>" value="<%= item[:quantity] %>">
+      </td>
+      <td class="calign"><a class="print-single" href="#"><i class="fa fa-print"></i> print</a></td>
+      <td class="calign"> 
+        <% unless pdf_path.nil? %>
+          <%= link_to Cache.setting('System', 'Static Files Url') + pdf_path, target: '_blank' do %>
+            <i class="fa fa-file-pdf-o"></i> pdf
           <% end %>
-        </td>
-      </tr>
+        <% end %>
+      </td>
+    </tr>
   <% end %>
 
 </table>
