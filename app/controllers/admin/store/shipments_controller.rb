@@ -252,7 +252,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
           str << "LABELNAME=#{label}\r\n"
           str << "FIELD 001=#{label_prefix}\\#{breed}\\#{sku}-#{breed}-#{variant}.pdf\r\n"
           str << "LABELQUANTITY=#{qty}\r\n"
-          str << "PRINTER=#{p.name}\r\n\r\n"
+          str << "PRINTER=#{p.url}\r\n\r\n"
         end
       end
     end
