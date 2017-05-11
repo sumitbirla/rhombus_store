@@ -192,7 +192,8 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipments = Shipment.where(status: :pending)
     
     sql = <<-EOF
-      select si.shipment_id, sheet.name as label, oi.item_number, p.name, p.option_title, sum(si.quantity) as quantity, uploaded_file, upload_file_preview, rendered_file
+      select si.shipment_id, si.id as shipment_item_id, sheet.name as label, oi.item_number, p.name, p.option_title, 
+            sum(si.quantity) as quantity, uploaded_file, upload_file_preview, rendered_file
       from store_shipment_items si
       join store_order_items oi on oi.id = si.order_item_id
       join store_products p on p.id = si.product_id
@@ -213,7 +214,8 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipments = Shipment.where(id: params[:shipment_id])
     
     sql = <<-EOF
-      select si.shipment_id, sheet.name as label, oi.item_number, p.name, p.option_title, sum(si.quantity) as quantity, uploaded_file, upload_file_preview, rendered_file
+      select si.shipment_id, si.id as shipment_item_id, sheet.name as label, oi.item_number, p.name, p.option_title, 
+              sum(si.quantity) as quantity, uploaded_file, upload_file_preview, rendered_file
       from store_shipment_items si
       join store_order_items oi on oi.id = si.order_item_id
       join store_products p on p.id = si.product_id
@@ -228,43 +230,61 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     ActiveRecord::Base.connection.execute(sql).each(as: :hash) { |row| @items << row.with_indifferent_access }
   end
   
+  
+  # Print one size of labels
   def label_print
+    
+    # First find the printer
     p = Printer.find_by(id: params[:printer_id])
     if p.nil?
       flash[:error] = "Printer not found"
       return redirect_to :back
     end
     
+    # See which label size this job is for (poor English here)
     label_prefix = Setting.get(:kiaro, "Label Prefix")
     label = params[:label].split(" ", 2)[1] + ".alf"
     label_count = 0
     str = ""
     logs = []
     
-    params.each do |k,v|
-      if k.start_with?("item-")
-        item, sku, breed, variant = k.split("-")
-        item_number = "#{sku}-#{breed}-#{variant}"
-        qty = v.to_i
-        label_count += qty
-        
-        if qty > 0
-          str << "LABELNAME=#{label}\r\n"
-          str << "FIELD 001=#{label_prefix}\\#{breed}\\#{item_number}.pdf\r\n"
-          str << "LABELQUANTITY=#{qty}\r\n"
-          str << "PRINTER=#{p.url}\r\n\r\n"
-          
-          logs << Log.new(timestamp: DateTime.now, 
-                          loggable_type: 'Shipment', 
-                          loggable_id: params["shipment-#{item_number}"], 
-                          event: :label_printed,
-                          data1: item_number,
-                          data2: qty,
-                          data3: p.name,
-                          ip_address: request.remote_ip,
-                          user_id: session[:user_id])
-        end
+    params[:shipment_items].each do |h|
+      puts h.inspect
+      next if h['quantity'] == "0"
+      
+      si = ShipmentItem.find(h['id'])
+      next if (h['personalized'] == 'true' && si.order_item.rendered_file.blank?)
+      item_number = si.order_item.item_number
+      
+      puts " >>>>>>>>>>>>>>> HERE >>>>>>>>>>>"
+      
+      qty = h['quantity'].to_i
+      label_count += qty
+      
+      ### QUICKCOMMAND LABEL SPECS #########
+      str << "LABELNAME=#{label}\r\n"
+      
+      if h['personalized'] == 'true'
+        img = si.order_item.rendered_file.split('/').last
+        str << "FIELD 001=#{label_prefix}\\personalized_labels\\#{img}\r\n"
+      else
+        sku, breed, variant = item_number.split("-")
+        str << "FIELD 001=#{label_prefix}\\hb_labels\\#{breed}\\#{item_number}.pdf\r\n"
       end
+      
+      str << "LABELQUANTITY=#{qty}\r\n"
+      str << "PRINTER=#{p.url}\r\n\r\n"
+      ######################################
+      
+      logs << Log.new(timestamp: DateTime.now, 
+                      loggable_type: 'Shipment', 
+                      loggable_id: si.shipment.id, 
+                      event: :label_printed,
+                      data1: item_number,
+                      data2: qty,
+                      data3: p.name,
+                      ip_address: request.remote_ip,
+                      user_id: session[:user_id])
     end
     
     # handle nothing to print

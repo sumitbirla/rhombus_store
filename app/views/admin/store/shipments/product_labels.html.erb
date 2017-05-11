@@ -49,16 +49,16 @@
     <tr>
       <td>
         <%= item_number %>
-        <% unless item[:uploaded_file].blank? %>     
+        <% unless item[:uploaded_file].blank? %>    
+          <input type="hidden" name="shipment_items[][personalized]" value="true">
           <span class="label label-info pull-right">personalized</span>
         <% end %>
       </td>
       <td><%= item[:name] %>, <%= item[:option_title] %></td>
       <td class="text-center"><%= link_to shipment.to_s, admin_store_shipment_path(shipment)%></td>
       <td class="text-center">
-        <input type="hidden" name="lot-<%= item_number %>" value="<%= item[:lot] %>-<%= item[:expiration] %>">
-        <input type="hidden" name="shipment-<%= item_number %>" value="<%= item[:shipment_id] %>">
-        <input style="width: 60px; text-align: center;" type="numeric" name="item-<%= item_number %>" value="<%= item[:quantity] %>">
+        <input type="hidden" name="shipment_items[][id]" value="<%= item[:shipment_item_id] %>">
+        <input style="width: 60px; text-align: center;" type="numeric" name="shipment_items[][quantity]" value="<%= item[:quantity] %>">
       </td>
       <td class="text-center">
       <% if !item[:uploaded_file].blank? && item[:rendered_file].blank? %>

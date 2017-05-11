@@ -39,7 +39,7 @@ class PersonalizedLabelJob < ActiveJob::Base
     final = bg.composite(buffer, elem.left, elem.top, Magick::OverCompositeOp)
     final.write(static_files_path + output_file) { self.quality = 100 }
     
-    Rails.logger.debug "PREVIEW image writtem to #{static_files_path + output_file}"
+    Rails.logger.debug "PREVIEW image written to #{static_files_path + output_file}"
     
     if medium == 'print'
       i.update(rendered_file: output_file)
