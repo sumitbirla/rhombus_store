@@ -286,7 +286,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     uri = URI(Setting.get(:kiaro, "Print Job URI"))
     
     begin
-      #Net::SCP.upload!(uri.host, uri.user, tmp_file, uri.path, :ssh => { :password => uri.password, :port => uri.port || 22 })
+      Net::SCP.upload!(uri.host, uri.user, tmp_file, uri.path, :ssh => { :password => uri.password, :port => uri.port || 22 })
       flash[:success] = "#{label_count} labels submitted for printing"
       logs.each(&:save)
       Log.create(timestamp: DateTime.now, loggable_type: 'Printer', loggable_id: p.id, event: :job_submitted,
