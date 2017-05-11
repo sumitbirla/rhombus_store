@@ -248,6 +248,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     str = ""
     logs = []
     
+    # LOOP through the items selected
     params[:shipment_items].each do |h|
       puts h.inspect
       next if h['quantity'] == "0"
@@ -255,8 +256,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       si = ShipmentItem.find(h['id'])
       next if (h['personalized'] == 'true' && si.order_item.rendered_file.blank?)
       item_number = si.order_item.item_number
-      
-      puts " >>>>>>>>>>>>>>> HERE >>>>>>>>>>>"
       
       qty = h['quantity'].to_i
       label_count += qty
