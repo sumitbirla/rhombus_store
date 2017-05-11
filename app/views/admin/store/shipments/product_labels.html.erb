@@ -42,21 +42,26 @@
         </tr> 
     <% end %>
   <%
-    item_number = item[:sku]
-    item_number += "-" + item[:code] + "-" + item[:variation] unless item[:code].blank?
-    pdf_path = "/images/labels/#{item_number}.jpg"
+    item_number = item[:item_number]
+    preview_path = item[:upload_file_preview].presence || "/images/labels/#{item_number}.jpg"
+    shipment = @shipments.find { |x| x.id == item[:shipment_id] }
   %>
     <tr>
-      <td><%= item_number %></td>
+      <td>
+        <%= item_number %>
+        <% unless item[:uploaded_file].blank? %>     
+          <span class="label label-info pull-right">personalized</span>
+        <% end %>
+      </td>
       <td><%= item[:name] %>, <%= item[:option_title] %></td>
-      <td class="text-center"><%= link_to item[:shipment], admin_store_shipment_path(item[:shipment_id])%></td>
+      <td class="text-center"><%= link_to shipment.to_s, admin_store_shipment_path(shipment)%></td>
       <td class="text-center">
         <input type="hidden" name="lot-<%= item_number %>" value="<%= item[:lot] %>-<%= item[:expiration] %>">
         <input type="hidden" name="shipment-<%= item_number %>" value="<%= item[:shipment_id] %>">
         <input style="width: 60px; text-align: center;" type="numeric" name="item-<%= item_number %>" value="<%= item[:quantity] %>">
       </td>
       <td class="text-center"><a class="print-single" href="#"><i class="fa fa-print"></i> print</a></td>
-      <td class="text-center"><a href="<%= cdn_image_url(pdf_path, 800, 700, 0) %>" data-lightbox="image-1"><i class="fa fa-image"></i> view</a></td>
+      <td class="text-center"><a href="<%= cdn_image_url(preview_path, 800, 700, 0) %>" data-lightbox="image-1"><i class="fa fa-image"></i> view</a></td>
     </tr>
   <% end %>
 

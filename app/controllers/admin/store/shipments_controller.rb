@@ -192,17 +192,15 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipments = Shipment.where(status: :pending)
     
     sql = <<-EOF
-      select shp.id as shipment_id, concat(shp.order_id, '-', shp.sequence) as shipment, sheet.name as label, p.sku, a.code, 
-          item.variation, p.name, p.option_title, sum(quantity) as quantity
-      from store_shipment_items item
-      join store_shipments shp on shp.id = item.shipment_id
-      join store_products p on p.id = item.product_id
-      left join core_affiliates a on a.id = item.affiliate_id
+      select si.shipment_id, sheet.name as label, oi.item_number, p.name, p.option_title, sum(si.quantity) as quantity, uploaded_file, upload_file_preview
+      from store_shipment_items si
+      join store_order_items oi on oi.id = si.order_item_id
+      join store_products p on p.id = si.product_id
       join store_label_sheets sheet on sheet.id = p.label_sheet_id
-      where shp.id in (#{@shipments.map(&:id).join(",")})
-      and item.quantity > 0
-      group by p.sku, a.code, item.variation
-      order by p.label_sheet_id, p.id;
+      where shipment_id in (#{@shipments.map(&:id).join(",")})
+      and si.quantity > 0
+      group by shipment_id, p.sku, si.quantity
+      order by sheet.name;
     EOF
     
     @items = []
@@ -215,17 +213,15 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipments = Shipment.where(id: params[:shipment_id])
     
     sql = <<-EOF
-      select shp.id as shipment_id, concat(shp.order_id, '-', shp.sequence) as shipment, sheet.name as label, p.sku, a.code, 
-            item.variation, p.name, p.option_title, sum(quantity) as quantity
-      from store_shipment_items item
-      join store_shipments shp on shp.id = item.shipment_id
-      join store_products p on p.id = item.product_id
-      left join core_affiliates a on a.id = item.affiliate_id
+      select si.shipment_id, sheet.name as label, oi.item_number, p.name, p.option_title, sum(si.quantity) as quantity, uploaded_file, upload_file_preview
+      from store_shipment_items si
+      join store_order_items oi on oi.id = si.order_item_id
+      join store_products p on p.id = si.product_id
       join store_label_sheets sheet on sheet.id = p.label_sheet_id
-      where shp.id in (#{params[:shipment_id].join(",")})
-      and item.quantity > 0
-      group by shp.id, p.sku, a.code, item.variation
-      order by p.label_sheet_id, p.id;
+      where shipment_id in (#{params[:shipment_id].join(",")})
+      and si.quantity > 0
+      group by shipment_id, p.sku, si.quantity
+      order by sheet.name;
     EOF
     
     @items = []
