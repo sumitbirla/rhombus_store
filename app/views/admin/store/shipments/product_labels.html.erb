@@ -60,7 +60,13 @@
         <input type="hidden" name="shipment-<%= item_number %>" value="<%= item[:shipment_id] %>">
         <input style="width: 60px; text-align: center;" type="numeric" name="item-<%= item_number %>" value="<%= item[:quantity] %>">
       </td>
-      <td class="text-center"><a class="print-single" href="#"><i class="fa fa-print"></i> print</a></td>
+      <td class="text-center">
+      <% if !item[:uploaded_file].blank? && item[:rendered_file].blank? %>
+        <span class="text-danger"><i class="fa fa-exclamation-circle"></i> not rendered</span>
+      <% else %>
+        <a class="print-single" href="#"><i class="fa fa-print"></i> print</a>
+      <% end %>
+      </td>
       <td class="text-center"><a href="<%= cdn_image_url(preview_path, 800, 700, 0) %>" data-lightbox="image-1"><i class="fa fa-image"></i> view</a></td>
     </tr>
   <% end %>

@@ -1,5 +1,6 @@
 require 'rmagick'
-require 'awesome_print'
+require 'net/scp'
+require 'uri'
 
 class PersonalizedLabelJob < ActiveJob::Base
   queue_as :image_processing
@@ -42,8 +43,19 @@ class PersonalizedLabelJob < ActiveJob::Base
     
     if medium == 'print'
       i.update(rendered_file: output_file)
+      
+      # COPY label to Kiaro printer PC
+      begin
+        uri = URI(Setting.get(:kiaro, "Personalized Labels Destination"))
+        Net::SCP.upload!(uri.host, uri.user, output_file, uri.path, :ssh => { :password => uri.password, :port => uri.port || 22 })
+        Rails.logger.info "Copied #{output_file} to destination"
+      rescue => e
+        Rails.logger.error = e.message
+      end
+      
     else
       i.update(upload_file_preview: output_file)
     end
+    
   end
 end

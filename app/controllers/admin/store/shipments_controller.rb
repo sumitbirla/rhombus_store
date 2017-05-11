@@ -192,7 +192,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipments = Shipment.where(status: :pending)
     
     sql = <<-EOF
-      select si.shipment_id, sheet.name as label, oi.item_number, p.name, p.option_title, sum(si.quantity) as quantity, uploaded_file, upload_file_preview
+      select si.shipment_id, sheet.name as label, oi.item_number, p.name, p.option_title, sum(si.quantity) as quantity, uploaded_file, upload_file_preview, rendered_file
       from store_shipment_items si
       join store_order_items oi on oi.id = si.order_item_id
       join store_products p on p.id = si.product_id
@@ -213,7 +213,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipments = Shipment.where(id: params[:shipment_id])
     
     sql = <<-EOF
-      select si.shipment_id, sheet.name as label, oi.item_number, p.name, p.option_title, sum(si.quantity) as quantity, uploaded_file, upload_file_preview
+      select si.shipment_id, sheet.name as label, oi.item_number, p.name, p.option_title, sum(si.quantity) as quantity, uploaded_file, upload_file_preview, rendered_file
       from store_shipment_items si
       join store_order_items oi on oi.id = si.order_item_id
       join store_products p on p.id = si.product_id
@@ -273,7 +273,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       return redirect_to :back
     end
     
-    puts str
     # SCP file over to server
     tmp_file = "/tmp/" + Time.now.strftime("%Y-%m-%d-%H%M%S") + ".acf"
     File.write(tmp_file, str)
