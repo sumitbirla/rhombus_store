@@ -50,7 +50,7 @@ class PersonalizedLabelJob < ActiveJob::Base
         Net::SCP.upload!(uri.host, uri.user, output_file, uri.path, :ssh => { :password => uri.password, :port => uri.port || 22 })
         Rails.logger.info "Copied #{output_file} to destination"
       rescue => e
-        Rails.logger.error = e.message
+        Rails.logger.error e.message
       end
       
     else
