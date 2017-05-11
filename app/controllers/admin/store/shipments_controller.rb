@@ -192,7 +192,8 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipments = Shipment.where(status: :pending)
     
     sql = <<-EOF
-      select sheet.name as label, p.sku, a.code, item.variation, p.name, p.option_title, sum(quantity) as quantity
+      select shp.id as shipment_id, concat(shp.order_id, '-', shp.sequence) as shipment, sheet.name as label, p.sku, a.code, 
+          item.variation, p.name, p.option_title, sum(quantity) as quantity
       from store_shipment_items item
       join store_shipments shp on shp.id = item.shipment_id
       join store_products p on p.id = item.product_id
@@ -214,7 +215,8 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipments = Shipment.where(id: params[:shipment_id])
     
     sql = <<-EOF
-      select sheet.name as label, p.sku, a.code, item.variation, p.name, p.option_title, sum(quantity) as quantity
+      select shp.id as shipment_id, concat(shp.order_id, '-', shp.sequence) as shipment, sheet.name as label, p.sku, a.code, 
+            item.variation, p.name, p.option_title, sum(quantity) as quantity
       from store_shipment_items item
       join store_shipments shp on shp.id = item.shipment_id
       join store_products p on p.id = item.product_id
@@ -222,7 +224,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       join store_label_sheets sheet on sheet.id = p.label_sheet_id
       where shp.id in (#{params[:shipment_id].join(",")})
       and item.quantity > 0
-      group by p.sku, a.code, item.variation
+      group by shp.id, p.sku, a.code, item.variation
       order by p.label_sheet_id, p.id;
     EOF
     
@@ -241,18 +243,30 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     label = params[:label].split(" ", 2)[1] + ".alf"
     label_count = 0
     str = ""
+    logs = []
     
     params.each do |k,v|
       if k.start_with?("item-")
         item, sku, breed, variant = k.split("-")
+        item_number = "#{sku}-#{breed}-#{variant}"
         qty = v.to_i
         label_count += qty
         
         if qty > 0
           str << "LABELNAME=#{label}\r\n"
-          str << "FIELD 001=#{label_prefix}\\#{breed}\\#{sku}-#{breed}-#{variant}.pdf\r\n"
+          str << "FIELD 001=#{label_prefix}\\#{breed}\\#{item_number}.pdf\r\n"
           str << "LABELQUANTITY=#{qty}\r\n"
           str << "PRINTER=#{p.url}\r\n\r\n"
+          
+          logs << Log.new(timestamp: DateTime.now, 
+                          loggable_type: 'Shipment', 
+                          loggable_id: params["shipment-#{item_number}"], 
+                          event: :label_printed,
+                          data1: item_number,
+                          data2: qty,
+                          data3: p.name,
+                          ip_address: request.remote_ip,
+                          user_id: session[:user_id])
         end
       end
     end
@@ -272,8 +286,11 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     uri = URI(Setting.get(:kiaro, "Print Job URI"))
     
     begin
-      Net::SCP.upload!(uri.host, uri.user, tmp_file, uri.path, :ssh => { :password => uri.password, :port => uri.port || 22 })
+      #Net::SCP.upload!(uri.host, uri.user, tmp_file, uri.path, :ssh => { :password => uri.password, :port => uri.port || 22 })
       flash[:success] = "#{label_count} labels submitted for printing"
+      logs.each(&:save)
+      Log.create(timestamp: DateTime.now, loggable_type: 'Printer', loggable_id: p.id, event: :job_submitted,
+                 data1: label, data2: label_count, ip_address: request.remote_ip, user_id: session[:user_id])
     rescue => e
       flash[:error] = e.message
     end

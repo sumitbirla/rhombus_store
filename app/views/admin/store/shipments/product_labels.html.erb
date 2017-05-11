@@ -35,9 +35,10 @@
         <tr>
           <th class="col-md-2">Item</th>
           <th class="col-md-5">Description</th>
-          <th class="col-md-1 calign">Quantity</th>
-          <th class="col-md-1 calign">&nbsp;</th>
-          <th class="col-md-1 calign">&nbsp;</th>
+          <th class="col-md-1 text-center">Shipment</th>
+          <th class="col-md-1 text-center">Quantity</th>
+          <th class="col-md-1 text-center">&nbsp;</th>
+          <th class="col-md-1 text-center">&nbsp;</th>
         </tr> 
     <% end %>
   <%
@@ -48,12 +49,14 @@
     <tr>
       <td><%= item_number %></td>
       <td><%= item[:name] %>, <%= item[:option_title] %></td>
-      <td class="calign">
+      <td class="text-center"><%= link_to item[:shipment], admin_store_shipment_path(item[:shipment_id])%></td>
+      <td class="text-center">
         <input type="hidden" name="lot-<%= item_number %>" value="<%= item[:lot] %>-<%= item[:expiration] %>">
+        <input type="hidden" name="shipment-<%= item_number %>" value="<%= item[:shipment_id] %>">
         <input style="width: 60px; text-align: center;" type="numeric" name="item-<%= item_number %>" value="<%= item[:quantity] %>">
       </td>
-      <td class="calign"><a class="print-single" href="#"><i class="fa fa-print"></i> print</a></td>
-      <td class="calign"><a href="<%= cdn_image_url(pdf_path, 800, 700, 0) %>" data-lightbox="image-1"><i class="fa fa-image"></i> view</a></td>
+      <td class="text-center"><a class="print-single" href="#"><i class="fa fa-print"></i> print</a></td>
+      <td class="text-center"><a href="<%= cdn_image_url(pdf_path, 800, 700, 0) %>" data-lightbox="image-1"><i class="fa fa-image"></i> view</a></td>
     </tr>
   <% end %>
 
