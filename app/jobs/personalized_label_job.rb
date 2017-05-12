@@ -24,6 +24,7 @@ class PersonalizedLabelJob < ActiveJob::Base
   
   def draw_image(elem, bg, order_item)
     i = order_item
+    static_files_path = Setting.get('System', 'Static Files Path')
     img = Magick::Image::read(static_files_path + i.uploaded_file)[0]
     #img = Magick::Image::read("./1.jpg")[0]
     
