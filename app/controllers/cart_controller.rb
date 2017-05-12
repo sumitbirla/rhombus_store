@@ -91,10 +91,14 @@ class CartController < ApplicationController
                 custom_text: params[:custom_text],
                 autoship_months: params[:autoship_months].blank? ? 0 : params[:autoship_months]
 
-        item.item_number = p.sku
-        item.item_number += "-" + Affiliate.find(affiliate_id).code unless affiliate_id.nil?
-        item.item_number += "-" + variation unless variation.nil?
-
+        if key.length == 2
+          item.item_number = p.item_number
+        else
+          item.item_number = p.sku
+          item.item_number += "-" + Affiliate.find(affiliate_id).code unless affiliate_id.nil?
+          item.item_number += "-" + variation unless variation.nil?
+        end
+        
         order.items << item
         
         # create image preview if this is a personalized product
