@@ -30,4 +30,12 @@ class AffiliateProduct < ActiveRecord::Base
   has_many :categories, -> { order :sort }, through: :affiliate_categories
   
   validates_uniqueness_of :product_id, scope: :affiliate_id
+  
+  def current_price
+    sale_price || price || product.special_price || product.price
+  end
+  
+  def sale?
+    [sale_price, product.special_price].include?(current_price)
+  end
 end
