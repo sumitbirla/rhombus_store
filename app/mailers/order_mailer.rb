@@ -7,15 +7,10 @@ class OrderMailer < ActionMailer::Base
     from_name = Cache.setting(@order.domain_id, :system, 'From Email Name')
     from_email = Cache.setting(@order.domain_id, :system, 'From Email Address')
 
-    options = {
-        address: Cache.setting(@order.domain_id, :system, 'SMTP Server'),
-        openssl_verify_mode: 'none'
-    }
     mail(from: "#{from_name} <#{from_email}>",
          to: @order.notify_email,
          bcc: bcc,
-         subject: "Order ##{@order.id} submitted",
-         delivery_method_options: options)
+         subject: "Order ##{@order.id} submitted")
          
    OrderHistory.create(order_id: @order.id, 
                        user_id: user_id, 
@@ -37,15 +32,10 @@ class OrderMailer < ActionMailer::Base
       subject = "Order ##{@shipment.order.id} has shipped"
     end
 
-    options = {
-        address: Cache.setting(@shipment.order.domain_id, :system, 'SMTP Server'),
-        openssl_verify_mode: 'none'
-    }
     mail(from: "#{from_name} <#{from_email}>",
          to: @shipment.order.notify_email,
          bcc: bcc,
-         subject: subject,
-         delivery_method_options: options)
+         subject: subject)
          
     OrderHistory.create(order_id: @shipment.order.id, 
                        user_id: user_id, 
