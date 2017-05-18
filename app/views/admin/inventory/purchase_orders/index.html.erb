@@ -7,6 +7,7 @@
   <select id="selAction" class="form-control" style="display: inline; width: 75%">
     <option> - - Select Action - - </option>
 	  <option method="get" value="<%= new_admin_inventory_purchase_order_path %>">New purchase order</option>
+    <option method="get" print-dialog="true" value="<%= new_admin_inventory_purchase_order_path %>">Print (PDF)</option>
     <optgroup label="Change order status to ">
       <option method="post" value="/admin/inventory/purchase_orders_update_status?status=new">New</option>
       <option method="post" value="/admin/inventory/purchase_orders_update_status?status=released">Released</option>
@@ -39,21 +40,21 @@
 <form id="frmBatch" action="" method="post">
 	<%= token_tag %>
 
-<%= will_paginate @purchase_orders %>
-<table class="table table-striped table-condensed">
-	<tr>
-    <th><input type="checkbox" id="chkAll" /></th>
-		<th><%= sortable "id", "PO #" %></th>
-		<th><%= sortable "core_affiliates.name", "Supplier" %></th>
-		<th class="text-center"><%= sortable "issue_date" %></th>
-		<th class="text-center"><%= sortable "due_date" %></th>
-    <th class="text-center">Received</th>
-		<th class="text-right">Amount</th>
-		<th class="text-center">Status</th>
-		<th></th>
-	</tr>
-	<%= render @purchase_orders %>
-</table>
+  <%= will_paginate @purchase_orders %>
+  <table class="table table-striped table-condensed">
+  	<tr>
+      <th><input type="checkbox" id="chkAll" /></th>
+  		<th><%= sortable "id", "PO #" %></th>
+  		<th><%= sortable "core_affiliates.name", "Supplier" %></th>
+  		<th class="text-center"><%= sortable "issue_date" %></th>
+  		<th class="text-center"><%= sortable "due_date" %></th>
+      <th class="text-center">Received</th>
+  		<th class="text-right">Amount</th>
+  		<th class="text-center">Status</th>
+  		<th></th>
+  	</tr>
+  	<%= render @purchase_orders %>
+  </table>
 
 </form>
 
@@ -68,29 +69,4 @@
 <% content_for :breadcrumbs do %>
 	<li><a href="#">Inventory</a></li>
 	<li class="active">Purchase Orders</li>
-<% end %>
-
-
-<% content_for :head do %>
-
-	<script type="text/javascript">
-	    $(document).ready(function () {
-
-	        $("#btnAction").click(function () {
-	            $("#frmBatch").attr("action", $("#selAction").val());
-	            $("#frmBatch").attr("method", $("#selAction option:selected").attr("method"));
-	            $("#frmBatch").submit();
-	        });
-
-          $("#chkAll").change(function() {
-
-            if ($(this).prop("checked"))
-              $(".po-chk").prop("checked", true);
-            else
-              $(".po-chk").prop("checked", false);
-          });
-
-	    });
-    </script>
-
 <% end %>

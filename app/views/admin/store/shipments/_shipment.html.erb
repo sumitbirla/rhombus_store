@@ -2,7 +2,7 @@
 
 <tr>
   <% unless readonly %>
-    <td><input type="checkbox" name="shipment_id[]" class="shipment-chk hidden-xs" value="<%= shipment.id %>"/></td>
+    <td><input type="checkbox" name="shipment_id[]" class="multiselect hidden-xs" value="<%= shipment.id %>"/></td>
   <% end %>
   <td nowrap><%= link_to shipment, admin_store_shipment_path(shipment, status: shipment.status) %></td>
   <td><%= shipment.recipient_name %></td>

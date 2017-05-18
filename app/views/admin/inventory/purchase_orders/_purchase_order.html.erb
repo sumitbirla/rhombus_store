@@ -1,6 +1,6 @@
 <% po = purchase_order %>
 <tr>
-    <td><input type="checkbox" name="purchase_order_id[]" class="po-chk" value="<%= po.id %>"/></td>
+    <td><input type="checkbox" name="purchase_order_id[]" class="multiselect" value="<%= po.id %>"/></td>
 		<td><%= link_to po.id, admin_inventory_purchase_order_path(po) %></td>
 		<td><%= link_to po.supplier, admin_system_affiliate_path(po.supplier, q: :po) %></td>
 		<td class="text-center"><%= po.issue_date %></td>

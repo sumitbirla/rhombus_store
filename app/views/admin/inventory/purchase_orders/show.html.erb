@@ -1,5 +1,5 @@
 <div class="pull-right">
-  <%= link_to "print", print_admin_inventory_purchase_order_path(@purchase_order), class: "btn btn-sm btn-default", target: "_new" %>
+  <%= link_to "print", print_admin_inventory_purchase_order_path(@purchase_order), class: "print-link btn btn-sm btn-default", target: "_new" %>
   <%= link_to edit_admin_inventory_purchase_order_path(@purchase_order), class: "btn btn-sm btn-default" do %>
     <i class="fa fa-edit"></i> edit
   <% end %>
@@ -89,6 +89,13 @@
     <div class="alert alert-info"><i class="fa fa-info-circle"></i> No items received thus far.</div>
   <% end %>
 <% end %>
+
+
+<form id="frmBatch" action="" method="post">
+	<%= token_tag %>
+  <input type="hidden" name="printer_id" value=""/>
+  <input type="hidden" name="purchase_order_id[]" value="<%= @purchase_order.id %>"/>
+</form>
 
 <% content_for :title do %>
 	Purchase Order #<%= @purchase_order.id %>

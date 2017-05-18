@@ -102,6 +102,7 @@
 
   </div>
 
+  <% unless @shipment.notes.blank? %>
   <div class="col-md-4">
     <div class="panel panel-primary">
       <div class="panel-heading">Notes:</div>
@@ -110,6 +111,7 @@
       </div>
     </div>
   </div>
+  <% end %>
 
 </div>
 
@@ -161,7 +163,7 @@
 
 
 <% if @shipment.status == 'shipped' %>
-	<div class="col-md-4" style="padding-left: 0;">
+	<div class="hidden-print col-md-4" style="padding-left: 0;">
     <% unless @shipment.courier_data.nil? %>
 		  <img width="100%" src="<%= label_image_admin_store_shipment_path(@shipment) %>" alt="label image"/>
     <% else %>
@@ -289,6 +291,4 @@
     <li><%= link_to 'Shipments', admin_store_shipments_path(status: :pending) %></li>
     <li class="active"><%= @shipment %></li>
 <% end %>
-
-<%= render 'admin/shared/print_dialog'%>
 

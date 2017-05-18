@@ -1,5 +1,5 @@
 	<tr>
-		<td><input type="checkbox" name="order_id[]" class="order-chk hidden-xs" value="<%= order.id %>"/></td>
+		<td><input type="checkbox" name="order_id[]" class="multiselect hidden-xs" value="<%= order.id %>"/></td>
 		<td>
       <%= link_to order.id, admin_store_order_path(order) %>
       <% if order.auto_ship %>

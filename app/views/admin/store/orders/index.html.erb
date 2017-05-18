@@ -71,7 +71,7 @@
 </form>
 
 <%= render 'admin/shared/table_summary', data: @orders %>
-<%= render 'admin/shared/print_dialog' %>
+
 
 
 <% content_for :title do %>
@@ -83,43 +83,4 @@
 <% content_for :breadcrumbs do %>
 	<li><a href="#">eCommerce</a></li>
 	<li class="active">Orders</li>
-<% end %>
-
-
-<% content_for :head do %>
-
-	<script type="text/javascript">
-	    $(document).ready(function () {
-
-          $("#btnAction").click(function () {
-              var selectedOption = $("#selAction option:selected");
-          
-              if (selectedOption.attr("print-dialog") == "true") {
-                $("#print-dialog").modal();
-                return;
-              }
-              $("#frmBatch").attr("action", $("#selAction").val());
-              $("#frmBatch").attr("method", selectedOption.attr("method"));
-              $("#frmBatch").submit();
-          });
-          
-          /* capture action in print-dialog */
-          $("#print-dialog a").click(function() {
-            $("input[name='printer_id']").val($(this).attr("printer_id"));
-            $("#frmBatch").attr("action", $("#selAction").val());
-            $("#frmBatch").attr("method", $("#selAction option:selected").attr("method"));
-            $("#frmBatch").submit();
-          });
-
-          $("#chkAll").change(function() {
-
-            if ($(this).prop("checked"))
-              $(".order-chk").prop("checked", true);
-            else
-              $(".order-chk").prop("checked", false);
-          });
-
-	    });
-    </script>
-
 <% end %>

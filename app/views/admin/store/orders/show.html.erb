@@ -173,7 +173,7 @@
   </tr>
   <% @order.items.each do |item| %>
       <tr class="vert-align">
-        <td><%= item.item_number %></td>
+        <td nowrap><%= item.item_number %></td>
         <td style="padding: 0"><%= render item %></td>
         <td class="text-right"><%= number_to_currency(item.unit_price, precision: 4, strip_insignificant_zeros: true)%></td>
         <td class="text-right"><%= number_with_delimiter(item.quantity) %></td>
@@ -349,10 +349,16 @@
 </table>
 
 
+<form id="frmBatch" action="" method="post">
+	<%= token_tag %>
+  <input type="hidden" name="printer_id" value=""/>
+  <input type="hidden" name="order_id[]" value="<%= @order.id %>"/>
+</form>
+
+
 <% content_for :title do %>
 	Orders: <%= @order.id %>
 <% end %>
-
 
 
 <% content_for :breadcrumbs do %>
