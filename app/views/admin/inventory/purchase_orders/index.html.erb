@@ -4,19 +4,7 @@
 %>
 
 <div class="pull-right">
-  <select id="selAction" class="form-control" style="display: inline; width: 75%">
-    <option> - - Select Action - - </option>
-	  <option method="get" value="<%= new_admin_inventory_purchase_order_path %>">New purchase order</option>
-    <option method="get" print-dialog="true" value="<%= new_admin_inventory_purchase_order_path %>">Print (PDF)</option>
-    <optgroup label="Change order status to ">
-      <option method="post" value="/admin/inventory/purchase_orders_update_status?status=new">New</option>
-      <option method="post" value="/admin/inventory/purchase_orders_update_status?status=released">Released</option>
-      <option method="post" value="/admin/inventory/purchase_orders_update_status?status=cancelled">Cancelled</option>
-      <option method="post" value="/admin/inventory/purchase_orders_update_status?status=received">Received</option>
-      <option method="post" value="/admin/inventory/purchase_orders_update_status?status=closed">Closed</option>
-    </optgroup>
-  </select>
-  <input type="button" class="btn btn-default btn-small" id="btnAction" value="Go" />	  
+  <%= render 'admin/inventory/purchase_orders/group_actions' %>  
 </div>
 
 <h2><i class="fa fa-file-text-o"></i>&nbsp; Purchase Orders</h2>
