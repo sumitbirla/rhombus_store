@@ -1,0 +1,14 @@
+  <select id="selAction" class="form-control" style="display: inline; width: 70%">
+      <option> - - Select Action - - </option>
+      <option method="get" value="/admin/store/orders/new">New Order</option>
+	    <option method="post" value="/admin/store/orders_create_shipment">Create Shipments</option>
+      <option method="post" value="/admin/store/orders_print_receipts" print-dialog="true">Print Receipts (PDF)</option>
+      <option method="post" value="/admin/store/orders_send_confirmation">Send Confirmation Email</option>
+      <option method="post" value="/admin/store/orders_address_label">Print Address Labels</option>
+      <optgroup label="Change order status to ">
+      <% Order.valid_statuses.each do |status| %>
+          <option method="post" value="/admin/store/orders_update_status?status=<%= status %>"><%= status.titlecase%></option>
+      <% end %>
+      </optgroup>
+  </select>
+  <input type="button" class="btn btn-default btn-small" id="btnAction" value="Go" />	
