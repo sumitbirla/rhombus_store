@@ -26,7 +26,7 @@
       <% end %>
     <% else %>
       <% unless m.document_url.nil? %>
-        <%= link_to "print document", m.document_url, target: '_new' %> &nbsp; 
+        <%= link_to "print document", admin_system_printers_print_url_path, class: "print-link", url: m.document_url, "print-format" => "pdf" %> &nbsp; 
       <% end %>
     <% end %>
   </td>

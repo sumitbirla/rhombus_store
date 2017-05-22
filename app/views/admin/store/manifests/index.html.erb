@@ -35,6 +35,13 @@
 </table>
 
 
+<form id="frmBatch" action="/admin/system/printers/print_url" method="post">
+	<%= token_tag %>
+  <input type="hidden" name="printer_id" value=""/>
+  <input type="hidden" name="url" value=""/>
+</form>
+
+
 <% content_for :title do %>
     Manifests
 <% end %>
