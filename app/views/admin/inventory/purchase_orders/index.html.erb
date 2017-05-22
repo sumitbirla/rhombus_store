@@ -27,6 +27,7 @@
 
 <form id="frmBatch" action="" method="post">
 	<%= token_tag %>
+  <input type="hidden" name="printer_id" value=""/>
 
   <%= will_paginate @purchase_orders %>
   <table class="table table-striped table-condensed">

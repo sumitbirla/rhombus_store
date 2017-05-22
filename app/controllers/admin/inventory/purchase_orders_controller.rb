@@ -159,6 +159,36 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
     render 'print', layout: nil
   end
   
+  def print_batch
+    urls = ''
+    token = Cache.setting(Rails.configuration.domain_id, :system, 'Security Token')
+    website_url = Cache.setting(Rails.configuration.domain_id, :system, 'Website URL')
+    
+    PurchaseOrder.where(id: params[:purchase_order_id]).each do |po|
+      digest = Digest::MD5.hexdigest(po.id.to_s + token) 
+      urls += " " + website_url + print_admin_inventory_purchase_order_path(po, digest: digest) 
+      
+      # LOG
+    end
+    
+    output_file = "/tmp/#{SecureRandom.hex(6)}.pdf"
+    ret = system("wkhtmltopdf -q #{urls} #{output_file}")
+    
+    unless File.exists?(output_file)
+      flash[:error] = "Unable to generate PDF [Debug: #{$?}]"
+      return redirect_to :back
+    end
+    
+    if params[:printer_id].blank?
+      send_file output_file
+    else
+      printer = Printer.find(params[:printer_id])
+      job = printer.print_file(output_file)
+      flash[:info] = "Print job submitted to '#{printer.name} [#{printer.location}]'. CUPS JobID: #{job.id}"
+      redirect_to :back
+    end
+  end
+  
   # used when releasing or closing PO
   def set_status
     po = PurchaseOrder.find(params[:id])
@@ -168,12 +198,9 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
   
   # batch updates
   def update_status
-    pos = PurchaseOrder.where(id: params[:purchase_order_id]).where.not(status: params[:status])
-    pos.each do |po|
-      po.update_attribute(:status, params[:status])
-    end
+    count = PurchaseOrder.where(id: params[:purchase_order_id]).update_all(status: params[:status])
+    flash[:info] = "Status of #{count} purchase order(s) updated to '#{params[:status]}'"
     
-    flash[:info] = "Status of #{pos.length} purchase order(s) updated to '#{params[:status]}'"
     redirect_to :back
   end
   

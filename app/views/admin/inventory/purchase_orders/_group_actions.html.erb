@@ -1,7 +1,7 @@
   <select id="selAction" class="form-control" style="display: inline; width: 75%">
     <option> - - Select Action - - </option>
 	  <option method="get" value="<%= new_admin_inventory_purchase_order_path %>">New purchase order</option>
-    <option method="get" print-dialog="true" print-format="pdf" value="#">Print (PDF)</option>
+    <option method="post" value="<%= admin_inventory_purchase_orders_print_batch_path %>" print-dialog="true" print-format="pdf" value="#">Print (PDF)</option>
     <optgroup label="Change order status to ">
       <option method="post" value="/admin/inventory/purchase_orders_update_status?status=new">New</option>
       <option method="post" value="/admin/inventory/purchase_orders_update_status?status=released">Released</option>

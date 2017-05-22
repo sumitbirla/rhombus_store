@@ -66,6 +66,7 @@ Rails.application.routes.draw do
       get 'reports/item_demand'
       get 'reports' => 'reports#index'
       post 'purchase_orders_update_status' => 'purchase_orders#update_status'
+      post 'purchase_orders_print_batch' => 'purchase_orders#print_batch'
       
       resources :purchase_orders do
         member do

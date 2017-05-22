@@ -16,7 +16,7 @@
     </td>
 		<td class="text-right"><%= number_to_currency po.items.collect { |i| i.quantity * (i.unit_price || 0.0) }.sum  %></td>
 		<td class="text-center"><%= po_status(po) %></td>
-		<td>
+		<td class="text-right">
 			<%= link_to "edit", edit_admin_inventory_purchase_order_path(po) %> &nbsp;
 			<%= link_to "delete", 
 						  { action: "destroy", id: po.id }, 
