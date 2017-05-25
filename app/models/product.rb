@@ -68,7 +68,7 @@ class Product < ActiveRecord::Base
   has_many :label_elements
   
   validates_presence_of :name, :item_number, :product_type
-  validates_presence_of :title, :slug, :brand_id, :price, unless: lambda { |x| x.product_type == 'not_for_sale' }
+  validates_presence_of :title, :slug, :brand_id, :price, unless: lambda { |x| x.product_type == 'white_label' }
   validates_presence_of :sku, if: :warehoused?
   validates_uniqueness_of :slug, allow_blank: true
   

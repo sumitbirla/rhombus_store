@@ -17,8 +17,9 @@
 <% unless params[:q] %>
 <div class="pull-right" style="margin-bottom: 12px;">
   <select name="brand_id" class="brand">
-    <option value="">All Brands</option>
-    <% Brand.order(:name).each do |b| %>
+    <option value="">-- white label --</option>
+    <option value="all">-- all brands --</option>
+    <% Brand.where(id: Product.select(:brand_id).uniq.pluck(:brand_id)).order(:name).each do |b| %>
       <option value="<%= b.id %>" <%= "selected" if params[:brand_id] == b.id.to_s %>><%= b.name %></option>
     <% end %>
   </select>
