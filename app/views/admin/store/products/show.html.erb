@@ -243,7 +243,7 @@
     <% unless @product.product_type == 'virtual' 
           inv_items = InventoryItem.includes(:inventory_location)
                                .where(sku: @product.sku)
-                               .group(:inventory_location_id)
+                               .group(:inventory_location_id, :lot)
                                .order("expiration, quantity")
                                .select("lot, expiration, inventory_location_id, sum(quantity) as quantity")
     %>
