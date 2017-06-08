@@ -110,7 +110,7 @@ class CartController < ApplicationController
         item.save
       end
       
-      flash[:item_id] = item.id
+      flash[:item_id] = item.id   # Used by HSN personalization
     end
     
     update_totals order
