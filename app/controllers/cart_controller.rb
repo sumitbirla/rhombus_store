@@ -113,6 +113,7 @@ class CartController < ApplicationController
     
     update_totals order
     order.save validate: false
+    flash[:item_id] = item.id
     
     respond_to do |format|
       format.html do 
