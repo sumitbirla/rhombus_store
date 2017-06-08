@@ -109,12 +109,13 @@ class CartController < ApplicationController
         item.autoship_months = params[:autoship_months].blank? ? 0 : item.autoship_months
         item.save
       end
+      
+      flash[:item_id] = item.id
     end
     
     update_totals order
     order.save validate: false
-    flash[:item_id] = item.id
-    
+
     respond_to do |format|
       format.html do 
         if params[:redirect].nil?
