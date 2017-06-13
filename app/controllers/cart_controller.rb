@@ -255,7 +255,7 @@ class CartController < ApplicationController
   
   # GET /cart/personalize?item=ITEM_NUMBER
   def personalize
-    @product = Product.find_by!(item_number: params[:item])
+    @product = Product.find_by!("item_number = ? OR upc = ?", params[:item], params[:item]) # check UPC because of FAV
     @order = load_or_create_order
   end
   
