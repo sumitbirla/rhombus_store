@@ -58,7 +58,11 @@ class PersonalizedLabelJob < ActiveJob::Base
       if elem.text_or_image == 'image'
         draw_image(elem, bg, i)
       elsif
-        draw_text(elem, bg, "OID: #{i.order_id}")
+        if elem.name == 'ORDER_ID'
+          draw_text(elem, bg, "OID: #{i.order_id}")
+        elsif elem.name == 'EXTERNAL_ID'
+          draw_text(elem, bg, "OID: #{i.external_id}")
+        end
       end
     end
 
