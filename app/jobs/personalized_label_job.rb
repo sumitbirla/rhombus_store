@@ -29,13 +29,13 @@ class PersonalizedLabelJob < ActiveJob::Base
     #img = Magick::Image::read("./1.jpg")[0]
     
     # create backfill for dog area
-    back_fill = Magick::GradientFill.new(0, 0, 0, 0, "#ffffff", "#ffffff")
+    back_fill = Magick::GradientFill.new(0, 0, 0, 0, "#000000", "#000000")
 
     # resize dog per user upload
     resized_img = img.resize(elem.width * i.width_percent / 100.0, elem.height * i.height_percent / 100.0)
 
     # draw the dog on the backfill area
-    buffer = Magick::Image.new(elem.width, elem.height, back_fill)
+    buffer = Magick::Image.new(elem.width, elem.height, back_fill).transparent('#000000')
     buffer = buffer.composite(resized_img, Magick::ForgetGravity, elem.width * i.start_x_percent / 100.0, elem.height * i.start_y_percent / 100.0, Magick::OverCompositeOp)
     bg.composite!(buffer, elem.left, elem.top, Magick::OverCompositeOp)
   end
