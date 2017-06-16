@@ -1,23 +1,31 @@
 require 'rmagick'
 require 'net/scp'
 require 'uri'
+require 'barby'
+require 'barby/barcode/code_39'
+require 'barby/outputter/rmagick_outputter'
 
 class PersonalizedLabelJob < ActiveJob::Base
   queue_as :image_processing
   
   
   def draw_text(elem, bg, text)
-    text_img = Magick::Image.new(elem.width, elem.height)
-    draw = Magick::Draw.new
-    draw.annotate(text_img, 0, 0, 0, 0, text) do
-      draw.gravity = Magick::CenterGravity
-      self.pointsize = elem.font_size || 38
-      self.font_family = elem.font_family || "Arial"
-      self.font_weight = Magick::NormalWeight
-      self.stroke = "none"
-      self.fill = elem.font_color || "#000000"
+    if elem.font_family == 'barcode_39'
+      barcode = Barby::Code39.new(text)
+      text_img = Barby::RmagickOutputter.new(barcode).to_image(height: elem.height, xdim: 8)
+    else
+      text_img = Magick::Image.new(elem.width, elem.height)
+      draw = Magick::Draw.new
+      draw.annotate(text_img, 0, 0, 0, 0, text) do
+        draw.gravity = Magick::CenterGravity
+        self.pointsize = elem.font_size || 38
+        self.font_family = elem.font_family || "Arial"
+        self.font_weight = Magick::NormalWeight
+        self.stroke = "none"
+        self.fill = elem.font_color || "#000000"
+      end
     end
-
+    
     bg.composite!(text_img, elem.left, elem.top, Magick::OverCompositeOp)
   end
   
@@ -50,7 +58,7 @@ class PersonalizedLabelJob < ActiveJob::Base
     # read the product image with space for photo and/or text
     bg_image_path = static_files_path + p.pictures.find { |x| x.purpose == "#{medium}_background" }.file_path
     bg = Magick::Image::read(bg_image_path)[0]
-    #bg = Magick::Image::read("./SCT-PK100.jpg")[0]
+    #bg = Magick::Image::read("./SCT-PK100-4.jpg")[0]
     Rails.logger.debug "Background image is #{bg.columns}x#{bg.rows} pixels"
 
     # render the text or image elements
@@ -61,7 +69,7 @@ class PersonalizedLabelJob < ActiveJob::Base
         if elem.name == 'ORDER_ID'
           draw_text(elem, bg, "OID: #{i.order_id}")
         elsif elem.name == 'EXTERNAL_ID'
-          draw_text(elem, bg, "OID: #{i.external_id}")
+          draw_text(elem, bg, i.external_id)
         end
       end
     end
@@ -69,7 +77,7 @@ class PersonalizedLabelJob < ActiveJob::Base
     output_file = "/personalized_labels/" + SecureRandom.hex(6) + ".jpg"
     bg.write(static_files_path + output_file) { self.quality = 100 }
     #bg.write("./output.jpg") { self.quality = 100 }
-    
+    #exit
     Rails.logger.debug "PREVIEW image written to #{static_files_path + output_file}"
     
     if medium == 'print'
