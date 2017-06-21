@@ -52,6 +52,8 @@
         <% unless item[:uploaded_file].blank? %>    
           <input type="hidden" name="shipment_items[][personalized]" value="true">
           <span class="label label-info pull-right">personalized</span>
+        <% else %>
+          <input type="hidden" name="shipment_items[][personalized]" value="false">
         <% end %>
       </td>
       <td><%= item[:name] %>, <%= item[:option_title] %></td>
