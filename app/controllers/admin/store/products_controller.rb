@@ -1,11 +1,16 @@
 class Admin::Store::ProductsController < Admin::BaseController
   
   def index
+    q = params[:q]
     @products = Product.includes(:brand).order(sort_column + " " + sort_direction)
-    @products = @products.where(active: true) unless (params[:product_type] == "all" || params[:q])
-    @products = @products.where(brand_id: (params[:brand_id].blank? ? nil : params[:brand_id])) unless params[:brand_id] == 'all'
-    @products = @products.where("name LIKE '%#{params[:q]}%' OR item_number = '#{params[:q]}'") unless params[:q].nil?
     
+    unless q.nil?
+      @products = @products.where("name LIKE '%#{q}%' OR item_number = '#{q}' OR SKU = '#{q}'") 
+    else
+      @products = @products.where(active: true) unless params[:product_type] == "all"
+      @products = @products.where(brand_id: (params[:brand_id].blank? ? nil : params[:brand_id])) unless params[:brand_id] == 'all'
+    end
+      
     respond_to do |format|
       format.html  { @products = @products.paginate(page: params[:page], per_page: @per_page) }
       format.csv { send_data Product.to_csv(@products) }
