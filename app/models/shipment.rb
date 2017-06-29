@@ -55,12 +55,14 @@
 
 require 'net/http'
 require 'uri'
+require 'digest/md5'
 
 class Shipment < ActiveRecord::Base
   include Exportable
   
   self.table_name = "store_shipments"
 
+  before_save :update_items_hash
   after_save :update_order
   after_create :save_inventory_transaction, unless: :skip_inventory
   
@@ -223,6 +225,23 @@ class Shipment < ActiveRecord::Base
     end
     
     tran
+  end
+  
+  def items_hash
+    str = ""
+    product_ids = items.collect(&:product_id).uniq.sort
+    
+    product_ids.each do |pid|
+      quantity = items.select { |x| x.product_id == pid }.sum(&:quantity)
+      str << "#{pid}:#{quantity}|"
+    end
+    
+    md5 = Digest::MD5.new
+    md5.hexdigest(str)
+  end
+  
+  def update_items_hash
+    self.items_hash = items_hash
   end
   
 end
