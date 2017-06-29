@@ -211,6 +211,11 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   end
 
   def product_labels
+    if params[:shipment_id].blank?
+      flash[:error] = "No shipments selected.  Please check at least one."
+      return redirect_to :back
+    end
+    
     @shipments = Shipment.where(id: params[:shipment_id])
     
     sql = <<-EOF
