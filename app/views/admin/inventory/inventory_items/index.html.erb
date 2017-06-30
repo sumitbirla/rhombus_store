@@ -1,25 +1,19 @@
-<div class="pull-right">
-  <%= link_to new_admin_inventory_inventory_item_path, class: 'btn btn-default btn-sm' do %>
-    <i class="fa fa-plus"></i> Add items
-  <% end %>
-  <%= link_to new_admin_inventory_inventory_item_path, class: 'btn btn-default btn-sm' do %>
-    <i class="fa fa-right"></i> Move items
-  <% end %>
-  <%= link_to new_admin_inventory_inventory_item_path, class: 'btn btn-default btn-sm' do %>
-    <i class="fa fa-minus"></i> Remove items
-  <% end %>
-</div>
-<h2><i class="fa fa-tags"></i>&nbsp; Inventory Items</h2>
+<h2><i class="fa fa-tags"></i>&nbsp; In Stock</h2>
 
-
+<ul class="nav nav-tabs" style="margin-bottom: 10px;">
+  <li class="<%= "active" if params[:group].blank? %>"><a href="<%= admin_inventory_inventory_items_path %>">Totals</a></li>
+  <li class="<%= "active" if params[:group] == 'location' %>"><a href="<%= admin_inventory_inventory_items_path(group: :location) %>">By Location</a></li>
+</ul>
 <%= will_paginate @inventory_items %>
 <table class="table table-striped table-condensed">
 	<tr>
 		<th><%= sortable 'sku', 'SKU' %></th>
 		<th>Description</th>
-		<th><%= sortable 'inventory_location_id', 'Location' %></th>
-    <th><%= sortable 'lot', 'Lot #' %></th>
-		<th class="text-center"><%= sortable 'expiration' %></th>
+    <% unless params[:group].blank? %>
+		  <th><%= sortable 'inventory_location_id', 'Location' %></th>
+      <th><%= sortable 'lot', 'Lot #' %></th>
+		  <th class="text-center"><%= sortable 'expiration' %></th>
+    <% end %>
     <th class="text-right"><%= sortable 'quantity' %></th>
 	</tr>
 	<%= render @inventory_items %>

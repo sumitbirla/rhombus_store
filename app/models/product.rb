@@ -68,7 +68,7 @@ class Product < ActiveRecord::Base
   has_many :label_elements
   
   validates_presence_of :name, :item_number, :product_type
-  validates_presence_of :title, :slug, :brand_id, :price, unless: lambda { |x| x.product_type == 'white_label' }
+  validates_presence_of :title, :slug, :brand_id, :price, unless: lambda { |x| x.product_type == 'white-label' }
   validates_presence_of :sku, if: :warehoused?
   validates_uniqueness_of :slug, allow_blank: true
   
@@ -93,7 +93,7 @@ class Product < ActiveRecord::Base
   end
   
   def warehoused?
-    product_type == "warehoused"
+    ["stock", "white-label"].include?(product_type)
   end
   
   def get_property(name)

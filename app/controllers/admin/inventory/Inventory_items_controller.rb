@@ -4,8 +4,13 @@ class Admin::Inventory::InventoryItemsController < Admin::BaseController
     @inventory_items = InventoryItem.includes(:inventory_location)
                                     .order(sort_column + ' ' + sort_direction)
                                     .having("sum(quantity) > 0")
-                                    .group(:inventory_location_id, :sku, :lot)
                                     .select("sku, sum(quantity) as quantity, lot, expiration, inventory_location_id")
+    
+    if params[:group] == 'location'                    
+      @inventory_items = @inventory_items.group(:inventory_location_id, :sku, :lot)                                
+    else
+      @inventory_items = @inventory_items.group(:sku, :lot)  
+    end                               
                                     
     respond_to do |format|
       format.html  { @inventory_items = @inventory_items.paginate(page: params[:page], per_page: @per_page) }

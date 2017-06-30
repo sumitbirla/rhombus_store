@@ -31,24 +31,34 @@
 
   <div class="row">
 		<div class="col-md-7">
-		  <%= f.input :product_type, as: :select, collection: ['stock', 'non-stock', 'consignment', 'virtual', 'white-label'], label: 'Type' %>
-      <%= f.input :name %>
-		  <%= f.input :title %>
-		  <%= f.input :slug %>
-		  <%= f.input :brand_id, collection: Brand.order(:name).all %>
-		  <%= f.input :item_number, label: 'Item #' %>
-      <%= f.input :upc, label: 'UPC' %>
-      <%= f.input :harmonized_code %>
-		  <%= f.input :price %>
-		  <%= f.input :special_price %>
-      <%= f.input :retail_map, label: 'Retail MAP' %>
-      <%= f.input :msrp, label: 'MSRP' %>
-      <%= f.input :group %>
-		  <%= f.input :option_title, input_html: { class: 'span8' } %>
-		  <%= f.input :option_sort %>
-      <%= f.input :keywords %>
-      <%= f.input :warranty %>
-      <%= f.association :label_sheet %>
+      <div class="panel panel-default">
+        <div class="panel-heading"><b>Basic Information</b></div>
+        <div class="panel-body">
+    		  <%= f.input :item_number, label: 'Item #' %>
+          <%= f.input :name %>
+    		  <%= f.input :product_type, as: :select, collection: ['stock', 'on-demand', '3PL', 'white-label' ], label: 'Type' %>
+    		  <%= f.input :brand_id, collection: Brand.order(:name).all %>
+          <%= f.input :upc, label: 'UPC' %>
+          <%= f.input :harmonized_code %>
+          <%= f.input :retail_map, label: 'Retail MAP' %>
+          <%= f.input :msrp, label: 'MSRP' %>
+        </div>
+      </div>
+      
+      <div class="panel panel-default web">
+        <div class="panel-heading">Web</div>
+        <div class="panel-body">
+    		  <%= f.input :title %>
+    		  <%= f.input :slug %>
+    		  <%= f.input :price %>
+    		  <%= f.input :special_price, label: "Sale Price" %>
+          <%= f.input :group %>
+    		  <%= f.input :option_title, input_html: { class: 'span8' } %>
+    		  <%= f.input :option_sort %>
+          <%= f.input :keywords %>
+          <%= f.input :warranty %>
+        </div>
+      </div>
 		</div>
 		
 		<div class="col-md-5">
@@ -76,6 +86,7 @@
           <%= f.input :low_threshold %>
           <%= f.input :country_of_origin, label: "Origin" %>
           <%= f.input :item_availability, as: :datepicker, label: "Date avail." %>
+          <%= f.association :label_sheet %>
         </div>
       </div>
 
@@ -109,15 +120,15 @@
 		</div>
   </div>
 
-	<div class="row">
+	<div class="row web">
     <h4>Short Description</h4>
   	<%= f.input_field :short_description, class: "form-control text", rows: 4  %>
     <br>
     <h4>Long Description</h4>
   	<%= f.input_field :long_description, class: "form-control text", rows: 20  %>
-	
-  	<%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
   </div>
+  
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
 
 <% end %>
 
@@ -125,6 +136,31 @@
 
 <% content_for :title do %>
     <%= @product.title %>
+<% end %>
+
+<% content_for :head do %>
+<script>
+  $(document).ready(function() {
+    
+    $("#product_product_type").on('change', function() {
+      if ($(this).val() == 'white-label') {
+        $(".product_brand_id").hide();
+        $(".product_upc").hide();
+        $(".product_msrp").hide();
+        $(".product_retail_map").hide();
+        $(".web").hide();
+      } else {
+        $(".product_brand_id").show();
+        $(".product_upc").show();
+        $(".product_msrp").show();
+        $(".product_retail_map").show();
+        $(".web").show();
+      }
+    });
+    
+    $("#product_product_type").trigger('change');
+  });
+</script>
 <% end %>
 
 
