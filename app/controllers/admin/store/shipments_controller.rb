@@ -320,6 +320,11 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   
   
   def packing_slip_batch
+    if params[:shipment_id].blank?
+      flash[:error] = "No shipments selected. Please check at least one."
+      return redirect_to :back
+    end
+    
     urls = ''
     token = Cache.setting(Rails.configuration.domain_id, :system, 'Security Token')
     website_url = Cache.setting(Rails.configuration.domain_id, :system, 'Website URL')
@@ -348,6 +353,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       redirect_to :back
     end
   end
+  
   
   def shipping_label_batch
     EasyPost.api_key = Cache.setting(Rails.configuration.domain_id, 'Shipping', 'EasyPost API Key')
@@ -418,27 +424,30 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
 
   def batch
-    @shipments = Shipment.where(id: params[:shipment_id])
-    
-    if @shipments.length == 0
-      flash[:error] = "No shipments selected."
+    if params[:shipment_id].blank?
+      flash[:error] = "No shipments selected. Please check at least one."
       return redirect_to :back
     end
     
+    @shipments = Shipment.where(id: params[:shipment_id])
     @batch = Shipment.new(ship_date: Date.today)
     
-    # try to autopopulate fields
-    shipments = Shipment.includes(:items)
-                        .where(status: :shipped)
-                        .order(ship_date: :desc)
-                        .limit(10)
+    # Check to make sure that the batch contains shipments with identical contents
+    if @shipments.collect(&:items_hash).uniq.length > 1
+      flash.now[:warning] = "Selected batch contains more that one configuration of shipment."
+      #return redirect_to :back
+    end
     
-    shipments.each do |s|
-      if s.same_content?(@shipments[0])
+    # try to autopopulate fields
+    # if identical shipment was recentely shipped with same contents, set box size and weight
+    s = Shipment.where(status: :shipped, items_hash: @shipments[0].items_hash)
+                .where("ship_date > ?", 3.months.ago)
+                .order(ship_date: :desc)
+                .first
+    
+    unless s.nil?
         @batch = s.dup
         @batch.ship_date = Date.today
-        break
-      end
     end
   end
 
