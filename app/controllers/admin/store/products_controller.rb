@@ -140,12 +140,12 @@ class Admin::Store::ProductsController < Admin::BaseController
     end
     
     # check if this is an itemnum-affcode-variant format SKU  
-    if sku.count('-') == 2
+    if sku.count('-') == 2 && sku.split('-').last.length == 3
       sku, affiliate_code, variant = sku.split('-')
       aff = Affiliate.find_by(code: affiliate_code)
     end
     
-    p = Product.find_by(item_number: sku)
+    p = Product.find_by("item_number = ? OR sku = ? OR upc = ?", sku, sku, sku)
     render json: { status: 'not found' } if p.nil?
     
     ap = AffiliateProduct.find_by(affiliate_id: aff_id, product_id: p.id) unless aff_id.blank?
