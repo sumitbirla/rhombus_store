@@ -348,7 +348,7 @@ class Order < ActiveRecord::Base
                              product_id: item.product_id,
                              affiliate_id: item.affiliate_id,
                              variation: item.variation, 
-                             quantity: item.quantity)
+                             quantity: item.quantity_accepted)
 
       elsif item.daily_deal_id
         

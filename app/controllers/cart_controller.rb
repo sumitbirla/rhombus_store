@@ -81,6 +81,7 @@ class CartController < ApplicationController
                 affiliate_id: affiliate_id,
                 variation: variation,
                 quantity: quantity,
+                quantity_accepted: quantity,
                 unit_price: p.special_price || p.price,
                 item_description: p.name_with_option,
                 uploaded_file: params[:uploaded_file],
