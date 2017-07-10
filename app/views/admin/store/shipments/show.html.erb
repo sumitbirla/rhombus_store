@@ -272,12 +272,14 @@
 
 <% end %>
 
-
 <form id="frmBatch" action="" method="post">
 	<%= token_tag %>
   <input type="hidden" name="printer_id" value=""/>
   <input type="hidden" name="shipment_id[]" value="<%= @shipment.id %>"/>
 </form>
+
+<div class="light small" style="clear: left;"><br><br>hash: <%= @shipment.items_hash %></div>
+
 
 
 
