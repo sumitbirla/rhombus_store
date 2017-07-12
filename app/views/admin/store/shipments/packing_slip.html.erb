@@ -59,7 +59,7 @@
       }
   </style>
 </head>
-<body onload="window.print()">
+<body>
 <section>
   <article>
     <header>
@@ -203,6 +203,21 @@
         <% end %>
       </table>
     </section>
+  <% end %>
+  
+  <% if @shipment.status == 'pending' 
+      s = Shipment.where(status: :shipped, items_hash: @shipment.items_hash)
+                .where("ship_date > ?", 3.months.ago)
+                .order(ship_date: :desc)
+                .first
+    
+      unless s.nil? %>
+      <section style="width: 300px; margin: 40px; padding: 5px; float:right; border: 1px solid #ccc; color: #ccc;">
+        <b>Suggested packaging:</b><br><br>
+        Box: <%= s.package_width %>" x <%= s.package_length %>" x <%= s.package_height %>"   &nbsp; &nbsp; 
+        Weight:  <%= s.package_weight %> lbs.
+      </section>
+      <% end %>
   <% end %>
 
 
