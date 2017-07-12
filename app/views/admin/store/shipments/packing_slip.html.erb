@@ -208,6 +208,7 @@
   <% if @shipment.status == 'pending' 
       s = Shipment.where(status: :shipped, items_hash: @shipment.items_hash)
                 .where("ship_date > ?", 3.months.ago)
+                .where.not(package_weight: nil)
                 .order(ship_date: :desc)
                 .first
     
