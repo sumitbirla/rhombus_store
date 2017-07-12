@@ -184,13 +184,13 @@
   
   <% unless @shipment.inventory_transaction.nil? %>
     <section style="width: 300px; margin-top: 40px; float:right">
-      <table style="border: 1px solid #ccc; color: #ccc; padding: 10px;">
+      <table style="border: 1px solid #999; color: #999; padding: 10px;">
         <tr>
           <th style="text-align:left;">Location</th>
           <th style="text-align:left;">SKU</th>
           <th style="text-align:center;">Lot #</th>
           <th style="text-align:center;">Exp.</th>
-          <th style="text-align:center;">Qty.</th>  
+          <th style="text-align:right;">Qty.</th>  
         </tr>
         <% @shipment.inventory_transaction.items.each do |item| %>
         <tr>
@@ -201,25 +201,23 @@
           <td style="text-align:right;"><%= number_with_delimiter(item.quantity.abs) %></td>
         </tr>
         <% end %>
+        <% if @shipment.status == 'pending' 
+            s = @shipment.similar_shipment
+            unless s.nil? %>
+            <tr>
+              <td colspan="5" style="border-top: solid 1px #999">
+                <b>Suggested:</b>
+                Box: <%= s.package_length %>" x <%= s.package_width %>" x <%= s.package_height %>"   &nbsp; &nbsp; 
+                Weight:  <%= s.package_weight %> lbs.
+              </td>
+            </tr>
+            <% end %>
+        <% end %>
       </table>
     </section>
   <% end %>
   
-  <% if @shipment.status == 'pending' 
-      s = Shipment.where(status: :shipped, items_hash: @shipment.items_hash)
-                .where("ship_date > ?", 3.months.ago)
-                .where.not(package_weight: nil)
-                .order(ship_date: :desc)
-                .first
-    
-      unless s.nil? %>
-      <section style="width: 300px; margin: 40px; padding: 5px; float:right; border: 1px solid #ccc; color: #ccc;">
-        <b>Suggested packaging:</b><br><br>
-        Box: <%= s.package_length %>" x <%= s.package_width %>" x <%= s.package_height %>"   &nbsp; &nbsp; 
-        Weight:  <%= s.package_weight %> lbs.
-      </section>
-      <% end %>
-  <% end %>
+  
 
 
   <% unless @shipment.notes.blank? %>
@@ -230,7 +228,7 @@
   
   <% if ["Healthy Breeds", "Amazon.com"].include? @shipment.order.sales_channel %>
   <div style="text-align: ceanter; margin-top: 40px;">
-    <img src="/img/HB10_reorder_coupon.jpg" width="250" style="padding: 10px; border: dashed 3px #666;">
+    <img src="/img/HB10_reorder_coupon.jpg" width="250" style="padding: 10px; border: dashed 3px #999;">
   </div>
   <% end %>
   

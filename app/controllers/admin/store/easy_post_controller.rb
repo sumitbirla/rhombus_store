@@ -14,11 +14,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
     end
     
     # if identical shipment was recentely shipped with same contents, set box size and weight
-    s = Shipment.where(status: :shipped, items_hash: @shipment.items_hash)
-                .where("ship_date > ?", 3.months.ago)
-                .where.not(package_weight: nil)
-                .order(ship_date: :desc)
-                .first
+    s = @shipment.similar_shipment
     
     @shipment.assign_attributes(
           packaging_type: s.packaging_type,

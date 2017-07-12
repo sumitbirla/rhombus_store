@@ -118,6 +118,14 @@ class Shipment < ActiveRecord::Base
     true
   end
   
+  def similar_shipment
+    Shipment.where(status: :shipped, items_hash: items_hash)
+            .where("ship_date > ?", 3.months.ago)
+            .where.not(package_weight: nil)
+            .order(ship_date: :desc)
+            .first
+  end
+  
   def post_invoice
     return if (invoice_amount == 0.0 || invoice_posted?)
     Payment.create(user_id: order.user_id, payable_id: id, payable_type: :shipment, amount: invoice_amount * -1.0, memo: 'invoice')               

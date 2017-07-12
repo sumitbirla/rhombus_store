@@ -440,11 +440,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     
     # try to autopopulate fields
     # if identical shipment was recentely shipped with same contents, set box size and weight
-    s = Shipment.where(status: :shipped, items_hash: @shipments[0].items_hash)
-                .where("ship_date > ?", 3.months.ago)
-                .where.not(package_weight: nil)
-                .order(ship_date: :desc)
-                .first
+    s = @shipments[0].similar_shipment
     
     unless s.nil?
         @batch = s.dup
@@ -455,15 +451,11 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   
   def auto_batch
     @shipments = Shipment.where(status: :pending, items_hash: params[:items_hash])
-    @batch = Shipment.new(ship_date: Date.today)
+    @batch = Shipment.new(ship_date: Date.today, items_hash: para)
     
     # try to autopopulate fields
     # if identical shipment was recentely shipped with same contents, set box size and weight
-    s = Shipment.where(status: :shipped, items_hash: params[:items_hash])
-                .where("ship_date > ?", 3.months.ago)
-                .where.not(package_weight: nil)
-                .order(ship_date: :desc)
-                .first
+    s = @shipments[0].similar_shipment
     
     unless s.nil?
         @batch = s.dup
