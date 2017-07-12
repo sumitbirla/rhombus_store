@@ -450,6 +450,27 @@ class Admin::Store::ShipmentsController < Admin::BaseController
         @batch.ship_date = Date.today
     end
   end
+  
+  
+  def auto_batch
+    @shipments = Shipment.where(status: :pending, items_hash: params[:items_hash])
+    @batch = Shipment.new(ship_date: Date.today)
+    
+    # try to autopopulate fields
+    # if identical shipment was recentely shipped with same contents, set box size and weight
+    s = Shipment.where(status: :shipped, items_hash: params[:items_hash])
+                .where("ship_date > ?", 3.months.ago)
+                .order(ship_date: :desc)
+                .first
+    
+    unless s.nil?
+        @batch = s.dup
+        @batch.ship_date = Date.today
+    end
+    
+    render 'batch'
+  end
+  
 
   def scan
     @shipment = Shipment.includes(:items, [items: :product], [items: :affiliate]).find(params[:id])

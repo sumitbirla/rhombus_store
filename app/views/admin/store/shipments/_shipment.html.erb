@@ -1,4 +1,4 @@
-<% readonly ||= false %>
+<% readonly ||= false  %>
 
 <tr>
   <% unless readonly %>
@@ -27,10 +27,9 @@
   <td><%= shipment_status(shipment)%></td>
   <% unless readonly %>
     <td class="actions ralign hidden-xs">
-      <% if shipment.status == "pending" %>
-        <%= link_to "ship", admin_store_easy_post_path(shipment_id: shipment.id) %> &nbsp;
+      <% if shipment.status == "pending" && (Shipment.where(status: :pending, items_hash: shipment.items_hash).count > 1) %>
+        <%= link_to "auto batch", admin_store_shipments_auto_batch_path(items_hash: shipment.items_hash) %> &nbsp;
       <% end %>
-      <%= link_to "edit", edit_admin_store_shipment_path(shipment) %> &nbsp;
       <%= link_to "delete",
                   { action: "destroy", id: shipment.id },
                   method: :delete,

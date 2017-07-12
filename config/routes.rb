@@ -101,6 +101,7 @@ Rails.application.routes.draw do
       get 'reports' => 'reports#index'
 
       get 'shipments_batch' => 'shipments#batch'
+      get 'shipments_auto_batch' => 'shipments#auto_batch'
       get 'shipments/choose_order'
       post 'shipments_update_status' => 'shipments#update_status'
       post 'shipments_packing_slip_batch' => 'shipments#packing_slip_batch'
