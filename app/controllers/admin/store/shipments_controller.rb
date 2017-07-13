@@ -451,7 +451,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   
   def auto_batch
     @shipments = Shipment.where(status: :pending, items_hash: params[:items_hash])
-    @batch = Shipment.new(ship_date: Date.today, items_hash: para)
+    @batch = Shipment.new(ship_date: Date.today, items_hash: params[:items_hash])
     
     # try to autopopulate fields
     # if identical shipment was recentely shipped with same contents, set box size and weight
