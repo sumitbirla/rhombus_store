@@ -44,7 +44,7 @@ class Admin::Store::AutoShipItemsController < Admin::BaseController
   def destroy
     @auto_ship_item = AutoShipItem.find(params[:id])
     @auto_ship_item.destroy
-    redirect_to action: 'index', notice: 'AutoShipItem has been deleted.'
+    redirect_to :back
   end
   
   private

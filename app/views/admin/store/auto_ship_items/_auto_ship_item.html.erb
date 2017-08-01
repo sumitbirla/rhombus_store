@@ -12,7 +12,7 @@
 		<td class="actions">
 			<%= link_to "edit", edit_admin_store_auto_ship_item_path(as) %> &nbsp;
 			<%= link_to "delete", 
-						  { action: "destroy", id: as.id }, 
+						  { controller: "admin/store/auto_ship_items", action: "destroy", id: as.id }, 
 						  method: :delete, 
 						  data: { confirm: "Are you sure?" } %>
 		</td>
