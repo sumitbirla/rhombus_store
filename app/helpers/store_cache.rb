@@ -20,7 +20,7 @@ module StoreCache
     
   def self.product(slug) 
     Rails.cache.fetch("product:#{slug}") do 
-      Product.includes(:categories, :extra_properties, :brand, :pictures, :comments).find_by(slug: slug)
+      Product.includes(:categories, :extra_properties, :brand, :pictures, :comments).find_by(slug: slug, active: true)
     end
   end
   
