@@ -3,7 +3,7 @@ class Admin::Store::OrdersController < Admin::BaseController
   def index
     q = params[:q]
     
-    @orders = Order.order(submitted: :desc)
+    @orders = Order.order(sort_column + " " + sort_direction)
     @orders = @orders.where(status: params[:status]) unless params[:status].blank?
     @orders = @orders.joins(:items).where("store_order_items.item_number = ?", params[:item_number]) unless params[:item_number].blank?
     @orders = @orders.where(domain_id: cookies[:domain_id]) if q.blank?
@@ -373,6 +373,14 @@ EOF
   
     def order_params
       params.require(:order).permit!
+    end
+    
+    def sort_column
+      params[:sort] || "store_orders.id"
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
     end
   
 end

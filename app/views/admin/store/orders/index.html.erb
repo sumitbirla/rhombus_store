@@ -41,13 +41,13 @@
   <table class="table table-striped table-condensed footable">
   	<tr>
   		<th><input type="checkbox" id="chkAll" class="hidden-xs"/></th>
-  		<th>Order #</th>
-      <th data-breakpoints="xs"><%= params[:po] == "1" ? "PO #" : "Sales Channel" %></th>
-  		<th data-breakpoints="xs">Submitted</th>
-  		<th>Customer</th>
-  		<th data-breakpoints="xs">Location</th>
-  		<th data-breakpoints="xs">Amount</th>
-      <th data-breakpoints="xs">Ship by</th>
+  		<th><%= sortable "store_orders.id", "Order #" %></th>
+      <th data-breakpoints="xs"><%= sortable "store_orders.sales_channel", params[:po] == "1" ? "PO #" : "Sales Channel" %></th>
+  		<th data-breakpoints="xs"><%= sortable "store_orders.submitted", "Submitted" %></th>
+  		<th><%= sortable "store_orders.affiliate_id, store_orders.user_id", "Customer" %></th>
+  		<th data-breakpoints="xs"><%= sortable "store_orders.shipping_city", "Location" %></th>
+  		<th data-breakpoints="xs"><%= sortable "store_orders.total", "Total" %></th>
+      <th data-breakpoints="xs"><%= sortable "store_orders.ship_latest", "Ship by" %></th>
       <th class="hidden-xs"></th>
   		<th>Status</th>
   	</tr>
