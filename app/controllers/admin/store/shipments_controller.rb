@@ -14,7 +14,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   def index
     q = params[:q]
     s = Shipment.includes(:order, :items, :inventory_transaction, [items: :order_item]).order(sort_column + " " + sort_direction)
-    s = s.where("recipient_name LIKE '%#{q}%' OR recipient_company LIKE '%#{q}%' OR recipient_city LIKE '%#{q}%'")
+    s = s.where("recipient_name LIKE '%#{q}%' OR recipient_company LIKE '%#{q}%' OR recipient_city LIKE '%#{q}%'") unless q.blank?
     s = s.where("store_orders.user_id = ?", params[:user_id]) unless params[:user_id].blank?
     s = s.where("store_orders.affiliate_id = ?", params[:affiliate_id]) unless params[:affiliate_id].blank?
     s = s.where(carrier: params[:carrier]) unless params[:carrier].blank?
