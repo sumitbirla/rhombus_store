@@ -28,7 +28,7 @@
   <table class="table table-striped table-condensed footable">
     <tr>
   	  <th><input type="checkbox" id="chkAll" class="hidden-xs" /></th>
-      <th data-breakpoints="xs"><%= sortable "store_shipments.id", "ID" %></th>
+      <th data-breakpoints="xs"><%= sortable "store_shipments.order_id, store_shipments.sequence", "ID" %></th>
       <th><%= sortable "store_orders.shipping_name", "Ship to" %></th>
       <th><%= sortable "store_orders.shipping_city", "Destination" %></th>
       <th data-breakpoints="xs"><%= sortable "store_shipments.items_hash", "Item(s)" %></th>
