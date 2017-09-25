@@ -79,6 +79,7 @@ namespace :rhombus_store do
         variation: i.variation,
         item_description: i.description,
         quantity: i.quantity,
+        quantity_accepted: i.quantity,
         unit_price: p.price
       )
     end
