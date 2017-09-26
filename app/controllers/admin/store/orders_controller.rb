@@ -3,7 +3,7 @@ class Admin::Store::OrdersController < Admin::BaseController
   def index
     q = params[:q]
     
-    @orders = Order.order(sort_column + " " + sort_direction)
+    @orders = Order.where.not(status: 'in cart').order(sort_column + " " + sort_direction)
     @orders = @orders.where(status: params[:status]) unless params[:status].blank?
     @orders = @orders.joins(:items).where("store_order_items.item_number = ?", params[:item_number]) unless params[:item_number].blank?
     @orders = @orders.where(domain_id: cookies[:domain_id]) if q.blank?

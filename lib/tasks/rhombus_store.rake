@@ -117,5 +117,14 @@ namespace :rhombus_store do
     
   end
   
+  
+  desc "Process auto-ship items and create orders"
+  task delete_incomplete_orders: :environment do
+    Order.where(status: 'in cart').where("created_at < ?", 1.year.ago).each do |o|
+      puts "Destroying order ##{o.id}: #{o.status}: #{o.created_at}"
+      o.destroy
+    end
+  end
+  
 
 end
