@@ -1,6 +1,7 @@
 <% 
   item = inventory_item
   p = Product.find_by(sku: item.sku)
+  if p
 %>
 	<tr>
 		<td><%= link_to p.sku, admin_store_product_path(p) %></td>
@@ -12,3 +13,4 @@
     <% end %>
     <td class="text-right"><%= number_with_delimiter item.quantity %></td>
 	</tr>
+<% end %>
