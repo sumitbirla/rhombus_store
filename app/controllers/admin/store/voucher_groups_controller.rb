@@ -1,6 +1,7 @@
 class Admin::Store::VoucherGroupsController < Admin::BaseController
   
   def index
+    authorize VoucherGroup
     @voucher_groups = VoucherGroup.order(created_at: :desc)
     
     respond_to do |format|
@@ -10,12 +11,12 @@ class Admin::Store::VoucherGroupsController < Admin::BaseController
   end
 
   def new
-    @voucher_group = VoucherGroup.new name: 'New voucher group'
+    @voucher_group = authorize VoucherGroup.new(name: 'New voucher group')
     render 'edit'
   end
 
   def create
-    @voucher_group = VoucherGroup.new(voucher_group_params)
+    @voucher_group = authorize VoucherGroup.new(voucher_group_params)
     
     if @voucher_group.save
       redirect_to action: 'index', notice: 'VoucherGroup was successfully created.'
@@ -25,15 +26,15 @@ class Admin::Store::VoucherGroupsController < Admin::BaseController
   end
 
   def show
-    @voucher_group = VoucherGroup.find(params[:id])
+    @voucher_group = authorize VoucherGroup.find(params[:id])
   end
 
   def edit
-    @voucher_group = VoucherGroup.find(params[:id])
+    @voucher_group = authorize VoucherGroup.find(params[:id])
   end
 
   def update
-    @voucher_group = VoucherGroup.find(params[:id])
+    @voucher_group = authorize VoucherGroup.find(params[:id])
     
     if @voucher_group.update(voucher_group_params)
       redirect_to action: 'index', notice: 'VoucherGroup was successfully updated.'
@@ -43,12 +44,13 @@ class Admin::Store::VoucherGroupsController < Admin::BaseController
   end
 
   def destroy
-    @voucher_group = VoucherGroup.find(params[:id])
+    @voucher_group = authorize VoucherGroup.find(params[:id])
     @voucher_group.destroy
     redirect_to action: 'index', notice: 'VoucherGroup has been deleted.'
   end
   
   def create_vouchers
+    authorize Voucher, :create?
     
     group_id = params[:id].to_i
     num = params[:num].to_i

@@ -29,6 +29,11 @@ class Coupon < ActiveRecord::Base
   validates_presence_of :code, :start_time, :expire_time, :description, :max_uses, :max_per_user, :times_used
   validate :amount_xor_percent
   
+  # PUNDIT
+  def self.policy_class
+    ApplicationPolicy
+  end
+  
   private
 
       def amount_xor_percent

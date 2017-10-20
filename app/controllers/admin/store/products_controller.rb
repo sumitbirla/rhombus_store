@@ -1,6 +1,8 @@
 class Admin::Store::ProductsController < Admin::BaseController
   
   def index
+    authorize Product
+    
     q = params[:q]
     @products = Product.includes(:brand).order(sort_column + " " + sort_direction)
     
@@ -18,12 +20,12 @@ class Admin::Store::ProductsController < Admin::BaseController
   end
 
   def new
-    @product = Product.new name: 'New product'
+    @product = authorize Product.new(name: 'New product')
     render 'edit'
   end
 
   def create
-    @product = Product.new(product_params)
+    @product = authorize Product.new(product_params)
     
     if @product.save
       redirect_to action: 'show', id: @product.id, notice: 'Product was successfully created.'
@@ -33,15 +35,15 @@ class Admin::Store::ProductsController < Admin::BaseController
   end
 
   def show
-    @product = Product.find(params[:id])
+    @product = authorize Product.find(params[:id])
   end
 
   def edit
-    @product = Product.find(params[:id])
+    @product = authorize Product.find(params[:id])
   end
 
   def update
-    @product = Product.find(params[:id])
+    @product = authorize Product.find(params[:id])
     
     if @product.update(product_params)
       Rails.cache.delete @product
@@ -52,7 +54,7 @@ class Admin::Store::ProductsController < Admin::BaseController
   end
 
   def destroy
-    @product = Product.find(params[:id])
+    @product = authorize Product.find(params[:id])
     @product.destroy
     
     Rails.cache.delete @product
@@ -61,18 +63,23 @@ class Admin::Store::ProductsController < Admin::BaseController
   
   def pictures
     @product = Product.find(params[:id])
+    authorize @product, :show?
   end
   
   def coupons
     @product = Product.find(params[:id])
+    authorize @product, :show?
   end
   
   def categories
     @product = Product.find(params[:id])
+    authorize @product, :show?
   end
   
   def create_categories
     @product = Product.find(params[:id])
+    authorize @product, :update?
+    
     ProductCategory.delete_all product_id: @product.id
     category_ids = params[:category_ids]
     
@@ -86,20 +93,23 @@ class Admin::Store::ProductsController < Admin::BaseController
   
   def extra_properties
     @product = Product.find(params[:id])
+    authorize @product, :show?
     5.times { @product.extra_properties.build }
   end
   
   def label_elements
     @product = Product.find(params[:id])
+    authorize @product, :show?
   end
   
   def adjust_prices
+    authorize Product, :update?
     @products = Product.where(active: true)
   end
   
   
   def update_prices
-    
+    authorize Product, :update?
     @products = Product.all
     
     params.each do |key, val|

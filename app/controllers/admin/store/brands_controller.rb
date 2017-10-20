@@ -1,6 +1,7 @@
 class Admin::Store::BrandsController < Admin::BaseController
   
   def index
+    authorize Brand
     @brands = Brand.order(:name)
     
     respond_to do |format|
@@ -10,12 +11,12 @@ class Admin::Store::BrandsController < Admin::BaseController
   end
 
   def new
-    @brand = Brand.new name: 'New brand'
+    @brand = authorize Brand.new(name:'New Brand')
     render 'edit'
   end
 
   def create
-    @brand = Brand.new(brand_params)
+    @brand = authorize Brand.new(brand_params)
     
     if @brand.save
       redirect_to action: 'index', notice: 'Brand was successfully created.'
@@ -25,15 +26,15 @@ class Admin::Store::BrandsController < Admin::BaseController
   end
 
   def show
-    @brand = Brand.find(params[:id])
+    @brand = authorize Brand.find(params[:id])
   end
 
   def edit
-    @brand = Brand.find(params[:id])
+    @brand = authorize Brand.find(params[:id])
   end
 
   def update
-    @brand = Brand.find(params[:id])
+    @brand = authorize Brand.find(params[:id])
     
     if @brand.update(brand_params)
       redirect_to action: 'index', notice: 'Brand was successfully updated.'
@@ -43,7 +44,7 @@ class Admin::Store::BrandsController < Admin::BaseController
   end
 
   def destroy
-    @brand = Brand.find(params[:id])
+    @brand = authorize Brand.find(params[:id])
     @brand.destroy
     redirect_to action: 'index', notice: 'Brand has been deleted.'
   end

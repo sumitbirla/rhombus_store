@@ -19,4 +19,9 @@ class Upc < ActiveRecord::Base
   def to_s
     code
   end
+  
+  # PUNDIT
+  def self.policy_class
+    ApplicationPolicy
+  end
 end

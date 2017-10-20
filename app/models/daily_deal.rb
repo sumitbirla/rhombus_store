@@ -75,4 +75,9 @@ class DailyDeal < ActiveRecord::Base
     Order.includes(:items).where.not(status: 'in cart').where(id: OrderItem.where(daily_deal_id: id).pluck(:order_id)).order(submitted: :desc)
   end
   
+  # PUNDIT
+  def self.policy_class
+    ApplicationPolicy
+  end
+  
 end

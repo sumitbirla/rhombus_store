@@ -1,6 +1,7 @@
 class Admin::Store::OrdersController < Admin::BaseController
   
   def index
+    authorize Order
     q = params[:q]
     
     @orders = Order.where.not(status: 'in cart').order(sort_column + " " + sort_direction)
@@ -63,14 +64,13 @@ class Admin::Store::OrdersController < Admin::BaseController
     end
     5.times { @order.items.build }
     
+    authorize @order
     render 'edit'
   end
 
   def create
-    @order = Order.new(order_params)
+    @order = authorize Order.new(order_params)
     @order.cart_key = SecureRandom.hex
-    
-    Rails.logger.error ">>>>>>>>>>>>>  #{@order.items.length}"
     
     unless params[:add_more_items].blank?
       count = params[:add_more_items].to_i - @order.items.length + 5 
@@ -88,15 +88,16 @@ class Admin::Store::OrdersController < Admin::BaseController
 
   def show
     @order = Order.includes(:items, [items: :product], [items: :affiliate], :history, [history: :user]).find(params[:id])
+    authorize @order
   end
 
   def edit
-    @order = Order.find(params[:id])
+    @order = authorize Order.find(params[:id])
     2.times { @order.items.build }
   end
 
   def update
-    @order = Order.find(params[:id])
+    @order = authorize Order.find(params[:id])
     item_count = @order.items.length
 
     @order.assign_attributes(order_params)
@@ -116,7 +117,7 @@ class Admin::Store::OrdersController < Admin::BaseController
   end
 
   def destroy
-    @order = Order.find(params[:id])
+    @order = authorize Order.find(params[:id])
     @order.destroy
     redirect_to action: 'index', notice: 'Order has been deleted.'
   end
@@ -150,10 +151,13 @@ class Admin::Store::OrdersController < Admin::BaseController
 
   def product_labels
     @order = Order.find(params[:id])
+    authorize @order, :show?
   end
   
   
   def update_status
+    authorize Order, :update?
+    
     orders = Order.where(id: params[:order_id]).where.not(status: params[:status])
     orders.each do |o|
       

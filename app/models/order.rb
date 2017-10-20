@@ -390,4 +390,9 @@ class Order < ActiveRecord::Base
     
   end
   
+  # PUNDIT
+  def self.policy_class
+    ApplicationPolicy
+  end
+  
 end

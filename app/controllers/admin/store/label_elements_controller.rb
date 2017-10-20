@@ -1,7 +1,8 @@
 class Admin::Store::LabelElementsController < Admin::BaseController
   
   def index
-    @label_elements = LabelElement.order("created_at DESC")
+    authorize LabelElement
+    @label_elements = LabelElement.order(created_at: :desc)
     
     respond_to do |format|
       format.html  { @label_elements = @label_elements.paginate(page: params[:page], per_page: @per_page) }
@@ -11,12 +12,12 @@ class Admin::Store::LabelElementsController < Admin::BaseController
 
   def new
     @redirect = params[:redirect]
-    @label_element = LabelElement.new name: 'New Label Element', product_id: params[:product_id]
+    @label_element = authorize LabelElement.new(name: 'New Label Element', product_id: params[:product_id])
     render 'edit'
   end
 
   def create
-    @label_element = LabelElement.new(label_element_params)
+    @label_element = authorize LabelElement.new(label_element_params)
     
     if @label_element.save
       unless params[:redirect].blank?
@@ -31,16 +32,16 @@ class Admin::Store::LabelElementsController < Admin::BaseController
   end
 
   def show
-    @label_element = LabelElement.find(params[:id])
+    @label_element = authorize LabelElement.find(params[:id])
   end
 
   def edit
     @redirect = params[:redirect]
-    @label_element = LabelElement.find(params[:id])
+    @label_element = authorize LabelElement.find(params[:id])
   end
 
   def update
-    @label_element = LabelElement.find(params[:id])
+    @label_element = authorize LabelElement.find(params[:id])
     
     if @label_element.update(label_element_params)
       unless params[:redirect].blank?
@@ -55,7 +56,7 @@ class Admin::Store::LabelElementsController < Admin::BaseController
   end
 
   def destroy
-    @label_element = LabelElement.find(params[:id])
+    @label_element = authorize LabelElement.find(params[:id])
     @label_element.destroy
     redirect_to :back
   end

@@ -17,4 +17,9 @@
 
 class Manifest < ActiveRecord::Base
 	self.table_name = "store_manifests"
+  
+  # PUNDIT
+  def self.policy_class
+    ApplicationPolicy
+  end
 end

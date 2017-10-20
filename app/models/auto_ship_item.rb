@@ -42,4 +42,9 @@ class AutoShipItem < ActiveRecord::Base
       self.affiliate_id = a.id unless a.nil?
     end
   end
+  
+  # PUNDIT
+  def self.policy_class
+    ApplicationPolicy
+  end
 end

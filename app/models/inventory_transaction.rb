@@ -20,4 +20,8 @@ class InventoryTransaction < ActiveRecord::Base
   has_many :items, class_name: "InventoryItem", dependent: :destroy
   accepts_nested_attributes_for :items, reject_if: lambda { |x| x['sku'].blank? }, allow_destroy: true
   
+  # PUNDIT
+  def self.policy_class
+    ApplicationPolicy
+  end
 end

@@ -3,6 +3,8 @@ require 'easypost'
 class Admin::Store::ManifestsController < Admin::BaseController
   
   def index
+    authorize Manifest
+    
     sql = <<-EOF
       select carrier, count(*)
       from store_shipments
@@ -22,7 +24,7 @@ class Admin::Store::ManifestsController < Admin::BaseController
   end
   
   def create
-    manifest = Manifest.new(manifest_params)
+    manifest = authorize Manifest.new(manifest_params)
     EasyPost.api_key = Cache.setting(Rails.configuration.domain_id, :shipping, 'EasyPost API Key')
     shipments = Shipment.where(ship_date: manifest.day, carrier: manifest.carrier, status: :shipped, manifest_id: nil)
     

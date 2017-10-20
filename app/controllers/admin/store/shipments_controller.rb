@@ -12,6 +12,8 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   skip_before_filter  :verify_authenticity_token, only: :label_print
 
   def index
+    authorize Shipment
+    
     q = params[:q]
     s = Shipment.includes(:order, :items, :inventory_transaction, [items: :order_item]).order(sort_column + " " + sort_direction)
     s = s.where("recipient_name LIKE '%#{q}%' OR recipient_company LIKE '%#{q}%' OR recipient_city LIKE '%#{q}%'") unless q.blank?
@@ -30,7 +32,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
 
   def new
-
     # check if order id was passed in?
     return redirect_to action: 'choose_order' if params[:order_id].nil?
 
@@ -41,7 +42,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       return redirect_to action: 'choose_order'
     end
 
-    @shipment = @order.create_shipment(session[:user_id], false)
+    @shipment = authorize @order.create_shipment(session[:user_id], false)
     @shipment.invoice_amount = @order.total if @shipment.sequence == 1
                     
     render 'edit'
@@ -49,11 +50,9 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
 
   def create
-    @shipment = Shipment.new(shipment_params)
+    @shipment = authorize Shipment.new(shipment_params)
     @shipment.fulfilled_by_id = current_user.id
     
-    puts ">>>>>>>>>>>  #{@shipment.skip_inventory}"
-
     if @shipment.save
       # create order history item
       OrderHistory.create order_id: @shipment.order_id, user_id: current_user.id, event_type: :shipment_created,
@@ -67,22 +66,22 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   end
 
   def show
-    @shipment = Shipment.includes(:items, [items: :product], [items: :affiliate]).find(params[:id])
+    @shipment = authorize Shipment.includes(:items, [items: :product], [items: :affiliate]).find(params[:id])
   end
 
 
   def packing_slip
-    @shipment = Shipment.includes(:items, [items: :product], [items: :affiliate], [items: :order_item]).find(params[:id])
+    @shipment = authorize Shipment.includes(:items, [items: :product], [items: :affiliate], [items: :order_item]).find(params[:id])
     render 'packing_slip', layout: false
   end
   
   def invoice
-    @shipment = Shipment.find(params[:id])                       
+    @shipment = authorize Shipment.find(params[:id])
     render 'invoice', layout: false
   end
   
   def email_invoice
-    @shipment = Shipment.find(params[:id])
+    @shipment = authorize Shipment.find(params[:id])
     SendInvoiceJob.perform_later(@shipment.id, session[:user_id])
     
     flash[:success] = "Invoice was emailed to #{@shipment.order.notify_email}"
@@ -106,12 +105,12 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
 
   def edit
-    @shipment = Shipment.includes(:items, [items: :product], [items: :affiliate], [items: :order_item]).find(params[:id])
+    @shipment = authorize Shipment.includes(:items, [items: :product], [items: :affiliate], [items: :order_item]).find(params[:id])
   end
 
 
   def update
-    @shipment = Shipment.find(params[:id])
+    @shipment = authorize Shipment.find(params[:id])
     @shipment.fulfilled_by_id = current_user.id
 
     if @shipment.update(shipment_params)
@@ -125,7 +124,9 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
 
   def destroy
-    Shipment.find(params[:id]).destroy
+    @shipment = authorize Shipment.find(params[:id])
+    @shipment.destroy
+    
     redirect_to :back
   end
 

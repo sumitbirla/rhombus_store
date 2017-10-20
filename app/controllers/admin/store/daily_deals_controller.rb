@@ -3,6 +3,7 @@ require 'csv'
 class Admin::Store::DailyDealsController < Admin::BaseController
   
   def index
+    authorize DailyDeal
     @daily_deals = DailyDeal.order(start_time: :desc)
     
     respond_to do |format|
@@ -18,11 +19,13 @@ class Admin::Store::DailyDealsController < Admin::BaseController
       @daily_deal = DailyDeal.find(params[:clone_id]).dup
       @daily_deal.slug += "-copy"
     end
+    
+    authorize @daily_deal
     render 'edit'
   end
 
   def create
-    @daily_deal = DailyDeal.new(daily_deal_params)
+    @daily_deal = authorize DailyDeal.new(daily_deal_params)
     @daily_deal.uuid = SecureRandom.uuid
     
     if @daily_deal.save
@@ -34,15 +37,15 @@ class Admin::Store::DailyDealsController < Admin::BaseController
   end
 
   def show
-    @daily_deal = DailyDeal.find(params[:id])
+    @daily_deal = authorize DailyDeal.find(params[:id])
   end
 
   def edit
-    @daily_deal = DailyDeal.find(params[:id])
+    @daily_deal = authorize DailyDeal.find(params[:id])
   end
 
   def update
-    @daily_deal = DailyDeal.find(params[:id])
+    @daily_deal = authorize DailyDeal.find(params[:id])
     
     if @daily_deal.update_attributes(daily_deal_params)
       Rails.cache.clear "featured-deal"
@@ -53,27 +56,32 @@ class Admin::Store::DailyDealsController < Admin::BaseController
   end
 
   def destroy
-    @daily_deal = DailyDeal.find(params[:id])
+    @daily_deal = authorize DailyDeal.find(params[:id])
     @daily_deal.destroy
+    
     Rails.cache.clear "featured-deal"
     redirect_to action: 'index', notice: 'Daily Deal has been deleted.'
   end
   
   def pictures
     @daily_deal = DailyDeal.find(params[:id])
+    authorize @daily_deal, :show?
   end
   
   def coupons
     @daily_deal = DailyDeal.find(params[:id])
+    authorize @daily_deal, :show?
   end
   
   def items
     @daily_deal = DailyDeal.find(params[:id])
     2.times { @daily_deal.items.build }
+    authorize @daily_deal, :show?
   end
   
   def update_items
     @daily_deal = DailyDeal.find(params[:id])
+    authorize @daily_deal, :update?
     item_count = @daily_deal.items.length
 
     @daily_deal.attributes = daily_deal_params
@@ -93,10 +101,12 @@ class Admin::Store::DailyDealsController < Admin::BaseController
   
   def locations
     @daily_deal = DailyDeal.find(params[:id])
+    authorize @daily_deal, :show?
   end
   
   def external_coupons
     @daily_deal = DailyDeal.find(params[:id])
+    authorize @daily_deal, :show?
   end
   
   def create_external_coupons
@@ -135,6 +145,7 @@ class Admin::Store::DailyDealsController < Admin::BaseController
   
   def categories
     @daily_deal = DailyDeal.includes(:categories).find(params[:id])
+    authorize @daily_deal, :show?
   end
   
   def create_categories

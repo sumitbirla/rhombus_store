@@ -252,4 +252,9 @@ class Shipment < ActiveRecord::Base
     self.items_hash = items_hash
   end
   
+  # PUNDIT
+  def self.policy_class
+    ApplicationPolicy
+  end
+  
 end
