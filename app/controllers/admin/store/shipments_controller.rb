@@ -12,7 +12,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   skip_before_filter  :verify_authenticity_token, only: :label_print
 
   def index
-    authorize Shipment
+    authorize Shipment.new
     
     q = params[:q]
     s = Shipment.includes(:order, :items, :inventory_transaction, [items: :order_item]).order(sort_column + " " + sort_direction)

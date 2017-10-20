@@ -1,7 +1,7 @@
 class Admin::Store::BrandsController < Admin::BaseController
   
   def index
-    authorize Brand
+    authorize Brand.new
     @brands = Brand.order(:name)
     
     respond_to do |format|

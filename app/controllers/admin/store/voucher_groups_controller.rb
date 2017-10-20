@@ -1,7 +1,7 @@
 class Admin::Store::VoucherGroupsController < Admin::BaseController
   
   def index
-    authorize VoucherGroup
+    authorize VoucherGroup.new
     @voucher_groups = VoucherGroup.order(created_at: :desc)
     
     respond_to do |format|

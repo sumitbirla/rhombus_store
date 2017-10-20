@@ -1,7 +1,7 @@
 class Admin::Store::AutoShipItemsController < Admin::BaseController
   
   def index
-    authorize AutoShipItem
+    authorize AutoShipItem.new
     
     @selected_status = params[:status].presence || "active"
     @auto_ship_items = AutoShipItem.joins(:user).includes(:user).order(sort_column + " " + sort_direction)

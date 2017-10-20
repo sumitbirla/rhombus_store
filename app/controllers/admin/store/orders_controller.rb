@@ -1,7 +1,7 @@
 class Admin::Store::OrdersController < Admin::BaseController
   
   def index
-    authorize Order
+    authorize Order.new
     q = params[:q]
     
     @orders = Order.where.not(status: 'in cart').order(sort_column + " " + sort_direction)

@@ -1,7 +1,7 @@
 class Admin::Store::AffiliateProductsController < Admin::BaseController
   
   def new
-    authorize AffiliateProduct
+    authorize AffiliateProduct.new
     @affiliate_product = AffiliateProduct.new(affiliate_id: params[:affiliate_id])
     render 'edit'
   end

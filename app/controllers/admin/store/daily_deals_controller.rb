@@ -3,7 +3,7 @@ require 'csv'
 class Admin::Store::DailyDealsController < Admin::BaseController
   
   def index
-    authorize DailyDeal
+    authorize DailyDeal.new
     @daily_deals = DailyDeal.order(start_time: :desc)
     
     respond_to do |format|

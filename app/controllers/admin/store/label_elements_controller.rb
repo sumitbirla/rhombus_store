@@ -1,7 +1,7 @@
 class Admin::Store::LabelElementsController < Admin::BaseController
   
   def index
-    authorize LabelElement
+    authorize LabelElement.new
     @label_elements = LabelElement.order(created_at: :desc)
     
     respond_to do |format|

@@ -1,7 +1,7 @@
 class Admin::Store::CouponsController < Admin::BaseController
   
   def index
-    authorize Coupon
+    authorize Coupon.new
     @coupons = Coupon.order("created_at DESC")
     
     respond_to do |format|

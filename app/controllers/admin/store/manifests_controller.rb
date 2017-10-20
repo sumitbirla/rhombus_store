@@ -3,7 +3,7 @@ require 'easypost'
 class Admin::Store::ManifestsController < Admin::BaseController
   
   def index
-    authorize Manifest
+    authorize Manifest.new
     
     sql = <<-EOF
       select carrier, count(*)

@@ -1,7 +1,7 @@
 class Admin::Store::ProductsController < Admin::BaseController
   
   def index
-    authorize Product
+    authorize Product.new
     
     q = params[:q]
     @products = Product.includes(:brand).order(sort_column + " " + sort_direction)
