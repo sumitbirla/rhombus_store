@@ -68,20 +68,42 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   def show
     @shipment = authorize Shipment.includes(:items, [items: :product], [items: :affiliate]).find(params[:id])
   end
+  
+  def edit
+    @shipment = authorize Shipment.includes(:items, [items: :product], [items: :affiliate], [items: :order_item]).find(params[:id])
+  end
+
+  def update
+    @shipment = authorize Shipment.find(params[:id])
+    @shipment.fulfilled_by_id = current_user.id
+
+    if @shipment.update(shipment_params)
+      flash[:notice] = "Shipment #{@shipment.order_id}-#{@shipment.sequence} was updated."
+      redirect_to action: 'show', id: @shipment.id
+    else
+      render 'edit'
+    end
+  end
+
+  def destroy
+    @shipment = authorize Shipment.find(params[:id])
+    @shipment.destroy
+    redirect_to :back
+  end
 
 
   def packing_slip
-    @shipment = authorize Shipment.includes(:items, [items: :product], [items: :affiliate], [items: :order_item]).find(params[:id])
+    @shipment = Shipment.includes(:items, [items: :product], [items: :affiliate], [items: :order_item]).find(params[:id])
     render 'packing_slip', layout: false
   end
   
   def invoice
-    @shipment = authorize Shipment.find(params[:id])
+    @shipment = Shipment.find(params[:id])
     render 'invoice', layout: false
   end
   
   def email_invoice
-    @shipment = authorize Shipment.find(params[:id])
+    @shipment = Shipment.find(params[:id])
     SendInvoiceJob.perform_later(@shipment.id, session[:user_id])
     
     flash[:success] = "Invoice was emailed to #{@shipment.order.notify_email}"
@@ -102,34 +124,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     
     redirect_to :back                    
   end
-
-
-  def edit
-    @shipment = authorize Shipment.includes(:items, [items: :product], [items: :affiliate], [items: :order_item]).find(params[:id])
-  end
-
-
-  def update
-    @shipment = authorize Shipment.find(params[:id])
-    @shipment.fulfilled_by_id = current_user.id
-
-    if @shipment.update(shipment_params)
-      flash[:notice] = "Shipment #{@shipment.order_id}-#{@shipment.sequence} was updated."
-      redirect_to action: 'show', id: @shipment.id
-    else
-      render 'edit'
-    end
-
-  end
-
-
-  def destroy
-    @shipment = authorize Shipment.find(params[:id])
-    @shipment.destroy
-    
-    redirect_to :back
-  end
-
 
   def choose_order
   end
