@@ -2,6 +2,7 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
   # ['new', 'release', 'change_order', 'received', 'cancelled', 'closed']
   
   def index
+    authorize PurchaseOrder.new
     @purchase_orders = PurchaseOrder.includes(:items)
                                     .joins(:supplier)
                                     .order(sort_column + " " + sort_direction)
@@ -12,13 +13,13 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
   end
 
   def new
-    @purchase_order = PurchaseOrder.new(issue_date: Date.today, due_date: Date.today + 1.week, status: 'new')
+    @purchase_order = authorize PurchaseOrder.new(issue_date: Date.today, due_date: Date.today + 1.week, status: 'new')
     20.times { @purchase_order.items.build }
     render 'edit'
   end
 
   def create
-    @purchase_order = PurchaseOrder.new(purchase_order_params)
+    @purchase_order = authorize PurchaseOrder.new(purchase_order_params)
     
     unless params[:add_more_items].blank?
       count = params[:add_more_items].to_i - @purchase_order.items.length + 10 
@@ -35,16 +36,16 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
   end
 
   def show
-    @purchase_order = PurchaseOrder.includes(:inventory_transactions, [inventory_transactions: :items]).find(params[:id])
+    @purchase_order = authorize PurchaseOrder.includes(:inventory_transactions, [inventory_transactions: :items]).find(params[:id])
   end
 
   def edit
-    @purchase_order = PurchaseOrder.find(params[:id])
+    @purchase_order = authorize PurchaseOrder.find(params[:id])
     5.times { @purchase_order.items.build }
   end
 
   def update
-    @purchase_order = PurchaseOrder.find(params[:id])
+    @purchase_order = authorize PurchaseOrder.find(params[:id])
     @purchase_order.assign_attributes(purchase_order_params)
     
     unless params[:add_more_items].blank?
@@ -62,7 +63,7 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
   end
 
   def destroy
-    @purchase_order = PurchaseOrder.find(params[:id])
+    @purchase_order = authorize PurchaseOrder.find(params[:id])
     @purchase_order.destroy
     
     redirect_to action: 'index', notice: 'PurchaseOrder has been deleted.'

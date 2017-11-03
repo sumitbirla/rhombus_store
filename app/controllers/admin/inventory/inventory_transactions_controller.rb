@@ -1,13 +1,14 @@
 class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
   
   def index
+    authorize InventoryTransaction.new
     @transactions = InventoryTransaction.includes(:user, :items)
                                         .order(created_at: :desc)
                                         .paginate(page: params[:page], per_page: @per_page)
   end
   
   def new
-    @transaction = InventoryTransaction.new( 
+    @transaction = authorize InventoryTransaction.new( 
                       user_id: session[:user_id], 
                       shipment_id: params[:shipment_id],
                       purchase_order_id: params[:purchase_order_id] )
@@ -22,7 +23,7 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
   end
   
   def create
-    @transaction = InventoryTransaction.new(inventory_transaction_params)
+    @transaction = authorize InventoryTransaction.new(inventory_transaction_params)
 
     unless params[:add_more_items].blank?
       count = params[:add_more_items].to_i - @transaction.items.length + 5 
@@ -48,12 +49,12 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
   end
   
   def edit
-    @transaction = InventoryTransaction.find(params[:id])
+    @transaction = authorize InventoryTransaction.find(params[:id])
     5.times { @transaction.items.build }
   end
   
   def update
-    @transaction = InventoryTransaction.find(params[:id])
+    @transaction = authorize InventoryTransaction.find(params[:id])
     item_count = @transaction.items.length
 
     @transaction.assign_attributes(inventory_transaction_params)
@@ -83,7 +84,7 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
   end
   
   def destroy
-    @transaction = InventoryTransaction.find(params[:id])
+    @transaction = authorize InventoryTransaction.find(params[:id])
     @transaction.destroy
     redirect_to :back, notice: 'Transaction has been deleted.'
   end

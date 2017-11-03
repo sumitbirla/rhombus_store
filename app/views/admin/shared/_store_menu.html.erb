@@ -45,7 +45,9 @@
     <% if current_user.has_permission?('Product', 'index')%>
       <li><%= link_to "Products", admin_store_products_path %></li>
     <% end %>
-    <li><%= link_to "Reports", admin_store_reports_path %></li>
+    <% if current_user.has_permission?('Store Reports', 'index')%>
+      <li><%= link_to "Reports", admin_store_reports_path %></li>
+    <% end %>
     <% if current_user.has_permission?('ShippingOption', 'index')%>
       <li><%= link_to "Shipping Options", admin_store_shipping_options_path %></li>
     <% end %>
@@ -97,7 +99,9 @@
       <% end %>
     </li>
     <% end %>
-    <li><%= link_to "Reports", admin_inventory_reports_path %></li>
+    <% if current_user.has_permission?('Inventory Reports', 'index')%>
+      <li><%= link_to "Reports", admin_inventory_reports_path %></li>
+    <% end %>
     <li><%= link_to "Suppliers", admin_system_affiliates_path(c: :suppliers) %></li>
     <li><%= link_to "Warehouse setup", admin_inventory_inventory_locations_path %></li>
   </ul>
