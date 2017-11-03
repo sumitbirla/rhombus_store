@@ -252,7 +252,7 @@
         <% end %>
         </table>
         
-        <%= link_to "New payment", new_admin_billing_payment_path(order_id: @order.id), class: 'btn btn-sm btn-default' %>
+        <%= link_to "New payment", new_admin_billing_payment_path(order_id: @order.id, redirect: request.original_fullpath), class: 'btn btn-sm btn-default' %>
       </div>
     </div>
   </div>
@@ -288,6 +288,11 @@
             </td>
             <td class="light"><%= systime shipment.created_at %></td>
             <td><span class="label <%= 'label-warning' if shipment.status == 'pending' %>  <%= 'label-success' if shipment.status == 'shipped' %>"><%= shipment.status %></span></td>
+            <td class="text-right">
+              <%= link_to "x", { controller: 'shipments', action: "destroy", id: shipment.id },
+                          method: :delete,
+                          data: { confirm: "Are you sure you want to delete shipment #{shipment}?" } %>
+            </td>
           </tr>
         <% end %>
         </table>

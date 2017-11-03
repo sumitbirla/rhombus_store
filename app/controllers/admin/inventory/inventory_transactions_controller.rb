@@ -85,7 +85,7 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
   def destroy
     @transaction = InventoryTransaction.find(params[:id])
     @transaction.destroy
-    redirect_to action: 'index', notice: 'Transaction has been deleted.'
+    redirect_to :back, notice: 'Transaction has been deleted.'
   end
   
   
