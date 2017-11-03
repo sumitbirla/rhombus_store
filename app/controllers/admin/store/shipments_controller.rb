@@ -391,6 +391,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   
   
   def update_status
+    authorize Shipment.new, :update?
     shipments = Shipment.where(id: params[:shipment_id]).where.not(status: params[:status])
     shipments.each do |s|
       s.update_attribute(:status, params[:status])

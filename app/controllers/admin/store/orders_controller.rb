@@ -156,7 +156,7 @@ class Admin::Store::OrdersController < Admin::BaseController
   
   
   def update_status
-    authorize Order, :update?
+    authorize Order.new, :update?
     
     orders = Order.where(id: params[:order_id]).where.not(status: params[:status])
     orders.each do |o|
