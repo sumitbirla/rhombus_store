@@ -375,8 +375,11 @@ class CartController < ApplicationController
       end
     end
 
-    # PROCESS PAYMENT
     begin
+      # CHECK TO SEE IF THIS IS A DUPLCATE.  AT THIS POINT THERE SHOULD BE NO PAYMENTS
+      raise "Duplicate order" if (@order.status == 'submitted' || @order.payments.count > 0)
+      
+      # PROCESS PAYMENT  (this method will save status,submitted fields to the database)
       @order.process_payment(request)
     rescue => e
       @order.errors.add :base, e.message
