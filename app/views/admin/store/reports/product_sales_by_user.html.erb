@@ -18,7 +18,8 @@
   <% @data.each do |row|  %>
 	<tr>
 		<td><%= link_to row[1], admin_system_user_path(row[0], q: :orders) %></td>
-		<td><%= row[2]%>, <%= row[3] %></td>
+		<td><%= row[8] %></td>
+    <td><%= row[2]%>, <%= row[3] %></td>
     <td><%= row[4] %></td>
     <td class="text-right"><%= number_with_delimiter row[5] %></td>
     <td class="text-right"><%= number_to_currency row[6] %></td>

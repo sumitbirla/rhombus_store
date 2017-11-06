@@ -49,7 +49,7 @@ class Admin::Store::ReportsController < Admin::BaseController
     
     sql = <<-EOF
       select distinct o.user_id, u.`name`, o.shipping_city, o.shipping_state, oi.item_number, sum(oi.quantity) as 'total_quantity_ordered', 
-      avg(o.total) as 'average_order_amount', DATE(o.submitted) as 'last ordered' 
+      avg(o.total) as 'average_order_amount', DATE(o.submitted) as 'last ordered', u.email 
       from store_orders o
       join store_order_items oi on oi.order_id = o.id
       join core_users u on o.user_id = u.id
