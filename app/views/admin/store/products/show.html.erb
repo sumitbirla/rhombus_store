@@ -293,6 +293,9 @@
       </div>
     </div>
     <% end %>
+    
+    <i class="fa fa-info-circle"></i> 
+    <%= link_to "see who purchased this item", admin_store_reports_product_sales_by_user_path(product_id: @product.id, start_date: 1.year.ago.to_date) %>
   <% end %>
 
 </div>

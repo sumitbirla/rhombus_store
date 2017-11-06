@@ -90,6 +90,7 @@ Rails.application.routes.draw do
 
       get 'reports/product_sales_by_sku'
       get 'reports/product_sales_by_affiliate'
+      get 'reports/product_sales_by_user'
       get 'reports/product_sales'
       get 'reports/daily_sales'
       get 'reports/monthly_sales'

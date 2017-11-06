@@ -1,4 +1,5 @@
 <form action="" method="get" class="pull-right well">
+  <input type="hidden" name="product_id" value="<%= params[:product_id] %>">
   Sales channel:  &nbsp; <select name="sales_channel">
     <option value="">-- all channels --</option>
     <% @sales_channels.each do |ch| %>
