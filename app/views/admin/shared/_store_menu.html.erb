@@ -65,7 +65,7 @@
       <li><%= link_to "Tax Rates", admin_store_tax_rates_path %></li>
     <% end %>
     <% if current_user.has_permission?('Upc', 'index')%>
-      <li><%= link_to "UPC Codes", admin_store_upc_index_path %></li>
+      <li><%= link_to "UPC Codes", admin_store_upc_index_path(allocated: 1) %></li>
     <% end %>
     <% if current_user.has_permission?('VoucherGroup', 'index')%>
       <li><%= link_to "Vouchers", admin_store_voucher_groups_path %></li>
