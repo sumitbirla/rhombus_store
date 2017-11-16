@@ -2,6 +2,8 @@ class Admin::Store::UpcController < Admin::BaseController
   
   def index
     @upcs = Upc.order(:code)
+    @upcs = @upcs.where("item IS NOT NULL AND item <> ''") if params[:allocated] == "1"
+    @upcs = @upcs.where("item IS NULL OR item = ''") if params[:allocated] == "0"
     @upcs = @upcs.where("code LIKE ? OR item LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%") unless params[:q].nil?
     
     respond_to do |format|

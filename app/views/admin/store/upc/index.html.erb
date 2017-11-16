@@ -10,6 +10,12 @@
 
 <%= render "admin/shared/search_results_header", object: @upcs %>
 
+<ul class="nav nav-tabs" style="margin-bottom: 10px;">
+  <li class="<%= "active" if params[:allocated] == "1" %>"><a href="<%= admin_store_upc_index_path(allocated: 1) %>">Allocated</a></li>
+  <li class="<%= "active" if params[:allocated] == "0" %>"><a href="<%= admin_store_upc_index_path(allocated: 0) %>">Unallocated</a></li>
+  <li class="<%= "active" if params[:allocated].blank? %>"><a href="<%= admin_store_upc_index_path %>">All</a></li>
+</ul>
+
 <%= will_paginate @upcs %>
 <table class="table table-striped table-condensed">
 	<tr>
