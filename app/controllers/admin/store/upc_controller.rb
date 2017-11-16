@@ -2,7 +2,7 @@ class Admin::Store::UpcController < Admin::BaseController
   
   def index
     @upcs = Upc.order(:code)
-    @upcs = @upcs.where("code LIKE '%#{params[:q]}%' OR item LIKE '%#{params[:q]}%'") unless params[:q].nil?
+    @upcs = @upcs.where("code LIKE ? OR item LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%") unless params[:q].nil?
     
     respond_to do |format|
       format.html  { @upcs = @upcs.paginate(page: params[:page], per_page: @per_page) }
@@ -47,6 +47,29 @@ class Admin::Store::UpcController < Admin::BaseController
     @upc = Upc.find(params[:id])
     @upc.destroy
     redirect_to action: 'index', notice: 'Upc has been deleted.'
+  end
+  
+  
+  def allocate_batch
+    # CHECK IF TAG HAS BEEN USED PREVIOUSLY
+    if params[:tag].blank? || Upc.exists?(item: params[:tag])
+      flash[:error] = "The tag has already been used.  Please specify a different tag."
+      return redirect_to :back
+    end
+    
+    # CHECK IF ENOUGH UPC codes AVAILABLE
+    qty = params[:quantity].to_i
+    list = Upc.where("item IS NULL OR item = ''").limit(qty)
+    if list.length < qty
+      flash[:error] = "Not enough available UPCs.  Requested: #{params[:quantity]},  available: #{list.length}"
+      return redirect_to :back
+    end
+      
+    # ALLOCATE
+    Upc.where(id: list.collect(&:id)).update_all(item: params[:tag])
+    flash[:info] = "#{params[:quantity]} UPC's allocated with tag '#{params[:tag]}'"
+      
+    redirect_to action: :index, q: params[:tag]
   end
   
   

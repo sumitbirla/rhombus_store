@@ -134,6 +134,8 @@ Rails.application.routes.draw do
       
       get 'products/item_info' => 'products#item_info'
       
+      post 'upc/allocate_batch' => 'upc#allocate_batch'
+      
       resources :auto_ship_items
       resources :brands
       resources :products do

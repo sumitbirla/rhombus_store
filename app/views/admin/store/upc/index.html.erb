@@ -1,6 +1,10 @@
-<%= link_to new_admin_store_upc_path, class: 'btn btn-sm btn-default pull-right' do %>
-  <i class="fa fa-plus"></i> New UPC code
-<% end %>
+<div class="pull-right">
+  <a id="allocate-link" href="#" class="btn btn-sm btn-default"><i class="fa fa-ellipsis-v"></i> Allocate batch</a> &nbsp;
+  <%= link_to new_admin_store_upc_path, class: 'btn btn-sm btn-default' do %>
+    <i class="fa fa-plus"></i> New UPC code
+  <% end %>
+</div>
+
 <h2><i class="fa fa-barcode"></i> UPC</h2>
 
 
@@ -33,9 +37,55 @@
 	</tr>
 	<% end %>
 </table>
-
-
 <%= render 'admin/shared/table_summary', data: @upcs %>
+
+
+
+
+<div id="allocate-dialog" class="modal modal-primary fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Allocate Batch</h4>
+      </div>
+      <div class="modal-body">
+        <% available_count = Upc.where("item IS NULL OR item = ''").count %>
+        <form id="allocate-form" action="<%= admin_store_upc_allocate_batch_path %>" method="post">
+          <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+          Quantity: <input type="number" name="quantity" style="width: 120px"/> &nbsp; &nbsp; &nbsp;
+          Tag: <input type="text" name="tag">
+        </form>
+        <br><b>Note: </b><%= number_with_delimiter(available_count) %> UPC codes available
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="btn-allocate">Allocate</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+      
+        $("#allocate-link").click(function() {
+          $("#allocate-dialog").modal();
+          return false;
+        });
+        
+        $("#btn-allocate").click(function () {
+          if ($("input[name='tag']").val() == '' || $("input[name='quantity']").val() == '') {
+            alert("Please enter quantity and a tag to identify this batch.");
+            return;
+          }
+          $("#allocate-form").submit();
+        });     
+        
+    });
+</script>
+
 
 
 <%= content_for :title do %>
