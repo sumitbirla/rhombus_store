@@ -15,6 +15,8 @@
 class Upc < ActiveRecord::Base
   include Exportable
   self.table_name = "store_upc"
+  scope :allocated, -> { where("item IS NOT NULL AND item <> ''") }
+  scope :unallocated, -> { where("item IS NULL OR item = ''") }
   
   def to_s
     code

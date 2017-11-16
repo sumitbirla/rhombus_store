@@ -11,8 +11,8 @@
 <%= render "admin/shared/search_results_header", object: @upcs %>
 
 <ul class="nav nav-tabs" style="margin-bottom: 10px;">
-  <li class="<%= "active" if params[:allocated] == "1" %>"><a href="<%= admin_store_upc_index_path(allocated: 1) %>">Allocated</a></li>
-  <li class="<%= "active" if params[:allocated] == "0" %>"><a href="<%= admin_store_upc_index_path(allocated: 0) %>">Unallocated</a></li>
+  <li class="<%= "active" if params[:allocated] == "1" %>"><a href="<%= admin_store_upc_index_path(allocated: 1) %>"><%= tab_count "Allocated", Upc.allocated.count %></a></li>
+  <li class="<%= "active" if params[:allocated] == "0" %>"><a href="<%= admin_store_upc_index_path(allocated: 0) %>"><%= tab_count "Unallocated", Upc.unallocated.count %></a></li>
   <li class="<%= "active" if params[:allocated].blank? %>"><a href="<%= admin_store_upc_index_path %>">All</a></li>
 </ul>
 
@@ -24,6 +24,7 @@
     <th>Flags</th>
     <th>Img Label</th>
     <th>Notes</th>
+    <th>Last Update</th>
 		<th class="actions">&nbsp;</th>
 	</tr>
 	<% @upcs.each do |upc| %>
@@ -33,7 +34,8 @@
     <td><%= upc.flags %></td>
     <td><%= upc.image_label %></td>
     <td><%= upc.notes %></td>
-		<td class="actions">
+    <td><%= systime upc.updated_at %></td>
+		<td class="text-right">
 			<%= link_to "edit", edit_admin_store_upc_path(upc) %> &nbsp;
 			<%= link_to "delete",
 						  { action: "destroy", id: upc.id },

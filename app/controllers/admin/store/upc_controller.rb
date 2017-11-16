@@ -68,7 +68,7 @@ class Admin::Store::UpcController < Admin::BaseController
     end
       
     # ALLOCATE
-    Upc.where(id: list.collect(&:id)).update_all(item: params[:tag])
+    Upc.where(id: list.collect(&:id)).update_all(item: params[:tag], updated_at: DateTime.now)
     flash[:info] = "#{params[:quantity]} UPC's allocated with tag '#{params[:tag]}'"
       
     redirect_to action: :index, q: params[:tag]
