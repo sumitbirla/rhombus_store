@@ -17,6 +17,7 @@
 class InventoryItem < ActiveRecord::Base
   
   self.table_name = "inv_items"
+  validates_presence_of :sku, :quantity, :inventory_location_id
   belongs_to :inventory_location
   belongs_to :inventory_transaction
   
