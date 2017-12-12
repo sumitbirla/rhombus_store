@@ -269,7 +269,7 @@ class Admin::Store::ReportsController < Admin::BaseController
     ActiveRecord::Base.connection.execute(sql).each { |row| @data_3mo << row } 
 
     sql = <<-EOF
-      select p.id, p.sku, p.name, sum(oi.quantity)
+      select p.id, p.sku, CONCAT(p.name, ', ', p.option_title), sum(oi.quantity)
       from store_orders o, store_order_items oi, store_products p
       where o.id = oi.order_id
       and oi.product_id = p.id
@@ -280,6 +280,16 @@ class Admin::Store::ReportsController < Admin::BaseController
 
     @data_6mo = []
     ActiveRecord::Base.connection.execute(sql).each { |row| @data_6mo << row } 
+    
+    sql = <<-EOF
+      select p.id, coalesce(sum(i.quantity), 0)
+      from store_products p
+      left join inv_items i on p.sku = i.sku
+      group by p.sku;
+    EOF
+    
+    @stock = []
+    ActiveRecord::Base.connection.execute(sql).each { |row| @stock << row }
     
   end
   
