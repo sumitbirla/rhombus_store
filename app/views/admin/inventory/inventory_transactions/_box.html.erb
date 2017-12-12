@@ -13,11 +13,13 @@
           <th class="text-center">Exp.</th>
           <th class="text-right">Qty.</th>  
         </tr>
-        <% inventory_transaction.items.each do |item| %>
+        <% inventory_transaction.items.each do |item| 
+			p = Product.find_by(sku: item.sku)
+		%>
         <tr>
           <td class="text-center"><%= item.inventory_location.name %></td>
           <td><%= item.sku %></td>
-          <td><%= Product.find_by(sku: item.sku).name_with_option %></td>
+          <td><%= p.nil? ? '-not found-' : p.name_with_option %></td>
           <td class="text-center"><%= item.lot %></td>
           <td class="text-center"><%= item.formatted_expiration %></td>
           <td class="text-right"><%= number_with_delimiter(item.quantity.abs) %></td>
