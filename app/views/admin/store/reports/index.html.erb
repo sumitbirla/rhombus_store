@@ -33,10 +33,14 @@
 		<td><%= link_to "Pending Fulfillment", admin_store_reports_pending_fulfillment_path %> </td>
 		<td>Items that need to be fulfilled currently</td>
 	</tr>
+	<tr>
+		<td><%= link_to "Sales Trend", admin_store_reports_sales_trend_path %> </td>
+		<td>Sales trend of each product</td>
+	</tr>
 </table>
 
 
-<%= content_for :title do %>
+<% content_for :title do %>
 	Reports
 <% end %>
 

@@ -213,6 +213,79 @@ class Admin::Store::ReportsController < Admin::BaseController
   end
   
   
+  
+  def sales_trend
+    
+    sql = <<-EOF
+      select p.id, sum(oi.quantity)
+      from store_orders o, store_order_items oi, store_products p
+      where o.id = oi.order_id
+      and oi.product_id = p.id
+      and o.status in ('shipped', 'submitted', 'backordered')
+      and o.submitted > NOW() - INTERVAL 1 WEEK
+      group by p.id;
+    EOF
+
+    @data_1wk = []
+    ActiveRecord::Base.connection.execute(sql).each { |row| @data_1wk << row } 
+
+    sql = <<-EOF
+      select p.id, sum(oi.quantity)
+      from store_orders o, store_order_items oi, store_products p
+      where o.id = oi.order_id
+      and oi.product_id = p.id
+      and o.status in ('shipped', 'submitted', 'backordered')
+      and o.submitted > NOW() - INTERVAL 2 WEEK
+      group by p.id;
+    EOF
+
+    @data_2wk = []
+    ActiveRecord::Base.connection.execute(sql).each { |row| @data_2wk << row } 
+
+    sql = <<-EOF
+      select p.id, sum(oi.quantity) 
+      from store_orders o, store_order_items oi, store_products p
+      where o.id = oi.order_id
+      and oi.product_id = p.id
+      and o.status in ('shipped', 'submitted', 'backordered')
+      and o.submitted > NOW() - INTERVAL 1 MONTH
+      group by p.id;
+    EOF
+
+    @data_1mo = []
+    ActiveRecord::Base.connection.execute(sql).each { |row| @data_1mo << row } 
+
+    sql = <<-EOF
+      select p.id, sum(oi.quantity)
+      from store_orders o, store_order_items oi, store_products p
+      where o.id = oi.order_id
+      and oi.product_id = p.id
+      and o.status in ('shipped', 'submitted', 'backordered')
+      and o.submitted > NOW() - INTERVAL 3 MONTH
+      group by p.id;
+    EOF
+
+    @data_3mo = []
+    ActiveRecord::Base.connection.execute(sql).each { |row| @data_3mo << row } 
+
+    sql = <<-EOF
+      select p.id, p.sku, p.name, sum(oi.quantity)
+      from store_orders o, store_order_items oi, store_products p
+      where o.id = oi.order_id
+      and oi.product_id = p.id
+      and o.status in ('shipped', 'submitted', 'backordered')
+      and o.submitted > NOW() - INTERVAL 6 MONTH
+      group by p.id;
+    EOF
+
+    @data_6mo = []
+    ActiveRecord::Base.connection.execute(sql).each { |row| @data_6mo << row } 
+    
+  end
+  
+  
+  
+  
   def set_report_params
     
     @sales_channels = Order.uniq(:sales_channel).pluck(:sales_channel)
