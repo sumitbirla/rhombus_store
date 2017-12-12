@@ -45,6 +45,14 @@
     <td class="text-right"><%= wk1 %></td>
   </tr>
   <% end %>
+  <tr>
+    <td colspan="3"><b>Total:</b></td>
+    <td class="text-right"><b><%= number_with_delimiter @data_6mo.sum { |x| x[3] } %></b></td>
+    <td class="text-right"><b><%= number_with_delimiter @data_3mo.sum { |x| x[1] } %></b></td>
+    <td class="text-right"><b><%= number_with_delimiter @data_1mo.sum { |x| x[1] } %></b></td>
+    <td class="text-right"><b><%= number_with_delimiter @data_2wk.sum { |x| x[1] } %></b></td>
+    <td class="text-right"><b><%= number_with_delimiter @data_1wk.sum { |x| x[1] } %></b></td>
+  </tr>
 </table>
 
 
