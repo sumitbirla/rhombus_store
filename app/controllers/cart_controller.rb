@@ -413,6 +413,11 @@ class CartController < ApplicationController
     # load order
     applied = false
     order = Order.includes(:items).find_by(cart_key: cookies[:cart])
+    
+    if order.nil? || order.items.length == 0
+      flash[:error] = "You don't have any items in your cart."
+      return redirect_to :back
+    end
 
     # test if code is a coupon code
     coupon = Coupon.find_by(code: params[:code])
