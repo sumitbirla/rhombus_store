@@ -42,9 +42,14 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       return redirect_to action: 'choose_order'
     end
 
-    @shipment = authorize @order.create_shipment(session[:user_id], false)
-    @shipment.invoice_amount = @order.total if @shipment.sequence == 1
-                    
+    begin
+      @shipment = authorize @order.create_shipment(session[:user_id], false)
+    rescue => e
+      flash[:error] = e.message
+      return redirect_to :back
+    end 
+    
+    @shipment.invoice_amount = @order.total if @shipment.sequence == 1             
     render 'edit'
   end
 
