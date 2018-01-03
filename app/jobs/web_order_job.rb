@@ -36,6 +36,13 @@ class WebOrderJob < ActiveJob::Base
       end
     end
     
+    # set ship_by date
+    if Date.today.cwday < 5
+      o.ship_by = Date.today + 1.day
+    else
+      o.ship_by = Date.today + (7-Date.today.cwday).days
+    end
+    
     # IMPORTANT - save any changed to order
     o.save validate: false
 
