@@ -19,7 +19,7 @@ class AmazonFulfillmentJob < ActiveJob::Base
              i.order_item.external_id, 
              i.quantity, 
              shp.ship_date.strftime("%Y-%m-%d"),
-             shp.carrier,
+             shp.carrier.sub("FedExSmartPost", "FedEx SmartPost"),
              shp.tracking_number,
              shp.ship_method
            ].join("\t")
