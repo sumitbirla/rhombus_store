@@ -69,10 +69,12 @@ class Shipment < ActiveRecord::Base
   belongs_to :order
   belongs_to :fulfiller, class_name: 'User', foreign_key: 'fulfilled_by_id'
   has_many :items, class_name: 'ShipmentItem', dependent: :destroy
+  has_many :packages, class_name: 'ShipmentPackage', dependent: :destroy
   has_one :inventory_transaction, dependent: :destroy
   has_many :logs, as: :loggable
   
   accepts_nested_attributes_for :items, allow_destroy: true
+  accepts_nested_attributes_for :packages, allow_destroy: true
 
   validates_presence_of :ship_from_company, :ship_from_street1, :ship_from_city, :ship_from_state, :ship_from_zip, :ship_from_country
   validates_presence_of :recipient_name, :recipient_street1, :recipient_city, :recipient_zip, :recipient_country

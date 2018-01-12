@@ -1,9 +1,9 @@
 class CreateShipmentPackages < ActiveRecord::Migration
   def change
-    create_table :shipment_packages do |t|
-      t.references :shipment, index: true, foreign_key: true
+    create_table :store_shipment_packages do |t|
+      t.integer :shipment_id, null: false
       t.string :tracking_number
-      t.string :predefined_type
+      t.string :predefined_type, null: false
       t.decimal :length, precision: 6, scale: 2
       t.decimal :width, precision: 6, scale: 2
       t.decimal :height, precision: 6, scale: 2

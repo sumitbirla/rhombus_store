@@ -44,9 +44,10 @@ class Admin::Store::ProductsController < Admin::BaseController
 
   def update
     @product = authorize Product.find(params[:id])
-    
+
     if @product.update(product_params)
       Rails.cache.delete @product
+      Rails.cache.delete("featured-product")
       redirect_to action: 'show', id: params[:id], notice: 'Product was successfully updated.'
     else
       render 'edit'
