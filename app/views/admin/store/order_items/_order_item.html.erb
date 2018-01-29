@@ -23,7 +23,11 @@
     &nbsp; (<span><%= order_item.affiliate %></span>)
   <% end %>
   <% unless order_item.uploaded_file.nil? %>
-    <span> &nbsp; &nbsp; <a target="_new" href="<%= cdn_download_url order_item.uploaded_file %>"><i class="fa fa-download text-danger"></i></a></span>
+    <% if order_item.uploaded_file.starts_with?("http") %>
+      <span> &nbsp; &nbsp; <a href="<%= order_item.uploaded_file %>"><i class="fa fa-download text-danger"></i></a></span>
+    <% else %>
+      <span> &nbsp; &nbsp; <a target="_new" href="<%= cdn_download_url order_item.uploaded_file %>"><i class="fa fa-download text-danger"></i></a></span>
+    <% end %>
   <% end %>
 <% else %>
   <span class="text-danger"><i class="fa fa-exclamation-circle"></i> <%= order_item.item_description %></span>
