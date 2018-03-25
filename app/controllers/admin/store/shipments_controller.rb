@@ -76,6 +76,17 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   
   def edit
     @shipment = authorize Shipment.includes(:items, [items: :product], [items: :affiliate], [items: :order_item]).find(params[:id])
+    
+    # add any items that were added to Order later and not currently present in Shipment
+    @shipment.order.items.each do |oi|
+      unless @shipment.items.any? { |x| x.order_item_id == oi.id }
+        @shipment.items.build(order_item_id: oi.id, 
+                              product_id: oi.product_id, 
+                              affiliate_id: oi.affiliate_id,
+                              variation: oi.variation,
+                              quantity: 0) 
+      end
+    end
   end
 
   def update
