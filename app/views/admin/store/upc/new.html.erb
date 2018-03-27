@@ -1,0 +1,34 @@
+<h2>New UPC</h2>
+<hr/>
+
+<%= simple_form_for @upc, url: admin_store_upc_index_path do |f| %>
+
+    <%= render 'admin/shared/error_messages', object: f.object %>
+
+    <%= f.input :code %>
+    <%= f.input :item %>
+    <%= f.input :flags %>
+    <%= f.input :image_label %>
+    <%= f.input :notes %>
+
+    <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+
+<% end %>
+
+
+
+<%= content_for :title do %>
+    UPC Codes: <%= @upc.item %>
+<% end %>
+
+
+<% content_for :menu do
+  render "admin/shared/store_menu"
+end %>
+
+
+<% content_for :breadcrumbs do %>
+    <li><a href="#">eCommerce</a></li>
+    <li><%= link_to "UPC Codes", admin_store_upc_index_path %></li>
+    <li class="active"><%= @upc.item %></li>
+<% end %>

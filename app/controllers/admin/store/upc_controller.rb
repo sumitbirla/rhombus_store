@@ -14,7 +14,6 @@ class Admin::Store::UpcController < Admin::BaseController
 
   def new
     @upc = Upc.new
-    render 'edit'
   end
 
   def create
@@ -23,7 +22,7 @@ class Admin::Store::UpcController < Admin::BaseController
     if @upc.save
       redirect_to action: 'index', notice: 'Upc was successfully created.'
     else
-      render 'edit'
+      render 'new'
     end
   end
 
