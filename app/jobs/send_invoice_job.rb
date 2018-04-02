@@ -18,7 +18,7 @@ class SendInvoiceJob < ActiveJob::Base
     url = website_url + "/admin/store/shipments/#{shipment.id}/invoice?digest=#{digest}" 
       
     output_file = "/tmp/#{SecureRandom.hex(6)}.pdf"
-    system "wkhtmltopdf #{url} #{output_file}"
+    system "wkhtmltopdf -s Letter #{url} #{output_file}"
     
     Mail.deliver do
       from      Cache.setting(Rails.configuration.domain_id, :system, 'From Email Address')

@@ -196,7 +196,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     end
     
     output_file = "/tmp/#{SecureRandom.hex(6)}.pdf"
-    ret = system("wkhtmltopdf -q #{urls} #{output_file}")
+    ret = system("wkhtmltopdf -q -s Letter #{urls} #{output_file}")
     
     unless File.exists?(output_file)
       flash[:error] = "Unable to generate PDF [Debug: #{$?}]"
