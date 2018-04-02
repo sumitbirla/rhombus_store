@@ -385,6 +385,20 @@ class Order < ActiveRecord::Base
     
   end
   
+  # check to see if shipments (status 'shipped') contain all items orders
+  def complete_order_shipped?
+    shipped_items = ShipmentItem.joins(:shipment)
+                                .where("store_shipments.order_id = ? AND store_shipments.status = 'shipped'", id)
+    
+    items.each do |i|
+      if i.quantity > shipped_items.select{ |x| x.order_item_id == i.id }.sum(&:quantity)
+        return false
+      end
+    end
+    
+    true
+  end
+  
   # PUNDIT
   def self.policy_class
     ApplicationPolicy

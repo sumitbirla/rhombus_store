@@ -136,8 +136,10 @@ class Shipment < ActiveRecord::Base
   # this callback is executed after shipment is saved
   def update_order
     if status == "shipped"
-      if Shipment.where(order_id: order_id).where.not(status: "shipped").length == 0
-        Order.find(order_id).update_attribute(:status, "shipped")
+      if order.complete_order_shipped?
+        order.update_attribute(:status, "shipped")
+      else
+        order.update_attribute(:status, "partially_shipped")
       end
     end
     
