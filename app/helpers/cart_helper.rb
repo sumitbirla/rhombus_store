@@ -22,8 +22,15 @@ module CartHelper
 
 
   def apply_tax(order)
+    order.tax_rate = 0.0
+    order.tax_amount = 0.0
+    
+    # Do not add tax to tax_exempt customers
+    if order.user && order.user.affiliate && order.user.affiliate.tax_exempt
+      return
+    end
+    
     zip = ZipCode.find_by(code: order.shipping_zip)
-
     unless zip.nil?
       # determine tax
       order.tax_rate = zip.tax_rate
@@ -31,9 +38,6 @@ module CartHelper
 
       # order total needs to be > $0.0 to apply tax
       order.tax_amount = 0.0 if order.tax_amount <= 0.0
-    else
-      order.tax_rate = 0.0
-      order.tax_amount = 0.0
     end
   end
 
