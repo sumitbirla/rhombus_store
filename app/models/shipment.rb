@@ -47,10 +47,11 @@
 #  inventory_updated    :boolean          default(FALSE), not null
 #  batch_status         :string(255)
 #  batch_status_message :string(255)
-#  created_at           :datetime
-#  updated_at           :datetime
 #  manifest_id          :integer
 #  third_party_billing  :boolean          default(FALSE), not null
+#  items_hash           :string(32)
+#  created_at           :datetime
+#  updated_at           :datetime
 #
 
 require 'net/http'

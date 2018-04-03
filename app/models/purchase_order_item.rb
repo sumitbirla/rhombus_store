@@ -9,7 +9,7 @@
 #  description       :string(255)
 #  supplier_code     :string(255)
 #  upc               :string(255)
-#  unit_price        :decimal(10, 2)
+#  unit_price        :decimal(12, 4)   default(0.0), not null
 #  discount          :decimal(10, 2)
 #  quantity_received :integer          default(0), not null
 #  status            :string(255)

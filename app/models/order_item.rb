@@ -16,15 +16,16 @@
 #  autoship_months     :integer          default(0), not null
 #  uploaded_file       :string(255)
 #  upload_file_preview :string(255)
+#  rendered_file       :string(255)
 #  start_x_percent     :integer
 #  start_y_percent     :integer
 #  width_percent       :integer
 #  height_percent      :integer
 #  custom_text         :string(255)
-#  created_at          :datetime
-#  updated_at          :datetime
 #  quantity_accepted   :integer          default(0), not null
 #  quantity_received   :integer          default(0), not null
+#  created_at          :datetime
+#  updated_at          :datetime
 #
 
 class OrderItem < ActiveRecord::Base

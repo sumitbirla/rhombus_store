@@ -2,52 +2,51 @@
 #
 # Table name: store_products
 #
-#  id                     :integer          not null, primary key
-#  name                   :string(255)      not null
-#  group                  :string(255)
-#  product_type           :string(255)
-#  slug                   :string(255)
-#  brand_id               :integer
-#  item_number            :string(255)      default(""), not null
-#  upc                    :string(255)
-#  sku                    :string(255)
-#  active                 :boolean          default(TRUE), not null
-#  title                  :string(255)
-#  option_title           :string(255)
-#  option_sort            :integer
-#  retail_map             :decimal(10, 2)
-#  price                  :decimal(10, 2)
-#  msrp                   :decimal(10, 2)
-#  special_price          :decimal(10, 2)
-#  free_shipping          :boolean          default(FALSE), not null
-#  tax_exempt             :boolean          default(FALSE), not null
-#  hidden                 :boolean          default(FALSE), not null
-#  featured               :boolean          default(FALSE), not null
-#  auto_ship              :boolean          default(FALSE), not null
-#  affiliate_only         :boolean
-#  require_image_upload   :boolean          default(FALSE), not null
-#  short_description      :text(65535)
-#  long_description       :text(65535)
-#  keywords               :string(255)
-#  warranty               :string(255)
-#  fulfiller_id           :integer
-#  label_sheet_id         :integer
-#  item_length            :decimal(10, 3)
-#  item_width             :decimal(10, 3)
-#  item_height            :decimal(10, 3)
-#  item_weight            :decimal(10, 3)
-#  case_length            :decimal(10, 3)
-#  case_width             :decimal(10, 3)
-#  case_height            :decimal(10, 3)
-#  case_weight            :decimal(10, 3)
-#  case_quantity          :integer
-#  country_of_origin      :string(255)
-#  minimum_order_quantity :integer
-#  low_threshold          :integer
-#  item_availability      :date
-#  harmonized_code        :string(255)
-#  created_at             :datetime
-#  updated_at             :datetime
+#  id                   :integer          not null, primary key
+#  name                 :string(255)      not null
+#  group                :string(255)
+#  product_type         :string(255)      default(""), not null
+#  slug                 :string(255)
+#  brand_id             :integer
+#  item_number          :string(255)      default(""), not null
+#  upc                  :string(255)
+#  sku                  :string(255)
+#  active               :boolean          default(TRUE), not null
+#  title                :string(255)
+#  option_title         :string(255)
+#  option_sort          :integer
+#  retail_map           :decimal(10, 2)
+#  price                :decimal(10, 2)
+#  msrp                 :decimal(10, 2)
+#  special_price        :decimal(10, 2)
+#  free_shipping        :boolean          default(FALSE), not null
+#  tax_exempt           :boolean          default(FALSE), not null
+#  hidden               :boolean          default(FALSE), not null
+#  featured             :boolean          default(FALSE), not null
+#  auto_ship            :boolean          default(FALSE), not null
+#  affiliate_only       :boolean
+#  require_image_upload :boolean          default(FALSE), not null
+#  short_description    :text(65535)
+#  long_description     :text(65535)
+#  keywords             :string(255)
+#  warranty             :string(255)
+#  fulfiller_id         :integer
+#  label_sheet_id       :integer
+#  item_length          :decimal(10, 3)
+#  item_width           :decimal(10, 3)
+#  item_height          :decimal(10, 3)
+#  item_weight          :decimal(10, 3)
+#  case_length          :decimal(10, 3)
+#  case_width           :decimal(10, 3)
+#  case_height          :decimal(10, 3)
+#  case_weight          :decimal(10, 3)
+#  case_quantity        :integer
+#  country_of_origin    :string(255)
+#  low_threshold        :integer
+#  item_availability    :date
+#  harmonized_code      :string(255)
+#  created_at           :datetime
+#  updated_at           :datetime
 #
 
 class Product < ActiveRecord::Base

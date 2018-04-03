@@ -5,12 +5,12 @@
 #  id                   :integer          not null, primary key
 #  product_id           :integer          not null
 #  name                 :string(255)      not null
-#  type                 :string(255)      not null
-#  use                  :string(255)      not null
-#  top                  :decimal(6, 2)
-#  left                 :decimal(6, 2)
-#  width                :decimal(6, 2)
-#  height               :decimal(6, 2)
+#  text_or_image        :string(255)      default(""), not null
+#  web_or_print         :string(255)      default(""), not null
+#  top                  :integer
+#  left                 :integer
+#  width                :integer
+#  height               :integer
 #  background_color     :string(255)
 #  horizontal_alignment :string(255)
 #  vertical_alignment   :string(255)
