@@ -32,8 +32,8 @@
 			<% end %>
 		</td>
 		<td><%= order.shipping_city %>, <%= order.shipping_state %></td>
-		<td><%= number_to_currency(order.total) %></td>
     <td><%= order.ship_latest %></td>
-    <td class="ralign hidden-xs"><%= shipment_icons(order) %></td>
-		<td><%= order_status(order) %></td>
+		<td class="text-right"><%= number_to_currency(order.total) %></td>
+    <td class="text-right hidden-xs"><%= shipment_icons(order) %></td>
+		<td class="text-right"><%= order_status(order) %></td>
 	</tr>
