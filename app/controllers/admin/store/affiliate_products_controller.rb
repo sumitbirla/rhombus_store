@@ -7,15 +7,13 @@ class Admin::Store::AffiliateProductsController < Admin::BaseController
   end
   
   def create
-    begin
-      ap = authorize AffiliateProduct.new(affiliate_product_params)
-      ap.save!
-    rescue => e
-      flash[:error] = e.message
-      redirect_to :back
-    end
+    @affiliate_product = authorize AffiliateProduct.new(affiliate_product_params)
     
-    redirect_to admin_system_affiliate_path(ap.affiliate_id, q: :products)
+    if @affiliate_product.save
+      redirect_to admin_system_affiliate_path(@affiliate_product.affiliate_id, q: :products)
+    else
+      render 'edit'
+    end
   end
   
   def edit
