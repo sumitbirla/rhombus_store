@@ -38,4 +38,12 @@ class OrderItem < ActiveRecord::Base
   validates_presence_of :quantity, :unit_price
   #validates :product_id, presence: true, if: daily_deal_id.nil?
   #validates :daily_deal_id, presence: true, if: product_id.nil?
+  
+  # check to see how much of this item has already shipped
+  def quantity_shipped
+    qty = ShipmentItem.joins(:shipment)
+                      .where("store_shipments.status = 'shipped' AND order_item_id = ?", id)
+                      .sum(:quantity)
+  end
+  
 end
