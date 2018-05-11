@@ -154,7 +154,8 @@
       </thead>
       <tbody>
       <% @shipment.items.each do |item| 
-          upc = upc_list.find { |x| x.item == item.order_item.item_number } %>
+          upc = upc_list.find { |x| x.item == item.order_item.item_number } 
+          next if item.order_item.nil? || (item.quantity == 0 && item.special_status.blank?) %>
       <tr>
         <td nowrap><%= item.order_item.item_number %></td>
         <td><%= upc.nil? ? item.product.upc : upc %></td>

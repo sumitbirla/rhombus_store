@@ -132,7 +132,7 @@
         <th class="calign">Status</th>
     </tr>
     <% @shipment.items.each do |item| 
-        next if item.order_item.nil?
+        next if item.order_item.nil? || (item.quantity == 0 && item.special_status.blank?)
         upc = upc_list.find { |x| x.item == item.order_item.item_number } %>
         <tr>
             <td nowrap><%= item.order_item.item_number %></td>
