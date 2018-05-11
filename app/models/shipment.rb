@@ -234,7 +234,7 @@ class Shipment < ActiveRecord::Base
     
     products.each do |p|
       quantity = items.select { |x| x.product_id == p.id }.sum(&:quantity)
-      tran.items << InventoryItem.get(p.sku, quantity)
+      tran.items << InventoryItem.get(p.sku, quantity) unless quantity == 0
     end
     
     tran
