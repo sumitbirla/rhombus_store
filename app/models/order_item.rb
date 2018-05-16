@@ -9,8 +9,8 @@
 #  affiliate_id        :integer
 #  external_id         :string(255)
 #  variation           :string(255)
-#  quantity            :integer          not null
-#  unit_price          :decimal(12, 4)   not null
+#  quantity            :integer          default(1), not null
+#  unit_price          :decimal(12, 4)   default(0.0), not null
 #  item_number         :string(32)       not null
 #  item_description    :string(255)      not null
 #  autoship_months     :integer          default(0), not null

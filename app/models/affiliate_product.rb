@@ -4,8 +4,10 @@
 #
 #  id                     :integer          not null, primary key
 #  affiliate_id           :integer          not null
-#  product_id             :integer          not null
 #  item_number            :string(255)
+#  product_id             :integer          not null
+#  variant1               :string(255)
+#  variant2               :string(255)
 #  price                  :decimal(10, 4)
 #  sale_price             :decimal(10, 4)
 #  minimum_order_quantity :integer          default(1), not null

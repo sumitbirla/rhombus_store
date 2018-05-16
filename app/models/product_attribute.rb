@@ -14,6 +14,7 @@
 #  InventoryAcctIndx :integer
 #  COGAcctIndx       :integer
 #  ITMCLSCD          :string(11)
+#  PetProduct        :boolean          default(FALSE)
 #
 
 class ProductAttribute < ActiveRecord::Base
