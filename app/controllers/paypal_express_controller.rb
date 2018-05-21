@@ -49,7 +49,7 @@ class PaypalExpressController < ActionController::Base
       payment_method: 'PAYPAL',
       paypal_token: gateway_response.token,
       paypal_payer_id: gateway_response.payer_id,
-      sales_channel: Cache.setting(Module::Rails.configuration.domain_id, :system, 'Website Name')
+      sales_channel: Cache.setting(Rails.configuration.domain_id, :system, 'Website Name')
     })
     
     update_totals(@cart)
@@ -69,9 +69,9 @@ class PaypalExpressController < ActionController::Base
 
     def assigns_gateway
       @gateway ||= PaypalExpressGateway.new(
-          :login => Cache.setting(Module::Rails.configuration.domain_id, 'eCommerce', 'PayPal API Username'),
-          :password => Cache.setting(Module::Rails.configuration.domain_id, 'eCommerce', 'PayPal API Password'),
-          :signature => Cache.setting(Module::Rails.configuration.domain_id, 'eCommerce', 'PayPal Signature'),
+          :login => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'PayPal API Username'),
+          :password => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'PayPal API Password'),
+          :signature => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'PayPal Signature'),
       )
     end
 end
