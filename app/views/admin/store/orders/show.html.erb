@@ -200,7 +200,7 @@
   <% if @order.discount_amount > 0.0 %>
       <tr>
         <td colspan="5" class="ralign">
-          <% unless @order.coupon_id.nil? %>
+          <% unless @order.coupon.nil? %>
               <i>Coupon: <%= link_to @order.coupon.code, edit_admin_store_coupon_path(@order.coupon) %></i> &nbsp; &raquo; &nbsp;
           <% end %>
           Discount:
@@ -211,7 +211,7 @@
   <% if @order.credit_applied > 0.0 %>
       <tr>
         <td colspan="5" class="ralign">
-          <% unless @order.voucher_id.nil? %>
+          <% unless @order.voucher.nil? %>
               <i>Voucher: <%= link_to @order.voucher.code, admin_store_voucher_group_path(@order.voucher.voucher_group_id) %></i> &nbsp; &raquo; &nbsp;
           <% end %>
           Credit:</td>
