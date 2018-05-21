@@ -69,9 +69,9 @@ class PaypalExpressController < ActionController::Base
 
     def assigns_gateway
       @gateway ||= PaypalExpressGateway.new(
-          :login => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'PayPal API Username'),
-          :password => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'PayPal API Password'),
-          :signature => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'PayPal Signature'),
+          :login => Cache.setting(1, 'eCommerce', 'PayPal API Username'),
+          :password => Cache.setting(1, 'eCommerce', 'PayPal API Password'),
+          :signature => Cache.setting(1, 'eCommerce', 'PayPal Signature'),
       )
     end
 end
