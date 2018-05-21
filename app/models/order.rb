@@ -3,10 +3,14 @@
 # Table name: store_orders
 #
 #  id                     :integer          not null, primary key
+#  batch_id               :integer
 #  domain_id              :integer          not null
 #  external_order_id      :string(255)
 #  sales_channel          :string(255)
 #  user_id                :integer
+#  affiliate_id           :integer
+#  financial_status       :string(255)
+#  fulfillment_status     :string(255)
 #  cart_key               :string(255)      default(""), not null
 #  affiliate_campaign_id  :integer
 #  referred_by            :integer
@@ -58,11 +62,14 @@
 #  paypal_token           :string(255)
 #  paypal_payer_id        :string(255)
 #  fb_discount            :decimal(5, 2)    default(0.0), not null
+#  expected_delivery_date :date
 #  created_at             :datetime
 #  updated_at             :datetime
-#  affiliate_id           :integer
-#  expected_delivery_date :date
 #
+
+
+## FINANCIAL STATUS:   pending, authorized, partially_paid, paid, partially_refunded, refunded, voided
+## FULFILLMENT STATUS: fulfilled, nil, partial, restocked
 
 require 'activemerchant'
 
@@ -80,6 +87,7 @@ class Order < ActiveRecord::Base
   belongs_to :affiliate_campaign
   belongs_to :coupon
   belongs_to :voucher
+  belongs_to :batch
   
   # destroy with super-caution because the following items will also be deleted
   has_many :items, class_name: 'OrderItem', dependent: :destroy
@@ -294,7 +302,6 @@ class Order < ActiveRecord::Base
   end
   
   
-  
   # create shipment for the order.  doesn't take inventory into consideration currently
   def create_shipment(user_id, save_to_db = true)
     
@@ -343,7 +350,7 @@ class Order < ActiveRecord::Base
                              product_id: item.product_id,
                              affiliate_id: item.affiliate_id,
                              variation: item.variation, 
-                             quantity: item.quantity_accepted)
+                             quantity: item.quantity_accepted - item.quantity_shipped)
 
       elsif item.daily_deal_id
         

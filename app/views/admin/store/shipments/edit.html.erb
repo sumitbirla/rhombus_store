@@ -37,8 +37,8 @@
               <% unless item.affiliate_id.nil? %>
                 &nbsp; (<span><%= item.affiliate %></span>)
               <% end %></td>
-            <td class="calign"><%= item.order_item.quantity %></td>
-            <td class="calign"><%= avl %></td>
+            <td class="calign"><%= number_with_delimiter(item.order_item.quantity) %></td>
+            <td class="calign"><%= number_with_delimiter(avl) %></td>
             <td class="calign"><%= itemf.number_field :quantity, unit_price: (item.order_item ? item.order_item.unit_price : '0.0'), class: "item-qty", style: 'width: 80px; text-align: center;' %></td>
             <td class="calign"><%= itemf.text_field :special_status %></td>
             <td><i class="fa fa-times light"></i><%= itemf.hidden_field :_destroy, class: 'destroy' %></td>

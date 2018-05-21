@@ -132,7 +132,7 @@
         <th class="calign">Status</th>
     </tr>
     <% @shipment.items.each do |item| 
-        next if item.order_item.nil?
+        next if item.order_item.nil? || (item.quantity == 0 && item.special_status.blank?)
         upc = upc_list.find { |x| x.item == item.order_item.item_number } %>
         <tr>
             <td nowrap><%= item.order_item.item_number %></td>
@@ -143,7 +143,7 @@
                 &nbsp; (<span><%= item.affiliate %></span>)
               <% end %>
               
-              <% if upc && !upc.flags.include?("P") %>
+              <% if upc && upc.flags && !upc.flags.include?("P") %>
                 &nbsp; &nbsp; <i class="fa fa-camera" style="color: #d9534f;"></i>
               <% end %>
             </td>

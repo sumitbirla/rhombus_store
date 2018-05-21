@@ -27,7 +27,7 @@ class AmazonFulfillmentJob < ActiveJob::Base
     
     d = shp.order.domain_id
     client = MWS.feeds(
-          marketplace_id: Cache.setting(d, "eCommerce", "Amazon Marketplace ID"),
+          marketplace: Cache.setting(d, "eCommerce", "Amazon Marketplace ID"),
           merchant_id: Cache.setting(d, "eCommerce", "Amazon Merchant ID"),
           aws_access_key_id: Cache.setting(d, "eCommerce", "AWS Access Key ID"),
           aws_secret_access_key: Cache.setting(d, "eCommerce", "AWS Secret Access Key")

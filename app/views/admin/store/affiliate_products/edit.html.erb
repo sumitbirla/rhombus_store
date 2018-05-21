@@ -5,6 +5,8 @@
 
   <%= f.hidden_field :affiliate_id %>
   <%= f.input :product_id, collection: Product.select(:id, :item_number, :name, :option_title).order(:item_number).map { |x| ["[ #{x.item_number} ] #{x.name_with_option}", x.id]} %>
+  <%= f.input :variant1 %>
+  <%= f.input :variant2 %>
   <%= f.input :title, as: :text, input_html: { rows: 2 } %>
   <%= f.input :item_number %>
   <%= f.input :price %>

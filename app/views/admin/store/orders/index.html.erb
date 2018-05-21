@@ -46,10 +46,10 @@
   		<th data-breakpoints="xs"><%= sortable "store_orders.submitted", "Submitted" %></th>
   		<th><%= sortable "store_orders.affiliate_id, store_orders.user_id", "Customer" %></th>
   		<th data-breakpoints="xs"><%= sortable "store_orders.shipping_city", "Location" %></th>
-  		<th data-breakpoints="xs"><%= sortable "store_orders.total", "Total" %></th>
       <th data-breakpoints="xs"><%= sortable "store_orders.ship_latest", "Ship by" %></th>
+      <th class="text-right" data-breakpoints="xs"><%= sortable "store_orders.total", "Total" %></th>
       <th class="hidden-xs"></th>
-  		<th>Status</th>
+  		<th class="text-right">Status</th>
   	</tr>
   	<%= render @orders %>
   </table>
