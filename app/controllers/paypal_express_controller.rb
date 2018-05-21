@@ -49,7 +49,7 @@ class PaypalExpressController < ActionController::Base
       payment_method: 'PAYPAL',
       paypal_token: gateway_response.token,
       paypal_payer_id: gateway_response.payer_id,
-      sales_channel: Cache.setting(Rails.configuration.domain_id, :system, 'Website Name')
+      sales_channel: Cache.setting(1, :system, 'Website Name')
     })
     
     update_totals(@cart)
