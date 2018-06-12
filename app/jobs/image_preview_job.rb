@@ -1,5 +1,4 @@
 require 'rmagick'
-require 'awesome_print'
 
 class ImagePreviewJob < ActiveJob::Base
   queue_as :image_processing
