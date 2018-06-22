@@ -227,7 +227,14 @@
     </div>
     <div class="panel-body">
       <table class="table table-condensed">
-        <% Product.where(group: @product.group).order(:option_sort).each do |v| %>
+        <% 
+          group = Product.where(group: @product.group)
+          if group.count > 20
+            breed = @product.categories.find { |x| x.parent_id == 2 }   # breed
+            group = group.joins(:categories).where("core_categories.id = ?", breed.id)
+          end 
+        %>
+        <% group.order(:option_sort).each do |v| %>
             <tr>
               <td><%= link_to v.item_number, admin_store_product_path(v) %></td>
               <td><%= v.option_title %></td>

@@ -58,18 +58,17 @@ class Product < ActiveRecord::Base
   belongs_to :fulfiller, class_name: 'Affiliate', foreign_key: 'fulfiller_id'
   belongs_to :label_sheet
 
-  has_many :pictures, -> { order :sort }, as: :imageable
-  has_many :comments, as: :commentable
-  has_many :product_categories
-  has_many :coupons, -> { order 'created_at desc' }
+  has_many :pictures, -> { order :sort }, as: :imageable, dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
+  has_many :product_categories, dependent: :destroy
+  has_many :coupons, -> { order 'created_at desc' }, dependent: :destroy
   has_many :categories, -> { order :sort }, through: :product_categories
-  has_many :extra_properties, -> { order "sort, name" }, as: :extra_property
-  has_many :label_elements
+  has_many :extra_properties, -> { order "sort, name" }, as: :extra_property, dependent: :destroy
+  has_many :label_elements, dependent: :destroy
   
   validates_presence_of :name, :item_number, :product_type
   validates_presence_of :title, :slug, :brand_id, :price, unless: lambda { |x| x.product_type == 'white-label' }
   validates_presence_of :sku, if: :warehoused?
-  validates_uniqueness_of :slug, allow_blank: true
   
   def to_s
     "#{sku}: #{title}"
