@@ -228,7 +228,7 @@
     <div class="panel-body">
       <table class="table table-condensed">
         <% 
-          group = Product.where(group: @product.group)
+          group = Product.where(group: @product.group, brand_id: @product.brand_id)
           if group.count > 20
             breed = @product.categories.find { |x| x.parent_id == 2 }   # breed
             group = group.joins(:categories).where("core_categories.id = ?", breed.id)
@@ -317,6 +317,6 @@
 
 <% content_for :breadcrumbs do %>
 	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Products", admin_store_products_path %></li>
+	<li><%= link_to "Products", admin_store_products_path(brand_id: @product.brand_id) %></li>
 	<li class="active"><%= @product.name_with_option %></li>
 <% end %>
