@@ -203,7 +203,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
             sum(si.quantity) as quantity, uploaded_file, upload_file_preview, rendered_file
       from store_shipment_items si
       join store_order_items oi on oi.id = si.order_item_id
-      join store_products p on p.id = si.product_id
+      join store_products p on p.id = oi.product_id
       join store_label_sheets sheet on sheet.id = p.label_sheet_id
       where shipment_id in (#{@shipments.map(&:id).join(",")})
       and si.quantity > 0
@@ -230,7 +230,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
               sum(si.quantity) as quantity, uploaded_file, upload_file_preview, rendered_file
       from store_shipment_items si
       join store_order_items oi on oi.id = si.order_item_id
-      join store_products p on p.id = si.product_id
+      join store_products p on p.id = oi.product_id
       join store_label_sheets sheet on sheet.id = p.label_sheet_id
       where shipment_id in (#{params[:shipment_id].join(",")})
       and si.quantity > 0

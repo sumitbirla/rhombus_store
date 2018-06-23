@@ -7,7 +7,7 @@ class Admin::Store::ProductsController < Admin::BaseController
     @products = Product.includes(:brand).order(sort_column + " " + sort_direction)
     
     unless q.nil?
-      @products = @products.where("name LIKE '%#{q}%' OR item_number = '#{q}' OR SKU = '#{q}'") 
+      @products = @products.where("name LIKE '%#{q}%' OR item_number = ? OR SKU = ? OR upc = ?", q, q, q) 
     else
       @products = @products.where(active: true) unless params[:product_type] == "all"
       @products = @products.where(brand_id: (params[:brand_id].blank? ? nil : params[:brand_id])) unless params[:brand_id] == 'all'
