@@ -39,7 +39,7 @@
       <div class="panel panel-default">
         <div class="panel-heading"><b>Basic Information</b></div>
         <div class="panel-body">
-          <%= f.input :template_product_id, collection: Product.where(template: true), label_method: :to_s %>
+          <%= f.input :template_product_id, collection: Product.where(template: true), prompt: '- do not use a template -', label_method: :to_s %>
     		  <%= f.input :item_number, label: 'Item #' %>
           <%= f.input :name %>
     		  <%= f.input :product_type, as: :select, collection: ['stock', 'on-demand', '3PL', 'white-label' ], label: 'Type' %>
