@@ -27,12 +27,7 @@
             <% @order.items.each do |item| %>
             <tr>
               <td style="border-bottom: solid 1px #999; padding-right: 15px; padding: 4px;"><%= item.item_number %></td>
-              <td style="border-bottom: solid 1px #999; padding-right: 15px; padding: 4px;">
-                <%= item.item_description %>
-                <% if item.affiliate_id %>
-                    <br/><i style="color: #999;">For <%= item.affiliate.name %></i>
-                <% end %>
-              </td>
+              <td style="border-bottom: solid 1px #999; padding-right: 15px; padding: 4px;"><%= item.item_description %></td>
               <td style="border-bottom: solid 1px #999; padding-right: 15px; padding: 4px; text-align: right;"><%= item.quantity %></td>
             </tr>
             <% end %>
@@ -40,7 +35,6 @@
           </table>
 
           <p style="text-align: center; margin-top: 40px;"><b>Total:</b> &nbsp; <%= number_to_currency(@order.total) %></p>
-          
           
     		</td>
     	</tr>

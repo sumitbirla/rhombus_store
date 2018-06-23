@@ -117,7 +117,6 @@
 
 
 <% 
-  upc_list = Upc.where(item: @shipment.order.items.collect { |x| x.item_number }) 
   item_count = @shipment.items.select { |x| x.quantity > 0 }.count
   total_qty = @shipment.items.map(&:quantity).reduce(:+)
 %>
@@ -132,21 +131,11 @@
         <th class="calign">Status</th>
     </tr>
     <% @shipment.items.each do |item| 
-        next if item.order_item.nil? || (item.quantity == 0 && item.special_status.blank?)
-        upc = upc_list.find { |x| x.item == item.order_item.item_number } %>
+        next if item.order_item.nil? || (item.quantity == 0 && item.special_status.blank?) %>
         <tr>
             <td nowrap><%= item.order_item.item_number %></td>
-            <td><%= upc.nil? ? item.product.upc : upc %></td>
-            <td>
-              <%= link_to item.product.full_name, admin_store_product_path(item.product_id) %>
-              <% unless item.affiliate_id.nil? %>
-                &nbsp; (<span><%= item.affiliate %></span>)
-              <% end %>
-              
-              <% if upc && upc.flags && !upc.flags.include?("P") %>
-                &nbsp; &nbsp; <i class="fa fa-camera" style="color: #d9534f;"></i>
-              <% end %>
-            </td>
+            <td><%= item.order_item.product.upc %></td>
+            <td><%= link_to item.order_item.product.full_name, admin_store_product_path(item.order_item.product_id) %></td>
             <td class="text-right"><%= number_with_delimiter(item.quantity) %></td>
             <td class="calign"><%= item.special_status %></td>
         </tr>

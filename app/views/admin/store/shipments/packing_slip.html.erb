@@ -159,16 +159,7 @@
       <tr>
         <td nowrap><%= item.order_item.item_number %></td>
         <td><%= upc.nil? ? item.product.upc : upc %></td>
-        <td>
-          <%= item.product.full_name %>
-          <% unless item.affiliate_id.nil? %>
-            &nbsp; (<span><%= item.affiliate %></span>)
-          <% end %>
-          
-          <% if false && upc && !upc.flags.include?("P") %>
-            &nbsp; &nbsp; <i style="color: #ccc;">P</i>
-          <% end %>
-        </td>
+        <td><%= item.product.full_name %></td>
         <td align="right" class="textright"><%= item.order_item.daily_deal_id.nil? ? item.order_item.quantity : item.quantity %></td>
         <td align="right" class="textright"><%= item.quantity unless item.quantity == 0 && !item.special_status.blank? %> <%= item.special_status %></td>
       </tr>

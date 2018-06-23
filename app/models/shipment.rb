@@ -240,12 +240,13 @@ class Shipment < ActiveRecord::Base
     tran
   end
   
-  def items_hash
+  def calculate_items_hash
     str = ""
-    product_ids = items.collect(&:product_id).uniq.sort
+		order_items = items.collect(&:order_item)
+    product_ids = order_items.collect(&:product_id).uniq.sort
     
     product_ids.each do |pid|
-      quantity = items.select { |x| x.product_id == pid }.sum(&:quantity)
+      quantity = order_items.select { |x| x.product_id == pid }.sum(&:quantity)
       str << "#{pid}:#{quantity}|"
     end
     
@@ -254,7 +255,7 @@ class Shipment < ActiveRecord::Base
   end
   
   def update_items_hash
-    self.items_hash = items_hash
+    self.items_hash = calculate_items_hash
   end
   
   # PUNDIT
