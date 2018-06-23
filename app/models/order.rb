@@ -347,22 +347,20 @@ class Order < ActiveRecord::Base
       
       # regular order item, not a daily deal
       if item.product_id
-        shipment.items.build(order_item_id: item.id, 
-                             product_id: item.product_id,
+        shipment.items.build(order_item_id: item.id,
                              quantity: item.quantity_accepted - item.quantity_shipped)
 
       elsif item.daily_deal_id
         
         if item.custom_text.blank?  
           item.daily_deal.items.each do |di|
-            shipment.items.build(order_item_id: item.id, 
-                               product_id: di.product_id,
+            shipment.items.build(order_item_id: item.id,
                                quantity: item.quantity * di.quantity)
           end
         else
           # user may have selected a specific item from drowndown
           p = Product.find_by(item_number: item.custom_text.split(":").first)
-          shipment.items.build(order_item_id: item.id, product_id: p.id, quantity: item.quantity)
+          shipment.items.build(order_item_id: item.id, quantity: item.quantity)
         end
         
       end
