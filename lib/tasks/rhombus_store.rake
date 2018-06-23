@@ -126,5 +126,27 @@ namespace :rhombus_store do
     end
   end
   
+	
+  desc "Reset shipment hashes"
+  task reset_shipment_hashes: :environment do
+		
+    Shipment.select(:id)
+						.includes(items: { order_item: :product })
+						.find_in_batches do |group|
+			group.each do |s|
+				print s.id.to_s + " : "
+				
+				begin
+					hash = s.calculate_items_hash
+					puts hash
+					s.update_column(:items_hash, hash)
+				rescue => e
+					puts e.message
+				end
+				
+			end
+		end
+		
+  end
 
 end
