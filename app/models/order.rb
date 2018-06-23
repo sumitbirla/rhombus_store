@@ -82,7 +82,7 @@ class Order < ActiveRecord::Base
   attr_accessor :same_as_shipping
   
   belongs_to :domain
-	belongs_to :sales_channel
+	# belongs_to :sales_channel
   belongs_to :user
   belongs_to :affiliate
   belongs_to :affiliate_campaign
