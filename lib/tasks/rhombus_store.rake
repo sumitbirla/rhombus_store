@@ -24,7 +24,9 @@ namespace :rhombus_store do
   task auto_ship_items: :environment do
     @logger = Logger.new(Rails.root.join("log", "autoship.log"))
     
-    asi_list = AutoShipItem.where(status: :active).where("next_ship_date < ?", Date.today + 2.day)
+    asi_list = AutoShipItem.includes(:product)
+												   .where(status: :active)
+													 .where("next_ship_date < ?", Date.today + 2.day)
     user_ids = asi_list.pluck(:user_id).uniq
     
     user_ids.each do |user_id|
@@ -73,14 +75,12 @@ namespace :rhombus_store do
       
       OrderItem.create(
         order_id: new_order.id,
-        item_number: i.item_number,
-        product_id: i.product_id,
-        affiliate_id: i.affiliate_id,
-        variation: i.variation,
-        item_description: i.description,
+				product_id: i.product_id,
         quantity: i.quantity,
         quantity_accepted: i.quantity,
-        unit_price: p.price
+				unit_price: p.price,
+        item_number: i.product.item_number,
+        item_description: i.product.title  
       )
     end
 
