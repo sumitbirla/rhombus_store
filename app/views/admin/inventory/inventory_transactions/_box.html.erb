@@ -13,8 +13,10 @@
           <th class="text-center">Exp.</th>
           <th class="text-right">Qty.</th>  
         </tr>
-        <% inventory_transaction.items.each do |item| 
-			p = Product.find_by(sku: item.sku)
+        <% 
+        products = Product.where(item_number: inventory_transaction.items.collect(&:sku))
+        inventory_transaction.items.each do |item| 
+			    p = products.find { |p| p.item_number == item.sku }
 		%>
         <tr>
           <td class="text-center"><%= item.inventory_location.name %></td>

@@ -71,7 +71,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   end
 
   def show
-    @shipment = authorize Shipment.includes(:items, [items: :order_item]).find(params[:id])
+    @shipment = authorize Shipment.includes(items: { order_item: :product }).find(params[:id])
   end
   
   def edit
