@@ -134,8 +134,14 @@
         next if item.order_item.nil? || (item.quantity == 0 && item.special_status.blank?) %>
         <tr>
             <td nowrap><%= item.order_item.item_number %></td>
-            <td><%= item.order_item.product.upc %></td>
-            <td><%= link_to item.order_item.product.full_name, admin_store_product_path(item.order_item.product_id) %></td>
+            <td><%= item.order_item.product.present? ? item.order_item.product.upc : "<span class='text-danger'>- product deleted -</span>".html_safe %></td>
+            <td>
+              <% if item.order_item.product.present? %>
+                <%= link_to item.order_item.product.full_name, admin_store_product_path(item.order_item.product_id) %>
+              <% else %>
+                <%= item.order_item.item_description %>
+              <% end %>
+            </td>
             <td class="text-right"><%= number_with_delimiter(item.quantity) %></td>
             <td class="calign"><%= item.special_status %></td>
         </tr>
