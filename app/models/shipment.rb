@@ -230,11 +230,11 @@ class Shipment < ActiveRecord::Base
   # creates a new transaction without saving to DB
   def new_inventory_transaction
     tran = InventoryTransaction.new
-    products = Product.where(id: items.map(&:order_item).map(&:product_id).uniq).select(:id, :sku)
+		skus = Product.where(id: items.map(&:order_item).map(&:product_id)).pluck(:sku).uniq
     
-    products.each do |p|
-      quantity = items.select { |x| x.order_item.product_id == p.id }.sum(&:quantity)
-      tran.items << InventoryItem.get(p.sku, quantity) unless quantity == 0
+    skus.each do |sku|
+      quantity = items.select { |x| x.order_item.product.sku == sku }.sum(&:quantity)
+      tran.items << InventoryItem.get(sku, quantity) unless quantity == 0
     end
     
     tran
