@@ -22,7 +22,7 @@
         item = @shipment.items[itemf.index] 
         avl = item.quantity
         if @shipment.inventory_transaction.nil?
-          avl = InventoryItem.where(sku: item.product.sku).sum(:quantity) 
+          avl = InventoryItem.where(sku: item.order_item.product.sku).sum(:quantity) 
         end
         %>
           <tr class="<%= 'danger' if avl < item.quantity %>">
