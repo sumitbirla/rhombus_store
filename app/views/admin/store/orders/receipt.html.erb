@@ -167,12 +167,7 @@
       <% @order.items.each do |item| %>
           <tr>
             <td><%= item.item_number.upcase %></td>
-            <td>
-              <%= item.item_description %>
-              <% unless item.affiliate.nil? %>
-                &nbsp; (<span><%= item.affiliate %></span>)
-              <% end %>
-            </td>
+            <td><%= item.item_description %></td>
             <td align="right" class="textright"><%= number_to_currency(item.unit_price, precision: 4, strip_insignificant_zeros: true) %></td>
             <td align="right" class="textright"><%= number_with_delimiter(item.quantity) %></td>
             <td align="right" class="textright"><%= number_to_currency(item.unit_price * item.quantity) %></td>

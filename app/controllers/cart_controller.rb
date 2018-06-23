@@ -35,8 +35,7 @@ class CartController < ApplicationController
   # GET /cart
   
   def index
-    key = cookies[:cart]
-    @order = Order.includes(:items, [items: [:product, :affiliate]]).find_by(cart_key: key) unless key.nil?
+    @order = Order.find_by(cart_key: cookies[:cart])
   end
 
 
@@ -48,14 +47,8 @@ class CartController < ApplicationController
     # key = {product-id}-{affiliate-id}-{variation}
     params.each do |key, val|
       next unless key.include?('qty-')
-      
-      key = key.split('-')
-      affiliate_id = nil
-      variation = nil
-      
-      product_id = key[1].to_i
-      affiliate_id = key[2].to_i unless key.length < 3
-      variation = key[3] unless key.length < 4
+
+      product_id = key.split("-").last
       quantity = val.to_i
       
       next unless quantity > 0
@@ -64,8 +57,6 @@ class CartController < ApplicationController
       #check if item already exists
       item = order.items.find do |i| 
         i.product_id == product_id && 
-        i.affiliate_id == affiliate_id && 
-        i.variation == variation && 
         i.custom_text == params[:custom_text] &&
         i.uploaded_file == params[:uploaded_file] && 
         i.start_x_percent == params[:start_x_percent] &&
@@ -76,36 +67,26 @@ class CartController < ApplicationController
       
       if item.nil?
 
-        item = OrderItem.new order_id: order.id,
-                product_id: product_id,
-                affiliate_id: affiliate_id,
-                variation: variation,
-                quantity: quantity,
-                quantity_accepted: quantity,
-                unit_price: p.special_price || p.price,
-                item_description: p.name_with_option,
-                uploaded_file: params[:uploaded_file],
-                start_x_percent: params[:start_x_percent],
-                start_y_percent: params[:start_y_percent],
-                width_percent: params[:width_percent],
-                height_percent: params[:height_percent],
-                custom_text: params[:custom_text],
-                autoship_months: params[:autoship_months].blank? ? 0 : params[:autoship_months]
+        item = OrderItem.new(order_id: order.id,
+			                			product_id: product_id,
+														item_number: p.item_number,
+					                	quantity: quantity,
+					                	quantity_accepted: quantity,
+					                	unit_price: p.special_price || p.price,
+					                	item_description: p.title,
+					                	uploaded_file: params[:uploaded_file],
+					                	start_x_percent: params[:start_x_percent],
+					                	start_y_percent: params[:start_y_percent],
+					                	width_percent: params[:width_percent],
+					                	height_percent: params[:height_percent],
+					                	custom_text: params[:custom_text],
+					                	autoship_months: params[:autoship_months].blank? ? 0 : params[:autoship_months])
 
-        if key.length == 2
-          item.item_number = p.item_number
-        else
-          item.item_number = p.sku
-          item.item_number += "-" + Affiliate.find(affiliate_id).code unless affiliate_id.nil?
-          item.item_number += "-" + variation unless variation.nil?
-        end
-        
         order.items << item
         
         # create image preview if this is a personalized product
         PersonalizedLabelJob.perform_later(item.id, 'web') unless item.uploaded_file.nil?
       else
-        
         item.quantity += quantity
         item.autoship_months = params[:autoship_months].blank? ? 0 : item.autoship_months
         item.save
@@ -201,8 +182,8 @@ class CartController < ApplicationController
 
         # update order or delete altogether if no items left
         if order.items.length > 0
-          update_totals order
-          order.save validate: false
+          update_totals(order)
+          order.save(validate: false)
         else
           order.destroy
         end

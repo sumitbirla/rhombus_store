@@ -35,7 +35,8 @@ module StoreCache
     Rails.cache.fetch("product-list:#{category_slug}") do
       c = Category.find_by(slug: category_slug, entity_type: :product)
       Product.includes(:pictures)
-             .where(active: true, id: ProductCategory.where(category_id: c.id).pluck(:product_id))
+             .where(active: true, hidden: false, id: ProductCategory.where(category_id: c.id).pluck(:product_id))
+						 .order("name, item_number")
              .load
     end
   end

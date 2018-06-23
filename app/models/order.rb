@@ -349,8 +349,6 @@ class Order < ActiveRecord::Base
       if item.product_id
         shipment.items.build(order_item_id: item.id, 
                              product_id: item.product_id,
-                             affiliate_id: item.affiliate_id,
-                             variation: item.variation, 
                              quantity: item.quantity_accepted - item.quantity_shipped)
 
       elsif item.daily_deal_id
@@ -359,8 +357,6 @@ class Order < ActiveRecord::Base
           item.daily_deal.items.each do |di|
             shipment.items.build(order_item_id: item.id, 
                                product_id: di.product_id,
-                               affiliate_id: di.affiliate_id,
-                               variation: di.variation, 
                                quantity: item.quantity * di.quantity)
           end
         else

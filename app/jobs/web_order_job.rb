@@ -60,22 +60,12 @@ class WebOrderJob < ActiveJob::Base
     # set up auto_ship items
     order_items = o.items.select { |x| x.autoship_months > 0 }
     order_items.each do |item|
-      autoship = AutoShipItem.find_by(user_id: o.user_id, item_number: item.item_number)
-      if autoship.nil?
-        autoship = AutoShipItem.new(
-                    user_id: o.user_id,
-                    item_number: item.item_number,
-                    description: item.item_description,
-                    product_id: item.product_id,
-                    affiliate_id: item.affiliate_id,
-                    variation: item.variation,
-                    quantity: item.quantity, 
-                    status: :active)
-      end
-      
-      autoship.days = item.autoship_months * 30
-      autoship.last_shipped = Date.today
-      autoship.next_ship_date = Date.today + autoship.days.days
+      autoship = AutoShipItem.find_or_initialize_by(user_id: o.user_id, product_id: item.product_id)
+      autoship.assign_attributes(quantity: item.quantity,
+																 days: item.autoship_months * 30,
+																 last_shipped: Date.today,
+																 next_ship_date: Date.today + item.autoship_months * 30,
+																 status: :active)
       autoship.save
     end
     

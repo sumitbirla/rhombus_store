@@ -1,17 +1,18 @@
 <%
-    if order_item.daily_deal
-    	image_path = order_item.daily_deal.pictures[0].file_path unless order_item.daily_deal.pictures.length == 0
-    elsif order_item.affiliate_id.nil?
-      image_path = order_item.product.pictures[0].file_path unless order_item.product.pictures.length == 0
-      image_path = order_item.upload_file_preview unless order_item.upload_file_preview.nil?
-    else
-      image_path = "/images/products/#{order_item.affiliate.code}/#{order_item.item_number}.jpg"
-    end
+  if order_item.upload_file_preview.present?
+    file_path = order_item.upload_file_preview
+  elsif order_item.daily_deal && order_item.daily_deal.pictures.any?
+  	file_path = order_item.daily_deal.pictures[0].file_path
+  elsif order_item.product && order_item.product.pictures.any?
+    file_path = order_item.product.pictures[0].file_path
+  else
+    file_path = "/images/no-image.png"
+  end
 %>
 
 <span class="order-item-thumbnail hidden-print">
-  <a href="<%= cdn_image_url image_path, 800, 700, 0 %>" data-lightbox="image-1">
-    <img src="<%= cdn_image_url image_path, 50, 50, 0 %>" title="product" height="50"/>
+  <a href="<%= cdn_image_url file_path, 800, 700, 0 %>" data-lightbox="image-1">
+    <img src="<%= cdn_image_url file_path, 50, 50, 2 %>" title="product" height="50"/>
   </a>
 </span>
 
@@ -19,9 +20,6 @@
   <%= link_to order_item.daily_deal.title, admin_store_daily_deal_path(order_item.daily_deal) %>
 <% elsif order_item.product_id %>
   <%= link_to order_item.product.full_name, admin_store_product_path(order_item.product_id) %>
-  <% unless order_item.affiliate_id.nil? %>
-    &nbsp; (<span><%= order_item.affiliate %></span>)
-  <% end %>
   <% unless order_item.uploaded_file.nil? %>
     <% if order_item.uploaded_file.starts_with?("http") %>
       <span> &nbsp; &nbsp; <a href="<%= order_item.uploaded_file %>"><i class="fa fa-download text-danger"></i></a></span>
