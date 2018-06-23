@@ -178,6 +178,34 @@ class Admin::Store::ProductsController < Admin::BaseController
     @product.slug += "-clone"
     render 'edit'
   end
+	
+	# GET /admin/store/products/:id/template
+	def template
+    @product = Product.find(params[:id])
+    authorize @product, :update?
+	end
+	
+	# POST /admin/store/products/:id/template
+	def apply_template
+		@product = Product.find(params[:id])
+		authorize @product, :update?
+		
+		if params[:field_names].nil?
+			flash[:info] = "No fields selected.  Please select one or more fields to update."
+			return redirect_to :back
+		end
+		
+		new_values = @product.attributes.select { |k, v| params[:field_names].include?(k) }
+		count = Product.where(template_product_id: @product.id).update_all(new_values)
+		
+		if count > 0
+			flash[:info] = "#{count} items (#{params[:field_names].length} fields) have been updated."
+			redirect_to admin_store_product_path(params[:id])
+		else
+			flash[:info] = "No records updated."
+			render 'template'
+		end
+	end
   
   
   private

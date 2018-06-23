@@ -148,6 +148,8 @@ Rails.application.routes.draw do
           get 'coupons'
           get 'clone'
           post 'categories' => 'products#create_categories'
+					get 'template'
+					post 'template' => 'products#apply_template'
         end
       end
       resources :orders do
