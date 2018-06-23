@@ -87,7 +87,7 @@ class Admin::Store::OrdersController < Admin::BaseController
   end
 
   def show
-    @order = Order.includes(:items, [items: :product], [items: :affiliate], :history, [history: :user]).find(params[:id])
+    @order = Order.includes(items: { product: [:pictures, :brand] }, history: :user).find(params[:id])
     authorize @order
   end
 

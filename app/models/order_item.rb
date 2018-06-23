@@ -32,7 +32,6 @@ class OrderItem < ActiveRecord::Base
   self.table_name = "store_order_items"
   belongs_to :order
   belongs_to :product
-  belongs_to :affiliate
   belongs_to :daily_deal
   
   validates_presence_of :quantity, :unit_price

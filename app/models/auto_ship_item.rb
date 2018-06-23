@@ -24,24 +24,9 @@ class AutoShipItem < ActiveRecord::Base
   self.table_name = "store_auto_ship_items"
   belongs_to :user
   belongs_to :product
-  belongs_to :affiliate
-  
-  before_validation :set_product_id
-  
-  validates_presence_of :user_id, :item_number, :product_id, :quantity, :days, :next_ship_date, :status
+
+  validates_presence_of :user_id, :product_id, :quantity, :days, :next_ship_date, :status
   validates_numericality_of :quantity, greater_than: 0
-  
-  def set_product_id
-    sku, affiliate, self.variation = item_number.split("-")
-    
-    p = Product.find_by(item_number: sku)
-    self.product_id = p.id unless p.nil?
- 
-    unless affiliate.nil?
-      a = Affiliate.find_by(code: affiliate)
-      self.affiliate_id = a.id unless a.nil?
-    end
-  end
   
   # PUNDIT
   def self.policy_class

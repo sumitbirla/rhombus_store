@@ -4,7 +4,7 @@ class Admin::Store::AutoShipItemsController < Admin::BaseController
     authorize AutoShipItem.new
     
     @selected_status = params[:status].presence || "active"
-    @auto_ship_items = AutoShipItem.joins(:user).includes(:user).order(sort_column + " " + sort_direction)
+    @auto_ship_items = AutoShipItem.joins(:user).includes(:user, :product).order(sort_column + " " + sort_direction)
     @auto_ship_items = @auto_ship_items.where(status: @selected_status)
     
     respond_to do |format|
