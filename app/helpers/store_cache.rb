@@ -40,6 +40,18 @@ module StoreCache
              .load
     end
   end
+	
+  def self.product_list2(cat1, cat2)
+    Rails.cache.fetch("product-list:#{cat1}:#{cat2}") do
+      c1 = Category.find_by(slug: cat1, entity_type: :product)
+			c2 = Category.find_by(slug: cat2, entity_type: :product)
+      Product.includes(:pictures)
+             .where(active: true, hidden: false)
+						 .where("EXISTS (select 1 from store_product_categories c1 where c1.category_id = ? and c1.product_id = store_products.id) and EXISTS (select 1 from store_product_categories c2 where c2.category_id = ? and c2.product_id = store_products.id)", c1.id, c2.id)
+						 .order("name, item_number")
+             .load
+    end
+  end
   
   def self.all_affiliate_products(slug)
     Rails.cache.fetch("ap-list:#{slug}", force: true) do

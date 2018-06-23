@@ -230,10 +230,10 @@ class Shipment < ActiveRecord::Base
   # creates a new transaction without saving to DB
   def new_inventory_transaction
     tran = InventoryTransaction.new
-    products = Product.where(id: items.map(&:product_id).uniq).select(:id, :sku)
+    products = Product.where(id: items.map(&:order_item).map(&:product_id).uniq).select(:id, :sku)
     
     products.each do |p|
-      quantity = items.select { |x| x.product_id == p.id }.sum(&:quantity)
+      quantity = items.select { |x| x.order_item.product_id == p.id }.sum(&:quantity)
       tran.items << InventoryItem.get(p.sku, quantity) unless quantity == 0
     end
     
@@ -242,12 +242,11 @@ class Shipment < ActiveRecord::Base
   
   def calculate_items_hash
     str = ""
-		order_items = items.collect(&:order_item)
-    product_ids = order_items.collect(&:product_id).uniq.sort
+		skus = Product.where(id: items.map(&:order_item).map(&:product_id)).pluck(:sku).uniq.sort
     
-    product_ids.each do |pid|
-      quantity = order_items.select { |x| x.product_id == pid }.sum(&:quantity)
-      str << "#{pid}:#{quantity}|"
+    skus.each do |sku|
+      quantity = items.select { |x| x.order_item.product.sku == sku }.sum(&:quantity)
+      str << "#{sku}:#{quantity}|"
     end
     
     md5 = Digest::MD5.new
