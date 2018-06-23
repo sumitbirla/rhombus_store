@@ -71,20 +71,16 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   end
 
   def show
-    @shipment = authorize Shipment.includes(:items, [items: :product], [items: :affiliate]).find(params[:id])
+    @shipment = authorize Shipment.includes(:items, [items: :order_item]).find(params[:id])
   end
   
   def edit
-    @shipment = authorize Shipment.includes(:items, [items: :product], [items: :affiliate], [items: :order_item]).find(params[:id])
+    @shipment = authorize Shipment.includes(:items, [items: :order_item]).find(params[:id])
     
     # add any items that were added to Order later and not currently present in Shipment
     @shipment.order.items.each do |oi|
       unless @shipment.items.any? { |x| x.order_item_id == oi.id }
-        @shipment.items.build(order_item_id: oi.id, 
-                              product_id: oi.product_id, 
-                              affiliate_id: oi.affiliate_id,
-                              variation: oi.variation,
-                              quantity: 0) 
+        @shipment.items.build(order_item_id: oi.id, quantity: 0) 
       end
     end
   end
@@ -109,7 +105,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
 
   def packing_slip
-    @shipment = Shipment.includes(:items, [items: :product], [items: :affiliate], [items: :order_item]).find(params[:id])
+    @shipment = Shipment.includes(:items, [items: :order_item]).find(params[:id])
     render 'packing_slip', layout: false
   end
   

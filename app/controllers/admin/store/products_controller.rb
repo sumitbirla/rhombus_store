@@ -156,7 +156,7 @@ class Admin::Store::ProductsController < Admin::BaseController
       aff = Affiliate.find_by(code: affiliate_code)
     end
     
-    p = Product.find_by("item_number = ? OR sku = ? OR upc = ?", sku, sku, sku)
+    p = Product.find_by("item_number = ? OR upc = ?", sku, sku)
     render json: { status: 'not found' } if p.nil?
     
     ap = AffiliateProduct.find_by(affiliate_id: aff_id, product_id: p.id) unless aff_id.blank?

@@ -54,7 +54,6 @@ class Product < ActiveRecord::Base
   
   self.table_name = "store_products"
   belongs_to :brand
-  belongs_to :affiliate
   belongs_to :fulfiller, class_name: 'Affiliate', foreign_key: 'fulfiller_id'
   belongs_to :label_sheet
 
@@ -69,6 +68,8 @@ class Product < ActiveRecord::Base
   validates_presence_of :name, :item_number, :product_type
   validates_presence_of :title, :slug, :brand_id, :price, unless: lambda { |x| x.product_type == 'white-label' }
   validates_presence_of :sku, if: :warehoused?
+	validates_uniqueness_of :item_number
+	validates_uniqueness_of :upc, unless: lambda { |x| x.upc.blank? }
   
   def to_s
     "#{sku}: #{title}"

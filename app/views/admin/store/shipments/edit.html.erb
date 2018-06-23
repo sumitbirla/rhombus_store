@@ -28,15 +28,8 @@
           <tr class="<%= 'danger' if avl < item.quantity %>">
             <td nowrap>
               <%= itemf.hidden_field :order_item_id %>
-              <%= itemf.hidden_field :product_id %>
-              <%= itemf.hidden_field :affiliate_id %>
-              <%= itemf.hidden_field :variation %>
-              <%= item.sku %></td>
-            <td>
-              <%= link_to item.product.full_name, admin_store_product_path(item.product_id) %>
-              <% unless item.affiliate_id.nil? %>
-                &nbsp; (<span><%= item.affiliate %></span>)
-              <% end %></td>
+              <%= item.order_item.item_number %></td>
+            <td><%= link_to item.order_item.product.full_name, admin_store_product_path(item.order_item.product_id) %></td>
             <td class="calign"><%= number_with_delimiter(item.order_item.quantity) %></td>
             <td class="calign"><%= number_with_delimiter(avl) %></td>
             <td class="calign"><%= itemf.number_field :quantity, unit_price: (item.order_item ? item.order_item.unit_price : '0.0'), class: "item-qty", style: 'width: 80px; text-align: center;' %></td>
