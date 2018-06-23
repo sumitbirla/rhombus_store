@@ -12,7 +12,12 @@
 
 <h2><%= @product.name_with_option %></h2>
 
-
+<% if @product.template_product_id %>
+<div class="alert alert-info">
+  <b>Note: </b> This product's content is maintained by a template.  Changes made here may be overwritten.
+  <b><%= link_to "Click here to edit template", admin_store_product_path(@product.template_product) %></b>.
+</div>
+<% end %>
 
 <%= simple_form_for [:admin, :store, @product] do |f| %>
 
@@ -34,7 +39,7 @@
       <div class="panel panel-default">
         <div class="panel-heading"><b>Basic Information</b></div>
         <div class="panel-body">
-          <%= f.input :template_product_id, collection: Product.where(template: true) %>
+          <%= f.input :template_product_id, collection: Product.where(template: true), label_method: :to_s %>
     		  <%= f.input :item_number, label: 'Item #' %>
           <%= f.input :name %>
     		  <%= f.input :product_type, as: :select, collection: ['stock', 'on-demand', '3PL', 'white-label' ], label: 'Type' %>

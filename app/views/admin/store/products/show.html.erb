@@ -11,6 +11,13 @@
 </div>
 <h2><i class="fa fa-tags"></i>&nbsp; <%= @product.name_with_option %></h2>
 <h4>Item #: <%= @product.item_number %></h4>
+
+<% if @product.template_product_id %>
+<div class="alert alert-info">
+  <b>Note: </b> This product's content is maintained by a template.  Changes made here may be overwritten.
+  <b><%= link_to "Click here to edit template", admin_store_product_path(@product.template_product) %></b>.
+</div>
+<% end %>
 <hr/>
 
 <div class="row">
@@ -109,6 +116,10 @@
         
         <% if @product.affiliate_only %>
             <span class="label label-warning">affiliate</span>
+        <% end %>
+        
+        <% if @product.template %>
+            <span class="label label-danger">template</span>
         <% end %>
 
         <% if !@product.low_threshold.nil? && stock <= @product.low_threshold %>
