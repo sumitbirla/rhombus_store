@@ -215,6 +215,8 @@ class Admin::Store::EasyPostController < Admin::BaseController
       # Amazon orders need to be notified about shipment
       if shipment.order.sales_channel == "Amazon.com"
         AmazonFulfillmentJob.perform_later(shipment.id)
+			elsif shipment.order.sales_channel == "shopify"
+				ShopifyFulfillmentJob.perform_later(shipment.id)
       else
         shipment.post_invoice
       end
