@@ -18,7 +18,7 @@ class CartController < ApplicationController
     end    
     
     # load existing order from database
-    order = Order.includes(:items, [items: [:product, :affiliate]]).find_by(cart_key: key)
+    order = Order.includes(items: :product).find_by(cart_key: key)
     if order.nil?
       order = Order.new(cart_key: key, 
                         status: 'in cart', 
@@ -44,7 +44,7 @@ class CartController < ApplicationController
     order = load_or_create_order
     
     # iterate through multiple items being added to cart
-    # key = {product-id}-{affiliate-id}-{variation}
+    # key = qty-{product-id}
     params.each do |key, val|
       next unless key.include?('qty-')
 
