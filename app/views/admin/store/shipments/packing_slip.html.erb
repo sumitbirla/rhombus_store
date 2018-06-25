@@ -156,7 +156,7 @@
       <tr>
         <td nowrap><%= item.order_item.item_number %></td>
         <td><%= item.order_item.product.upc %></td>
-        <td><%= item.order_item.item_description %></td>
+        <td><%= item.order_item.product.full_name %></td>
         <td align="right" class="textright"><%= item.order_item.daily_deal_id.nil? ? item.order_item.quantity : item.quantity %></td>
         <td align="right" class="textright"><%= item.quantity unless item.quantity == 0 && !item.special_status.blank? %> <%= item.special_status %></td>
       </tr>
