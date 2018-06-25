@@ -87,6 +87,26 @@ class Product < ActiveRecord::Base
     str = brand.name + " " + str unless brand.nil?
     str
   end
+	
+	# assuming long description is in plain text, tries to convert to HTML with bullet points
+	def html_description
+		paragraphs = long_description.delete("\r").gsub("\n\n", "\n").split("\n")
+		str = paragraphs.map { |x| "<p>#{x}</p>" }.join
+		
+		bullets = []
+		(1..5).each do |x| 
+			point = get_property("Bullet #{x}")
+			bullets << point unless point.blank?
+		end
+		
+		if bullets.length > 0
+			str += "<ol>"
+			str += bullets.map { |x| "<li>#{x}</li>" }.join
+			str += "</ol>"
+		end
+		
+		str
+	end
   
   def cache_key
     "product:#{slug}"
