@@ -1,7 +1,7 @@
 require 'easypost'
 
 class BatchShipJob < ActiveJob::Base
-  queue_as :shipping
+  queue_as :default
   
   attr_accessor :logger
 
