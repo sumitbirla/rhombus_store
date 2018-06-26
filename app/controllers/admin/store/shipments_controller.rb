@@ -71,7 +71,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   end
 
   def show
-    @shipment = authorize Shipment.includes(items: { order_item: :product }).find(params[:id])
+    @shipment = authorize Shipment.includes(items: { order_item: {product: :brand} }).find(params[:id])
   end
   
   def edit
@@ -208,7 +208,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       where shipment_id in (#{@shipments.map(&:id).join(",")})
       and si.quantity > 0
       group by shipment_id, oi.item_number, si.quantity
-      order by sheet.name, oi.product_id;
+      order by sheet.name, oi.item_number;
     EOF
     
     @items = []
@@ -235,7 +235,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       where shipment_id in (#{params[:shipment_id].join(",")})
       and si.quantity > 0
       group by shipment_id, oi.item_number, si.quantity
-      order by sheet.name, oi.product_id;
+      order by sheet.name, oi.item_number;
     EOF
     
     @items = []

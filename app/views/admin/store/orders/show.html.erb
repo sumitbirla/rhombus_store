@@ -263,13 +263,24 @@
       <div class="panel-body">
         
         <% if @order.shipments.length == 0 %>
-        <% order_items = @order.items.where.not(product_id: nil).group(:product_id).sum(:quantity_accepted) %>
+        <% 
+          order_items = OrderItem.where(order_id: @order.id)
+                                  .joins(:product)
+                                  .order("store_products.sku")
+                                  .group("store_products.sku")
+                                  .sum(:quantity_accepted) 
+          products = Product.where(item_number: order_items.keys)
+                            .select(:id, :name, :option_title, :item_number)
+          inventories = InventoryItem.where(sku: order_items.keys)
+                                     .group(:sku)
+                                     .sum(:quantity)
+        %>
         <table class="table table-condensed light">
-          <% order_items.each do |product_id, quantity_accepted| 
-              p = Product.find(product_id) 
-              avl = InventoryItem.where(sku: p.sku).sum(:quantity) %>
+          <% order_items.each do |sku, quantity_accepted| 
+              p = products.find { |x| x.item_number == sku } 
+              avl = inventories[sku] %>
           <tr class="<%= 'text-danger' if avl < quantity_accepted %>">
-            <td><%= p.sku %></td>
+            <td><%= sku %></td>
             <td><%= p.name_with_option %></td>
             <td class="text-right">req: <%= number_with_delimiter quantity_accepted %></td>
             <td class="text-right">avl: <%= number_with_delimiter avl %></td>
