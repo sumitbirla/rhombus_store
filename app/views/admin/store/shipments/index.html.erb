@@ -11,14 +11,12 @@
   <input type="hidden" name="printer_id" value=""/>
   
   <%
-    status_list = Shipment.uniq(:status).pluck(:status)
-    status_list << 'pending' unless status_list.include?('pending')
-    status_list.reverse!
+    shipment_counts = Shipment.group(:status).count
+    shipment_counts['pending'] = 0 unless shipment_counts.keys.include?('pending')
   %>
   
   <ul class="nav nav-tabs" style="margin-bottom: 10px;">
-  <% status_list.each do |status| 
-      count = Shipment.where(status: status).count %>
+  <% shipment_counts.each do |status, count| %>
     <li class="<%= "active" if params[:status] == status %>"><a href="<%= admin_store_shipments_path(status: status)%>"><%= tab_count(status.titlecase, count)%></a></li>
   <% end %>
   <li class="<%= "active" if params[:status].blank? %>"><a href="<%= admin_store_shipments_path %>">All</a></li>
