@@ -59,7 +59,7 @@ class Admin::Store::ProductsController < Admin::BaseController
     @product.destroy
     
     Rails.cache.delete @product
-    redirect_to action: 'index', notice: 'Product has been deleted.'
+    redirect_to :back, notice: 'Product has been deleted.'
   end
   
   def pictures
@@ -143,30 +143,22 @@ class Admin::Store::ProductsController < Admin::BaseController
       render json: { status: 'not found' } if dd.nil?
       
       return render json: { status: 'ok', 
+														item_number: sku,
                             daily_deal_id: dd.id, 
                             description: dd.title, 
                             price: dd.deal_price, 
                             dealer_price: dd.deal_price,
                             moc: 1 }
     end
-    
-    # check if this is an itemnum-affcode-variant format SKU  
-    if sku.count('-') == 2 && sku.split('-').last.length == 3
-      sku, affiliate_code, variant = sku.split('-')
-      aff = Affiliate.find_by(code: affiliate_code)
-    end
-    
+       
     p = Product.find_by("item_number = ? OR upc = ?", sku, sku)
     render json: { status: 'not found' } if p.nil?
     
     ap = AffiliateProduct.find_by(affiliate_id: aff_id, product_id: p.id) unless aff_id.blank?
   
     render json: { status: 'ok', 
-                   product_id: p.id, 
-                   affiliate_id: (aff ? aff.id : nil), 
-                   affiliate_name: (aff ? aff.name : nil), 
-                   variation: variant, 
-                   sku: (ap ? (ap.item_number || p.sku) : p.sku), 
+                   product_id: p.id,
+                   item_number: (ap ? (ap.item_number || p.item_number) : p.item_number), 
                    description: (ap ? (ap.description.presence || p.name_with_option) : p.name_with_option), 
                    price: (ap ? ap.price : p.price),
                    moc: (ap ? ap.minimum_order_quantity : 1) }

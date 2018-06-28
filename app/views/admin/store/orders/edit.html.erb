@@ -23,7 +23,7 @@
       <%= f.fields_for :items do |itemf| %>
         <% item = @order.items[itemf.index] %>
         <tr>
-          <td><%= itemf.input_field :item_number, class: 'item-id' %></td>
+          <td><%= itemf.input_field :item_number, class: 'item-number' %></td>
           <td><%= itemf.input_field :item_description, style: 'width: 100%', class: 'item-desc' %></td>
           <td><%= itemf.input_field :unit_price, class: 'unit-price text-center' %></td>
           <td><%= itemf.input_field :quantity, class: 'qty text-center' %></td>
@@ -191,11 +191,12 @@
       
       
       
-      $(".item-id").change(function() {
+      $(".item-number").change(function() {
         var item = $(this);
         
         $.get('/admin/store/products/item_info?affiliate_id=<%= @order.affiliate_id%>&sku=' + $(this).val(), function(data) {
           
+          item.parent().parent().find('.item-number').val(data.item_number);
           item.parent().parent().find('.product-id').val(data.product_id);
           item.parent().parent().find('.item-desc').val(data.description);
           item.parent().parent().find('.unit-price').val(data.price);

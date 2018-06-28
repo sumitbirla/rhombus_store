@@ -231,7 +231,7 @@ class Order < ActiveRecord::Base
 
       raise "PayPal processing failed: #{response.message}" unless response.success?
 
-      self.update_columns(status: 'submitted', submitted: Time.now)
+      self.update_columns(status: 'submitted', submitted: Time.now, received: Time.now)
       
       Payment.create(payable_id: id, payable_type: :order, amount: total, memo: 'PayPal Payment', 
                      user_id: user_id, transaction_id: response.authorization)
@@ -286,7 +286,11 @@ class Order < ActiveRecord::Base
           end
       end
       
-      self.update_columns(status: 'submitted', submitted: Time.now, cc_code: nil, cc_number: credit_card.display_number)
+      self.update_columns(status: 'submitted', 
+													submitted: Time.now, 
+													received: Time.now, 
+													cc_code: nil, 
+													cc_number: credit_card.display_number)
   
       Payment.create(payable_id: id, payable_type: :order, amount: total, memo: cc_number, 
                     user_id: user_id, transaction_id: response.authorization)

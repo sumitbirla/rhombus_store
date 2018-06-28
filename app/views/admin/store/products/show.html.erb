@@ -27,7 +27,7 @@
 	<div class="col-md-8">
 
 	<table class="table table-condensed table-bordered summary">
-    <%= obj_property @product, :slug %>
+    
     <%= obj_property(@product, :brand) { |x| link_to x.name, admin_store_products_path(brand_id: x.id) } %>
     <%= obj_property @product, :group %>
     
@@ -48,12 +48,13 @@
 		</tr>
     
     <%= obj_property(@product, :product_type) { |x| x.titlecase } %>
-    <%= obj_property @product, :sku %>
-    <%= obj_property @product, :upc %>
+    <%= obj_property @product, :sku, label: 'SKU' %>
+    <%= obj_property @product, :upc, label: 'UPC' %>
     <%= obj_property(@product, :fulfiller) { |x| link_to x.name, admin_system_affiliate_path(x.id) } %>
     <%= obj_property @product, :country_of_origin %>
     <%= obj_property @product, :harmonized_code %>
     <%= obj_property @product, :item_availability %>
+    <%= obj_property @product, :slug %>
 
     <% unless @product.item_weight.nil? %>
       <tr>
@@ -225,7 +226,7 @@
     <div class="panel-body">
     	<ul>
     	<% @product.categories.each do |cat| %>
-    	    <li><%= cat.name %></li>
+    	    <li><i class="fa fa-caret-right"></i> &nbsp; <%= cat.name %></li>
     	<% end %>
     	</ul>
     </div>
