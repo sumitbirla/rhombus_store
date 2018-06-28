@@ -13,6 +13,7 @@
   <%
     shipment_counts = Shipment.group(:status).count
     shipment_counts['pending'] = 0 unless shipment_counts.keys.include?('pending')
+    shipment_counts = shipment_counts.sort
   %>
   
   <ul class="nav nav-tabs" style="margin-bottom: 10px;">

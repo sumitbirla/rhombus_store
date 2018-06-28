@@ -1,7 +1,10 @@
 <%
   order_counts = Order.where(domain_id: current_domain.id).group(:status).count
   order_counts['awaiting_shipment'] = 0 unless order_counts.keys.include?('awaiting_shipment')
+  order_counts = order_counts.sort
 %>
+
+
 <div class="pull-right hidden-xs">
     <%= render 'admin/store/orders/group_actions'%>
 </div>
