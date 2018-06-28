@@ -3,6 +3,9 @@ class Admin::Store::BrandsController < Admin::BaseController
   def index
     authorize Brand.new
     @brands = Brand.order(:name)
+		@counts = Brand.joins(:products)
+									 .group(:id)
+									 .count("store_products.id")
     
     respond_to do |format|
       format.html  { @brands = @brands.paginate(page: params[:page], per_page: @per_page) }
@@ -44,9 +47,16 @@ class Admin::Store::BrandsController < Admin::BaseController
   end
 
   def destroy
-    @brand = authorize Brand.find(params[:id])
-    @brand.destroy
-    redirect_to action: 'index', notice: 'Brand has been deleted.'
+		brand = authorize Brand.find(params[:id])
+		
+		begin 	
+    	brand.destroy
+    	flash[:success] = 'Brand has been deleted.'
+		rescue => e
+			flash[:error] = e.message
+		end
+		
+		redirect_to :back
   end
   
   

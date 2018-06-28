@@ -15,7 +15,7 @@ class Brand < ActiveRecord::Base
   include Exportable
   
   self.table_name = "store_brands"
-  has_many :products
+  has_many :products, :dependent => :restrict_with_exception
   validates :name, presence: true
   validates_uniqueness_of :name
   

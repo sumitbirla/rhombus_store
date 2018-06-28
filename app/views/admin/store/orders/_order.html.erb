@@ -24,9 +24,9 @@
 		<td><%= systime order.submitted if order.submitted%></td>
 		<td>
 			<% if order.user %>
-				<%= link_to order.user, admin_system_user_path(order.user_id, q: :orders) %>
+				<%= link_to order.user, admin_system_user_path(order.user_id) %>
       <% elsif order.affiliate %>
-        <%= link_to order.affiliate.name, admin_system_affiliate_path(order.affiliate_id, q: :orders) %>
+        <%= link_to order.affiliate.name, admin_system_affiliate_path(order.affiliate_id) %>
       <% else %>
         <%= order.shipping_name.presence || order.billing_name %>
 			<% end %>

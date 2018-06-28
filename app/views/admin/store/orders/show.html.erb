@@ -278,7 +278,7 @@
         <table class="table table-condensed light">
           <% order_items.each do |sku, quantity_accepted| 
               p = products.find { |x| x.item_number == sku } 
-              avl = inventories[sku] %>
+              avl = inventories[sku] || 0 %>
           <tr class="<%= 'text-danger' if avl < quantity_accepted %>">
             <td><%= sku %></td>
             <td><%= p.name_with_option %></td>

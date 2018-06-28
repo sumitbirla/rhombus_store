@@ -65,6 +65,8 @@ class Product < ActiveRecord::Base
   has_many :categories, -> { order :sort }, through: :product_categories
   has_many :extra_properties, -> { order "sort, name" }, as: :extra_property, dependent: :destroy
   has_many :label_elements, dependent: :destroy
+	has_many :order_items, :dependent => :restrict_with_exception
+	has_many :affiliate_products, :dependent => :restrict_with_exception
   
   validates_presence_of :name, :item_number, :product_type
   validates_presence_of :title, :slug, :brand_id, :price, unless: lambda { |x| x.product_type == 'white-label' }

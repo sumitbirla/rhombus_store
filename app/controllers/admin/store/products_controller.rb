@@ -56,10 +56,16 @@ class Admin::Store::ProductsController < Admin::BaseController
 
   def destroy
     @product = authorize Product.find(params[:id])
-    @product.destroy
-    
-    Rails.cache.delete @product
-    redirect_to :back, notice: 'Product has been deleted.'
+		
+		begin
+    	@product.destroy
+    	Rails.cache.delete @product
+			flash[:success] = 'Product has been deleted.'
+		rescue => e
+			flash[:error] = e.message
+		end
+		
+		redirect_to :back
   end
   
   def pictures

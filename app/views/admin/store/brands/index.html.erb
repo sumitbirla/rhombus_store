@@ -9,17 +9,23 @@
 	<tr>
     <th data-breakpoints="xs" >ID</th>
 		<th>Name</th>
-		<th>Products</th>
+		<th class="text-center">Products</th>
 		<th data-breakpoints="xs" >Website</th>
-		<th class="actions hidden-xs">&nbsp;</th>
+		<th class="actions text-right hidden-xs">&nbsp;</th>
 	</tr>
 	<% @brands.each do |brand| %>
 	<tr>
     <td><%= brand.id %></td>
 		<td><%= link_to brand.name, edit_admin_store_brand_path(brand) %></td>
-		<td><%= link_to number_with_delimiter(brand.products.count), admin_store_products_path(brand_id: brand.id, product_type: :all) %>
+		<td class="text-center">
+      <% if @counts[brand.id] %>
+        <%= link_to number_with_delimiter(@counts[brand.id]), admin_store_products_path(brand_id: brand.id, product_type: :all) %>
+      <% else %>
+        0
+      <% end %>
+    </td>
 		<td><%= brand.website %></td>
-		<td class="actions hidden-xs">
+		<td class="text-right actions hidden-xs">
 			<%= link_to "edit", edit_admin_store_brand_path(brand) %> &nbsp;
 			<%= link_to "delete", 
 						  { action: "destroy", id: brand.id }, 

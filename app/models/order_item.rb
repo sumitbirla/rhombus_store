@@ -33,7 +33,8 @@ class OrderItem < ActiveRecord::Base
   belongs_to :order
   belongs_to :product
   belongs_to :daily_deal
-  
+  has_one :shipment_item, dependent: :restrict_with_exception
+	
   validates_presence_of :quantity, :unit_price
   #validates :product_id, presence: true, if: daily_deal_id.nil?
   #validates :daily_deal_id, presence: true, if: product_id.nil?
