@@ -207,7 +207,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       join store_label_sheets sheet on sheet.id = p.label_sheet_id
       where shipment_id in (#{@shipments.map(&:id).join(",")})
       and si.quantity > 0
-      group by shipment_id, oi.item_number, si.quantity
+      group by oi.item_number, si.quantity, uploaded_file
       order by sheet.name, oi.item_number;
     EOF
     
@@ -234,7 +234,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       join store_label_sheets sheet on sheet.id = p.label_sheet_id
       where shipment_id in (#{params[:shipment_id].join(",")})
       and si.quantity > 0
-      group by shipment_id, oi.item_number, si.quantity
+      group by oi.item_number, si.quantity, uploaded_file
       order by sheet.name, oi.item_number;
     EOF
     
@@ -261,13 +261,10 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     logs = []
     
     # LOOP through the items selected
-    params[:shipment_items].each do |h|
-      puts h.inspect
+    params[:print_items].each do |h|
+      # puts h.inspect
       next if h['quantity'] == "0"
-      
-      si = ShipmentItem.find(h['id'])
-      next if (h['personalized'] == 'true' && si.order_item.rendered_file.blank?)
-      item_number = si.order_item.item_number
+			next if h['personalized'] == 'true' && h['rendered_file'].blank?
       
       qty = h['quantity'].to_i
       label_count += qty
@@ -276,11 +273,11 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       str << "LABELNAME=#{label}\r\n"
       
       if h['personalized'] == 'true'
-        img = si.order_item.rendered_file.split('/').last
+        img = h['rendered_file'].split('/').last
         str << "FIELD 001=#{label_prefix}\\personalized_labels\\#{img}\r\n"
       else
-        sku, breed, variant = item_number.split("-")
-        str << "FIELD 001=#{label_prefix}\\hb_labels\\#{breed}\\#{item_number}.pdf\r\n"
+        sku, breed, variant = h['item_number'].split("-")
+        str << "FIELD 001=#{label_prefix}\\hb_labels\\#{breed}\\#{h['item_number']}.pdf\r\n"
       end
       
       str << "LABELQUANTITY=#{qty}\r\n"
@@ -288,10 +285,10 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       ######################################
       
       logs << Log.new(timestamp: DateTime.now, 
-                      loggable_type: 'Shipment', 
-                      loggable_id: si.shipment.id, 
+                      loggable_type: 'Printer', 
+                      loggable_id: p.id, 
                       event: :label_printed,
-                      data1: item_number,
+                      data1: h['item_number'],
                       data2: qty,
                       data3: p.name,
                       ip_address: request.remote_ip,
@@ -303,6 +300,10 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       flash[:error] = "No labels specified for printing."
       return redirect_to :back
     end
+		
+		# puts str
+		# flash[:error] = "Testing short circuit."
+		# return redirect_to :back
     
     # SCP file over to server
     tmp_file = "/tmp/" + Time.now.strftime("%Y-%m-%d-%H%M%S") + ".acf"
