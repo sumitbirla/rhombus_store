@@ -13,6 +13,7 @@
       <%= link_to shp.to_s, admin_store_shipment_path(shp) %> <span class="light">/</span> 
     <% end %>
   <% end %>
+  &nbsp; (<%= @items.sum { |x| x[:quantity] }%> items)
 </div>
 
 <hr>

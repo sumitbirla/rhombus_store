@@ -207,7 +207,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       join store_label_sheets sheet on sheet.id = p.label_sheet_id
       where shipment_id in (#{@shipments.map(&:id).join(",")})
       and si.quantity > 0
-      group by oi.item_number, si.quantity, uploaded_file
+      group by oi.item_number, uploaded_file
       order by sheet.name, oi.item_number;
     EOF
     
@@ -234,7 +234,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       join store_label_sheets sheet on sheet.id = p.label_sheet_id
       where shipment_id in (#{params[:shipment_id].join(",")})
       and si.quantity > 0
-      group by oi.item_number, si.quantity, uploaded_file
+      group by oi.item_number, uploaded_file
       order by sheet.name, oi.item_number;
     EOF
     
