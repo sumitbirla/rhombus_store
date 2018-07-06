@@ -20,14 +20,19 @@ module StoreCache
     
   def self.product(slug) 
     Rails.cache.fetch("product:#{slug}") do 
-      Product.includes(:categories, :extra_properties, :brand, :pictures, :comments).find_by(slug: slug, active: true)
-    end
+      p = Product.includes(:categories, :extra_properties, :brand, :pictures, :comments).find_by(slug: slug, active: true)
+			p.group_items.load
+			p
+		end
   end
   
+	# There might be multiple products marked as featured.  Select one at random
   def self.featured_product 
-    Rails.cache.fetch("featured-product") do 
-      Product.includes(:brand, :pictures, :comments).where(featured: true, active: true).first
+    list = Rails.cache.fetch("featured-product") do 
+      Product.includes(:brand, :pictures).where(featured: true, active: true).load
     end
+		
+		list.sample
   end
   
   

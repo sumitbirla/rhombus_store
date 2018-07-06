@@ -90,6 +90,14 @@ class Product < ActiveRecord::Base
     str
   end
 	
+	# get items have the same group attribute as this product
+	def group_items
+		@group_items ||= Product.includes(:pictures)
+					 									.where(group: group.presence || '_ZZZZ_', active: true, hidden: false)
+					 								  .order(:option_sort, :option_title)
+	end
+	
+	
 	# assuming long description is in plain text, tries to convert to HTML with bullet points
 	def html_description
 		paragraphs = long_description.delete("\r").gsub("\n\n", "\n").split("\n")
