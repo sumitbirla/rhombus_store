@@ -264,21 +264,21 @@
         
         <% if @order.shipments.length == 0 %>
         <% 
-          order_items = OrderItem.where(order_id: @order.id)
+          quantities = OrderItem.where(order_id: @order.id)
                                   .joins(:product)
                                   .order("store_products.sku")
                                   .group("store_products.sku")
                                   .sum(:quantity_accepted) 
-          products = Product.where(item_number: order_items.keys)
+          products = Product.where(item_number: quantities.keys)
                             .select(:id, :name, :option_title, :item_number)
-          inventories = InventoryItem.where(sku: order_items.keys)
+          inventories = InventoryItem.where(sku: quantities.keys)
                                      .group(:sku)
                                      .sum(:quantity)
         %>
         <table class="table table-condensed light">
-          <% order_items.each do |sku, quantity_accepted| 
+          <% quantities.each do |sku, quantity_accepted| 
               p = products.find { |x| x.item_number == sku } 
-              next if p.nil?
+              p = @order.items.find { |x| x.product.sku == sku }.product if p.nil?
               avl = inventories[sku] || 0 %>
           <tr class="<%= 'text-danger' if avl < quantity_accepted %>">
             <td><%= sku %></td>
