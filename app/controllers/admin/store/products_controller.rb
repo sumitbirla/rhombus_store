@@ -164,7 +164,9 @@ class Admin::Store::ProductsController < Admin::BaseController
   
     render json: { status: 'ok', 
                    product_id: p.id,
-                   item_number: (ap ? (ap.item_number || p.item_number) : p.item_number), 
+                   item_number: (ap ? (ap.item_number || p.item_number) : p.item_number),
+									 sku: p.sku,
+									 upc: p.upc, 
                    description: (ap ? (ap.description.presence || p.name_with_option) : p.name_with_option), 
                    price: (ap ? ap.price : p.price),
                    moc: (ap ? ap.minimum_order_quantity : 1) }

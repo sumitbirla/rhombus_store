@@ -21,7 +21,7 @@ module StoreCache
   def self.product(slug) 
     Rails.cache.fetch("product:#{slug}") do 
       p = Product.includes(:categories, :extra_properties, :brand, :pictures, :comments).find_by(slug: slug, active: true)
-			p.group_items.load
+			p.group_items.load unless p.nil?
 			p
 		end
   end

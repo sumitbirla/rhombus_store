@@ -70,7 +70,7 @@
            p = Product.find_by(sku: item.sku) unless item.sku.blank?
          %>
         <tr>
-          <td><%= itemf.input_field :sku, class: "item-id" %></td>
+          <td><%= itemf.input_field :sku, class: "item-id", placeholder: 'Item # or UPC' %></td>
           <td class="item-desc"><%= p.name_with_option unless p.nil? %></td>
           <td><%= itemf.input_field :quantity, class: "text-right qty" %></td>
           <td><%= itemf.input_field :inventory_location_id, collection: InventoryLocation.order(:name) %></td>
