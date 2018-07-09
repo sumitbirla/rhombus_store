@@ -6,8 +6,6 @@
 #  affiliate_id           :integer          not null
 #  item_number            :string(255)
 #  product_id             :integer          not null
-#  variant1               :string(255)
-#  variant2               :string(255)
 #  price                  :decimal(10, 4)
 #  sale_price             :decimal(10, 4)
 #  minimum_order_quantity :integer          default(1), not null
@@ -32,7 +30,7 @@ class AffiliateProduct < ActiveRecord::Base
   belongs_to :product
   has_many :affiliate_categories
   has_many :categories, -> { order :sort }, through: :affiliate_categories
-  validates :product_id, uniqueness: { scope: [:affiliate_id, :variant1, :variant2] }
+  validates :product_id, uniqueness: { scope: :affiliate_id }
   
   def current_price
     sale_price || price || product.special_price || product.price
