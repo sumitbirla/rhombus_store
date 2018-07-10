@@ -22,6 +22,7 @@ class ShopifyFulfillmentJob < ActiveJob::Base
 		ShopifyAPI::Base.activate_session(session)
     
     f = ShopifyAPI::Fulfillment.new(order_id: shp.order.external_order_id, 
+																		status: 'success',
 																		tracking_number: shp.tracking_number, 
 																		tracking_company: shp.courier_name,
 																		line_items: [])
