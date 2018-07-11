@@ -25,9 +25,11 @@ class ShopifyFulfillmentJob < ActiveJob::Base
     	f = ShopifyAPI::Fulfillment.new(order_id: shp.order.external_order_id, line_items: [])
 			shp.items.each { |i| f.line_items << { id: i.order_item.external_id } }
 		else
-			f = ShopifyAPI::Fulfillment.find(shp.external_id)
+			f = ShopifyAPI::Fulfillment.where(id: shp.external_id, order_id: shp.order.external_order_id).first
 		end
 		
+		f.tracking_number = shp.tracking_number
+		f.tracking_company = shp.courier_name
 		f.save!
 		f.complete
 		
