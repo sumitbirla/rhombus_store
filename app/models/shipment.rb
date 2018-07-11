@@ -138,14 +138,14 @@ class Shipment < ActiveRecord::Base
   def update_order
     if status == "shipped"
       if order.complete_order_shipped?
-        order.update_attribute(:status, "shipped")
+        order.update_column(:status, "shipped")
       else
-        order.update_attribute(:status, "partially_shipped")
+        order.update_column(:status, "partially_shipped")
       end
     end
     
     if status == "pending"
-      Order.find(order_id).update_attribute(:status, "awaiting_shipment")
+      Order.find(order_id).update_column(:status, "awaiting_shipment")
     end
   end
   
