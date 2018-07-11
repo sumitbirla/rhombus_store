@@ -28,7 +28,8 @@ class ShopifyFulfillmentJob < ActiveJob::Base
 		
 		shp.items.each { |i| f.line_items << { id: i.order_item.external_id } }
 		f.save!
-		
 		f.complete
+		
+		shp.update_column(:external_id, f.id)
   end
 end
