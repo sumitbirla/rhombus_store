@@ -21,13 +21,14 @@ class ShopifyFulfillmentJob < ActiveJob::Base
 		session = ShopifyAPI::Session.new(auth.uid, auth.token)
 		ShopifyAPI::Base.activate_session(session)
     
-    f = ShopifyAPI::Fulfillment.new(order_id: shp.order.external_order_id, 
-																		status: 'success',
+    f = ShopifyAPI::Fulfillment.new(order_id: shp.order.external_order_id,
 																		tracking_number: shp.tracking_number, 
 																		tracking_company: shp.courier_name,
 																		line_items: [])
 		
 		shp.items.each { |i| f.line_items << { id: i.order_item.external_id } }
-		f.save
+		f.save!
+		
+		f.complete
   end
 end
