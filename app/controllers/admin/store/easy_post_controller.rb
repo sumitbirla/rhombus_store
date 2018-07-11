@@ -229,7 +229,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
     
       # email customer with tracking info if specified in settings
       if Cache.setting(shipment.order.domain_id, :shipping, "Auto Email Tracking") == "true"
-        unless shipment.order.sales_channel == "Amazon.com"
+        unless (shipment.order.sales_channel == "Amazon.com" || shipment.order.sales_channel == "shopify")
           OrderMailer.order_shipped(shipment.id, session[:user_id]).deliver_later
           flash[:info] = "Shipment confirmation sent to #{shipment.order.notify_email}"
         end
