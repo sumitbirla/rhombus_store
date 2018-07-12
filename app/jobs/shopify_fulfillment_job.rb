@@ -34,6 +34,6 @@ class ShopifyFulfillmentJob < ActiveJob::Base
 		f.save!
 		f.complete
 		
-		shp.update_column(:external_id, f.id)
+		shp.update_columns(external_id: f.id, external_name: f.name)
   end
 end
