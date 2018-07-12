@@ -181,6 +181,8 @@
 	        <td class="key">Order #:</td>
 	        <td><%= link_to @shipment.order_id.to_s, admin_store_order_path(@shipment.order_id) %></td>
 	      </tr>
+        <%= obj_property @shipment, :external_id %>
+        <%= obj_property @shipment, :external_name %>
 	      <tr>
 	        <td class="key" width="160">Service Type:</td>
 	        <td><%= @shipment.carrier %> <%= @shipment.ship_method %></td>

@@ -72,7 +72,7 @@
       <% else %>
         <%= @order.sales_channel %>
       <% end %>
-      : <%= @order.external_order_id %> ]
+      : <%= @order.external_order_name.presence || @order.external_order_id %> ]
   <% end %>
 
   &nbsp; <%= order_status(@order, 'large') %> <%= "<i class='icon-gift'></i>".html_safe if @order.gift %>
