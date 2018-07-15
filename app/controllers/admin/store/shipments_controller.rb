@@ -122,21 +122,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     redirect_to :back
   end
   
-  def create_payment
-    @shipment = Shipment.find(params[:id])
-    
-    if @shipment.post_invoice                   
-      OrderHistory.create(order_id: @shipment.order.id, user_id: session[:user_id], 
-                        event_type: :invoice, system_name: 'Rhombus', identifier: @shipment.to_s,
-                        comment: "Invoiced $#{@shipment.invoice_amount}" )
-      flash[:success] = 'Invoice posted'
-    else
-      flash[:error] = 'Invoice was not posted'
-    end
-    
-    redirect_to :back                    
-  end
-
   def choose_order
   end
   

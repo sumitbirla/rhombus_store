@@ -129,10 +129,6 @@ class Shipment < ActiveRecord::Base
             .first
   end
   
-  def post_invoice
-    return if (invoice_amount == 0.0 || invoice_posted?)
-    Payment.create(user_id: order.user_id, payable_id: id, payable_type: :shipment, amount: invoice_amount * -1.0, memo: 'invoice')               
-  end
   
   # this callback is executed after shipment is saved
   def update_order

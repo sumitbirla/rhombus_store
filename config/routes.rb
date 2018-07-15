@@ -174,7 +174,6 @@ Rails.application.routes.draw do
           get 'invoice'
           get 'void_label'
           get 'email_confirmation'
-          get 'create_payment'
           get 'scan'
           post 'scan' => 'shipments#verify_scan'
           get 'create_inventory_transaction'

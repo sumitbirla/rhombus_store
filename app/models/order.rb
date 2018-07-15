@@ -344,7 +344,7 @@ class Order < ActiveRecord::Base
     end 
     
     # set invoice amount
-    shipment.invoice_amount = shipment.order.total if seq == 1
+    # shipment.invoice_amount = shipment.order.total if seq == 1
     
     # build the shipment items                
     items.each do |item|

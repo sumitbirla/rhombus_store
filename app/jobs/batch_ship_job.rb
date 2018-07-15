@@ -71,8 +71,8 @@ class BatchShipJob < ActiveJob::Base
     # Amazon orders need to be notified about shipment
     if shp.order.sales_channel == "Amazon.com"
       AmazonFulfillmentJob.perform_later(shp.id)
-    else
-      shp.post_invoice
+		elsif shp.order.sales_channel == "shopify"
+			ShopifyFulfillmentJob.perform_later(shp.id)
     end
     
     if params[:send_email]
