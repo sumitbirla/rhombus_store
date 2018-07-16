@@ -1,5 +1,3 @@
-<% pmt = Payment.find_by(payable_type: :shipment, payable_id: @shipment.id) %>
-
 <div class="dropdown pull-right">
   <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
     <i class="icon-hand-right"></i> Select Action
@@ -53,14 +51,11 @@
   <i class="fa fa-truck"></i> Shipment #<%= @shipment %> 
 </h2>
 
+<% if @shipment.invoice_amount %>
 <div class="pull-right">
-  <% unless pmt.nil? %>
-    <span class="label label-info">posted: <%= number_to_currency(pmt.amount * -1.0) %></span>
-  <% else %>
-    <span class="label label-warning">not posted</span>
-  <% end %> &nbsp; 
   <span class="label label-success">invoice: <%= number_to_currency(@shipment.invoice_amount) %></span>
 </div>
+<% end %>
   
 <div>
   <b>Created: </b> <%= time_ago_in_words(@shipment.created_at) %> ago
