@@ -328,7 +328,7 @@ class Order < ActiveRecord::Base
                              recipient_country: shipping_country,
                              status: 'pending')
 
-     loc_id = Cache.setting(shipment.order.domain_id, :shipping, "Ship From Location ID")
+     loc_id = Cache.setting(domain_id, :shipping, "Ship From Location ID")
      loc = Location.find(loc_id) if loc_id
 
      unless loc.nil?
