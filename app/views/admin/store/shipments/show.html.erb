@@ -51,11 +51,19 @@
   <i class="fa fa-truck"></i> Shipment #<%= @shipment %> 
 </h2>
 
-<% if @shipment.invoice_amount %>
+
+
+
 <div class="pull-right">
-  <span class="label label-success">invoice: <%= number_to_currency(@shipment.invoice_amount) %></span>
+  <% unless @shipment.fulfiller.nil? %>
+    <b class="text-danger">Fulfilled by: &nbsp; <%= link_to @shipment.fulfiller, admin_system_affiliate_path(@shipment.fulfiller) %></b>
+  <% end %>
+  
+  <% if @shipment.invoice_amount %>
+    <span class="label label-success">invoice: <%= number_to_currency(@shipment.invoice_amount) %></span>
+  <% end %>
 </div>
-<% end %>
+
   
 <div>
   <b>Created: </b> <%= time_ago_in_words(@shipment.created_at) %> ago

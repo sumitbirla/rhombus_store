@@ -68,7 +68,7 @@ class Shipment < ActiveRecord::Base
   after_create :save_inventory_transaction, unless: :skip_inventory
   
   belongs_to :order
-  belongs_to :fulfiller, class_name: 'User', foreign_key: 'fulfilled_by_id'
+  belongs_to :fulfiller, class_name: 'Affiliate', foreign_key: 'fulfilled_by_id'
   has_many :items, class_name: 'ShipmentItem', dependent: :destroy
   has_many :packages, class_name: 'ShipmentPackage', dependent: :destroy
   has_one :inventory_transaction, dependent: :destroy

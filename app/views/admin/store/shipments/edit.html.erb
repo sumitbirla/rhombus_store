@@ -95,6 +95,11 @@
         <div class="panel panel-success">
           <div class="panel-heading">Shipment Details:</div>
           <div class="panel-body">
+            <% 
+              dropship_category = Category.find_by(slug: 'dropshippers')
+              dropshippers = Affiliate.where(id: AffiliateCategory.select(:affiliate_id).where(category_id: dropship_category.id)) unless dropship_category.nil? 
+            %>
+            <%= f.input :fulfilled_by_id, collection: dropshippers %>
             <%= f.input :carrier, collection: ["USPS", "FedEx", "UPS"] %>
             <%= f.input :ship_method %>
             <%= f.input :ship_date, as: :datepicker %>
