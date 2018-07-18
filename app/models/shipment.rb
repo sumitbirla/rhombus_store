@@ -69,10 +69,12 @@ class Shipment < ActiveRecord::Base
   
   belongs_to :order
   belongs_to :fulfiller, class_name: 'Affiliate', foreign_key: 'fulfilled_by_id'
+  
   has_many :items, class_name: 'ShipmentItem', dependent: :destroy
   has_many :packages, class_name: 'ShipmentPackage', dependent: :destroy
-  has_one :inventory_transaction, dependent: :destroy
   has_many :logs, as: :loggable
+  has_many :payments, as: :payable
+  has_one :inventory_transaction, dependent: :destroy
   
   accepts_nested_attributes_for :items, allow_destroy: true
   accepts_nested_attributes_for :packages, allow_destroy: true
@@ -138,6 +140,8 @@ class Shipment < ActiveRecord::Base
       else
         order.update_column(:status, "partially_shipped")
       end
+      
+      OrderShippedJob.perform_later(id)  # performs billing, notification etc.
     end
     
     if status == "pending"
