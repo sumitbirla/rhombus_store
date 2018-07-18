@@ -174,10 +174,10 @@
 	<div class="col-md-8" style="margin-bottom: 40px;">
 	    <%= carrier_image @shipment.ship_method.split[0] unless @shipment.ship_method.blank? %>
 	    <table class="table table-condensed table-bordered summary" style="margin-bottom: 10px;">
-      <% unless @shipment.fulfilled_by_id.nil? %>
+      <% unless @shipment.fulfiller.nil? %>
 	      <tr>
 	        <td class="key">Fulfilled by:</td>
-	        <td><%= link_to @shipment.fulfiller, admin_system_user_path(@shipment.fulfiller) %></td>
+	        <td><%= link_to @shipment.fulfiller, admin_system_affiliate_path(@shipment.fulfiller) %></td>
 	      </tr>
 		  <% end %>
 	      <tr>
