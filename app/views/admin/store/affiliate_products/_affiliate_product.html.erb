@@ -10,8 +10,7 @@
   <td><%= ap.title.presence || ap.product.name_with_option %></td>
   <td><%= ap.item_number.presence || "<span class='light'>- not set -</span>".html_safe %></td>
   <td class="text-right"><%= number_to_currency(ap.price) %></td>
-  <td class="text-center"><%= number_with_delimiter ap.minimum_order_quantity %></td>
-  <td class="text-center"><%= pluralize(ap.ship_lead_time, "day") %></td>
+  <td class="text-center"><%= product_status(ap) %></td>
   <td class="text-right">
     <%= link_to "edit", edit_admin_store_affiliate_product_path(ap) %> &nbsp;
 		<%= link_to "delete", admin_store_affiliate_product_path(ap), method: :delete %>
