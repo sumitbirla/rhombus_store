@@ -298,26 +298,6 @@ EOF
     redirect_to :back           
   end
   
-  def email_invoices
-    orders = Order.includes(:invoices)
-                  .where(id: params[:order_id])
-                  .where.not(affiliate_id: nil)
-    count = 0
-    
-    orders.each do |o|
-      next if o.affiliate.invoice_email.blank?
-      
-      o.invoices.each do |inv|
-        EmailInvoiceJob.perform_later(inv.id, o.affiliate.invoice_email)
-        inv.logs.create(user_id: session[:user_id], ip_address: request.remote_ip, event: 'emailed', data1: o.affiliate.invoice_email)
-        count += 1
-      end
-    end
-    
-    flash[:info] = "#{count} invoices have been emailed."
-    redirect_to :back
-  end
-  
   def batch_ship
     orders = Order.includes(:shipments).where(id: params[:order_id])
     shipment_ids = []
