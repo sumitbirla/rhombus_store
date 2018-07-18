@@ -95,7 +95,6 @@ class Order < ActiveRecord::Base
   has_many :history, class_name: 'OrderHistory', dependent: :destroy
   has_many :shipments, -> { order(created_at: :desc) }, dependent: :destroy
   has_many :payments, as: :payable, dependent: :destroy
-  has_many :invoices, as: :invoiceable, dependent: :destroy
   has_many :logs, as: :loggable, dependent: :destroy
   has_many :pictures, -> { order :sort }, as: :imageable, dependent: :destroy  # used for product personalization
   
@@ -184,35 +183,6 @@ class Order < ActiveRecord::Base
     end
     
     self.user_id = u.id
-  end
-  
-  
-  # create invoice based on shipments in 'shipped' status
-  def create_invoice(created_by = nil)
-    return false if invoices.length > 0
-                 
-    invoice = invoices.build(from_affiliate_id: 280, user_id: user_id, affiliate_id: affiliate_id, amount: 0.0)
-           
-    shipments.where(status: :shipped).each do |s|
-      invoice.amount += s.invoice_amount
-      
-      s.items.each do |item|
-        next if item.product.nil?  # should never happen
-        invoice.items.build(group: s.to_s, 
-                            item_number: item.order_item.item_number,
-                            item_description: item.order_item.item_description,
-                            unit_price: item.order_item.unit_price,
-                            quantity: item.quantity)
-      end   
-    end
-    
-    if shipments.length > 0
-      invoice.post_date = shipments.last.ship_date || Date.today
-      invoice.due_date = invoice.post_date + 1.month
-      return invoice.save
-    end
-    
-    return false
   end
   
   

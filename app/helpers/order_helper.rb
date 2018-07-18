@@ -34,10 +34,6 @@ module OrderHelper
     str = ''
     h = { "pending" => "light", "shipped" => "icon-success", "void" => "icon-danger" }
      
-    order.invoices.slice(0..2).each do |inv|
-      str += "&nbsp; <a href='#{admin_billing_invoice_path(inv)}'><i class='fa text-success fa-file-text-o'></i></a>"
-    end
-    
     order.shipments.slice(0..2).each do |s|
       str += "&nbsp; <a href='#{admin_store_shipment_path(s)}'><i class='#{h[s.status]} fa fa-truck'></i></a>"
     end

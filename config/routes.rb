@@ -128,10 +128,7 @@ Rails.application.routes.draw do
       post 'orders_print_receipts' => 'orders#print_receipts'
       post 'orders_address_label' => 'orders#address_label'
       post 'orders_send_confirmation' => 'orders#send_confirmation'
-      post 'orders_create_shipment' => 'orders#create_shipment'
-      post 'orders_create_invoices' => 'orders#create_invoices'
-      post 'orders_email_invoices' => 'orders#email_invoices'
-      
+      post 'orders_create_shipment' => 'orders#create_shipment'    
       
       get 'products/item_info' => 'products#item_info'
       
