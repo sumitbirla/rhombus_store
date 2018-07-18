@@ -21,7 +21,7 @@ class ShopifyFulfillmentJob < ActiveJob::Base
 		session = ShopifyAPI::Session.new(auth.uid, auth.token)
 		ShopifyAPI::Base.activate_session(session)
     
-		if shp.external_id.nil?
+		if shp.external_id.blank?
       # find fulfillment service first
       fs = ShopifyAPI::FulfillmentService.find(:all).find { |x| x.handle == 'stockify' }
       raise "FulfillmentService 'stockify' not found.  Cannot update tracking." if fs.nil?
