@@ -478,11 +478,12 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   end
   
   def create_inventory_transaction
-    @shipment = Shipment.includes(:items, [items: :product]).find(params[:id])
+    @shipment = Shipment.includes(:items).find(params[:id])
     
     begin
       tran = @shipment.new_inventory_transaction
-      tran.shipment_id = @shipment.id
+      tran.external_id = @shipment.uuid
+			tran.responsible_party = current_user.name
       tran.save!
     rescue => e
       flash[:error] = e.message
