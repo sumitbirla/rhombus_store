@@ -9,19 +9,8 @@
         &nbsp; <i class="fa text-danger fa-file-text-o"></i>
       <% end %>
     </td>
-    <td>
-    <% if order.po %>
-      <%= order.external_order_id %>
-    <% elsif order.affiliate_campaign_id 
-        ac = AffiliateCampaign.find_by(id: order.affiliate_campaign_id)
-        unless ac.nil?%>
-          <%= link_to ac.affiliate, admin_system_affiliate_path(ac.affiliate_id) %>
-        <% end %>
-    <% else %>
-      <%= order.sales_channel %>
-    <% end %>
-    </td>
-		<td><%= systime order.submitted if order.submitted%></td>
+    <td><%= order.external_order_name.presence || order.external_order_id.presence || order.sales_channel %></td>
+		<td><%= systime(order.submitted) if order.submitted%></td>
 		<td>
 			<% if order.user %>
 				<%= link_to order.user, admin_system_user_path(order.user_id) %>

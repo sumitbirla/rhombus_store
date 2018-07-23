@@ -3,9 +3,6 @@
 
 <%= simple_form_for [:admin, :inventory, @transaction] do |f| %>
   <input type="hidden" name="add_more_items" value=""/>
-  <%= f.hidden_field :user_id %>
-  <%= f.hidden_field :shipment_id %>
-  <%= f.hidden_field :purchase_order_id %>
 
 	<%= render 'admin/shared/error_messages', object: f.object %>
 
@@ -13,16 +10,8 @@
     <div class="col-md-6">
   	<table class="table table-bordered table-condensed summary">
   		<tr>
-  			<td class="key">Entity: </td>
-  			<td>
-          <% if @transaction.shipment %>
-            <%= link_to @transaction.shipment.to_s, admin_store_shipment_path(@transaction.shipment) %>
-          <% elsif @transaction.purchase_order %>
-            <%= link_to "PO #{@transaction.purchase_order_id}", admin_inventory_purchase_order_path(@transaction.purchase_order_id) %>
-          <% else %>
-            Manual
-          <% end %>
-  			</td>
+  			<td class="key">External ID: </td>
+  			<td><%= @transaction.external_id.presence || 'manual' %></td>
   		</tr>
       <% unless @transaction.created_at.nil? %>
   		<tr class="key">
@@ -32,18 +21,13 @@
       <% end %>
   		<tr>
   			<td class="key">Created by: </td>
-  			<td>
-        <% if @transaction.user_id %>
-          <%= link_to @transaction.user, admin_system_user_path(@transaction.user) %>
-        <% else %>
-          <span class="light">- system -</span>
-        <% end %>
-        </td>
+  			<td><%= @transaction.responsible_party.presence || '- system -' %></td>
   		</tr>
   	</table>
     </div>
     <div class="col-md-6">
-      <%= f.input_field :notes, placeholder: 'Notes...', style: "width: 100%; height: 100px;" %>
+      <%= f.input :external_id %>
+      <%= f.input_field :notes, placeholder: 'Notes...', style: "width: 100%; height: 80px;" %>
     </div>
   </div>
 

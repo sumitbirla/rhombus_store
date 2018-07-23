@@ -14,9 +14,6 @@
 class InventoryTransaction < ActiveRecord::Base
   self.table_name = "inv_transactions"
   
-  belongs_to :user
-  belongs_to :shipment
-  belongs_to :purchase_order
   has_many :items, class_name: "InventoryItem", dependent: :destroy
   accepts_nested_attributes_for :items, reject_if: lambda { |x| x['sku'].blank? }, allow_destroy: true
   

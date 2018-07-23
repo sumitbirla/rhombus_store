@@ -63,7 +63,7 @@ class Shipment < ActiveRecord::Base
   
   self.table_name = "store_shipments"
 
-  before_save :update_items_hash
+  before_save :update_items_hash, :set_uuid
   after_save :update_order
   after_create :save_inventory_transaction, unless: :skip_inventory
   
@@ -74,7 +74,7 @@ class Shipment < ActiveRecord::Base
   has_many :packages, class_name: 'ShipmentPackage', dependent: :destroy
   has_many :logs, as: :loggable
   has_many :payments, as: :payable
-  has_one :inventory_transaction, dependent: :destroy
+  has_one :inventory_transaction, foreign_key: :external_id, primary_key: :uuid, dependent: :destroy
   
   accepts_nested_attributes_for :items, allow_destroy: true
   accepts_nested_attributes_for :packages, allow_destroy: true
@@ -100,6 +100,10 @@ class Shipment < ActiveRecord::Base
   def to_s
     "#{order_id}-#{sequence}"
   end
+	
+	def set_uuid
+		self.uuid = Rails.configuration.system_prefix + "_shp_" + "#{order_id}_#{sequence}" if uuid.blank?
+	end
   
   def calculate_invoice_amount
     subtotal = 0
@@ -223,7 +227,7 @@ class Shipment < ActiveRecord::Base
   # called by after_create filter
   def save_inventory_transaction
     tran = new_inventory_transaction
-    tran.shipment_id = id
+    tran.external_id = uuid
     tran.save
   end
   

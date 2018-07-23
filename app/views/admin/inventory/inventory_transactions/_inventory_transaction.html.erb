@@ -7,25 +7,12 @@
 
 <tr>
   <td><%= systime t.created_at %></td>
-  <td>
-    <% if t.shipment %>
-      <%= link_to "Shipment #{t.shipment}", admin_store_shipment_path(t.shipment) %>
-    <% elsif t.purchase_order_id %>
-      <%= link_to "PO ##{t.purchase_order_id}", admin_inventory_purchase_order_path(t.purchase_order_id) %>
-    <% else %>
-      Manual
-    <% end %>
-  </td>
+  <td><%= t.external_id %></td>
+	<td><%= t.responsible_party.presence || '- system -' %></td>
   <td><%= actions.join(" / ") %></td>
   <td class="text-center small">- <%= pluralize(t.items.length, "item") %> -</td>
   <td class="text-right"><%= number_with_delimiter(t.items.sum(:quantity).abs) %></td>
-	<td class="text-center">
-    <% if t.user_id %>
-      <%= link_to t.user, admin_system_user_path(t.user) %>
-    <% else %>
-      <span class="light">- system -</span>
-    <% end %>
-  </td>
+	
 	<td class="text-right actions">
     <%= link_to :edit, edit_admin_inventory_inventory_transaction_path(t) %> &nbsp; 
 		<%= link_to :delete, 

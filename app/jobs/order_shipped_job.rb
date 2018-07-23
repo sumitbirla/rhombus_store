@@ -24,10 +24,17 @@ class OrderShippedJob < ActiveJob::Base
     
     # Add a negative payment if order needs billing info
     unless (shp.invoice_amount.nil? || shp.payments.count > 0)
+			
+			if shp.external_name.blank?
+				memo = shp.to_s
+			else
+				memo = shp.external_name
+			end
+			
       shp.payments.build(user_id: shp.order.user_id, 
                          affiliate_id: shp.order.affiliate_id,
                          amount: -1.0 * shp.invoice_amount, 
-                         memo: "Shipment #{shp.to_s}")
+                         memo: "Fulfillment #{memo}")
       shp.save!
     end
     

@@ -43,7 +43,7 @@
   	<tr>
   		<th><input type="checkbox" id="chkAll" class="hidden-xs"/></th>
   		<th><%= sortable "store_orders.id", "Order #" %></th>
-      <th data-breakpoints="xs"><%= sortable "store_orders.sales_channel", params[:po] == "1" ? "PO #" : "Sales Channel" %></th>
+      <th data-breakpoints="xs">PO / Channel</th>
   		<th data-breakpoints="xs"><%= sortable "store_orders.submitted", "Submitted" %></th>
   		<th><%= sortable "store_orders.affiliate_id, store_orders.user_id", "Customer" %></th>
   		<th data-breakpoints="xs"><%= sortable "store_orders.shipping_city", "Location" %></th>

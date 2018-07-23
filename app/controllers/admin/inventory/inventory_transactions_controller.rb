@@ -2,23 +2,15 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
   
   def index
     authorize InventoryTransaction.new
-    @transactions = InventoryTransaction.includes(:user, :items)
+    @transactions = InventoryTransaction.includes(:items)
                                         .order(created_at: :desc)
                                         .paginate(page: params[:page], per_page: @per_page)
   end
   
   def new
-    @transaction = authorize InventoryTransaction.new( 
-                      user_id: session[:user_id], 
-                      shipment_id: params[:shipment_id],
-                      purchase_order_id: params[:purchase_order_id] )
-                      
-    unless @transaction.purchase_order_id.nil?
-      po = PurchaseOrder.find(@transaction.purchase_order_id)
-      po.items.each { |i| @transaction.items.build(sku: i.sku, quantity: i.quantity) }
-    end
-                        
+    @transaction = authorize InventoryTransaction.new         
     10.times { @transaction.items.build }
+		
     render 'edit'
   end
   
@@ -31,17 +23,9 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
       return render 'edit'
     end
   
+		@transaction.responsible_party = current_user.name
     if @transaction.save
-      if @transaction.purchase_order_id
-        PurchaseOrder.find(@transaction.purchase_order_id).update_received_counts
-        redirect_to admin_inventory_purchase_order_path(@transaction.purchase_order_id)
-      
-      elsif @transaction.shipment_id
-        redirect_to admin_store_shipment_path(@transaction.shipment_id)
-      
-      else
-        redirect_to action: 'index', notice: 'Inventory transaction was successfully created.'
-      end
+      redirect_to action: 'index', notice: 'Inventory transaction was successfully created.'
     else
       5.times { @transaction.items.build }
       render 'edit'
@@ -65,19 +49,8 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
       return render 'edit'
     end
 
-    if @transaction.save(validate: false)
-      
-      if @transaction.purchase_order_id
-        PurchaseOrder.find(@transaction.purchase_order_id).update_received_counts
-        redirect_to admin_inventory_purchase_order_path(@transaction.purchase_order_id)
-      
-      elsif @transaction.shipment_id
-        redirect_to admin_store_shipment_path(@transaction.shipment_id)
-      
-      else
-        redirect_to action: 'index', notice: 'Transaction was successfully updated.'
-      end
-      
+    if @transaction.save
+			redirect_to action: 'index', notice: 'Transaction was successfully updated.'
     else
       render 'edit'
     end

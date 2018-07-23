@@ -20,14 +20,20 @@ class PurchaseOrder < ActiveRecord::Base
   include Exportable
   
   self.table_name = "inv_purchase_orders"
-  
+  after_create :set_uuid
+	
   belongs_to :affiliate
   belongs_to :supplier, class_name: 'Affiliate'
   has_many :items, class_name: 'PurchaseOrderItem', dependent: :destroy
-  has_many :inventory_transactions, dependent: :destroy
+  has_many :inventory_transactions, foreign_key: :external_id, primary_key: :uuid, dependent: :destroy
   validates_presence_of :affiliate, :supplier, :issue_date, :status
   accepts_nested_attributes_for :items, reject_if: lambda { |x| x['sku'].blank? }, allow_destroy: true
   
+	def set_uuid
+		self.uuid = Rails.configuration.system_prefix + "_po_" + "#{id}"
+		update_column(:uuid, uuid)
+	end
+	
   def total_amount
     amt = 0.0
     items.each { |i| amt += i.quantity * i.unit_price}
