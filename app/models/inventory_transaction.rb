@@ -12,6 +12,7 @@
 #
 
 class InventoryTransaction < ActiveRecord::Base
+	establish_connection :inventorydb
   self.table_name = "inv_transactions"
   
   has_many :items, class_name: "InventoryItem", dependent: :destroy
