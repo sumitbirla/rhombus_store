@@ -48,7 +48,7 @@
   <% end %>
   </table>
       
-  <%= f.button :submit, "Save" %>
+  <%= button_tag "Save", class: "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Saving ..." } %>
 <% end %>
 
 
