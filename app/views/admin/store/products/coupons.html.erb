@@ -17,6 +17,7 @@
   <li class="active"><a href="#">Coupons</a></li>
   <li><%= link_to "Extra Properties", extra_properties_admin_store_product_path(@product) %></li>
   <li><%= link_to "Label Elements", label_elements_admin_store_product_path(@product) %></li>
+  <li><%= link_to "Shipping Rates", shipping_rates_admin_store_product_path(@product) %></li>
 </ul>
 
 
@@ -64,9 +65,7 @@
 </table>
 
 
-<% content_for :title do %>
-    <%= @product.title %>
-<% end %>
+<% content_for :title, @product.title %>
 
 
 

@@ -138,34 +138,57 @@
   <%= @product.keywords %>
   <hr>
   <% end %>
+  
 
+  <% if @product.shipping_rates.length > 0 %>
+    <h4>Shipping Rates:</h4>
+    <table class="table table-condensed table-bordered">
+      <tr style="background-color: #f5f5f5">
+        <th>Destination Country</th>
+        <th>Ship Method</th>
+        <th class="text-center">First Item</th>
+        <th class="text-center">Second Item</th>
+        <th class="text-center">Each Additional</th>
+      </tr>
+    <% @product.shipping_rates.each do |rate| 
+        c = Country[rate.destination_country_code] %>
+      <tr>
+        <td><%= c.emoji_flag %> <%= c %></td>
+        <td><%= rate.ship_method %></td>
+        <td class="text-center"><%= number_to_currency(rate.first_item) %></td>
+        <td class="text-center"><%= number_to_currency(rate.second_item) %></td>
+        <td class="text-center"><%= number_to_currency(rate.additional_items) %></td>
+      </tr>
+    <% end %>
+    </table>
+  <% end %>
 
 
 	<% if @product.coupons.length > 0 %>
 	<h4>Coupons</h4>
-	<table class="table table-condensed">
-		<tr>
+	<table class="table table-condensed table-bordered">
+		<tr style="background-color: #f5f5f5">
 			<th>Code</th>
-			<th>Discount</th>
-			<th>Max uses</th>
-			<th>Per user</th>
-			<th>Times used</th>
-			<th>Status</th>
+			<th class="text-center">Discount</th>
+			<th class="text-center">Max uses</th>
+			<th class="text-center">Per user</th>
+			<th class="text-center">Times used</th>
+			<th class="text-center">Status</th>
 		</tr>
 		<% @product.coupons.each do |coupon| %>
 		<tr>
 			<td><%= link_to coupon.code, edit_admin_store_coupon_path(coupon, redirect: request.fullpath) %></td>
-			<td>
+			<td class="text-center">
 				<% if !coupon.discount_percent.nil? %>
 				<%= coupon.discount_percent.to_i %>%
 				<% else %>
 				<%= number_to_currency(coupon.discount_amount) %>
 				<% end %>
 			</td>
-			<td><%= coupon.max_uses %></td>
-			<td><%= coupon.max_per_user %></td>
-			<td><%= coupon.times_used %></td>
-			<td>
+			<td class="text-center"><%= coupon.max_uses %></td>
+			<td class="text-center"><%= coupon.max_per_user %></td>
+			<td class="text-center"><%= coupon.times_used %></td>
+			<td class="text-center">
 				<% if Time.now > coupon.start_time && Time.now < coupon.expire_time %>
 				<span class="label label-success">active</span>
 				<% elsif Time.now > coupon.expire_time %>

@@ -67,7 +67,14 @@ class Product < ActiveRecord::Base
   has_many :label_elements, dependent: :destroy
 	has_many :order_items, :dependent => :restrict_with_exception
 	has_many :affiliate_products, :dependent => :restrict_with_exception
-  
+  has_many :shipping_rates, class_name: 'ProductShippingRate'
+	
+	accepts_nested_attributes_for :shipping_rates, allow_destroy: true,
+																reject_if: proc { |a| a["destination_country_code"].blank? || 
+																											a["ship_method"].blank? || 
+																											a["first_item"].blank? || 
+																											a["additional_items"].blank? }
+	
   validates_presence_of :name, :item_number, :product_type
   validates_presence_of :title, :slug, :brand_id, :price, unless: lambda { |x| x.product_type == 'white-label' }
   validates_presence_of :sku, if: :warehoused?

@@ -108,6 +108,13 @@ class Admin::Store::ProductsController < Admin::BaseController
     @product = Product.find(params[:id])
     authorize @product, :show?
   end
+	
+  def shipping_rates
+    @product = Product.find(params[:id])
+		authorize @product, :show?
+		
+		3.times { @product.shipping_rates.build }
+  end
   
   def adjust_prices
     authorize Product, :update?

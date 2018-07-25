@@ -147,6 +147,7 @@ Rails.application.routes.draw do
           post 'categories' => 'products#create_categories'
 					get 'template'
 					post 'template' => 'products#apply_template'
+					get 'shipping_rates'
         end
       end
       resources :orders do

@@ -1,0 +1,88 @@
+<h2><%= @product.name_with_option %></h2>
+
+<% if @product.template_product_id %>
+<div class="alert alert-info">
+  <b>Note: </b> This product's content is maintained by a template.  Changes made here may be overwritten.
+  <b><%= link_to "Click here to edit template", admin_store_product_path(@product.template_product) %></b>.
+</div>
+<% end %>
+
+<ul class="nav nav-tabs">
+  <li><%= link_to "Summary", edit_admin_store_product_path(@product) %></li>
+  <li><%= link_to "Pictures", pictures_admin_store_product_path(@product) %></a></li>
+  <li><%= link_to "Categories", categories_admin_store_product_path(@product) %></li>
+  <li><%= link_to "Coupons", coupons_admin_store_product_path(@product) %></li>
+  <li><%= link_to "Extra Properties", extra_properties_admin_store_product_path(@product) %></li>
+  <li><%= link_to "Label Elements", label_elements_admin_store_product_path(@product) %></li>
+  <li class="active"><a href="#">Shipping Rates</a></li>
+</ul>
+
+<br/>
+
+
+<%= simple_form_for [:admin, :store, @product] do |f| %>
+  <input type="hidden" name="add_more_items" value=""/>
+  
+	<%= render 'admin/shared/error_messages', object: f.object %>
+
+  <table class="table">
+    <tr>
+      <th>Destination Country</th>
+      <th>Ship Method</th>
+      <th>First Item</th>
+      <th>Second Item</th>
+      <th>Each Additional</th>
+      <th></th>
+    </tr>
+  <%= f.fields_for :shipping_rates do |itemf| %>
+    <tr>
+      <td><%= itemf.input_field :destination_country_code %></td>
+      <td><%= itemf.input_field :ship_method %></td>
+      <td><%= itemf.input_field :first_item, class: 'text-center' %></td>
+      <td><%= itemf.input_field :second_item, class: 'text-center' %></td>
+      <td><%= itemf.input_field :additional_items, class: 'text-center' %></td>
+      <td class="text-right"><i class="fa fa-times"></i>
+        <%= itemf.hidden_field :_destroy, class: 'destroy' %>
+      </td>
+    </tr>
+  <% end %>
+  </table>
+      
+  <%= f.button :submit, "Save" %>
+<% end %>
+
+
+<% content_for :title, @product.title %>
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Products", admin_store_products_path(brand_id: @product.brand_id) %></li>
+	<li><%= link_to @product.name_with_option, admin_store_product_path(@product)%> </li>
+	<li class="active">edit</li>
+<% end %>
+
+
+<% content_for :head do %>
+    <style>
+        .form-inline .form-group { margin: 10px 0; }
+        .fa-times { cursor: pointer; }
+    </style>
+    
+    <script>
+    $(document).ready(function() {
+      
+      $(".fa-times").click(function () {
+        $(this).parent().parent().hide("slow");
+        $(this).siblings(".destroy").val("true");
+        return false;
+      });
+      
+      $(".add-more-items").click(function() {
+        $("input[name='add_more_items']").val(3);
+        $("form.form-horizontal").submit();
+      });
+
+    });
+    </script>
+<% end %>
