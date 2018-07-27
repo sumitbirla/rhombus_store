@@ -18,8 +18,6 @@
 
 class InventoryLocation < ActiveRecord::Base
   include Exportable
-	
-	establish_connection :inventorydb
   
   self.table_name = 'inv_locations'
   validates_presence_of :name

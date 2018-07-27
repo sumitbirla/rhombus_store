@@ -2,7 +2,7 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
   
   def index
     authorize InventoryTransaction.new
-    @transactions = InventoryTransaction.includes(:items)
+    @transactions = InventoryTransaction.includes(:items, :affiliate)
                                         .order(created_at: :desc)
                                         .paginate(page: params[:page], per_page: @per_page)
   end

@@ -1,3 +1,5 @@
+<% dropshippers = Affiliate.joins(:categories).order(:name).where(active: true).where("core_categories.slug IN ('dropshippers', 'suppliers')") %>
+
 <h2>Transaction #<%= @transaction.id %></h2>
 
 
@@ -27,6 +29,7 @@
     </div>
     <div class="col-md-6">
       <%= f.input :external_id %>
+      <%= f.input :affiliate_id, collection: dropshippers %>
       <%= f.input_field :notes, placeholder: 'Notes...', style: "width: 100%; height: 80px;" %>
     </div>
   </div>
@@ -51,7 +54,7 @@
       <%= f.simple_fields_for :items do |itemf| %>
          <% 
            item = @transaction.items[itemf.index] 
-           p = Product.find_by(sku: item.sku) unless item.sku.blank?
+           p = Product.find_by(item_number: item.sku) unless item.sku.blank?
          %>
         <tr>
           <td><%= itemf.input_field :sku, class: "item-id", placeholder: 'Item # or UPC' %></td>
@@ -115,7 +118,7 @@
           item.parent().parent().find('.item-desc').html(data.description);
            
           if (data.status == 'ok') { 
-            item.parent().parent().find('.item-id').val(data.sku);
+            // item.parent().parent().find('.item-id').val(data.sku);
             item.parent().parent().find('.qty').focus();
           } else {
             item.parent().parent().find('.item-desc').html('ITEM NOT FOUND!');
