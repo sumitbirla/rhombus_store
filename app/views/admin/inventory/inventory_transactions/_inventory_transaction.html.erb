@@ -7,6 +7,15 @@
 
 <tr>
   <td><%= systime t.created_at %></td>
+  <td>
+    <% if t.archived %>
+      <i class="text-warning fa fa-archive"></i>
+    <% end %>
+    
+    <% if t.bulk_import %>
+      <i class="text-success fa fa-file-import"></i>
+    <% end %>
+  </td>
   <td><% if t.affiliate %>
       <%= link_to t.affiliate.name, admin_system_affiliate_path(t.affiliate) %>
       <% else %>

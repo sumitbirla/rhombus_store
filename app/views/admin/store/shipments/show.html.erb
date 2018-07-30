@@ -55,10 +55,6 @@
 
 
 <div class="pull-right">
-  <% unless @shipment.fulfiller.nil? %>
-    <b class="text-danger">Fulfilled by: &nbsp; <%= link_to @shipment.fulfiller, admin_system_affiliate_path(@shipment.fulfiller) %></b>
-  <% end %>
-  
   <% if @shipment.invoice_amount %>
     <span class="label label-success">invoice: <%= number_to_currency(@shipment.invoice_amount) %></span>
   <% end %>
@@ -67,7 +63,11 @@
   
 <div>
   <b>Created: </b> <%= time_ago_in_words(@shipment.created_at) %> ago
-  &nbsp; <span class="label <%= 'label-warning' if @shipment.status == 'pending' %>  <%= 'label-success' if @shipment.status == 'shipped' %>"><%= @shipment.status %></span>
+  <% unless @shipment.fulfiller.nil? %>
+    &nbsp; <b>Fulfilled by:</b> &nbsp; <%= link_to @shipment.fulfiller, admin_system_affiliate_path(@shipment.fulfiller) %>
+  <% end %>
+  
+  &nbsp; &nbsp; <span class="label <%= 'label-warning' if @shipment.status == 'pending' %>  <%= 'label-success' if @shipment.status == 'shipped' %>"><%= @shipment.status %></span>
   &nbsp; <%= link_to admin_store_order_path(@shipment.order) do %>
     <i class="fa fa-shopping-cart"></i> View Order
   <% end %>
@@ -134,7 +134,7 @@
         <th class="calign">Status</th>
     </tr>
     <% @shipment.items.each do |item| 
-        next if item.order_item.nil? || (item.quantity == 0 && item.special_status.blank?) %>
+        next if item.order_item.nil? %>
         <tr>
             <td nowrap><%= item.order_item.item_number %></td>
             <td><%= item.order_item.product.present? ? item.order_item.product.upc : "<span class='text-danger'>- product deleted -</span>".html_safe %></td>

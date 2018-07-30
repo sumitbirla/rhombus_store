@@ -276,6 +276,75 @@ class Order < ActiveRecord::Base
     
   end
   
+  # create shipment for the order.  doesn't take inventory into consideration currently
+  def create_fulfillment(fulfiller_id, user_id, save_to_db = true)
+    
+    raise "There are no items in this order" if total_items == 0
+    
+    seq = 1
+    max_seq = shipments.maximum(:sequence)
+    seq = max_seq + 1 unless max_seq.nil?
+
+    shipment = Shipment.new(order_id: id,
+                            fulfilled_by_id: fulfiller_id,
+                            sequence: seq,
+                            recipient_company: shipping_company,
+                            recipient_name: shipping_name,
+                            recipient_street1: shipping_street1,
+                            recipient_street2: shipping_street2,
+                            recipient_city: shipping_city,
+                            recipient_state: shipping_state,
+                            recipient_zip: shipping_zip,
+                            recipient_country: shipping_country,
+                            status: 'pending')
+
+    aff = Affiliate.find(fulfiller_id)
+
+    shipment.assign_attributes(ship_from_company: aff.name,
+                               ship_from_street1: aff.street1,
+                               ship_from_street2: aff.street2,
+                               ship_from_city: aff.city,
+                               ship_from_state: aff.state,
+                               ship_from_zip: aff.zip,
+                               ship_from_country: aff.country,
+                               ship_from_email: aff.email,
+                               ship_from_phone: aff.phone)
+
+    # build the shipment items                
+    items.each do |item|
+      
+      # regular order item, not a daily deal
+      if item.product_id
+        next if item.product.fulfiller_id != aff.id
+        
+        shipment.items.build(order_item_id: item.id,
+                             quantity: item.quantity_accepted - item.quantity_shipped)
+
+      elsif item.daily_deal_id
+        
+        if item.custom_text.blank?  
+          item.daily_deal.items.each do |di|
+            shipment.items.build(order_item_id: item.id,
+                               quantity: item.quantity * di.quantity)
+          end
+        else
+          # user may have selected a specific item from drowndown
+          p = Product.find_by(item_number: item.custom_text.split(":").first)
+          shipment.items.build(order_item_id: item.id, quantity: item.quantity)
+        end
+        
+      end
+
+    end
+    
+    if save_to_db && shipment.save! 
+      OrderHistory.create(order_id: id, user_id: user_id, event_type: :shipment_created,
+                    system_name: 'Rhombus', identifier: shipment.id, comment: "shipment created: #{shipment}") 
+    end
+    
+    shipment
+  end
+  
   
   # create shipment for the order.  doesn't take inventory into consideration currently
   def create_shipment(user_id, save_to_db = true)
@@ -374,6 +443,27 @@ class Order < ActiveRecord::Base
     
     true
   end
+  
+  
+  def shipment_created?(fulfiller_id)
+    shipped_items = ShipmentItem.joins(:shipment, [order_item: :product])
+                                .where("store_shipments.order_id = ?", id)
+                                .where("store_products.fulfiller_id = ?", fulfiller_id)
+                                
+    items.each do |i|
+      next if i.product.fulfiller_id != fulfiller_id
+      return false if i.quantity > shipped_items.select{ |x| x.order_item_id == i.id }.sum(&:quantity)
+    end
+  end
+  
+  def fulfillers
+    fulfillers = items.joins(:product)
+                      .group("store_products.fulfiller_id")
+                      .pluck("store_products.fulfiller_id")
+                      
+    Affiliate.where(id: fulfillers)
+  end
+  
   
   # PUNDIT
   def self.policy_class

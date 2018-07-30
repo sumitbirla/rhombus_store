@@ -7,6 +7,7 @@
   <td nowrap><%= link_to shipment, admin_store_shipment_path(shipment, status: shipment.status) %></td>
   <td><%= shipment.recipient_name %></td>
   <td><%= shipment.recipient_city %>, <%= shipment.recipient_state %></td>
+  <td><%= shipment.fulfiller %></td>
   <td class="small">
   <% if shipment.items.length == 1 && shipment.items[0].order_item %>
     <b><%= shipment.items[0].order_item.item_number %></b> (<%= shipment.items.collect(&:quantity).sum %>)
@@ -20,7 +21,7 @@
   <td class="hidden-xs">
     <% if shipment.inventory_transaction %>
       <%= link_to edit_admin_inventory_inventory_transaction_path(shipment.inventory_transaction) do %>
-        <i class="light fa fa-dropbox"></i>
+        <i class="light fab fa-dropbox"></i>
       <% end %>
     <% end%>
   </td>

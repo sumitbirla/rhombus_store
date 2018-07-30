@@ -19,7 +19,7 @@
 			    p = products.find { |p| p.item_number == item.sku }
 		%>
         <tr>
-          <td class="text-center"><%= item.inventory_location.name %></td>
+          <td class="text-center"><%= item.inventory_location ? item.inventory_location.name : ' -' %></td>
           <td><%= item.sku %></td>
           <td><%= p.nil? ? '-not found-' : p.name_with_option %></td>
           <td class="text-center"><%= item.lot %></td>

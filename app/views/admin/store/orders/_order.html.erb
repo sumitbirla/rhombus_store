@@ -9,13 +9,16 @@
         &nbsp; <i class="fa text-danger fa-file-text-o"></i>
       <% end %>
     </td>
-    <td><%= order.external_order_name.presence || order.external_order_id.presence || order.sales_channel %></td>
+    <td>
+      <% if order.affiliate %>
+        <%= link_to order.affiliate.code, admin_system_affiliate_path(order.affiliate_id) %>
+      <% end %>
+      <%= order.external_order_name.presence || order.external_order_id.presence || order.sales_channel %>
+    </td>
 		<td><%= systime(order.submitted) if order.submitted%></td>
 		<td>
 			<% if order.user %>
 				<%= link_to order.user, admin_system_user_path(order.user_id) %>
-      <% elsif order.affiliate %>
-        <%= link_to order.affiliate.name, admin_system_affiliate_path(order.affiliate_id) %>
       <% else %>
         <%= order.shipping_name.presence || order.billing_name %>
 			<% end %>

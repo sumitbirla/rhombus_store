@@ -261,11 +261,11 @@
     <div class="panel panel-info">
       <div class="panel-heading"><%= @order.shipments.length == 0 ? 'Inventory Required' : 'Shipments' %></div>
       <div class="panel-body">
-        
-        <% if @order.shipments.length == 0 %>
-        <% 
+        <% @order.fulfillers.each do |aff|
+            next if @order.shipment_created?(aff.id)
           quantities = OrderItem.where(order_id: @order.id)
                                   .joins(:product)
+                                  .where("store_products.fulfiller_id = ?", aff.id)
                                   .order("store_products.sku")
                                   .group("store_products.sku")
                                   .sum(:quantity_accepted) 
@@ -275,7 +275,10 @@
                                      .group(:sku)
                                      .sum(:quantity)
         %>
-        <table class="table table-condensed light">
+        
+        <%= link_to "Create shipment", new_admin_store_shipment_path(order_id: @order.id, fulfiller_id: aff.id), class: 'btn btn-default btn-xs pull-right' %>
+        <table class="table table-condensed table-bordered light">
+          <caption class="text-left"><b><%= aff.name %></b></caption>
           <% quantities.each do |sku, quantity_accepted| 
               p = products.find { |x| x.item_number == sku } 
               p = @order.items.find { |x| x.product.sku == sku }.product if p.nil?
@@ -288,11 +291,13 @@
           </tr>
           <% end %>
         </table>
+        <hr>
         <% end %>
         
         <table class="table table-condensed">
         <% @order.shipments.each do |shipment| %>
           <tr>
+            <td><%= shipment.fulfiller.code %></td>
             <td nowrap><%= link_to shipment.to_s, admin_store_shipment_path(shipment) %></td>
             <td class="small">
               <%= shipment.ship_method.blank? ? '- unavl -' : shipment.ship_method %><br/>
@@ -309,7 +314,7 @@
         <% end %>
         </table>
         
-        <%= link_to "New shipment", new_admin_store_shipment_path(order_id: @order.id), class: 'btn btn-sm btn-default' %>
+        
         
       </div>
     </div>

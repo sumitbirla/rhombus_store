@@ -43,7 +43,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     end
 
     begin
-      @shipment = authorize @order.create_shipment(session[:user_id], false)
+      @shipment = authorize @order.create_fulfillment(params[:fulfiller_id], session[:user_id], false)
     rescue => e
       flash[:error] = e.message
       return redirect_to :back
@@ -56,8 +56,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
   def create
     @shipment = authorize Shipment.new(shipment_params)
-    @shipment.fulfilled_by_id = current_user.id
-    
+
     if @shipment.save
       # create order history item
       OrderHistory.create order_id: @shipment.order_id, user_id: current_user.id, event_type: :shipment_created,
@@ -80,7 +79,9 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     # add any items that were added to Order later and not currently present in Shipment
     @shipment.order.items.each do |oi|
       unless @shipment.items.any? { |x| x.order_item_id == oi.id }
-        @shipment.items.build(order_item_id: oi.id, quantity: 0) 
+        if oi.product.fulfiller_id == @shipment.fulfilled_by_id 
+          @shipment.items.build(order_item_id: oi.id, quantity: 0)
+        end
       end
     end
   end
