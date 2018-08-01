@@ -183,9 +183,9 @@
         </tr>
         <% @shipment.inventory_transaction.items.each do |item| %>
         <tr>
-          <td style="text-align:left;"><%= item.inventory_location.name %></td>
+          <td style="text-align:left;"><%= item.inventory_location_id.nil? ? '-' : item.inventory_location.name %></td>
           <td style="text-align:left;"><%= item.sku %></td>
-          <td style="text-align:center;"><%= item.lot %></td>
+          <td style="text-align:center;"><%= item.lot.presence || '-' %></td>
           <td style="text-align:center;"><%= item.formatted_expiration %></td>
           <td style="text-align:right;"><%= number_with_delimiter(item.quantity.abs) %></td>
         </tr>
