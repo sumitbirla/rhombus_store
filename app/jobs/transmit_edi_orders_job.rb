@@ -10,7 +10,7 @@ class TransmitEdiOrdersJob < ActiveJob::Base
     shipments = Shipment.where(status: :pending, fulfilled_by_id: fulfiller_id)
     return if shipments.length == 0
     
-		file_path = Setting.get('eCommerce', 'EDI Path') + "/" + shp.fulfiller.slug + "/outgoing/orders/order_#{shp}.csv" 
+		file_path = Setting.get('eCommerce', 'EDI Path') + "/" + shipments[0].fulfiller.slug + "/outgoing/orders/orders_#{DateTime.now.strftime("%F_%H%M%S")}.csv"
 		# file_path = "/Users/sbirla/Projects/edi/" + shipments[0].fulfiller.slug + "/outgoing/orders/orders_#{DateTime.now.strftime("%F_%H%M%S")}.csv" 
 		
 		headers = [
