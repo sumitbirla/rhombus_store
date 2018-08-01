@@ -284,7 +284,7 @@
               p = @order.items.find { |x| x.product.sku == sku }.product if p.nil?
               avl = inventories[sku] || 0 %>
           <tr class="<%= 'text-danger' if avl < quantity_accepted %>">
-            <td><%= sku %></td>
+            <td nowrap><%= sku %></td>
             <td><%= p.name_with_option %></td>
             <td class="text-right">req: <%= number_with_delimiter quantity_accepted %></td>
             <td class="text-right">avl: <%= number_with_delimiter avl %></td>

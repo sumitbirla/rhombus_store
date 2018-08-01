@@ -34,3 +34,7 @@
 <% unless order_item.custom_text.blank? %>
   &nbsp; (<span><%= order_item.custom_text %></span>)
 <% end %>
+
+<% unless order_item.product.fulfiller %>
+  &nbsp; <span class="text-danger"><i class="fa fa-exclamation-circle"></i> Fulfiller not set for this product</span>
+<% end %>
