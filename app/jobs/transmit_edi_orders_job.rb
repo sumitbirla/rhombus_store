@@ -11,8 +11,8 @@ class TransmitEdiOrdersJob < ActiveJob::Base
     return if shipments.length == 0
     
     fulfiller = Affiliate.find(fulfiller_id)
-		#file_path = Setting.get('eCommerce', 'EDI Path') + "/" + fulfiller.slug + "/outgoing/orders/orders_#{DateTime.now.strftime("%F_%H%M%S")}.csv"
-		file_path = "/Users/sbirla/Projects/edi/" + fulfiller.slug + "/outgoing/orders/orders_#{DateTime.now.strftime("%F_%H%M%S")}.csv" 
+		file_path = Setting.get('eCommerce', 'EDI Path') + "/" + fulfiller.slug + "/outgoing/orders/orders_#{DateTime.now.strftime("%F_%H%M%S")}.csv"
+		#file_path = "/Users/sbirla/Projects/edi/" + fulfiller.slug + "/outgoing/orders/orders_#{DateTime.now.strftime("%F_%H%M%S")}.csv" 
 		
 		headers = [
 			"customer_number",
