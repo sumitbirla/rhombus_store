@@ -20,7 +20,7 @@ class Admin::Store::ProductsController < Admin::BaseController
   end
 
   def new
-    @product = authorize Product.new(name: 'New product')
+    @product = authorize Product.new(name: 'New product', fulfiller_id: Cache.setting('eCommerce', 'Default Fulfiller ID'))
     render 'edit'
   end
 

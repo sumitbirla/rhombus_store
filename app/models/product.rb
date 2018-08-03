@@ -75,7 +75,7 @@ class Product < ActiveRecord::Base
 																											a["first_item"].blank? || 
 																											a["additional_items"].blank? }
 	
-  validates_presence_of :name, :item_number, :product_type
+  validates_presence_of :name, :item_number, :product_type, :fulfiller_id
   validates_presence_of :title, :slug, :brand_id, :price, unless: lambda { |x| x.product_type == 'white-label' }
   validates_presence_of :sku, if: :warehoused?
 	validates_uniqueness_of :item_number
