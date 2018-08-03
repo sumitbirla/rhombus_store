@@ -271,7 +271,9 @@
                                   .sum(:quantity_accepted) 
           products = Product.where(item_number: quantities.keys)
                             .select(:id, :name, :option_title, :item_number)
-          inventories = InventoryItem.where(sku: quantities.keys)
+          inventories = InventoryItem.joins(:inventory_transaction)
+                                     .where("inv_transactions.archived" => false)
+                                     .where(sku: quantities.keys)
                                      .group(:sku)
                                      .sum(:quantity)
         %>
