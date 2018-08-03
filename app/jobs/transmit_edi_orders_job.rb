@@ -10,8 +10,9 @@ class TransmitEdiOrdersJob < ActiveJob::Base
     shipments = Shipment.where(status: :pending, fulfilled_by_id: fulfiller_id)
     return if shipments.length == 0
     
-		file_path = Setting.get('eCommerce', 'EDI Path') + "/" + shipments[0].fulfiller.slug + "/outgoing/orders/orders_#{DateTime.now.strftime("%F_%H%M%S")}.csv"
-		# file_path = "/Users/sbirla/Projects/edi/" + shipments[0].fulfiller.slug + "/outgoing/orders/orders_#{DateTime.now.strftime("%F_%H%M%S")}.csv" 
+    fulfiller = Affiliate.find(fulfiller_id)
+		#file_path = Setting.get('eCommerce', 'EDI Path') + "/" + fulfiller.slug + "/outgoing/orders/orders_#{DateTime.now.strftime("%F_%H%M%S")}.csv"
+		file_path = "/Users/sbirla/Projects/edi/" + fulfiller.slug + "/outgoing/orders/orders_#{DateTime.now.strftime("%F_%H%M%S")}.csv" 
 		
 		headers = [
 			"customer_number",
@@ -25,14 +26,22 @@ class TransmitEdiOrdersJob < ActiveJob::Base
 			"extended_value",
 			"affiliate_id",
       "affiliate_order_number",
-			"shipping_name",
-			"shipping_address1",
-			"shipping_address2",
-			"shipping_city",
-			"shipping_state",
-			"shipping_zip",
-			"shipping_country",
-			"shipping_phone",	
+			"ship_from_name",
+			"ship_from_address1",
+			"ship_from_address2",
+			"ship_from_city",
+			"ship_from_state",
+			"ship_from_zip",
+			"ship_from_country",
+			"ship_from_phone",
+			"ship_to_name",
+			"ship_to_address1",
+			"ship_to_address2",
+			"ship_to_city",
+			"ship_to_state",
+			"ship_to_zip",
+			"ship_to_country",
+			"ship_to_phone",	
 			"shipper",
 			"ship_method"
 		] 
@@ -55,10 +64,18 @@ class TransmitEdiOrdersJob < ActiveJob::Base
     				ap.item_number,
     				ap.product.title,
     				si.quantity,
-    				"", # item_amount
+    				ap.price, # item_amount
     				"", # extended_value
     				shp.order.affiliate.code,
             shp.order.external_order_name,
+    				shp.order.affiliate.name,
+    				fulfiller.street1,
+    				fulfiller.street2,
+    				fulfiller.city,
+    				fulfiller.state,
+    				fulfiller.zip,
+    				fulfiller.country,
+    				fulfiller.phone,
     				shp.recipient_name,
     				shp.recipient_street1,
     				shp.recipient_street2,
