@@ -64,7 +64,7 @@
 <div>
   <b>Created: </b> <%= time_ago_in_words(@shipment.created_at) %> ago
   <% unless @shipment.fulfiller.nil? %>
-    &nbsp; <b>Fulfilled by:</b> &nbsp; <%= link_to @shipment.fulfiller, admin_system_affiliate_path(@shipment.fulfiller) %>
+    &nbsp; <b>Fulfilled by:</b> <%= link_to @shipment.fulfiller, admin_system_affiliate_path(@shipment.fulfiller) %>
   <% end %>
   
   &nbsp; &nbsp; <span class="label <%= 'label-warning' if @shipment.status == 'pending' %>  <%= 'label-success' if @shipment.status == 'shipped' %>"><%= @shipment.status %></span>

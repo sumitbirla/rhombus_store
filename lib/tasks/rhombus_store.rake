@@ -7,9 +7,18 @@ namespace :rhombus_store do
     Order.where(status: [:backordered, :submitted]).order(:submitted).each do |o|
   	  next if Cache.setting(o.domain_id, :shipping, "Auto Create Shipment") != "true"
       next if o.shipments.count > 0
+			next if o.items.count == 0
       
+			shipments = []
+			
       begin
-  		  o.create_shipment(nil)
+				o.fulfillers.each do |aff|
+					s = o.create_fulfillment(aff.id, nil, false)
+					raise "Cannot create shipment for #{aff}" unless s.valid?
+					shipments << s
+				end
+				
+				shipments.each { |s| s.save! }
         o.update_attribute(:status, :awaiting_shipment)
       rescue => e
         Rails.logger.info e.message
