@@ -34,7 +34,9 @@ class InventoryItem < ActiveRecord::Base
   
   # given a SKU and quantity,  this method returns locations from where product can be pulled, oldest ones first
   def self.get(sku, count)
-    items = InventoryItem.where(sku: sku)
+    items = InventoryItem.joins(:inventory_transaction)
+                         .where("inv_transactions.archived" => false)
+												 .where(sku: sku)
                          .group(:inventory_location_id, :lot)
                          .order("expiration, quantity")
                          .select("lot, expiration, inventory_location_id, sum(quantity) as quantity")
