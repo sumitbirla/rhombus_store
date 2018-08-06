@@ -41,6 +41,9 @@
         <% unless @product.retail_map.nil? %>
             <span class="label label-default price">MAP: $<%= @product.retail_map %></span>
         <% end %>
+        <% unless @product.reseller_price.nil? %>
+            <span class="label label-default price">Reseller: $<%= @product.reseller_price %></span>
+        <% end %>
         <% unless @product.msrp.nil? %>
             <span class="label label-default price">MSRP: $<%= @product.msrp %></span>
         <% end %>
