@@ -32,11 +32,6 @@
         <i class="fa fa-dollar"></i> Add Payment
       <% end %>
     </li>
-    <li>
-      <%= link_to new_admin_store_shipment_path(order_id: @order.id) do %>
-        <i class="fa fa-truck"></i> Create Shipment
-      <% end %>
-    </li>
   </ul>
 </div>
 
@@ -261,41 +256,6 @@
     <div class="panel panel-info">
       <div class="panel-heading"><%= @order.shipments.length == 0 ? 'Inventory Required' : 'Shipments' %></div>
       <div class="panel-body">
-        <% @order.fulfillers.each do |aff|
-            next if @order.shipment_created?(aff.id)
-          quantities = OrderItem.where(order_id: @order.id)
-                                  .joins(:product)
-                                  .where("store_products.fulfiller_id = ?", aff.id)
-                                  .order("store_products.sku")
-                                  .group("store_products.sku")
-                                  .sum(:quantity_accepted) 
-          products = Product.where(item_number: quantities.keys)
-                            .select(:id, :name, :option_title, :item_number)
-          inventories = InventoryItem.joins(:inventory_transaction)
-                                     .where("inv_transactions.archived" => false)
-                                     .where(sku: quantities.keys)
-                                     .group(:sku)
-                                     .sum(:quantity)
-        %>
-        
-        <%= link_to "Create shipment", new_admin_store_shipment_path(order_id: @order.id, fulfiller_id: aff.id), class: 'btn btn-default btn-xs pull-right' %>
-        <table class="table table-condensed table-bordered light">
-          <caption class="text-left"><b><%= aff.name %></b></caption>
-          <% quantities.each do |sku, quantity_accepted| 
-              p = products.find { |x| x.item_number == sku } 
-              p = @order.items.find { |x| x.product.sku == sku }.product if p.nil?
-              avl = inventories[sku] || 0 %>
-          <tr class="<%= 'text-danger' if avl < quantity_accepted %>">
-            <td nowrap><%= sku %></td>
-            <td><%= p.name_with_option %></td>
-            <td class="text-right">req: <%= number_with_delimiter quantity_accepted %></td>
-            <td class="text-right">avl: <%= number_with_delimiter avl %></td>
-          </tr>
-          <% end %>
-        </table>
-        <hr>
-        <% end %>
-        
         <table class="table table-condensed">
         <% @order.shipments.each do |shipment| %>
           <tr>
@@ -317,6 +277,42 @@
         </table>
         
         
+        <% @order.fulfillers.each do |aff| %>
+          <%= link_to "Create #{aff.code} shipment", new_admin_store_shipment_path(order_id: @order.id, fulfiller_id: aff.id), class: 'btn btn-default btn-xs pull-right' %>
+        <%
+          next if @order.shipment_created?(aff.id)
+          quantities = OrderItem.where(order_id: @order.id)
+                                  .joins(:product)
+                                  .where("store_products.fulfiller_id = ?", aff.id)
+                                  .order("store_products.sku")
+                                  .group("store_products.sku")
+                                  .sum(:quantity_accepted) 
+          products = Product.where(item_number: quantities.keys)
+                            .select(:id, :name, :option_title, :item_number)
+          inventories = InventoryItem.joins(:inventory_transaction)
+                                     .where("inv_transactions.archived" => false)
+                                     .where(sku: quantities.keys)
+                                     .group(:sku)
+                                     .sum(:quantity)
+        %>
+        
+        
+        <table class="table table-condensed table-bordered light">
+          <caption class="text-left"><b><%= aff.name %></b></caption>
+          <% quantities.each do |sku, quantity_accepted| 
+              p = products.find { |x| x.item_number == sku } 
+              p = @order.items.find { |x| x.product.sku == sku }.product if p.nil?
+              avl = inventories[sku] || 0 %>
+          <tr class="<%= 'text-danger' if avl < quantity_accepted %>">
+            <td nowrap><%= sku %></td>
+            <td><%= p.name_with_option %></td>
+            <td class="text-right">req: <%= number_with_delimiter quantity_accepted %></td>
+            <td class="text-right">avl: <%= number_with_delimiter avl %></td>
+          </tr>
+          <% end %>
+        </table>
+        <hr>
+        <% end %>
         
       </div>
     </div>
