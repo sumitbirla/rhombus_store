@@ -2,6 +2,7 @@ class OrderShippedJob < ActiveJob::Base
   queue_as :default
 
   def perform(shipment_id)
+    return
     shp = Shipment.find(shipment_id)
     
     # First see if invoice needs to be created

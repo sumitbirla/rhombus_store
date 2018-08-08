@@ -155,6 +155,22 @@ class Product < ActiveRecord::Base
     end
   end
   
+  # Given a destination, ship_method and quantity, lookup shipping_rates table and return ship cost
+  def get_ship_cost(country_code, ship_method, quantity)
+    rate = shipping_rates.find { |x| x.destination_country_code == country_code && x.ship_method == ship_method }
+    raise "Shipping rate not found for #{item_number}:#{country_code}:#{ship_method}" if rate.nil?
+    
+    if quantity == 0
+      return 0.0
+    elsif quantity == 1
+      return rate.first_item
+    elsif quantity == 2
+      return rate.first_item + rate.second_item
+    else
+      return rate.first_item + rate.second_item + (rate.additional_item * (quantity - 2))
+    end
+  end
+  
   # PUNDIT
   def self.policy_class
     ApplicationPolicy
