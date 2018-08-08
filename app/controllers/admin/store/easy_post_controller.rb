@@ -201,7 +201,6 @@ class Admin::Store::EasyPostController < Admin::BaseController
     
       shipment.copy_easy_post(response)
       shipment.status = 'shipped'
-      shipment.fulfilled_by_id = session[:user_id]
       shipment.save!
   
       OrderHistory.create order_id: shipment.order_id,
