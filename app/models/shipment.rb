@@ -145,7 +145,7 @@ class Shipment < ActiveRecord::Base
         order.update_column(:status, "partially_shipped")
       end
       
-      OrderShippedJob.perform_later(id)  # performs billing, notification etc.
+      # OrderShippedJob.perform_later(id)  # performs billing, notification etc.
     end
     
     if status == "pending"
