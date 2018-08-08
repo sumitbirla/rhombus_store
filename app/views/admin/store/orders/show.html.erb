@@ -270,7 +270,7 @@
             <td class="text-right">
               <%= link_to "x", { controller: 'shipments', action: "destroy", id: shipment.id },
                           method: :delete,
-                          data: { confirm: "Are you sure you want to delete shipment #{shipment}?" } %>
+                          data: { confirm: "Are you sure you want to delete shipment #{shipment}?" } unless shipment.status == 'shipped' %>
             </td>
           </tr>
         <% end %>
