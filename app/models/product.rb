@@ -67,14 +67,8 @@ class Product < ActiveRecord::Base
   has_many :label_elements, dependent: :destroy
 	has_many :order_items, :dependent => :restrict_with_exception
 	has_many :affiliate_products, :dependent => :restrict_with_exception
-  has_many :shipping_rates, class_name: 'ProductShippingRate'
-	
-	accepts_nested_attributes_for :shipping_rates, allow_destroy: true,
-																reject_if: proc { |a| a["destination_country_code"].blank? || 
-																											a["ship_method"].blank? || 
-																											a["first_item"].blank? || 
-																											a["additional_items"].blank? }
-	
+	has_many :shipping_rates, class_name: "ProductShippingRate", foreign_key: :code, primary_key: :shipping_code
+  
   validates_presence_of :name, :item_number, :product_type, :fulfiller_id
   validates_presence_of :title, :slug, :brand_id, :price, unless: lambda { |x| x.product_type == 'white-label' }
   validates_presence_of :sku, if: :warehoused?
@@ -155,21 +149,6 @@ class Product < ActiveRecord::Base
     end
   end
   
-  # Given a destination, ship_method and quantity, lookup shipping_rates table and return ship cost
-  def get_ship_cost(country_code, ship_method, quantity)
-    rate = shipping_rates.find { |x| x.destination_country_code == country_code && x.ship_method == ship_method }
-    raise "Shipping rate not found for #{item_number}:#{country_code}:#{ship_method}" if rate.nil?
-    
-    if quantity == 0
-      return 0.0
-    elsif quantity == 1
-      return rate.first_item
-    elsif quantity == 2
-      return rate.first_item + rate.second_item
-    else
-      return rate.first_item + rate.second_item + (rate.additional_item * (quantity - 2))
-    end
-  end
   
   # PUNDIT
   def self.policy_class

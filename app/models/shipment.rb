@@ -262,6 +262,27 @@ class Shipment < ActiveRecord::Base
     self.items_hash = calculate_items_hash
   end
   
+  # get shipment cost based on store_product_shipping_rates table
+  def calculate_shipping_cost
+    rates = {}  # hash of shipping_code : number_of_items
+    cost = 0.00
+    
+    items.each do |i|
+      code = i.order_item.product.shipping_code
+      raise "Shipping code not set for #{i.order_item.product.item_number}" if code.blank?
+      
+      rates[code] = 0 if rates[code].nil?
+      rates[code] += i.quantity
+    end
+    
+    rates.each do |code, quantity|
+      sr = ProductShippingRate.find_by!(code: code, destination_country_code: 'US', ship_method: :standard)
+      cost += sr.get_cost(quantity)
+    end
+    
+    cost
+  end
+  
   # PUNDIT
   def self.policy_class
     ApplicationPolicy
