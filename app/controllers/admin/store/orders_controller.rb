@@ -12,7 +12,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     
     unless q.blank?
       if (q.to_i == 0 || q.include?('-'))
-        @orders = @orders.where("billing_name LIKE '%#{q}%' OR shipping_name LIKE '%#{q}%' OR external_order_id = '#{q}'")
+        @orders = @orders.where("billing_name LIKE '%#{q}%' OR shipping_name LIKE '%#{q}%' OR external_order_id = '#{q}' OR external_order_name LIKE '%#{q}%'")
       else
         @orders = @orders.where(id: q)
       end
