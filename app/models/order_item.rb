@@ -34,8 +34,6 @@ class OrderItem < ActiveRecord::Base
   belongs_to :product
   belongs_to :daily_deal
   has_one :shipment_item
-  
-  audited associated_with: :order
 	
   validates_presence_of :quantity, :unit_price
   #validates :product_id, presence: true, if: daily_deal_id.nil?

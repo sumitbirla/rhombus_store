@@ -78,9 +78,6 @@ class Order < ActiveRecord::Base
   include PaymentGateway
   include Exportable
   
-  audited
-  has_associated_audits
-  
   self.table_name = "store_orders"
   attr_accessor :same_as_shipping
   
