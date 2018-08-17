@@ -67,15 +67,17 @@
         <thead>
         <tr valign="top">
           <th scope="col" style="text-align:left;">
-            <%
-                loc_id = Cache.setting(@shipment.order.domain_id, :shipping, "Ship From Location ID")
-                loc = Location.find(loc_id)
-                
-                if loc.pictures.length > 0
+            <% 
+              loc_id = Cache.setting(@shipment.order.domain_id, :shipping, "Ship From Location ID")
+              loc = Location.find(loc_id)
             %>
-            <h2><img src="<%= cdn_image_url loc.pictures[0].file_path, 250, 60, 0 %>" alt="Logo"></h2>
+            
+            <% if @shipment.order.affiliate %>
+              <h2><%= @shipment.order.affiliate.name %></h2>
+            <% elsif loc.pictures.length > 0 %>
+              <h2><img src="<%= cdn_image_url loc.pictures[0].file_path, 250, 60, 0 %>" alt="Logo"></h2>
             <% else %>
-            <h2><%= loc.name %></h2>
+              <h2><%= loc.name %></h2>
             <% end %>
             
             <p>
