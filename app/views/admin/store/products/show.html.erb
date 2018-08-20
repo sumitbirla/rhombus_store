@@ -90,6 +90,7 @@
     <% end %>
     
     <%= obj_property(@product, :label_sheet) { |x| link_to x.name, edit_admin_store_label_sheet_path(x.id) } %>
+    <%= obj_property @product, :label_file %>
     <%= obj_property @product, :warranty %>
     
     <tr>
