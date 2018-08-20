@@ -11,6 +11,7 @@
   <%= render 'admin/shared/error_messages', object: f.object %>
 
   <%= f.input :name %>
+  <%= f.input :slug %>
   <%= f.input :website %>
   <div class="form-group string optional brand_website">
 	  <label class="string optional control-label col-sm-3" for="brand_website">Logo</label>
@@ -42,17 +43,23 @@
 	{
 		document.getElementById( 'brand_logo' ).value = fileUrl.substring(<%= Cache.setting('System', 'Static Files Url').length %>);
 	}
+  
+	$(document).ready(function() {
+		$("#brand_name").blur(function() {   
+	    	var url = $("#brand_slug").val();
+	        if (url == '') {
+	        	url = $("#brand_name").val().toLowerCase().replace('&', '').replace('/', '').replace(' ', '-').replace("'", '').replace(' ', '');
+	            $("#brand_slug").val(url);
+	        }
+	     });
+	});
 	</script>
+  
 <% end %>
 
 
 
-<%= content_for :title do %>
-	Brands: <%= @brand.name %>
-<% end %>
-
-
-
+<% content_for :title, @brand.name %>
 
 
 <% content_for :breadcrumbs do %>
@@ -60,5 +67,3 @@
 	<li><%= link_to "Brands", admin_store_brands_path %></li>
 	<li class="active"><%= @brand.name %></li>
 <% end %>
-
-

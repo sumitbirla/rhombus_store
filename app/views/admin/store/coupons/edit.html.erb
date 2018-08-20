@@ -2,7 +2,7 @@
     .form-horizontal .control-label { width: 140px; }
 </style>
 
-<h2><%= @coupon.code %></h2>
+<h2><i class="fa fa-money-bill-alt"></i> <%= @coupon.code %></h2>
 <hr/>
 
 <%= simple_form_for [:admin, :store, @coupon] do |f| %>

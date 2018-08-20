@@ -16,7 +16,7 @@ class Brand < ActiveRecord::Base
   
   self.table_name = "store_brands"
   has_many :products, :dependent => :restrict_with_exception
-  validates :name, presence: true
+  validates_presence_of :name, :slug
   validates_uniqueness_of :name
   
   def to_s

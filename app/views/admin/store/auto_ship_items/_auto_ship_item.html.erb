@@ -3,7 +3,7 @@
     <td><%= as.id %></td>
 		<td><%= link_to as.user.name, admin_system_user_path(as.user) %></td>
 		<td><%= link_to as.product.item_number, admin_store_product_path(as.product_id) %></td>
-		<td><%= as.product.title %></td>
+		<td><%= as.product.name_with_option %></td>
     <td class="text-center"><%= as.quantity %></td>
     <td class="text-center"><%= as.days %> days</td>
     <td class="text-center"><%= as.last_shipped %></td>
