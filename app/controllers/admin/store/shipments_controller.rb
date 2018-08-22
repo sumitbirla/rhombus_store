@@ -262,8 +262,8 @@ class Admin::Store::ShipmentsController < Admin::BaseController
         img = h['rendered_file'].split('/').last
         str << "FIELD 001=#{label_prefix}\\personalized_labels\\#{img}\r\n"
       else
-        sku, breed, variant = h['item_number'].split("-")
-        str << "FIELD 001=#{label_prefix}\\hb_labels\\#{breed}\\#{h['item_number']}.pdf\r\n"
+        prod = Product.find_by(item_number: h['item_number'])
+        str << "FIELD 001=#{label_prefix}#{prod.label_file.tr('/', '\\')}\r\n"
       end
       
       str << "LABELQUANTITY=#{qty}\r\n"
