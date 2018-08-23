@@ -263,6 +263,13 @@ class Admin::Store::ShipmentsController < Admin::BaseController
         str << "FIELD 001=#{label_prefix}\\personalized_labels\\#{img}\r\n"
       else
         prod = Product.find_by(item_number: h['item_number'])
+        
+        # handle nothing to print
+        if prod.nil? || prod.label_file.blank?
+          flash[:error] = "Label is not configured for item [#{h['item_number']}].  Cannot print."
+          return redirect_to :back
+        end
+        
         str << "FIELD 001=#{label_prefix}#{prod.label_file.tr('/', '\\')}\r\n"
       end
       
