@@ -321,7 +321,6 @@ EOF
     new_order.assign_attributes({
       submitted: DateTime.now,
       status: :submitted,
-      external_order_id: nil,
       ship_earliest: Date.today,
       payment_due: nil,
       cc_type: nil,
