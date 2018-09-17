@@ -48,7 +48,10 @@
 
 
 <div>
-  <b>Submitted: </b> <%= time_ago_in_words(@order.submitted) %> ago
+  <% unless @order.submitted.nil? %>
+    <b>Submitted: </b> <%= time_ago_in_words(@order.submitted) %> ago
+  <% end %>
+  
   <% unless @order.user_id.nil? %>
     &nbsp; &nbsp; <i class="fa fa-user"></i> <%= link_to @order.user.name, admin_system_user_path(@order.user, q: :orders) %>
   <% end %>
@@ -357,7 +360,9 @@
       </tr>
   <% end %>
   <tr>
-    <td><%= systime @order.submitted %></td>
+    <% unless @order.submitted.nil? %>
+      <td><%= systime @order.submitted %></td>
+    <% end %>
     <td><% unless @order.user_id.nil? %>
           <%= link_to @order.user.name, admin_system_user_path(@order.user), class: 'small' %>
       <% end %></td>

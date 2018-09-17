@@ -4,7 +4,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     authorize Order.new
     q = params[:q]
     
-    @orders = Order.where.not(status: 'in cart').order(sort_column + " " + sort_direction)
+    @orders = Order.order(sort_column + " " + sort_direction)
     @orders = @orders.where(status: params[:status]) unless params[:status].blank?
 		@orders = @orders.where(batch_id: params[:batch_id]) unless params[:batch_id].blank?
     @orders = @orders.joins(:items).where("store_order_items.product_id = ?", params[:product_id]) unless params[:product_id].blank?
