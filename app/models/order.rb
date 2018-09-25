@@ -455,12 +455,22 @@ class Order < ActiveRecord::Base
     end
   end
   
+  
   def fulfillers
     fulfillers = items.joins(:product)
                       .group("store_products.fulfiller_id")
                       .pluck("store_products.fulfiller_id")
                       
     Affiliate.where(id: fulfillers)
+  end
+  
+  
+  def estimated_shipping_weight
+    weight = 0.0
+    items.each do |i|
+      weight += (i.product.item_weight.presence || 1.0) * i.quantity
+    end
+    weight * 1.15  #  account 15% for packaging
   end
   
   

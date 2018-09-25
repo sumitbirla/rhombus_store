@@ -48,7 +48,9 @@ module CartHelper
     order.subtotal = 0.0
     order.items.each { |i| order.subtotal += i.quantity.to_d * i.unit_price }
     
-    apply_shipping(order)
+    if order.shipping_country == 'US'
+      apply_shipping(order)
+    end
 
     # any coupon
     if order.coupon_id

@@ -1,3 +1,6 @@
+require 'easypost'
+require 'awesome_print'
+
 class CartController < ApplicationController
 
   include CartHelper
@@ -331,6 +334,49 @@ class CartController < ApplicationController
   
   def review
     @order = Order.includes(:items).find_by(cart_key: cookies[:cart])
+    
+    if @order.shipping_country != "US"
+      # get easypost rates
+      loc_id = Cache.setting(@order.domain_id, :shipping, "Ship From Location ID")
+      loc = Location.find(loc_id)
+
+      EasyPost.api_key = Cache.setting(@order.domain_id, :shipping, 'EasyPost API Key')
+      
+      response = EasyPost::Shipment.create(
+          :to_address => {
+            :name => @order.shipping_name,
+            :company => @order.shipping_company,
+            :street1 => @order.shipping_street1,
+            :street2 => @order.shipping_street2,
+            :city => @order.shipping_city,
+            :state => @order.shipping_state,
+            :zip => @order.shipping_zip,
+            :country => @order.shipping_country,
+            :phone => @order.contact_phone,
+            :email => @order.notify_email
+          },
+          :from_address => {
+            :company => loc.name,
+            :street1 => loc.street1,
+            :city => loc.city,
+            :state => loc.state,
+            :zip => loc.zip,
+            :country => loc.country,
+            :phone => loc.phone,
+            :email => loc.email
+          },
+          :parcel => { :weight => @order.estimated_shipping_weight * 16.0 },
+          :carrier_account => ["ca_sVouDr9F"] 
+      ) 
+  
+      @cheapest_rate = response[:rates].min_by { |x| x[:rate].to_d }
+      ap @cheapest_rate.to_hash
+      
+      @order.shipping_cost = @cheapest_rate[:rate]
+      @order.shipping_method = @cheapest_rate[:carrier] + " " + @cheapest_rate[:service]
+      update_totals(@order)
+    end
+    
     redirect_to action: 'index' if @order.nil? || @order.items.length == 0
   end
   
