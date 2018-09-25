@@ -369,15 +369,13 @@ class CartController < ApplicationController
           :carrier_account => ["ca_sVouDr9F"] 
       ) 
   
-      @cheapest_rate = response[:rates].min_by { |x| x[:rate].to_d }
-      ap @cheapest_rate.to_hash
-      
+      @cheapest_rate = response[:rates].min_by { |x| x[:rate].to_d }      
       @order.shipping_cost = @cheapest_rate[:rate]
       @order.shipping_method = @cheapest_rate[:carrier] + " " + @cheapest_rate[:service]
-      update_totals(@order)
-      
-      @order.save(validate: false)
     end
+    
+    update_totals(@order)
+    @order.save(validate: false)
     
     redirect_to action: 'index' if @order.nil? || @order.items.length == 0
   end
