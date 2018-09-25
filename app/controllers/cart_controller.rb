@@ -375,6 +375,8 @@ class CartController < ApplicationController
       @order.shipping_cost = @cheapest_rate[:rate]
       @order.shipping_method = @cheapest_rate[:carrier] + " " + @cheapest_rate[:service]
       update_totals(@order)
+      
+      @order.save(validate: false)
     end
     
     redirect_to action: 'index' if @order.nil? || @order.items.length == 0
