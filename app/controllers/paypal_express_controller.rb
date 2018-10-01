@@ -34,6 +34,10 @@ class PaypalExpressController < ActionController::Base
     end
 
     @cart = Order.find_by(cart_key: cookies[:cart])
+    if @cart.nil?
+      flash[:error] = "Your shopping cart was not found.  Order not placed."
+      return redirect_to cart_path
+    end
 
     @cart.assign_attributes({
       notify_email: gateway_response.email,
