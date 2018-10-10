@@ -24,7 +24,7 @@ class ShopifyFulfillmentJob < ActiveJob::Base
 		if shp.external_id.blank?
       # find fulfillment service first
       fs = ShopifyAPI::FulfillmentService.find(:all).find { |x| x.handle == 'stock-on-demand' }
-      raise "FulfillmentService 'stockify' not found.  Cannot update tracking." if fs.nil?
+      raise "FulfillmentService 'stock-on-demand' not found.  Cannot update tracking." if fs.nil?
       
     	f = ShopifyAPI::Fulfillment.new(order_id: shp.order.external_order_id, location_id: fs.location_id, line_items: [])
 			shp.items.each { |i| f.line_items << { id: i.order_item.external_id } }
