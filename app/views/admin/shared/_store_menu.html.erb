@@ -20,6 +20,9 @@
     <% if current_user.has_permission?('Brand', 'index')%>
       <li><%= link_to "Brands", admin_store_brands_path %></li>
     <% end %>
+    <% if current_user.has_permission?('Catalog', 'index')%>
+      <li><%= link_to "Catalogs", admin_store_catalogs_path %></li>
+    <% end %>
     <% if current_user.has_permission?('Coupon', 'index')%>
       <li><%= link_to "Coupons", admin_store_coupons_path %></li>
     <% end %>

@@ -10,37 +10,32 @@
 <ul class="nav nav-tabs">
   <li><%= link_to "Summary", edit_admin_store_product_path(@product) %></li>
   <li><%= link_to "Pictures", pictures_admin_store_product_path(@product) %></a></li>
-  <li class="active"><a href="#">Categories</a></li>
+  <li><%= link_to "Categories", categories_admin_store_product_path(@product) %></li>
   <li><%= link_to "Coupons", coupons_admin_store_product_path(@product) %></li>
   <li><%= link_to "Extra Properties", extra_properties_admin_store_product_path(@product) %></li>
   <li><%= link_to "Label Elements", label_elements_admin_store_product_path(@product) %></li>
-  <li><%= link_to "Catalogs", catalogs_admin_store_product_path(@product) %></li>
+  <li class="active"><a href="#">Catalogs</a></li>
 </ul>
 
 <br/>
-<form action="/admin/store/products/<%= params[:id] %>/categories" method="post" class="categories">
+<form action="/admin/store/products/<%= params[:id] %>/catalogs" method="post" class="catalogs">
 	<%= token_tag %>
 	<input type="hidden" name="id" value="<%= params[:id] %>">
-<% 	categories = Category.select("id, name, parent_id").where(entity_type: :product).order(:sort)
-	pcats = @product.categories
-	top_levels = categories.select { |c| c.parent_id == nil } %>
-	<ul>
-	<% top_levels.each do |cat| 
-		children = categories.select { |c| c.parent_id == cat.id } 
-		selected = pcats.find { |c| c.id == cat.id } %>
-		
-		<li><input type="checkbox" name="category_ids[]" value="<%= cat.id %>" <%= "checked='checked'" if selected %>/> &nbsp; <%= cat.name %>
-		<ul>
-		<% children.each do |child| %>
-			<li><input type="checkbox" name="category_ids[]" value="<%= child.id %>" <%= "checked='checked'" if pcats.include?(child) %>/> &nbsp; <%= child.name %></li>
-		<% end %>
-		</ul>
-		</li>
+	<table class="table table-bordered table-condensed">
+	<% Catalog.all.each do |cat| 
+      pc = @product.product_catalogs.find { |pc| pc.catalog_id == cat.id } %>
+    <tr>
+      <td><input type="checkbox" name="catalogs[][id]" value="<%= cat.id %>" <%= "checked='checked'" unless pc.nil? %>/></td>
+      <td><%= cat.code %></td>
+      <td><%= cat.name %></td>
+      <td><%= cat.url %></td>
+      <td><input type="text" name="catalogs[][standard_price]" value="<%= pc.nil? ? @product.msrp : pc.standard_price %>"/></td>
+      <td><input type="text" name="catalogs[][promotional_price]" value="<%= pc.promotional_price unless pc.nil? %>"/></td>
+    </tr>
 	<% end %>
-</ul>
-<div class="form-actions">
-	<%= button_tag "Save changes", class: "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ...".html_safe } %>
-</div>
+  </table>
+  
+  <%= button_tag "Save changes", class: "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ...".html_safe } %>
 </form>
 
 

@@ -136,6 +136,8 @@ Rails.application.routes.draw do
       
       resources :auto_ship_items
       resources :brands
+      resources :catalogs
+      resources :coupons
       resources :products do
         member do
           get 'pictures' 
@@ -148,6 +150,8 @@ Rails.application.routes.draw do
 					get 'template'
 					post 'template' => 'products#apply_template'
 					get 'shipping_rates'
+          get 'catalogs'
+          post 'catalogs' => 'products#create_catalogs'
         end
       end
       resources :orders do
@@ -161,7 +165,6 @@ Rails.application.routes.draw do
           get 'clone'
         end
       end
-      resources :coupons
       resources :shipments do
         member do
           get 'label_image'

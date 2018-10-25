@@ -230,6 +230,9 @@
 
 <div class="col-md-4">
 	<% if @product.pictures.length > 0 %>
+      <%= link_to pictures_admin_store_product_path(@product), class: "pull-right" do %>
+        <i class="fa fa-edit text-muted"></i>
+      <% end %>
       <h4>Pictures</h4>
       <a href="<%= cdn_image_url @product.pictures[0], 800, 700, 0 %>" data-lightbox="image-1">
           <img class="center-block" src="<%= cdn_image_url @product.pictures[0], 300, 300, 0 %>" title="<%= @product.pictures[0].caption %>" />
@@ -249,7 +252,12 @@
   <% if @product.categories.length > 0 %>
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title">Categories</h3>
+      <h3 class="panel-title">
+        <%= link_to categories_admin_store_product_path(@product), class: "pull-right" do %>
+          <i class="fa fa-edit text-muted"></i>
+        <% end %>
+        Categories
+      </h3>
     </div>
     <div class="panel-body">
     	<ul>
@@ -261,6 +269,38 @@
   </div>
   <% end %>
 
+
+  <% if @product.catalogs.length > 0 %>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <%= link_to catalogs_admin_store_product_path(@product), class: "pull-right" do %>
+          <i class="fa fa-edit text-muted"></i>
+        <% end %>
+        Catalogs
+      </h3>
+    </div>
+    <div class="panel-body">
+      <table class="table table-condensed">
+        <% @product.product_catalogs.each do |pc| %>
+            <tr>
+              <td><%= pc.catalog.code %></td>
+              <td><%= pc.catalog.name %></td>
+              <td class="ralign">
+                <% unless pc.promotional_price.nil? %>
+                  <span class="text-danger"><%= number_to_currency(pc.promotional_price)%></span>
+                  <strike><%= number_to_currency(pc.standard_price)%></strike>
+                <% else %>
+                  <%= number_to_currency(pc.standard_price)%>
+                <% end %>
+              </td>
+            </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+  <% end %>
+  
 
 
   <% unless @product.group.blank?  %>

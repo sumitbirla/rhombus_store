@@ -87,11 +87,33 @@ class Admin::Store::ProductsController < Admin::BaseController
     @product = Product.find(params[:id])
     authorize @product, :update?
     
-    ProductCategory.delete_all product_id: @product.id
-    category_ids = params[:category_ids]
+    ProductCategory.delete_all(product_id: @product.id)
+    category_ids = params[:category_ids] || []
     
     category_ids.each do |id|
       ProductCategory.create product_id: @product.id, category_id: id
+    end
+    
+    Rails.cache.delete @product
+    redirect_to action: 'show', id: @product.id, notice: 'Product was successfully updated.'
+  end
+  
+  def catalogs
+    @product = Product.find(params[:id])
+    authorize @product, :show?
+  end
+  
+  def create_catalogs
+    @product = Product.find(params[:id])
+    authorize @product, :update?
+    
+    ProductCatalog.delete_all(product_id: @product.id)
+    catalogs = params[:catalogs] || []
+    catalogs.each do |c| 
+      ProductCatalog.create(product_id: @product.id, 
+                            catalog_id: c[:id],
+                            standard_price: c[:standard_price],
+                            promotional_price: c[:promotional_price])
     end
     
     Rails.cache.delete @product

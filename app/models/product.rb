@@ -60,9 +60,11 @@ class Product < ActiveRecord::Base
 
   has_many :pictures, -> { order :sort }, as: :imageable, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
-  has_many :product_categories, dependent: :destroy
   has_many :coupons, -> { order 'created_at desc' }, dependent: :destroy
+  has_many :product_categories, dependent: :destroy
   has_many :categories, -> { order :sort }, through: :product_categories
+  has_many :product_catalogs, dependent: :destroy
+  has_many :catalogs, through: :product_catalogs
   has_many :extra_properties, -> { order "sort, name" }, as: :extra_property, dependent: :destroy
   has_many :label_elements, dependent: :destroy
 	has_many :order_items, :dependent => :restrict_with_exception
