@@ -3,7 +3,7 @@ class Catalog < ActiveRecord::Base
   
   self.table_name = "store_catalogs"
   
-  validates_presence_of :name, :code, :standard_price
+  validates_presence_of :name, :code
   validates_uniqueness_of :name, :code
   
   has_many :product_catalogs, dependent: :destroy

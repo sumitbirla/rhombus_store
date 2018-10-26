@@ -3,5 +3,5 @@ class ProductCatalog < ActiveRecord::Base
   belongs_to :product
   belongs_to :catalog
   
-  validates_presence_of :product_id, :catalog_id
+  validates_presence_of :product_id, :catalog_id, :standard_price
 end
