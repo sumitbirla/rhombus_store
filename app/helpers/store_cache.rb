@@ -46,6 +46,18 @@ module StoreCache
              .load
     end
   end
+  
+  def self.catalog_product_list(catalog_id, category_slug)
+    Rails.cache.fetch("catalog-product-list:#{catalog_id}:#{category_slug}") do
+      c = Category.find_by(slug: category_slug, entity_type: :product)
+      Product.includes(:pictures, :product_catalogs)
+             .joins(:product_catalogs)
+             .where(active: true, hidden: false, id: ProductCategory.where(category_id: c.id).pluck(:product_id))
+             .where("store_product_catalogs.catalog_id = ?", catalog_id)
+						 .order("name, item_number")
+             .load
+    end
+  end
 	
   def self.product_list2(cat1, cat2)
     Rails.cache.fetch("product-list:#{cat1}:#{cat2}") do
