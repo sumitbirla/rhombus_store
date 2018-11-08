@@ -54,7 +54,7 @@ class TransmitEdiOrdersJob < ActiveJob::Base
       
       begin
     		shp.items.each do |si|
-    			ap = AffiliateProduct.find_by(affiliate_id: shp.fulfiller.id, product_id: si.order_item.product_id)
+    			ap = AffiliateProduct.find_by(affiliate_id: shp.order.affiliate_id, product_id: si.order_item.product_id)
 			
     	  	csv << [
     				Setting.get(:system, "Website Name"),
