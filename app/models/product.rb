@@ -117,7 +117,12 @@ class Product < ActiveRecord::Base
 			str += bullets.map { |x| "<li>#{x}</li>" }.join
 			str += "</ol>"
 		end
-		
+    
+    extra_properties.each do |prop|
+      next if prop.name.start_with?("Bullet")
+		  str += "<p><b>#{prop.name}:</b><br>#{prop.value}</p>"
+    end
+    
 		str
 	end
   
