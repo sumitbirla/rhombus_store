@@ -216,6 +216,8 @@ class Admin::Store::EasyPostController < Admin::BaseController
         AmazonFulfillmentJob.perform_later(shipment.id)
 			elsif shipment.order.sales_channel == "shopify"
 				ShopifyFulfillmentJob.perform_later(shipment.id)
+			elsif shipment.order.sales_channel == "stockify"
+				StockifyFulfillmentJob.perform_later(shipment.id)
       end
     
       # auto print label if specified in settings
