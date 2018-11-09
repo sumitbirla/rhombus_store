@@ -8,7 +8,7 @@ class StockifyFulfillmentJob < ActiveJob::Base
   def perform(shipment_id)
     shp = Shipment.find(shipment_id)
     file_path = Cache.setting(shp.order.domain_id, "eCommerce", "Edi Path")
-		file_path += "/outgoing/tracking/tracking_#{DateTime.now.strftime("%F_%H%M%S")}.txt"
+		file_path += "/incoming/tracking/tracking_#{DateTime.now.strftime("%F_%H%M%S")}.txt"
 		
 		s = StringIO.new
 		
