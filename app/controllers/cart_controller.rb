@@ -213,11 +213,13 @@ class CartController < ApplicationController
       
       if quantity > 0
         item.quantity = quantity
+        item.quantity_accepted = quantity
         
         # special check for daily deals
         if item.daily_deal && item.daily_deal.max_per_user && (item.quantity > item.daily_deal.max_per_user)
           flash[:error] = "Sorry, #{item.item_number} is limited to #{item.daily_deal.max_per_user} per customer."
           item.quantity = item.daily_deal.max_per_user
+          item.quantity_accepted = item.quantity
         end
         
         item.save
