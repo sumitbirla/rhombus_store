@@ -23,11 +23,14 @@ class Admin::Store::EasyPostController < Admin::BaseController
           package_length: s.package_length,
           package_width: s.package_width
     ) unless s.nil?
+    
+    @default_printer_id = Cache.setting(@shipment.order.domain_id, :shipping, "Default Label Printer ID") 
   end
   
   def rates
     @shipment = Shipment.find(params[:shipment_id])
     @shipment.assign_attributes(shipment_params)
+    @default_printer_id = params[:printer_id]
     
     return render 'index' unless @shipment.valid?
 		
@@ -51,13 +54,14 @@ class Admin::Store::EasyPostController < Admin::BaseController
   # Purchases shipping for given shipment
   def buy
     shipment = Shipment.find(params[:shipment_id])
+    shipment.update_column(:affiliate_shipping_account, params[:affiliate_shipping_account] == "true")
     set_api_key(shipment)
     
     begin
       ep_shipment = EasyPost::Shipment.retrieve(params[:ep_shipment_id])
       easypost_purchase(shipment, params[:rate_id], ep_shipment)  
     rescue => e
-      flash[:error] = e.message
+      flash[:error] = e.message + params[:ep_shipment_id]
       return redirect_to :back
     end
     
@@ -219,9 +223,8 @@ class Admin::Store::EasyPostController < Admin::BaseController
 				StockifyFulfillmentJob.perform_later(shipment.id)
       end
     
-      # auto print label if specified in settings
-      if Cache.setting(shipment.order.domain_id, :shipping, "Auto Print EPL2") == "true"
-        ShippingLabelJob.perform_later(session[:user_id], shipment.id, "epl2")
+      unless params[:printer_id].blank?
+        ShippingLabelJob.perform_later(session[:user_id], shipment.id, params[:printer_id])
         flash[:success] = "Shipping label sent to printer"
       end
     

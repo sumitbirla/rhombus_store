@@ -43,6 +43,8 @@ packaging_types = [
 	'SmallExpressBox',
 	'MediumExpressBox',
 	'LargeExpressBox' ]
+  
+  printers = Printer.where(preferred_format: ['epl2', 'zpl', 'pdf'])
 %>
 
 <%= link_to "Modify Shipment", edit_admin_store_shipment_path(@shipment), class: "btn btn-sm btn-default pull-right" %>
@@ -60,24 +62,20 @@ packaging_types = [
      
       <%= hidden_field_tag :ship_cheapest, false %>
 		  <%= f.input :packaging_type, collection: packaging_types, label: 'Packaging' %>
-      <%= f.input :package_weight, label: 'Weight (lbs)' %>
-
+      
       <div class="form-group string optional shipment_dimensions" style="<%= 'display: none' unless @shipment.packaging_type == 'YOUR PACKAGING' %>">
         <label class="string optional control-label col-sm-3" for="shipment_dimensions">Size (in.)</label>
         <div class="dimensions col-sm-9">
           <%= f.input_field :package_length %> &nbsp;x&nbsp;
           <%= f.input_field :package_width %> &nbsp;x&nbsp;
-          <%= f.input_field :package_height %>
+          <%= f.input_field :package_height %> &nbsp; &nbsp; &nbsp; &nbsp;
+          
+          <b>Weight</b>: <%= f.input_field :package_weight %> lb.
         </div>
       </div>
       
       <%= f.input :ship_date, as: :datepicker %>
       <%= f.input :require_signature, label: 'Signature?' %>
-      <% if @shipment.affiliate_shipping_available? %>
-      <div class="alert alert-info">
-        <%= f.input_field :affiliate_shipping_account %> &nbsp; Use <u><%= @shipment.order.affiliate %></u> shipping account(s)
-      </div>
-      <% end %>
       
       <% aff = @shipment.order.affiliate  
         unless aff.nil? 
@@ -92,6 +90,30 @@ packaging_types = [
           </div>
           <% end %>
       <% end %>
+      
+      <div class="form-group string optional shipment_dimensions" style="<%= 'display: none' unless @shipment.packaging_type == 'YOUR PACKAGING' %>">
+        <label class="string optional control-label col-sm-3" for="shipment_dimensions">Label printer</label>
+        <div class="col-sm-9">
+          <%= select_tag(:printer_id, options_from_collection_for_select(printers, :id, :name, @default_printer_id), prompt: "- do not print -") %>
+        </div>
+      </div>
+      
+      <div class="alert alert-info">
+      <% if @ep_shipment %>
+        <% if @shipment.affiliate_shipping_account %>
+          Using <u><%= @shipment.order.affiliate %></u> shipping account(s)
+        <% else %>
+          Using <u><%= Cache.setting(@shipment.order.domain_id, :system, "Website Name") %></u> shipping account(s)
+        <% end %>
+        
+        <%= link_to "undo", admin_store_easy_post_path(shipment_id: @shipment.id), class: "pull-right" %>
+        <%= f.hidden_field :affiliate_shipping_account %>
+        
+      <% elsif @shipment.affiliate_shipping_available? %>
+        <%= f.input_field :affiliate_shipping_account %> &nbsp; Use <u><%= @shipment.order.affiliate %></u> shipping account(s)
+      <% end %>
+      </div>
+      
 		 
       <%= button_tag :class => "btn btn-success", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } do %>
         <i class="fa fa-dollar"></i> &nbsp; Get Rates
@@ -179,8 +201,14 @@ packaging_types = [
           <% end %>
         </td>
 			  <td class="text-right">
-			    <%= link_to "purchase", admin_store_easy_post_buy_path(shipment_id: @shipment.id, rate_id: rate[:id], ep_shipment_id: @ep_shipment[:id]), 
-                  class: 'btn btn-sm btn-default', data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> purchasing ..." }   %>
+          <%= form_tag admin_store_easy_post_buy_path do %>
+            <%= hidden_field_tag :shipment_id, @shipment.id %>
+            <%= hidden_field_tag :rate_id, rate[:id] %>
+            <%= hidden_field_tag :ep_shipment_id, @ep_shipment[:id] %>
+            <%= hidden_field_tag :printer_id, @default_printer_id %>
+            <%= hidden_field_tag :affiliate_shipping_account, @shipment.affiliate_shipping_account %>
+            <%= submit_tag "purchase", class: 'btn btn-sm btn-default', "data-disable-with" => "<i class='fa fa-spinner fa-spin'></i> purchasing ..." %>
+          <% end %>
 			  </td>
       </tr>
 			<% end %>
@@ -218,6 +246,10 @@ packaging_types = [
             
             $(".btn-cheapest").click(function() {
               $("#ship_cheapest").val("true");
+            });
+            
+            $("select#printer_id").change(function() {
+              $("input[name='printer_id']").val($(this).val());
             });
 
         });

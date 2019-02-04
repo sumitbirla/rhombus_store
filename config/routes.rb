@@ -121,7 +121,7 @@ Rails.application.routes.draw do
       get 'easy_post/batch_status'
 			get 'easy_post' => 'easy_post#index'
       patch 'easy_post' => 'easy_post#rates'
-      get 'easy_post_buy' => 'easy_post#buy'
+      post 'easy_post_buy' => 'easy_post#buy'
       
       post 'orders_batch_ship' => 'orders#batch_ship'
       post 'orders_update_status' => 'orders#update_status'
