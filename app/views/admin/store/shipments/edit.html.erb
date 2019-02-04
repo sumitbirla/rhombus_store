@@ -102,6 +102,7 @@
               dropship_category = Category.find_by(slug: 'dropshippers')
               dropshippers = Affiliate.where(id: AffiliateCategory.select(:affiliate_id).where(category_id: dropship_category.id)) unless dropship_category.nil? 
             %>
+            <%= f.input :affiliate_shipping_account, label: "Aff. acct." %>
             <%= f.input :fulfilled_by_id, collection: dropshippers %>
             <%= f.input :carrier, collection: ["USPS", "FedEx", "UPS"] %>
             <%= f.input :ship_method %>

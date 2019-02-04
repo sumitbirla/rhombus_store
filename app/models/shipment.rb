@@ -283,6 +283,10 @@ class Shipment < ActiveRecord::Base
     cost
   end
   
+  def affiliate_shipping_available?
+    order.affiliate && order.affiliate.get_property("Use EasyPost") == "true"
+  end
+  
   # PUNDIT
   def self.policy_class
     ApplicationPolicy

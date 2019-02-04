@@ -73,6 +73,11 @@ packaging_types = [
       
       <%= f.input :ship_date, as: :datepicker %>
       <%= f.input :require_signature, label: 'Signature?' %>
+      <% if @shipment.affiliate_shipping_available? %>
+      <div class="alert alert-info">
+        <%= f.input_field :affiliate_shipping_account %> &nbsp; Use <u><%= @shipment.order.affiliate %></u> shipping account(s)
+      </div>
+      <% end %>
       
       <% aff = @shipment.order.affiliate  
         unless aff.nil? 
@@ -103,7 +108,7 @@ packaging_types = [
    <div class="col-md-5">
 
      <div class="panel panel-primary">
-       <div class="panel-heading"><%= @shipment.ship_from_company %></div>
+       <div class="panel-heading"><%= @shipment.ship_from_company %> &rarr;</div>
        <div class="panel-body">
            <%= @shipment.ship_from_street1 %><br/>
            <%= raw @shipment.ship_from_street2 + '<br/>' unless @shipment.ship_from_street2.blank? %>
@@ -113,7 +118,7 @@ packaging_types = [
      </div>
 
      <div class="panel panel-primary">
-       <div class="panel-heading"><%= @shipment.recipient_name %></div>
+       <div class="panel-heading">&rarr; <%= @shipment.recipient_name %></div>
        <div class="panel-body">
            <%= raw @shipment.recipient_company + '<br/>' unless @shipment.recipient_company.blank? %>
            <%= @shipment.recipient_street1 %><br/>

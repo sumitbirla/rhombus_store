@@ -23,7 +23,6 @@ class Admin::Store::EasyPostController < Admin::BaseController
           package_length: s.package_length,
           package_width: s.package_width
     ) unless s.nil?
-    
   end
   
   def rates
@@ -52,7 +51,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
   # Purchases shipping for given shipment
   def buy
     shipment = Shipment.find(params[:shipment_id])
-    EasyPost.api_key = Cache.setting(shipment.order.domain_id, :shipping, 'EasyPost API Key')
+    set_api_key(shipment)
     
     begin
       ep_shipment = EasyPost::Shipment.retrieve(params[:ep_shipment_id])
@@ -137,7 +136,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
         options[:bill_third_party_postal_code] = zip
       end
       
-      EasyPost.api_key = Cache.setting(shipment.order.domain_id, :shipping, 'EasyPost API Key')
+      set_api_key(shipment)
       
       # create customs information if required
       if (['APO', 'FPO', 'DPO'].include?(shipment.recipient_city) || shipment.recipient_country != 'US')
@@ -194,7 +193,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
     
     def easypost_purchase(shipment, rate_id, ep_shipment)
       
-      EasyPost.api_key = Cache.setting(shipment.order.domain_id, :shipping, 'EasyPost API Key')  
+      set_api_key(shipment) 
       response = ep_shipment.buy(:rate => {:id => rate_id})
       
       puts response.inspect
@@ -234,6 +233,14 @@ class Admin::Store::EasyPostController < Admin::BaseController
         end
       end
       
+    end
+    
+    def set_api_key(shipment)
+      if shipment.affiliate_shipping_account
+        EasyPost.api_key = shipment.order.affiliate.get_property("EasyPost API Key")
+      else
+        EasyPost.api_key = Cache.setting(shipment.order.domain_id, :shipping, 'EasyPost API Key')
+      end
     end
 
 end
