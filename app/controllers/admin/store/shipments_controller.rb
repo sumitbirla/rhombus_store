@@ -147,7 +147,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     courier_data = JSON.parse(shipment.courier_data)
     
     begin
-      EasyPost.api_key = Cache.setting(shipment.order.domain_id, 'Shipping', 'EasyPost API Key')
+      EasyPost.api_key = shipment.easy_post_api_key
       ep_shipment = EasyPost::Shipment.retrieve(courier_data['id'])
       response = ep_shipment.label({'file_format' => params[:format]})
       
@@ -166,7 +166,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
   def void_label
     shipment = Shipment.find(params[:id])
-    EasyPost.api_key = Cache.setting(shipment.order.domain_id, 'Shipping', 'EasyPost API Key')
+    EasyPost.api_key = shipment.easy_post_api_key
     courier_data = JSON.parse(shipment.courier_data)
     
     begin
@@ -356,9 +356,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   end
   
   
-  def shipping_label_batch
-    EasyPost.api_key = Cache.setting(Rails.configuration.domain_id, 'Shipping', 'EasyPost API Key')
-    
+  def shipping_label_batch    
     if params[:printer_id].blank?
       file_format = 'pdf'
     else
@@ -372,6 +370,9 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     begin
       Shipment.where(id: params[:shipment_id]).each do |s|
         courier_data = JSON.parse(s.courier_data)
+        
+        EasyPost.api_key = s.easy_post_api_key
+      
         ep_shipment = EasyPost::Shipment.retrieve(courier_data['id'])
         response = ep_shipment.label({'file_format' => file_format})
       

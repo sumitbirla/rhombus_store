@@ -13,12 +13,8 @@ class ShippingLabelJob < ActiveJob::Base
       printer = Printer.find(printer_id)
       mime_type = (printer.preferred_format == 'pdf' ? 'application/pdf' : 'text/plain')
     
-      if shipment.affiliate_shipping_account
-        EasyPost.api_key = shipment.order.affiliate.get_property("EasyPost API Key")
-      else
-        EasyPost.api_key = Cache.setting(shipment.order.domain_id, :shipping, 'EasyPost API Key')
-      end
-      
+      EasyPost.api_key = shipment.easy_post_api_key
+  
       ep_shipment = EasyPost::Shipment.retrieve(courier_data['id'])
       response = ep_shipment.label({'file_format' => printer.preferred_format})
       

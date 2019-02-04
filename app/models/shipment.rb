@@ -287,6 +287,17 @@ class Shipment < ActiveRecord::Base
     order.affiliate && order.affiliate.get_property("Use EasyPost") == "true"
   end
   
+  def easy_post_api_key
+    if affiliate_shipping_account
+      key = order.affiliate.get_property("EasyPost API Key")
+    else
+      key = Cache.setting(order.domain_id, :shipping, 'EasyPost API Key')
+    end
+    
+    raise "EasyPost API Key is not set." if key.blank?
+    key
+  end
+  
   # PUNDIT
   def self.policy_class
     ApplicationPolicy

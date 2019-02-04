@@ -42,8 +42,8 @@ class BatchShipJob < ActiveJob::Base
       )
     end
     
-    # ship from address is already populated
-    EasyPost.api_key = Cache.setting(shp.order.domain_id, :shipping, 'EasyPost API Key')
+    EasyPost.api_key = shp.easy_post_api_key
+    
     ep_shipment = create_ep_shipment(shp)
     reply = ep_shipment.buy(
       :rate => ep_shipment.lowest_rate(carriers = [shp.carrier], services = [shp.ship_method])
@@ -120,7 +120,7 @@ class BatchShipJob < ActiveJob::Base
     }
     options[:delivery_confirmation] = 'SIGNATURE' if shipment.require_signature
     
-    EasyPost.api_key = Cache.setting(shipment.order.domain_id, :shipping, 'EasyPost API Key')
+    EasyPost.api_key = shipment.easy_post_api_key
     response = EasyPost::Shipment.create(
         :to_address => {
           :name => shipment.recipient_name,
