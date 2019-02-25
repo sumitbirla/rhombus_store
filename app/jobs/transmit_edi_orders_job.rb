@@ -11,8 +11,9 @@ class TransmitEdiOrdersJob < ActiveJob::Base
     return if shipments.length == 0
     
     fulfiller = Affiliate.find(fulfiller_id)
-		file_path = Setting.get('eCommerce', 'EDI Path') + "/" + fulfiller.slug + "/outgoing/orders/orders_#{DateTime.now.strftime("%F_%H%M%S")}.csv"
+		file_path = Setting.get(shipments[0].order.domain_id, :ecommerce, 'EDI Path') + "/" + fulfiller.slug + "/outgoing/orders/orders_#{DateTime.now.strftime("%F_%H%M%S")}.csv"
 		#file_path = "/Users/sbirla/Projects/edi/" + fulfiller.slug + "/outgoing/orders/orders_#{DateTime.now.strftime("%F_%H%M%S")}.csv" 
+    website_name = Setting.get(Rails.configuration.domain_id, :system, "Website Name")
 		
 		headers = [
 			"customer_number",
@@ -57,7 +58,7 @@ class TransmitEdiOrdersJob < ActiveJob::Base
     			ap = AffiliateProduct.find_by(affiliate_id: shp.fulfiller.id, product_id: si.order_item.product_id)
 			
     	  	csv << [
-    				Setting.get(:system, "Website Name"),
+    				website_name,
             shp.to_s,
     				shp.order.submitted.to_date,
     				shp.order.submitted.to_date,

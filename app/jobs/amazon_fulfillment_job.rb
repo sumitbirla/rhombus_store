@@ -27,10 +27,10 @@ class AmazonFulfillmentJob < ActiveJob::Base
     
     d = shp.order.domain_id
     client = MWS.feeds(
-          marketplace: Cache.setting(d, "eCommerce", "Amazon Marketplace ID"),
-          merchant_id: Cache.setting(d, "eCommerce", "Amazon Merchant ID"),
-          aws_access_key_id: Cache.setting(d, "eCommerce", "AWS Access Key ID"),
-          aws_secret_access_key: Cache.setting(d, "eCommerce", "AWS Secret Access Key")
+          marketplace: Setting.get(d, :ecommerce, "Amazon Marketplace ID"),
+          merchant_id: Setting.get(d, :ecommerce, "Amazon Merchant ID"),
+          aws_access_key_id: Setting.get(d, :ecommerce, "AWS Access Key ID"),
+          aws_secret_access_key: Setting.get(d, :ecommerce, "AWS Secret Access Key")
           )
     
     client.submit_feed(s.string, "_POST_FLAT_FILE_FULFILLMENT_DATA_")

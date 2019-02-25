@@ -32,7 +32,7 @@ class PersonalizedLabelJob < ActiveJob::Base
   
   def draw_image(elem, bg, order_item)
     i = order_item
-    static_files_path = Setting.get('System', 'Static Files Path')
+    static_files_path = Setting.get(Rails.configuration.domain_id, :system, 'Static Files Path')
     img = Magick::Image::read(static_files_path + i.uploaded_file)[0]
     #img = Magick::Image::read("./1.jpg")[0]
     
@@ -50,7 +50,7 @@ class PersonalizedLabelJob < ActiveJob::Base
   
 
   def perform(order_item_id, medium)
-    static_files_path = Setting.get('System', 'Static Files Path')
+    static_files_path = Setting.get(Rails.configuration.domain_id, :system, 'Static Files Path')
       
     i = OrderItem.find(order_item_id)
     p = i.product
@@ -85,7 +85,7 @@ class PersonalizedLabelJob < ActiveJob::Base
       
       # COPY label to Kiaro printer PC
       begin
-        uri = URI(Setting.get(:kiaro, "Personalized Labels Destination"))
+        uri = URI(Setting.get(Rails.configuration.domain_id, :kiaro, "Personalized Labels Destination"))
         Net::SCP.upload!(uri.host, uri.user, static_files_path + output_file, uri.path, :ssh => { :password => uri.password, :port => uri.port || 22 })
         Rails.logger.info "Copied #{static_files_path + output_file} to destination"
       rescue => e

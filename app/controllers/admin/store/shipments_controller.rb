@@ -240,7 +240,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     end
     
     # See which label size this job is for (poor English here)
-    label_prefix = Setting.get(:kiaro, "Label Prefix")
+    label_prefix = Setting.get(Rails.configuration.domain_id, :kiaro, "Label Prefix")
     label = params[:label].split(" ", 2)[1] + ".alf"
     label_count = 0
     str = ""
@@ -303,7 +303,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     File.write(tmp_file, str)
     
     # example  scp://user:pass@server1.mydomain.com:/home/kiaro/monitor/
-    uri = URI(Setting.get(:kiaro, "Print Job URI"))
+    uri = URI(Setting.get(Rails.configuration.domain_id, :kiaro, "Print Job URI"))
     
     begin
       Net::SCP.upload!(uri.host, uri.user, tmp_file, uri.path, :ssh => { :password => uri.password, :port => uri.port || 22 })

@@ -4,7 +4,7 @@ class ImagePreviewJob < ActiveJob::Base
   queue_as :image_processing
 
   def perform(order_item_id)
-    static_files_path = Setting.get('System', 'Static Files Path')
+    static_files_path = Setting.get(Rails.configuration.domain_id, :system, 'Static Files Path')
     
     i = OrderItem.find(order_item_id)
     p = i.product

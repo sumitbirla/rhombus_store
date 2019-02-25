@@ -9,8 +9,8 @@ class SendInvoiceJob < ActiveJob::Base
       delivery_method :smtp, { :enable_starttls_auto => false  }
     end
     
-    token = Cache.setting(Rails.configuration.domain_id, :system, 'Security Token')
-    website_url = Cache.setting(Rails.configuration.domain_id, :system, 'Website URL')
+    token = Setting.get(Rails.configuration.domain_id, :system, 'Security Token')
+    website_url = Setting.get(Rails.configuration.domain_id, :system, 'Website URL')
     
     shipment = Shipment.find(shipment_id)
     o = shipment.order
@@ -21,7 +21,7 @@ class SendInvoiceJob < ActiveJob::Base
     system "wkhtmltopdf -s Letter #{url} #{output_file}"
     
     Mail.deliver do
-      from      Cache.setting(Rails.configuration.domain_id, :system, 'From Email Address')
+      from      Setting.get(Rails.configuration.domain_id, :system, 'From Email Address')
       to        shipment.order.notify_email
       subject   "Invoice for #{o.external_order_id.blank? ? "order ##{o.id}" : o.external_order_id}"
       body      "Invoice attached:\n\n"

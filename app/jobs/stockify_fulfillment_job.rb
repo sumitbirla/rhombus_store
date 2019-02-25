@@ -7,7 +7,7 @@ class StockifyFulfillmentJob < ActiveJob::Base
   # @param shipment [Integer] id of the shipment that has been shipped.
   def perform(shipment_id)
     shp = Shipment.find(shipment_id)
-    file_path = Cache.setting(shp.order.domain_id, "eCommerce", "Edi Path")
+    file_path = Setting.get(shp.order.domain_id, :ecommerce, "Edi Path")
 		file_path += "/incoming/tracking/tracking_#{DateTime.now.strftime("%F_%H%M%S")}.txt"
 		
 		s = StringIO.new

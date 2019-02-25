@@ -11,8 +11,8 @@ class ShopifyFulfillmentJob < ActiveJob::Base
     shp = Shipment.find(shipment_id)
 		
 		# Initialize shopify
-		api_key = Cache.setting('eCommerce', 'Shopify API Key')
-		api_secret = Cache.setting('eCommerce', 'Shopify API Secret')
+		api_key = Setting.get(shp.order.domain_id, :ecommerce, 'Shopify API Key')
+		api_secret = Setting.get(shp.order.domain_id, :ecommerce, 'Shopify API Secret')
 		
 		affiliate_id = shp.order.affiliate_id
 		auth = Authorization.find_by(user_id: User.find_by(affiliate_id: affiliate_id).id)
