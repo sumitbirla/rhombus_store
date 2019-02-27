@@ -5,7 +5,7 @@ namespace :rhombus_store do
   task create_shipments: :environment do 
     
     Order.where(status: [:backordered, :submitted]).order(:submitted).each do |o|
-  	  next if Cache.setting(o.domain_id, :shipping, "Auto Create Shipment") != "true"
+  	  next if Setting.get(o.domain_id, :shipping, "Auto Create Shipment") != "true"
       next if o.shipments.count > 0
 			next if o.items.count == 0
       
