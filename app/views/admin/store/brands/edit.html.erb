@@ -13,10 +13,27 @@
   <%= f.input :name %>
   <%= f.input :slug %>
   <%= f.input :website %>
-  <div class="form-group string optional brand_website">
-	  <label class="string optional control-label col-sm-3" for="brand_website">Logo</label>
+  
+  <script>
+     function openPopup(input_field_id) {
+         CKFinder.popup( {
+             chooseFiles: true,
+             onInit: function( finder ) {
+                 finder.on( 'files:choose', function( evt ) {
+                     var file = evt.data.files.first();
+                     document.getElementById( input_field_id ).value = file.getUrl();
+                 } );
+                 finder.on( 'file:choose:resizedImage', function( evt ) {
+                     document.getElementById( input_field_id ).value = evt.data.resizedUrl;
+                 } );
+             }
+         } );
+     }
+  </script>
+  <div class="form-group string optional brand_logo">
+	  <label class="string optional control-label col-sm-3" for="brand_logo">Logo</label>
     <div class="col-md-9">
-	  <%= f.input_field :logo, style: 'width: 50%' %> <input type="button" value="Browse Server" class="btn btn-default btn-sm" onclick="javascript:BrowseServer();">
+	  <%= f.input_field :logo %> <input type="button" value="Browse Server" class="btn btn-default btn-sm" onclick="openPopup('brand_logo')">
     </div>
   </div>
   <%= f.input :about %>
@@ -35,20 +52,6 @@
 
 <% content_for :head do %>
 	<script>
-	function BrowseServer()
-	{
-		// You can use the "CKFinder" class to render CKFinder in a page:
-    CKFinder.modal({
-            height: 600
-        });
-	}
-
-	// This is a sample function which is called when a file is selected in CKFinder.
-	function SetFileField( fileUrl )
-	{
-		document.getElementById( 'brand_logo' ).value = fileUrl.substring(<%= Cache.setting('System', 'Static Files Url').length %>);
-	}
-  
 	$(document).ready(function() {
 		$("#brand_name").blur(function() {   
 	    	var url = $("#brand_slug").val();
