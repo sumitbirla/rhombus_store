@@ -19,7 +19,14 @@
 	  <%= f.input_field :logo, style: 'width: 50%' %> <input type="button" value="Browse Server" class="btn btn-default btn-sm" onclick="javascript:BrowseServer();">
     </div>
   </div>
-  <%= f.input :about, as: :text, input_html: { rows: 10 } %>
+  <%= f.input :about %>
+  <script>
+        ClassicEditor
+            .create( document.querySelector( '#brand_about' ) )
+            .catch( error => {
+                console.error( error );
+            } );
+  </script>
   
   <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
 
@@ -27,15 +34,13 @@
 
 
 <% content_for :head do %>
-	<script type="text/javascript" src="/ckfinder/ckfinder.js"></script>
 	<script>
 	function BrowseServer()
 	{
 		// You can use the "CKFinder" class to render CKFinder in a page:
-		var finder = new CKFinder( { connectorPath : '<%= Cache.setting('System', 'Static Files Url') %>/ckfinder/core/connector/php/connector.php' });
-		//finder.basePath = '../';	// The path for the installation of CKFinder (default = "/ckfinder/").
-		finder.selectActionFunction = SetFileField;
-		finder.popup();
+    CKFinder.modal({
+            height: 600
+        });
 	}
 
 	// This is a sample function which is called when a file is selected in CKFinder.
