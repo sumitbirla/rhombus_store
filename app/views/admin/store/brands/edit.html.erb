@@ -22,11 +22,16 @@
   </div>
   <%= f.input :about %>
   <script>
-        ClassicEditor
-            .create( document.querySelector( '#brand_about' ) )
-            .catch( error => {
-                console.error( error );
-            } );
+    var editor = ClassicEditor
+        .create( document.querySelector( '#brand_about' ), {
+            ckfinder: {
+                uploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json'
+            },
+            toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'ckfinder', 'blockQuote', 'insertTable', 'mediaEmbed', 'undo', 'redo' ]
+        } )
+        .catch( function( error ) {
+            console.error( error );
+        } );
   </script>
   
   <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
