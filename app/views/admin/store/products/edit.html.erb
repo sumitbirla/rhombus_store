@@ -136,14 +136,7 @@
   	<%= f.input_field :short_description, class: "form-control text", rows: 4  %>
     <br>
     <h4>Long Description</h4>
-  	<%= f.input_field :long_description, class: "form-control text" %>
-    <script>
-          ClassicEditor
-              .create( document.querySelector( '#product_long_description' ) )
-              .catch( error => {
-                  console.error( error );
-              } );
-    </script>
+  	<%= ckeditor_input_field(@product, "long_description") %>
   </div>
   
   <br>

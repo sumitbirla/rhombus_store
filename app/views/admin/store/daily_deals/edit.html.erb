@@ -42,7 +42,7 @@
   <%= f.input :allow_photo_upload %>
   <%= f.input :featured %>
   <%= f.input :fb_discount, label: "Facebook Discount" %>
-  <%= f.input :description, as: :text, input_html: { rows: 12 } %>
+  <%= ckeditor_input(@daily_deal, "description") %>
   <%= f.input :conditions, as: :text, input_html: { rows: 6 } %>
   <%= f.input :redemption_instructions, as: :text, input_html: { rows: 6 } %>
   <%= f.input :order_specifications, as: :text, input_html: { rows: 6 } %>
