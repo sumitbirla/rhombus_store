@@ -36,7 +36,7 @@ namespace :rhombus_store do
     asi_list = AutoShipItem.includes(:product)
 												   .where(status: :active)
 													 .where("next_ship_date < ?", Date.today + 2.day)
-    user_ids = asi_list.pluck(:user_id).uniq
+    user_ids = asi_list.pluck(:user_id).distinct
     
     user_ids.each do |user_id|
       begin

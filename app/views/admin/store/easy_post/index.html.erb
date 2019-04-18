@@ -168,7 +168,7 @@ packaging_types = [
 
 
 <% unless @ep_shipment.nil? || @ep_shipment[:rates].nil?
-		carriers = @ep_shipment[:rates].map { |x| x[:carrier] }.uniq 
+		carriers = @ep_shipment[:rates].map { |x| x[:carrier] }.distinct 
 		carriers.each do |carrier| %>
 
 	<div class="col-md-6">

@@ -1,6 +1,6 @@
 class Admin::Inventory::ReportsController < Admin::BaseController
-  skip_before_filter :verify_authenticity
-  before_filter :set_report_params
+  skip_before_action :verify_authenticity
+  before_action :set_report_params
   
   def index
   end

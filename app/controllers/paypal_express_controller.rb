@@ -1,7 +1,7 @@
 require 'activemerchant'
 
 class PaypalExpressController < ActionController::Base
-  before_filter :assigns_gateway
+  before_action :assigns_gateway
 
   include ActiveMerchant::Billing
   include PaypalExpressHelper

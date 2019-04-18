@@ -1,6 +1,6 @@
 <div class="pull-right">
   <% unless params[:q] %>
-    <%= select_tag(:status, options_for_select(AutoShipItem.uniq(:status).pluck(:status), @selected_status)) %> &nbsp; 
+    <%= select_tag(:status, options_for_select(AutoShipItem.distinct(:status).pluck(:status), @selected_status)) %> &nbsp; 
   <% end %>
   <%= link_to new_admin_store_auto_ship_item_path, class: 'btn btn-sm btn-default' do %>
     <i class="fa fa-plus"></i> New autoship item

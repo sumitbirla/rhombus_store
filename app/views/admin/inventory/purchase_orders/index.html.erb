@@ -1,5 +1,5 @@
 <%
-  status_list = PurchaseOrder.uniq(:status).order(status: :desc).pluck(:status)
+  status_list = PurchaseOrder.distinct(:status).order(status: :desc).pluck(:status)
   status_list = status_list
 %>
 

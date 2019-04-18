@@ -1,6 +1,6 @@
 class Admin::Store::ReportsController < Admin::BaseController
-  skip_before_filter :verify_authenticity
-  before_filter :set_report_params
+  skip_before_action :verify_authenticity
+  before_action :set_report_params
   
   def index
   end
@@ -297,7 +297,7 @@ class Admin::Store::ReportsController < Admin::BaseController
   
   def set_report_params
     
-    @sales_channels = Order.uniq(:sales_channel).pluck(:sales_channel)
+    @sales_channels = Order.distinct(:sales_channel).pluck(:sales_channel)
     @selected_channel = '%'
     @group_channel = ''
     unless params[:sales_channel].blank?
