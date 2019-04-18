@@ -436,7 +436,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @batch = Shipment.new(ship_date: Date.today)
     
     # Check to make sure that the batch contains shipments with identical contents
-    if @shipments.collect(&:items_hash).distinct.length > 1
+    if @shipments.collect(&:items_hash).uniq.length > 1
       flash.now[:warning] = "Selected batch contains more that one configuration of shipment."
       #return redirect_to :back
     end

@@ -235,7 +235,7 @@ class Shipment < ActiveRecord::Base
   # creates a new transaction without saving to DB
   def new_inventory_transaction
     tran = InventoryTransaction.new
-		skus = Product.where(id: items.map(&:order_item).map(&:product_id)).pluck(:sku).distinct
+		skus = Product.where(id: items.map(&:order_item).map(&:product_id)).pluck(:sku).uniq
     
     skus.each do |sku|
       quantity = items.select { |x| x.order_item.product.sku == sku }.sum(&:quantity)
@@ -247,7 +247,7 @@ class Shipment < ActiveRecord::Base
   
   def calculate_items_hash
     str = ""
-		skus = Product.where(id: items.map(&:order_item).map(&:product_id)).pluck(:sku).distinct.sort
+		skus = Product.where(id: items.map(&:order_item).map(&:product_id)).pluck(:sku).uniq.sort
     
     skus.each do |sku|
       quantity = items.select { |x| x.order_item.product.sku == sku }.sum(&:quantity)
