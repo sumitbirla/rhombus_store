@@ -1,5 +1,5 @@
 class Admin::Inventory::ReportsController < Admin::BaseController
-  skip_before_action :verify_authenticity
+  skip_before_action :verify_authenticity, raise: false
   before_action :set_report_params
   
   def index

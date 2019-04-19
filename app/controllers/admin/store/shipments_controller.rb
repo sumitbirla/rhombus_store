@@ -9,7 +9,7 @@ require 'uri'
 
 class Admin::Store::ShipmentsController < Admin::BaseController
   
-  skip_before_action  :verify_authenticity_token, only: :label_print
+  skip_before_action  :verify_authenticity_token, only: :label_print, raise: false
 
   def index
     authorize Shipment.new
