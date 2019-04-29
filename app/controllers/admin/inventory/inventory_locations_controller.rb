@@ -36,7 +36,7 @@ class Admin::Inventory::InventoryLocationsController < Admin::BaseController
   def destroy
     @inventory_location = InventoryLocation.find(params[:id])
     @inventory_location.destroy
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   

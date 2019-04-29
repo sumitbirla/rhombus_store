@@ -18,7 +18,7 @@ class Account::AutoShipItemsController < Account::BaseController
 		
 		respond_to do |format|
       if @auto_ship_item.update(auto_ship_item_params)
-        format.html { redirect_to :back }
+        format.html { redirect_back(fallback_location: account_auto_ship_items_path) }
         format.js
         format.json { render json: { status: 'ok', object: @pbx_user } }
       else

@@ -139,7 +139,7 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
 
     if update_count == 0
       flash[:notice] = 'No updates made.'
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end
     
     # check if purchase order status needs to be updated
@@ -177,7 +177,7 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
     
     unless File.exists?(output_file)
       flash[:error] = "Unable to generate PDF [Debug: #{$?}]"
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end
     
     if params[:printer_id].blank?
@@ -186,7 +186,7 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
       printer = Printer.find(params[:printer_id])
       job = printer.print_file(output_file)
       flash[:info] = "Print job submitted to '#{printer.name} [#{printer.location}]'. CUPS JobID: #{job.id}"
-      redirect_to :back
+      redirect_back(fallback_location: admin_root_path)
     end
   end
   
@@ -194,7 +194,7 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
   def set_status
     po = PurchaseOrder.find(params[:id])
     po.update(status: params[:status])
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   # batch updates
@@ -202,7 +202,7 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
     count = PurchaseOrder.where(id: params[:purchase_order_id]).update_all(status: params[:status])
     flash[:info] = "Status of #{count} purchase order(s) updated to '#{params[:status]}'"
     
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   

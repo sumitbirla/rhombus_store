@@ -46,7 +46,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       @shipment = authorize @order.create_fulfillment(params[:fulfiller_id], session[:user_id], false)
     rescue => e
       flash[:error] = e.message
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end 
     
     @shipment.invoice_amount = @order.total if @shipment.sequence == 1             
@@ -101,7 +101,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   def destroy
     @shipment = authorize Shipment.find(params[:id])
     @shipment.destroy
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
 
 
@@ -120,7 +120,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     SendInvoiceJob.perform_later(@shipment.id, session[:user_id])
     
     flash[:success] = "Invoice was emailed to #{@shipment.order.notify_email}"
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   def choose_order
@@ -139,7 +139,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     if ['epl2','zpl'].include?(params[:format])
       ShippingLabelJob.perform_later(session[:user_id], params[:id], params[:format])
       flash[:info] = "Shipping label dispatched to printer"
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end
     
     # requested a PNG probably
@@ -157,7 +157,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       
     rescue => e
       flash[:error] = "Error downloading shipping label: " + e.message
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end
     
     send_data label_data, filename: shipment.to_s + "." + params[:format]
@@ -178,7 +178,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       flash[:error] = e.message
     end
     
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   def product_labels_pending
@@ -206,7 +206,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   def product_labels
     if params[:shipment_id].blank?
       flash[:error] = "No shipments selected.  Please check at least one."
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end
     
     @shipments = Shipment.where(id: params[:shipment_id])
@@ -236,7 +236,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     p = Printer.find_by(id: params[:printer_id])
     if p.nil?
       flash[:error] = "Printer not found"
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end
     
     # See which label size this job is for (poor English here)
@@ -267,7 +267,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
         # handle nothing to print
         if prod.nil? || prod.label_file.blank?
           flash[:error] = "Label is not configured for item [#{h['item_number']}].  Cannot print."
-          return redirect_to :back
+          return redirect_back(fallback_location: admin_root_path)
         end
         
         str << "FIELD 001=#{label_prefix}#{prod.label_file.tr('/', '\\')}\r\n"
@@ -291,12 +291,12 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     # handle nothing to print
     if label_count == 0
       flash[:error] = "No labels specified for printing."
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end
 		
 		# puts str
 		# flash[:error] = "Testing short circuit."
-		# return redirect_to :back
+		# return redirect_back(fallback_location: admin_root_path)
     
     # SCP file over to server
     tmp_file = "/tmp/" + Time.now.strftime("%Y-%m-%d-%H%M%S") + ".acf"
@@ -316,14 +316,14 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     end
     
     File.delete(tmp_file)
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   
   def packing_slip_batch
     if params[:shipment_id].blank?
       flash[:error] = "No shipments selected. Please check at least one."
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end
     
     urls = ''
@@ -342,7 +342,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     
     unless File.exists?(output_file)
       flash[:error] = "Unable to generate PDF [Debug: #{$?}]"
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end
     
     if params[:printer_id].blank?
@@ -351,7 +351,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       printer = Printer.find(params[:printer_id])
       job = printer.print_file(output_file)
       flash[:info] = "Print job submitted to '#{printer.name} [#{printer.location}]'. CUPS JobID: #{job.id}"
-      redirect_to :back
+      redirect_back(fallback_location: admin_root_path)
     end
   end
   
@@ -389,11 +389,11 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       end
     rescue => e
       flash[:error] = e.message
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end
     
     flash[:info] = "#{count} label(s) sent to #{p.name} [#{p.location}]"
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   
@@ -408,7 +408,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     end
     
     flash[:info] = "Status of #{shipments.length} shipment(s) updated to '#{params[:status]}'"
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   
@@ -422,14 +422,14 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       flash[:info] = e.message
     end
     
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
 
 
   def batch
     if params[:shipment_id].blank?
       flash[:error] = "No shipments selected. Please check at least one."
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end
     
     @shipments = Shipment.where(id: params[:shipment_id])
@@ -438,7 +438,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     # Check to make sure that the batch contains shipments with identical contents
     if @shipments.collect(&:items_hash).uniq.length > 1
       flash.now[:warning] = "Selected batch contains more that one configuration of shipment."
-      #return redirect_to :back
+      #return redirect_back(fallback_location: admin_root_path)
     end
     
     # try to autopopulate fields
@@ -498,7 +498,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       flash[:error] = e.message
     end
     
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
 
 

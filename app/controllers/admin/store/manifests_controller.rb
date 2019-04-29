@@ -50,7 +50,7 @@ class Admin::Store::ManifestsController < Admin::BaseController
       flash[:error] = e.message
     end
     
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   def request_pickup

@@ -63,7 +63,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
       easypost_purchase(shipment, params[:rate_id], ep_shipment)  
     rescue => e
       flash[:error] = e.message + params[:ep_shipment_id]
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end
     
     redirect_to admin_store_shipment_path(shipment)

@@ -57,7 +57,7 @@ class Admin::Store::CatalogsController < Admin::BaseController
   def destroy
     @catalog = authorize Catalog.find(params[:id])
     @catalog.destroy
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   

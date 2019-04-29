@@ -65,7 +65,7 @@ class Admin::Store::ProductsController < Admin::BaseController
 			flash[:error] = e.message
 		end
 		
-		redirect_to :back
+		redirect_back(fallback_location: admin_root_path)
   end
   
   def pictures
@@ -164,7 +164,7 @@ class Admin::Store::ProductsController < Admin::BaseController
     end
     
     flash[:notice] = "Prices have been updated"
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   
@@ -221,7 +221,7 @@ class Admin::Store::ProductsController < Admin::BaseController
 		
 		if params[:field_names].nil?
 			flash[:info] = "No fields selected.  Please select one or more fields to update."
-			return redirect_to :back
+			return redirect_back(fallback_location: admin_root_path)
 		end
 		
 		new_values = @product.attributes.select { |k, v| params[:field_names].include?(k) }

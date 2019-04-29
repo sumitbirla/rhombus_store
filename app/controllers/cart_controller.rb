@@ -193,13 +193,13 @@ class CartController < ApplicationController
       end
     end
 
-    redirect_to :back
+    redirect_back(fallback_location: cart_path)
   end
 
   
   def update
     order = Order.includes(:items).find_by(cart_key: cookies[:cart]) unless cookies[:cart].nil?
-    return redirect_to :back if order.nil?
+    return redirect_back(fallback_location: cart_path) if order.nil?
     
     # iterate through items
     params.each do |key, val|
@@ -237,7 +237,7 @@ class CartController < ApplicationController
     end
     
     flash[:notice] = 'Your shopping cart has been updated.'
-    redirect_to :back
+    redirect_back(fallback_location: cart_path)
   end
   
   # GET /cart/personalize?item=ITEM_NUMBER
@@ -445,7 +445,7 @@ class CartController < ApplicationController
     
     if order.nil? || order.items.length == 0
       flash[:error] = "You don't have any items in your cart."
-      return redirect_to :back
+      return redirect_back(fallback_location: cart_path)
     end
 
     # test if code is a coupon code
@@ -488,7 +488,7 @@ class CartController < ApplicationController
     end
 
     flash[:notice] = "Coupon or voucher code not found." unless applied
-    redirect_to :back
+    redirect_back(fallback_location: cart_path)
   end
   
   

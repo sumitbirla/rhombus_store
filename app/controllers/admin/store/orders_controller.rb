@@ -134,7 +134,7 @@ class Admin::Store::OrdersController < Admin::BaseController
       flash[:notice] = e.message
     end
 
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
 
@@ -176,7 +176,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     end
     
     flash[:info] = "Status of #{orders.length} order(s) updated to '#{params[:status]}'"
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   
@@ -201,7 +201,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     
     unless File.exists?(output_file)
       flash[:error] = "Unable to generate PDF [Debug: #{$?}]"
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end
     
     if params[:printer_id].blank?
@@ -210,7 +210,7 @@ class Admin::Store::OrdersController < Admin::BaseController
       printer = Printer.find(params[:printer_id])
       job = printer.print_file(output_file)
       flash[:info] = "Print job submitted to '#{printer.name} [#{printer.location}]'. CUPS JobID: #{job.id}"
-      redirect_to :back
+      redirect_back(fallback_location: admin_root_path)
     end
   end
   
@@ -260,7 +260,7 @@ EOF
       flash[:error] = e.message
     end
     
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   
@@ -280,7 +280,7 @@ EOF
         flash[:error] = e.message
       end
 
-      redirect_to :back
+      redirect_back(fallback_location: admin_root_path)
   end
   
   def create_shipment
@@ -295,7 +295,7 @@ EOF
     end
     
     flash[:info] = "#{count} new shipments created"
-    redirect_to :back           
+    redirect_back(fallback_location: admin_root_path)           
   end
   
   def batch_ship

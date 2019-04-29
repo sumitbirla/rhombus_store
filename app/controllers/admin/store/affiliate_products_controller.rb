@@ -34,7 +34,7 @@ class Admin::Store::AffiliateProductsController < Admin::BaseController
     @affiliate_product = authorize AffiliateProduct.find(params[:id])
     @affiliate_product.destroy
 
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   

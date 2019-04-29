@@ -31,7 +31,7 @@ class Admin::Store::LabelAreasController < Admin::BaseController
 
   def destroy
     LabelArea.delete(params[:id])
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
 

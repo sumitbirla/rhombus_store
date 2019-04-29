@@ -58,7 +58,7 @@ class Admin::Store::CouponsController < Admin::BaseController
   def destroy
     @coupon = authorize Coupon.find(params[:id])
     @coupon.destroy
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   

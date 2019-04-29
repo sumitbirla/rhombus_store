@@ -46,7 +46,7 @@ class Admin::Store::AutoShipItemsController < Admin::BaseController
   def destroy
     @auto_ship_item = authorize AutoShipItem.find(params[:id])
     @auto_ship_item.destroy
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   private

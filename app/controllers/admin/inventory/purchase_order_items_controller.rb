@@ -6,14 +6,14 @@ class Admin::Inventory::PurchaseOrderItemsController < ApplicationController
     # does the SKU exist in system?
     if p.nil?
       flash[:notice] = "SKU '#{params[:sku]}' not found."
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end
     
     # does the PO already have this SKU?
     existing = PurchaseOrderItem.find_by(sku: p.sku, purchase_order_id: params[:purchase_order_id])
     if existing
       flash[:notice] = "SKU '#{params[:sku]}' already exists in purchase order."
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end
     
     # find info from last time this SKU was ordered
@@ -28,13 +28,13 @@ class Admin::Inventory::PurchaseOrderItemsController < ApplicationController
     
     item.save
     
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
 
   def destroy
     PurchaseOrderItem.delete(params[:id])
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
 end

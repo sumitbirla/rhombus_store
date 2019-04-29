@@ -51,7 +51,7 @@ class Admin::Inventory::InventoryItemsController < Admin::BaseController
   def destroy
     @inventory_item = InventoryItem.find(params[:id])
     @inventory_item.destroy
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   

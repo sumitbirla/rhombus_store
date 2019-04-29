@@ -58,7 +58,7 @@ class Admin::Store::LabelElementsController < Admin::BaseController
   def destroy
     @label_element = authorize LabelElement.find(params[:id])
     @label_element.destroy
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
   
   

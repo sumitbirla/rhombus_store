@@ -55,7 +55,7 @@ class Admin::Store::UpcController < Admin::BaseController
     # CHECK IF TAG HAS BEEN USED PREVIOUSLY
     if params[:tag].blank? || Upc.exists?(item: params[:tag])
       flash[:error] = "The tag has already been used.  Please specify a different tag."
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end
     
     # CHECK IF ENOUGH UPC codes AVAILABLE
@@ -63,7 +63,7 @@ class Admin::Store::UpcController < Admin::BaseController
     list = Upc.where("item IS NULL OR item = ''").limit(qty)
     if list.length < qty
       flash[:error] = "Not enough available UPCs.  Requested: #{params[:quantity]},  available: #{list.length}"
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_root_path)
     end
       
     # ALLOCATE
