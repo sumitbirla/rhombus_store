@@ -173,7 +173,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       ep_shipment = EasyPost::Shipment.retrieve(courier_data['id'])
       response = ep_shipment.refund
       flash[:info] = "Refund status: #{response[:refund_status]} - / - Tracking: #{response[:tracking_code]} - / - Confirmation: #{response[:confirmation_number] || "n/a"}"
-      shipment.update_attribute(:status, 'void') if response[:refund_status] == 'submitted'
+      shipment.update_attribute(:status, 'void') if ['submitted', 'refunded'].include?(response[:refund_status])
     rescue => e
       flash[:error] = e.message
     end

@@ -269,7 +269,7 @@
               <%= shipment.tracking_number %>
             </td>
             <td class="light"><%= systime shipment.created_at %></td>
-            <td><span class="label <%= 'label-warning' if shipment.status == 'pending' %>  <%= 'label-success' if shipment.status == 'shipped' %>"><%= shipment.status %></span></td>
+            <td><%= shipment_status(shipment)%></td>
             <td class="text-right">
               <%= link_to "x", { controller: 'shipments', action: "destroy", id: shipment.id },
                           method: :delete,

@@ -67,7 +67,7 @@
     &nbsp; <b>Fulfilled by:</b> <%= link_to @shipment.fulfiller, admin_system_affiliate_path(@shipment.fulfiller) %>
   <% end %>
   
-  &nbsp; &nbsp; <span class="label <%= 'label-warning' if @shipment.status == 'pending' %>  <%= 'label-success' if @shipment.status == 'shipped' %>"><%= @shipment.status %></span>
+  &nbsp; &nbsp; <%= shipment_status(@shipment)%>
   &nbsp; <%= link_to admin_store_order_path(@shipment.order) do %>
     <i class="fa fa-shopping-cart"></i> View Order
   <% end %>
@@ -232,7 +232,7 @@
 
     	<% unless @shipment.courier_data.nil? %>
 			      
-        <% if @shipment.status == "shipped" && @shipment.carrier == 'USPS' && @shipment.ship_date > 1.month.ago %>
+        <% if @shipment.status == "shipped" && @shipment.ship_date > 1.month.ago %>
           <%= link_to "Void Shipment", void_label_admin_store_shipment_path(@shipment), class: "btn btn-sm btn-danger pull-right", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> please wait ..." }   %>
 			  <% end %>
         
