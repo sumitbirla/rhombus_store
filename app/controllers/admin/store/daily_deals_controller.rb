@@ -114,8 +114,9 @@ class Admin::Store::DailyDealsController < Admin::BaseController
     (1..qty).each do 
       ExternalCoupon.create daily_deal_id: params[:id], code: (0...8).map { (65 + rand(26)).chr }.join, allocated: false
     end
-    
-    redirect_back(fallback_location: admin_root_path), notice: "Created #{qty} external coupon codes."
+   
+    flash[:notice] = "Created #{qty} external coupon codes."
+    redirect_back(fallback_location: admin_root_path)
   end
   
   def import_external_coupons
@@ -126,7 +127,8 @@ class Admin::Store::DailyDealsController < Admin::BaseController
     render text: file_io.read
     return
     
-    redirect_back(fallback_location: admin_root_path), notice: "Created #{qty} external coupon codes."
+    flash[:notice] = "Created #{qty} external coupon codes."
+    redirect_back(fallback_location: admin_root_path)
   end
   
   def export_external_coupons

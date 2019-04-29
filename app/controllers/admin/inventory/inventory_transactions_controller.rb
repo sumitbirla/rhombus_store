@@ -59,7 +59,9 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
   def destroy
     @transaction = authorize InventoryTransaction.find(params[:id])
     @transaction.destroy
-    redirect_back(fallback_location: admin_root_path), notice: 'Transaction has been deleted.'
+
+    flash[:success] = 'Transaction has been deleted.'
+    redirect_back(fallback_location: admin_root_path)
   end
   
   
