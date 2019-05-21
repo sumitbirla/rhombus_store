@@ -18,7 +18,7 @@ class EasypostController < ApplicationController
       Rails.logger.error e
     end
     
-    render :nothing => true, :status => 200
+    head :ok
   end
   
 end
