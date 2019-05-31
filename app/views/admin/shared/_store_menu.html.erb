@@ -54,6 +54,9 @@
     <% if current_user.has_permission?('ShippingOption', 'index')%>
       <li><%= link_to "Shipping Options", admin_store_shipping_options_path %></li>
     <% end %>
+    <% if current_user.has_permission?('ProductShippingRate', 'index')%>
+      <li><%= link_to "Shipping Rates", admin_store_product_shipping_rates_path %></li>
+    <% end %>
     <% if current_user.has_permission?('Shipment', 'index')%>
       <li>
       <%= link_to admin_store_shipments_path(status: "pending") do %>
