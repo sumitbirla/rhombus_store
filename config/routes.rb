@@ -196,6 +196,7 @@ Rails.application.routes.draw do
       end
       resources :invoice_images
       resources :shipping_options
+      resources :product_shipping_rates
       resources :upc
       resources :affiliate_products
       resources :label_sheets
