@@ -15,7 +15,7 @@ class Admin::Store::ProductsController < Admin::BaseController
       
     respond_to do |format|
       format.html  { @products = @products.paginate(page: params[:page], per_page: @per_page) }
-      format.csv { send_data Product.to_csv(@products) }
+      format.csv { send_data Product.to_csv(@products.includes(:pictures, :extra_properties)) }
     end
   end
 

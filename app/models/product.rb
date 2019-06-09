@@ -50,9 +50,8 @@
 #
 
 class Product < ActiveRecord::Base
-  include Exportable
-  
   self.table_name = "store_products"
+	
   belongs_to :brand
   belongs_to :fulfiller, class_name: 'Affiliate', foreign_key: 'fulfiller_id'
   belongs_to :label_sheet
@@ -79,6 +78,69 @@ class Product < ActiveRecord::Base
   
   def to_s
     "#{sku}: #{title}"
+  end
+	
+  def self.to_csv(list, opts = {})
+  
+    CSV.generate do |csv|
+      base_cols = [ "item_number", 
+										"upc", 
+										"sku", 
+										"group",
+										"brand", 
+										"name", 
+										"option_title", 
+										"option_sort", 
+										"title", 
+										"retail_map", 
+										"reseller_price", 
+										"price", 
+										"msrp",
+										"keywords",
+										"warranty",
+										"label_file",
+										"item_length",
+										"item_width",
+										"item_height",
+										"item_weight",
+										"case_length",
+										"case_width",
+										"case_height",
+										"case_weight",
+										"case_quantity",
+										"shipping_code",
+										"country_of_origin",
+										"harmonized_code",
+										"short_description",
+										"long_description"
+									]
+
+			extra_cols = []
+			(1..5).each { |x| extra_cols << "image#{x}_url" }
+			(1..10).each do |x| 
+				extra_cols << "attr#{x}_name" 
+				extra_cols << "attr#{x}_value" 
+			end
+      csv << base_cols + extra_cols
+			
+			img_base_url = "http:" + Setting.get(Rails.configuration.domain_id, :system, "Static Files Url")
+			
+      list.each do |x| 
+				h = x.attributes.values_at(*base_cols)
+				h[4] = x.brand.name if x.brand
+				
+				# product photos
+				5.times { h << '' }
+				x.pictures.each_with_index { |pic, i| h[base_cols.length+i] = img_base_url + pic.file_path }
+				
+				# extra properties
+				x.extra_properties.each { |prop| h += [prop.name, prop.value] }	
+				csv << h
+			end
+			
+			
+    end
+  
   end
   
   def name_with_option

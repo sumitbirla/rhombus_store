@@ -158,7 +158,7 @@
     <% @product.shipping_rates.each do |rate| 
         c = Country[rate.destination_country_code] %>
       <tr>
-        <td><%= c.emoji_flag %> <%= c %></td>
+        <td><%= c.alpha2 == "ZZ" ? "🌍" : c.emoji_flag %> <%= c %></td>
         <td><%= rate.ship_method %></td>
         <td class="text-center"><%= number_to_currency(rate.first_item) %></td>
         <td class="text-center"><%= number_to_currency(rate.second_item) %></td>
