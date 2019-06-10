@@ -1,5 +1,7 @@
 <%
-  order_counts = Order.where(domain_id: current_domain.id).group(:status).count
+  query = Order.where(domain_id: current_domain.id).group(:status)
+  query = query.where(sales_channel: params[:sales_channel]) unless params[:sales_channel].blank?
+  order_counts = query.count
   order_counts['awaiting_shipment'] = 0 unless order_counts.keys.include?('awaiting_shipment')
   order_counts = order_counts.sort
 %>
@@ -11,13 +13,16 @@
 
 
 <h2>
-  <% if params[:po] == "1" %>
-    <i class="fa fa-file-text-o"></i>
-  <% else %>
-    <i class="fa fa-shopping-cart"></i>
-  <% end %>
-  &nbsp;<%= (params[:status].presence || '').titlecase %> orders</h2>
-  
+  <i class="fa fa-shopping-cart"></i> &nbsp;Orders
+  <select name="sales_channel" id="sales_channel" style="font-size: 14px; vertical-align: middle;">
+    <option value="">-- All sales channels --</option>
+    <% Order.where(po: false).select(:sales_channel).distinct.pluck(:sales_channel).each do |sc| %>
+      <option value="<%= sc %>" <%= 'selected' if params[:sales_channel] == sc %>><%= sc %></option>
+    <% end%>
+  </select>
+</h2>
+
+<hr>
 
 <%= render "admin/shared/search_results_header", object: @orders %>
 
@@ -30,9 +35,9 @@
   <ul class="nav nav-tabs" style="margin-bottom: 10px;">
     <% order_counts.each do |status, count|
         alert = (status == 'backordered' && count > 0) %>
-    <li class="<%= "active" if params[:status] == status %>"><a href="<%= admin_store_orders_path(status: status)%>"><%= tab_count(status.titlecase, count, alert) %></a></li>
+    <li class="<%= "active" if params[:status] == status %>"><a href="<%= admin_store_orders_path(status: status, sales_channel: params[:sales_channel])%>"><%= tab_count(status.titlecase, count, alert) %></a></li>
     <% end %>
-    <li class="<%= "active" if params[:status].blank? %>"><a href="<%= admin_store_orders_path %>">All</a></li>
+    <li class="<%= "active" if params[:status].blank? %>"><a href="<%= admin_store_orders_path(sales_channel: params[:sales_channel]) %>">All</a></li>
   </ul>
   <% end %>
   
@@ -68,4 +73,17 @@
 <% content_for :breadcrumbs do %>
 	<li><a href="#">eCommerce</a></li>
 	<li class="active">Orders</li>
+<% end %>
+
+
+<% content_for :head do %>
+  <script>
+    $(document).ready(function() {
+      
+      $("#sales_channel").change(function() {
+        window.location.href = "/admin/store/orders?status=<%= params[:status] %>&sales_channel=" + $(this).val();      
+      });
+      
+    });
+  </script>
 <% end %>

@@ -9,6 +9,7 @@ class Admin::Store::OrdersController < Admin::BaseController
 		@orders = @orders.where(batch_id: params[:batch_id]) unless params[:batch_id].blank?
     @orders = @orders.joins(:items).where("store_order_items.product_id = ?", params[:product_id]) unless params[:product_id].blank?
     @orders = @orders.where(domain_id: cookies[:domain_id]) if q.blank?
+    @orders = @orders.where(sales_channel: params[:sales_channel]) unless params[:sales_channel].blank?
     
     unless q.blank?
       if (q.to_i == 0 || q.include?('-'))
