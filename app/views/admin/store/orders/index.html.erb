@@ -13,7 +13,7 @@
 
 
 <h2>
-  <i class="fa fa-shopping-cart"></i> &nbsp;Orders
+  <i class="fa fa-shopping-cart"></i> &nbsp;Orders &nbsp;
   <select name="sales_channel" id="sales_channel" style="font-size: 14px; vertical-align: middle;">
     <option value="">-- All sales channels --</option>
     <% Order.where(po: false).select(:sales_channel).distinct.pluck(:sales_channel).each do |sc| %>
