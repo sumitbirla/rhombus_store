@@ -16,13 +16,24 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     
     q = params[:q]
     s = Shipment.includes(:order, :items, :inventory_transaction, [items: :order_item]).order(sort_column + " " + sort_direction)
-    s = s.where("recipient_name LIKE '%#{q}%' OR recipient_company LIKE '%#{q}%' OR recipient_city LIKE '%#{q}%'") unless q.blank?
     s = s.where("store_orders.user_id = ?", params[:user_id]) unless params[:user_id].blank?
     s = s.where("store_orders.affiliate_id = ?", params[:affiliate_id]) unless params[:affiliate_id].blank?
     s = s.where(carrier: params[:carrier]) unless params[:carrier].blank?
     s = s.where(ship_date: params[:ship_date]) unless params[:ship_date].blank?
     s = s.where(status: params[:status]) unless params[:status].blank?
     s = s.where(manifest_id: params[:manifest_id]) unless params[:manifest_id].blank?
+    
+    unless q.blank?
+      # if an exact shipment was scanned in, redirect to the shipment#show page
+      if q.match(/\d{5}-\d{1,2}/)
+        order_id, sequence = q.split("-")
+        shp = Shipment.find_by(order_id: order_id, sequence: sequence)
+        return redirect_to admin_store_shipment_path(shp) unless shp.nil?
+      end
+      
+      s = s.where("recipient_name LIKE '%#{q}%' OR recipient_company LIKE '%#{q}%' OR recipient_city LIKE '%#{q}%'")
+    end
+    
     
     if current_user.admin?
       s = s.where(fulfilled_by_id: params[:fulfilled_by_id]) unless params[:fulfilled_by_id].blank?
