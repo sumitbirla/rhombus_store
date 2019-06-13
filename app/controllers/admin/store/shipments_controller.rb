@@ -23,7 +23,12 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     s = s.where(ship_date: params[:ship_date]) unless params[:ship_date].blank?
     s = s.where(status: params[:status]) unless params[:status].blank?
     s = s.where(manifest_id: params[:manifest_id]) unless params[:manifest_id].blank?
-    s = s.where(fulfilled_by_id: params[:fulfilled_by_id]) unless params[:fulfilled_by_id].blank?
+    
+    if current_user.admin?
+      s = s.where(fulfilled_by_id: params[:fulfilled_by_id]) unless params[:fulfilled_by_id].blank?
+    else
+      s = s.where(fulfilled_by_id: current_user.affiliate_id)
+    end
     
     respond_to do |format|
       format.html { @shipments = s.paginate(page: params[:page], per_page: @per_page) }

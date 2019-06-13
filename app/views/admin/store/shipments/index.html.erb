@@ -4,6 +4,7 @@
 
 <h2>
   <i class="fa fa-truck"></i> &nbsp;Shipments
+  <% if current_user.admin? %>
   <%
   dropship_category = Category.find_by(slug: 'dropshippers')
   unless dropship_category.nil? 
@@ -15,6 +16,7 @@
       <option value="<%= aff.id %>" <%= 'selected' if params[:fulfilled_by_id] == aff.id.to_s %>><%= aff.name %></option>
     <% end %>
   </select>
+  <% end %>
   <% end %>
 </h2>
 
