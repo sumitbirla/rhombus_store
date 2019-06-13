@@ -294,3 +294,12 @@
     <li class="active"><%= @shipment %></li>
 <% end %>
 
+
+<% content_for :head do %>
+  <script>
+    $(document).ready(function() {
+      $("#master-search").val("shp ");
+    });
+  </script>
+<% end %>
+

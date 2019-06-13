@@ -166,9 +166,16 @@
       </thead>
       <tbody>
       <% @shipment.items.each do |item| 
-          next if item.order_item.nil? || (item.quantity == 0 && item.special_status.blank?) %>
+          next if item.order_item.nil? || (item.quantity == 0 && item.special_status.blank?) 
+          item_number = item.order_item.item_number 
+          
+          if @shipment.fulfiller
+            ap = AffiliateProduct.find_by(product_id: item.order_item.product_id, affiliate_id: @shipment.fulfilled_by_id)
+            item_number = ap.item_number unless ap.nil?
+          end
+      %>
       <tr>
-        <td nowrap><%= item.order_item.item_number %></td>
+        <td nowrap><%= item_number %></td>
         <td><%= item.order_item.product.upc %></td>
         <td><%= item.order_item.product.full_name %></td>
         <td align="right" class="textright"><%= item.order_item.daily_deal_id.nil? ? item.order_item.quantity : item.quantity %></td>

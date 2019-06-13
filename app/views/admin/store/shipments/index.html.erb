@@ -81,6 +81,8 @@
   <script>
     $(document).ready(function() {
       
+      $("#master-search").val("shp ");
+      
       $("#fulfiller").change(function() {
         window.location.href = "/admin/store/shipments?status=<%= params[:status] %>&fulfilled_by_id=" + $(this).val();      
       });
