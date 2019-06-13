@@ -70,26 +70,38 @@
             <% 
               loc_id = Cache.setting(@shipment.order.domain_id, :shipping, "Ship From Location ID")
               loc = Location.find(loc_id)
+              aff = @shipment.order.affiliate
             %>
             
-            <% if @shipment.order.affiliate %>
-              <h2><%= @shipment.order.affiliate.name %></h2>
+            <% if aff %>
+              <h2><%= aff.name %></h2>
+              <p> 
+                <% unless aff.phone.blank? %>
+                <strong>Phone:</strong> <%= aff.phone %><br/>
+                <% end %>
+                <% unless aff.email.blank? %>
+                <strong>Email:</strong> <%= aff.email %><br/>
+                <% end %>
+                <% unless aff.website.blank? %>
+                <strong>Web:</strong> <%= aff.website %><br/>
+                <% end %>
+              </p>
             <% elsif loc.pictures.length > 0 %>
               <h2><img src="<%= cdn_image_url loc.pictures[0].file_path, 250, 60, 0 %>" alt="Logo"></h2>
             <% else %>
               <h2><%= loc.name %></h2>
+              <p>
+                <%= loc.to_text(skip_country: true, new_line: "<br>").html_safe %>
+              </p>
+              <p>
+                <% unless loc.website.blank? %>
+                <strong>Web:</strong> <%= loc.website %><br/>
+                <% end %>
+                <strong>Phone:</strong> <%= loc.phone %><br/>
+                <strong>Email:</strong> <%= loc.email %>
+              </p>
             <% end %>
             
-            <p>
-              <%= loc.to_text(skip_country: true, new_line: "<br>").html_safe %>
-            </p>
-            <p>
-              <% unless loc.website.blank? %>
-              <strong>Web:</strong> <%= loc.website %><br/>
-              <% end %>
-              <strong>Phone:</strong> <%= loc.phone %><br/>
-              <strong>Email:</strong> <%= loc.email %>
-            </p>
           </th>
           <th scope="col" style="text-align:right;"> <h2>PACKING SLIP</h2>
             <p>
