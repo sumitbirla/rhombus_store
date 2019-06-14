@@ -2,9 +2,10 @@ class Account::OrdersController < Account::BaseController
 
   def index
     @orders = Order.includes(:shipments, items: { product: :pictures })
-                   .where("user_id = ? AND status != 'in cart'", session[:user_id])
+                   .where(user_id: session[:user_id])
+                   .where.not(status: "in cart")
                    .order(submitted: :desc)
-                   .paginate(params[:page])
+                   .page(params[:page])
      
      q = params[:q]
      unless q.blank?
