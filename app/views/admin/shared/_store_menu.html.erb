@@ -85,7 +85,7 @@
   new_pos = StoreCache.new_purchase_orders_count %>
   
 <li class="<%= 'active' if request.original_url.include? 'admin/inventory' %>">
-  <a href="#"><i class="fa fa-book fa-fw"></i> Inventory 
+  <a href="#"><i class="fa fa-list fa-fw"></i> Inventory 
     <% if new_pos > 0 %>
     &nbsp; &nbsp; <span class="badge"><%= new_pos %></span>
     <% end %>

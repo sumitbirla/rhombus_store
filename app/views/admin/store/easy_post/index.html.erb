@@ -116,10 +116,10 @@ packaging_types = [
       
 		 
       <%= button_tag :class => "btn btn-success", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } do %>
-        <i class="fa fa-dollar"></i> &nbsp; Get Rates
+        <i class="fas fa-search-dollar"></i> &nbsp; Get rates
       <% end %>
       <%= button_tag :class => "btn btn-primary btn-cheapest", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } do %>
-        <i class="fa fa-truck"></i> &nbsp; Ship Cheapest
+        <i class="fa fa-truck"></i> &nbsp; Ship cheapest
       <% end %>
       
 		  <span class="label label-warning pull-right"><%= @ep_shipment[:mode] unless @ep_shipment.nil? %></span>
@@ -197,7 +197,7 @@ packaging_types = [
 			  <td class="text-right"><%= number_to_currency(rate[:rate]) %></td>
         <td class="text-center">
           <% if rate == @cheapest_rate %>
-            <i class="fa fa-star-o text-danger"></i>
+            <i class="fas fa-star text-danger"></i>
           <% end %>
         </td>
 			  <td class="text-right">

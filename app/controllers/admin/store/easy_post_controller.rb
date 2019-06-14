@@ -25,6 +25,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
     ) unless s.nil?
     
     @default_printer_id = Cache.setting(@shipment.order.domain_id, :shipping, "Default Label Printer ID") 
+		@shipment.affiliate_shipping_account = @shipment.affiliate_shipping_available?
   end
   
   def rates
