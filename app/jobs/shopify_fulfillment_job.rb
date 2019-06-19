@@ -8,7 +8,10 @@ class ShopifyFulfillmentJob < ActiveJob::Base
   #
   # @param shipment [Integer] id of the shipment that has been shipped.
   def perform(shipment_id)
+    @logger = Logger.new(Rails.root.join("log", "tracking.log"))
     shp = Shipment.find(shipment_id)
+    
+    @logger.info "Sending tracking information for #{shp} [#{shp.order.external_order_name}] to Shopify"
 		
 		# Initialize shopify
 		api_key = Setting.get(shp.order.domain_id, :ecommerce, 'Shopify API Key')
@@ -35,9 +38,12 @@ class ShopifyFulfillmentJob < ActiveJob::Base
 		
 		f.tracking_numbers = [ shp.tracking_number ]
 		f.tracking_company = shp.courier_name
-		f.save!
-		f.complete
 		
-		shp.update_columns(external_id: f.id, external_name: f.name)
+    if f.save
+		  f.complete
+		  shp.update_columns(external_id: f.id, external_name: f.name)
+    else
+      @logger.error f.errors.full_messages
+    end
   end
 end
