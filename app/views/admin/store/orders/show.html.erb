@@ -76,9 +76,9 @@
   &nbsp; <%= order_status(@order, 'large') %> <%= "<i class='icon-gift'></i>".html_safe if @order.gift %>
 </div>
 
-<% unless @order.ship_earliest.nil? %>
+<% unless @order.ship_earliest.nil? || ["shipped", "cancelled"].include?(@order.status)%>
 <div class="alert alert-warning" style="margin-top: 20px;">
-    <b>Ship window:</b> <%= @order.ship_earliest %> &rarr; <%= @order.ship_latest %>
+    <i class="fa fa-truck"></i> &nbsp; <b>Ship window:</b> <%= @order.ship_earliest %> &rarr; <%= @order.ship_latest %>
     
     <% unless @order.expected_delivery_date.nil? %>
         &nbsp; &nbsp; &nbsp; &nbsp; <b>Expected delivery: </b> <%= @order.expected_delivery_date %>
@@ -232,7 +232,11 @@
 <br/>
 
 <div class="row">
-  <% payments = @order.payments + Payment.where(payable_type: :shipment, payable_id: @order.shipments.collect { |x| x.id })%>
+  <% 
+    payments = @order.payments + 
+               Payment.where(payable_type: :shipment, payable_id: @order.shipments.collect { |x| x.id }) + 
+               Payment.where(payable_type: "ShipmentItem", payable_id: @order.shipments.collect { |x| x.items.collect(&:id) })
+  %>
   <div class="col-md-6">
     <div class="panel panel-success">
       <div class="panel-heading">
@@ -244,6 +248,7 @@
         <% payments.each do |pmt| %>
           <tr>
             <td><%= link_to number_to_currency(pmt.amount, negative_format: "(%u%n)"), admin_billing_payment_path(pmt) %></td>
+            <td><%= pmt.payable %></td>
             <td><%= pmt.memo %></td>
             <td><%= systime pmt.created_at %></td>
           </tr>

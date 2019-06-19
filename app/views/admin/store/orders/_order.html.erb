@@ -11,7 +11,7 @@
     </td>
     <td>
       <% if order.affiliate %>
-        <%= link_to order.affiliate.code, admin_system_affiliate_path(order.affiliate_id) %>
+        <%= link_to order.affiliate.code.presence || "[#{order.affiliate_id}]", admin_system_affiliate_path(order.affiliate_id) %>&nbsp;
       <% end %>
       <%= order.external_order_name.presence || order.external_order_id.presence || order.sales_channel %>
     </td>
