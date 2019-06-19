@@ -474,7 +474,7 @@ class Order < ActiveRecord::Base
   end
   
   def to_s
-    "Order #{id}"
+    "Order ##{id}"
   end
   
   
