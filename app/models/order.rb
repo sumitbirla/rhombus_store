@@ -473,6 +473,10 @@ class Order < ActiveRecord::Base
     weight * 1.15  #  account 15% for packaging
   end
   
+  def to_s
+    "Order #{id}"
+  end
+  
   
   # PUNDIT
   def self.policy_class
