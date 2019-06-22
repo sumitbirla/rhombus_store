@@ -121,55 +121,65 @@
   total_qty = @shipment.items.map(&:quantity).reduce(:+)
 %>
 
-<h4>Items:</h4>
-<table class="table table-striped table-condensed table-bordered">
-    <tr>
-        <th>Item</th>
-        <th>UPC</th>
-        <th>Description</th>
-        <th class="text-right">Ship Qty.</th>
-        <th class="calign">Status</th>
-    </tr>
-    <% @shipment.items.each do |item| 
-        next if item.order_item.nil? %>
+<div class="row" style="margin-bottom: 20px;">
+  <div class="col-md-12">
+    <h4>Items:</h4>
+    <table class="table table-striped table-condensed table-bordered">
         <tr>
-            <td nowrap><%= item.order_item.item_number %></td>
-            <td><%= item.order_item.product.present? ? item.order_item.product.upc : "<span class='text-danger'>- product deleted -</span>".html_safe %></td>
-            <td>
-              <% if item.order_item.product.present? %>
-                <%= link_to item.order_item.product.full_name, admin_store_product_path(item.order_item.product_id) %>
-              <% else %>
-                <%= item.order_item.item_description %>
-              <% end %>
-            </td>
-            <td class="text-right"><%= number_with_delimiter(item.quantity) %></td>
-            <td class="calign"><%= item.special_status %></td>
+            <th>Item</th>
+            <th>UPC</th>
+            <th>Description</th>
+            <th class="text-right">Ship Qty.</th>
+            <th class="calign">Status</th>
         </tr>
-    <% end %>
-    <tr>
-      <th><%= pluralize item_count, "item" %></th>
-      <th class="ralign" colspan="2">Total: </th>
-      <th class="text-right"><%= number_with_delimiter(total_qty) %></th>
-      <th></th>
-    </tr>
-</table>
+        <% @shipment.items.each do |item| 
+            next if item.order_item.nil? %>
+            <tr>
+                <td nowrap><%= item.order_item.item_number %></td>
+                <td><%= item.order_item.product.present? ? item.order_item.product.upc : "<span class='text-danger'>- product deleted -</span>".html_safe %></td>
+                <td>
+                  <% if item.order_item.product.present? %>
+                    <%= link_to item.order_item.product.full_name, admin_store_product_path(item.order_item.product_id) %>
+                  <% else %>
+                    <%= item.order_item.item_description %>
+                  <% end %>
+                </td>
+                <td class="text-right"><%= number_with_delimiter(item.quantity) %></td>
+                <td class="calign"><%= item.special_status %></td>
+            </tr>
+        <% end %>
+        <tr>
+          <th><%= pluralize item_count, "item" %></th>
+          <th class="ralign" colspan="2">Total: </th>
+          <th class="text-right"><%= number_with_delimiter(total_qty) %></th>
+          <th></th>
+        </tr>
+    </table>
+  </div>
+</div>
 
-<br/>
 
-
-<% if @shipment.status == 'shipped' %>
-	<div class="hidden-print col-md-4" style="padding-left: 0;">
+<% if ["void", "shipped"].include?(@shipment.status) %>
+<div class="row" style="margin-bottom: 30px;">
+	<div class="col-md-4 hidden-print">
     <% unless @shipment.courier_data.nil? %>
-		  <img width="100%" src="<%= label_image_admin_store_shipment_path(@shipment) %>" alt="label image"/>
+      
+      <figure class="watermark">
+        <img width="100%" class="<%= @shipment.status %>" src="<%= label_image_admin_store_shipment_path(@shipment) %>" alt="label image"/>
+        <% if @shipment.status == "void" %>
+          <figcaption class="watermark-text">VOID</figcaption>
+        <% end %>
+      </figure>
+
     <% else %>
-    <div style="color: #ccc; font-size: 24px; text-align: center; line-height: 150px; border: solid 1px #ccc;">
-      Shipping Label not available
-    </div>
+      <div style="color: #ccc; font-size: 24px; text-align: center; line-height: 200px; border: solid 1px #ccc;">
+        Shipping Label not available
+      </div>
     <% end %>
 	</div>
 	
-	<div class="col-md-8" style="margin-bottom: 40px;">
-	    <%= carrier_image @shipment.ship_method.split[0] unless @shipment.ship_method.blank? %>
+	<div class="col-md-8">
+	    <%= carrier_image @shipment.carrier unless @shipment.carrier.blank? %>
 	    <table class="table table-condensed table-bordered summary" style="margin-bottom: 10px;">
       <% unless @shipment.fulfiller.nil? %>
 	      <tr>
@@ -228,7 +238,6 @@
 	    </table>
 
     	<% unless @shipment.courier_data.nil? %>
-			      
         <% if @shipment.status == "shipped" && @shipment.ship_date > 1.month.ago %>
           <%= link_to "Void Shipment", void_label_admin_store_shipment_path(@shipment), class: "btn btn-sm btn-danger pull-right", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> please wait ..." }   %>
 			  <% end %>
@@ -236,10 +245,10 @@
         <%= link_to admin_store_shipments_shipping_label_batch_path, class: 'btn btn-primary print-link', 'print-format' => 'pdf,zpl,epl2' do %>
           <i class="fa fa-print fa-fw"></i> Reprint Label
         <% end %>
-        
     	<% end %>
+      
     </div>
-    
+  </div>
 <% else %>
 
   <div class="pull-right">
@@ -256,18 +265,18 @@
 <% end %>
 
 
-<% if @shipment.inventory_transaction.nil? %>
-<div class="alert alert-warning">
-  <i class="fa fa-exclamation-triangle"></i> There is no corresponding inventory transaction.  
-  <%= link_to "Create one", create_inventory_transaction_admin_store_shipment_path(@shipment) %>
+<div class="row">
+  <div class="col-md-6">
+    <% if @shipment.inventory_transaction.nil? %>
+      <div class="alert alert-warning">
+        <i class="fa fa-exclamation-triangle"></i> There is no corresponding inventory transaction.  
+        <%= link_to "Create one", create_inventory_transaction_admin_store_shipment_path(@shipment) %>
+      </div>
+    <% else %>
+      <%= render partial: 'admin/inventory/inventory_transactions/box', locals: { inventory_transaction: @shipment.inventory_transaction } %>
+    <% end %>
+  </div>
 </div>
-<% else %>
-
-<div class="col-md-6 pull-left">
-  <%= render partial: 'admin/inventory/inventory_transactions/box', locals: { inventory_transaction: @shipment.inventory_transaction } %>
-</div>
-
-<% end %>
 
 <form id="frmBatch" action="" method="post">
 	<%= token_tag %>
@@ -298,5 +307,37 @@
       $("#master-search").val("shp ");
     });
   </script>
+  <link href="https://fonts.googleapis.com/css?family=Special+Elite&display=swap" rel="stylesheet">
+  <style>
+    img.void { opacity: 0.5; }
+    
+    .watermark {
+      position: relative;
+      padding: 0;
+      margin: 0;
+    }
+    .watermark img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+    .watermark-text {
+      display: block;
+      position: absolute;
+      color: red;
+      font-family: 'Special Elite', cursive;
+      font-size: 5vw;
+      width: 100%;
+      top: 20%;
+      text-align: center;
+      padding: 1em;
+      font-weight: 700;
+      z-index: 2;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      transform: rotate(-45deg);
+      opacity: 0.8;
+    }
+    </style>
 <% end %>
 

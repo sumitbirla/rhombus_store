@@ -47,7 +47,9 @@ packaging_types = [
   printers = Printer.where(preferred_format: ['epl2', 'zpl', 'pdf'])
 %>
 
-<%= link_to "Modify Shipment", edit_admin_store_shipment_path(@shipment), class: "btn btn-sm btn-default pull-right" %>
+<%= link_to edit_admin_store_shipment_path(@shipment), class: "btn btn-sm btn-default pull-right" do %>
+  <i class="fa fa-edit"></i> &nbsp;Modify Shipment
+<% end %>
 <h2>
   Shipment #<%= @shipment %>
   <span class="label <%= 'label-warning' if @shipment.status == 'pending' %>  <%= 'label-success' if @shipment.status == 'shipped' %>"><%= @shipment.status %></span>
@@ -130,7 +132,7 @@ packaging_types = [
    <div class="col-md-5">
 
      <div class="panel panel-primary">
-       <div class="panel-heading"><%= @shipment.ship_from_company %> &rarr;</div>
+       <div class="panel-heading"><%= @shipment.ship_from_company %> <i class="fa fa-arrow-right"></i></div>
        <div class="panel-body">
            <%= @shipment.ship_from_street1 %><br/>
            <%= raw @shipment.ship_from_street2 + '<br/>' unless @shipment.ship_from_street2.blank? %>
@@ -140,7 +142,7 @@ packaging_types = [
      </div>
 
      <div class="panel panel-primary">
-       <div class="panel-heading">&rarr; <%= @shipment.recipient_name %></div>
+       <div class="panel-heading"><i class="fa fa-arrow-right"></i> <%= @shipment.recipient_name %></div>
        <div class="panel-body">
            <%= raw @shipment.recipient_company + '<br/>' unless @shipment.recipient_company.blank? %>
            <%= @shipment.recipient_street1 %><br/>
@@ -169,53 +171,54 @@ packaging_types = [
 
 <% unless @ep_shipment.nil? || @ep_shipment[:rates].nil?
 		carriers = @ep_shipment[:rates].map { |x| x[:carrier] }.uniq 
-		carriers.each do |carrier| %>
+		carriers.each_slice(carriers.length/2 + 1) do |grp| %>
 
 	<div class="col-md-6">
-		<%= carrier_image carrier %>
-			
-		<table class="table table-striped table-condensed">
-			<tr>
-			  <th>Service</th>
-			  <th class="text-center">Est. Days</th>
-        <th class="text-center">Date</th>
-			  <th class="text-right">Rate</th>
-        <th width="12"></th>
-			  <th></th>
-			</tr>
-			<% @ep_shipment[:rates].select { |x| x[:carrier] == carrier }.each do |rate| %>
-			<tr>
-			  <td><%= rate[:service] %></td>
-			  <td class="text-center"><%= rate[:delivery_days] || "<span class='light'> - n/a - </span>".html_safe %></td>
-        <td class="text-center">
-          <% if rate[:delivery_date] %>
-            <%= Date.parse(rate[:delivery_date]).strftime("%m/%d") %>
-          <% else %>
-            <span class='light'> - unknown - </span>
-          <% end %>
-        </td>
-			  <td class="text-right"><%= number_to_currency(rate[:rate]) %></td>
-        <td class="text-center">
-          <% if rate == @cheapest_rate %>
-            <i class="fas fa-star text-danger"></i>
-          <% end %>
-        </td>
-			  <td class="text-right">
-          <%= form_tag admin_store_easy_post_buy_path do %>
-            <%= hidden_field_tag :shipment_id, @shipment.id %>
-            <%= hidden_field_tag :rate_id, rate[:id] %>
-            <%= hidden_field_tag :ep_shipment_id, @ep_shipment[:id] %>
-            <%= hidden_field_tag :printer_id, @default_printer_id %>
-            <%= hidden_field_tag :affiliate_shipping_account, @shipment.affiliate_shipping_account %>
-            <%= button_tag "purchase", class: 'btn btn-sm btn-default', "data-disable-with" => "<i class='fa fa-spinner fa-spin'></i> purchasing ..." %>
-          <% end %>
-			  </td>
-      </tr>
-			<% end %>
-		</table>
-	</div>
-	<% end %>
-	
+    <% grp.each do |carrier| %>
+		
+  		<table class="rates table table-bordered table-condensed">
+        <caption><%= carrier_image carrier %>	</caption>
+  			<tr>
+  			  <th>Service</th>
+  			  <th class="text-center">Est. Days</th>
+          <th class="text-center">Date</th>
+  			  <th class="text-right">Rate</th>
+  			  <th></th>
+  			</tr>
+  			<% @ep_shipment[:rates].select { |x| x[:carrier] == carrier }.each do |rate| %>
+  			<tr class="<%= 'highlight' if rate == @cheapest_rate %>">
+  			  <td>
+            <% if rate == @cheapest_rate %>
+              <i class="fas fa-star text-danger"></i>
+            <% end %>
+            <%= rate[:service] %>
+          </td>
+  			  <td class="text-center"><%= rate[:delivery_days] || "<span class='light'> - n/a - </span>".html_safe %></td>
+          <td class="text-center">
+            <% if rate[:delivery_date] %>
+              <%= Date.parse(rate[:delivery_date]).strftime("%m/%d") %>
+            <% else %>
+              <span class='light'> - unknown - </span>
+            <% end %>
+          </td>
+  			  <td class="text-right"><%= number_to_currency(rate[:rate]) %></td>
+  			  <td class="text-right">
+            <%= form_tag admin_store_easy_post_buy_path do %>
+              <%= hidden_field_tag :shipment_id, @shipment.id %>
+              <%= hidden_field_tag :rate_id, rate[:id] %>
+              <%= hidden_field_tag :ep_shipment_id, @ep_shipment[:id] %>
+              <%= hidden_field_tag :printer_id, @default_printer_id %>
+              <%= hidden_field_tag :affiliate_shipping_account, @shipment.affiliate_shipping_account %>
+              <%= button_tag "buy", class: 'btn btn-xs btn-primary', "data-disable-with" => "<i class='fa fa-spinner fa-spin'></i> buying ..." %>
+            <% end %>
+  			  </td>
+        </tr>
+  			<% end %>
+  		</table>
+      <% end %>
+    </div>
+  <% end%>
+
 <% end %>
 
 
@@ -228,8 +231,20 @@ packaging_types = [
     <style>
         .dimensions .numeric { width: 45px; text-align: center;}
         .add-on { background-color: #dfeaef; color: #666; text-shadow: none; font-weight: normal; display: inline-block; width: 120px; margin-bottom: 4px; }
-        th { background-color: #ddd; padding: 0; }
-        .cheapest { background-color: #bbffaa; }
+        th { background-color: #eee; font-size: 9pt; }
+        caption { text-align: left; }
+        caption img { max-height: 30px; margin-bottom: 6px; }
+        table.rates { margin-bottom: 40px; }
+        table.rates td:first-child { }
+
+        .table>tbody>tr>td, 
+        .table>tbody>tr>th, 
+        .table>tfoot>tr>td, 
+        .table>tfoot>tr>th, 
+        .table>thead>tr>td, 
+        .table>thead>tr>th {
+              vertical-align: middle;
+         }
     </style>
     <script>
         $(document).ready(function() {
