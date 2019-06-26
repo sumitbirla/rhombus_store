@@ -190,7 +190,7 @@
   
   
   <% unless @shipment.inventory_transaction.nil? %>
-    <section style="width: 300px; margin-top: 40px; float:right">
+    <section style="width: 300px; margin-top: 40px; float:right; margin-left: 40px;">
       <table style="border: 1px solid #999; color: #999; padding: 10px;">
         <tr>
           <th style="text-align:left;">Location</th>
@@ -224,20 +224,17 @@
     </section>
   <% end %>
   
-  
-
 
   <% unless @shipment.notes.blank? %>
-    <h2>Comments</h2>
+    <br><br><b>Comment:</b><br>
     <%= @shipment.notes %>
   <% end %>
   
-  
-  <% if ["Healthy Breeds", "Amazon.com"].include? @shipment.order.sales_channel %>
-  <div style="text-align: ceanter; margin-top: 40px;">
-    <img src="/img/HB10_reorder_coupon.jpg" width="250" style="padding: 10px; border: dashed 3px #999;">
-  </div>
+  <% if aff && !aff.get_property("Packing Slip Note").blank? %>
+    <br><br><b>Note:</b><br>
+    <i><%= aff.get_property("Packing Slip Note") %></i>
   <% end %>
+
   
 </section>
 
