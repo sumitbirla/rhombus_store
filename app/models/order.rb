@@ -81,6 +81,8 @@ class Order < ActiveRecord::Base
   self.table_name = "store_orders"
   attr_accessor :same_as_shipping
   
+  before_save :check_for_errors
+  
   belongs_to :domain
 	# belongs_to :sales_channel
   belongs_to :user
@@ -161,7 +163,7 @@ class Order < ActiveRecord::Base
   end
   
   def self.valid_statuses
-    [ 'accepted', 'backordered', 'cancelled', 'partially_shipped', 'shipped', 'submitted', 'awaiting_shipment' ]
+    [ 'accepted', 'backordered', 'cancelled', 'partially_shipped', 'shipped', 'submitted', 'awaiting_shipment', 'payment_pending' ]
   end
   
   # create a dummy user if one doesn't exist and assign user_id
@@ -473,8 +475,34 @@ class Order < ActiveRecord::Base
     weight * 1.15  #  account 15% for packaging
   end
   
+  
+  # get shipment cost based on store_product_shipping_rates table
+  def calculate_shipping_cost
+    rates = {}  # hash of shipping_code : number_of_items
+    cost = 0.00
+    
+    items.each do |i|
+      code = i.product.shipping_code
+      raise "Shipping code not set for #{i.product.item_number}" if code.blank?
+      
+      rates[code] = 0 if rates[code].nil?
+      rates[code] += i.quantity
+    end
+    
+    rates.each do |code, quantity|
+      sr = ProductShippingRate.find_by!(code: code, destination_country_code: 'US', ship_method: :standard)
+      cost += sr.get_cost(quantity)
+    end
+    
+    cost
+  end
+  
   def to_s
     "Order ##{id}"
+  end
+  
+  def check_for_errors
+    self.status = "error" unless error_messages.blank?
   end
   
   

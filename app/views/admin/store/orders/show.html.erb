@@ -76,7 +76,7 @@
   &nbsp; <%= order_status(@order, 'large') %> <%= "<i class='icon-gift'></i>".html_safe if @order.gift %>
 </div>
 
-<% unless @order.ship_earliest.nil? || ["shipped", "cancelled"].include?(@order.status)%>
+<% unless @order.ship_earliest.nil? || ["shipped", "cancelled"].include?(@order.status) || @order.status == "error" %>
 <div class="alert alert-warning" style="margin-top: 20px;">
     <i class="fa fa-truck"></i> &nbsp; <b>Ship window:</b> <%= @order.ship_earliest %> &rarr; <%= @order.ship_latest %>
     
@@ -86,11 +86,17 @@
 </div>
 <% end %>
 
-
-  
 <hr style="margin: 15px 0 20px 0;"/>
 
-
+<% unless @order.error_messages.blank? %>
+<div class="alert alert-danger" style="margin-top: 20px;">
+  <ul>
+  <% @order.error_messages.split("\n").each do |err| %>
+    <li><i class="fa fa-exclamation-triangle"></i> <%= err %></li>
+  <% end%>
+  </ul>
+</div>
+<% end %>
 
 <div class="row">
 
@@ -185,7 +191,7 @@
   </tr>
   <% if !@order.shipping_method.blank? || @order.shipping_cost > 0.0 %>
       <tr>
-        <td colspan="5" class="ralign"><%= @order.shipping_method %>:</td>
+        <td colspan="5" class="ralign"><%= @order.shipping_method.titlecase %>:</td>
         <td class="ralign"><%= number_to_currency(@order.shipping_cost) %></td>
       </tr>
   <% end %>
