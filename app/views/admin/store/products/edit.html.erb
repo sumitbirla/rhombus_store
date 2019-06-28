@@ -173,7 +173,7 @@
 
 <% content_for :breadcrumbs do %>
 	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Products", admin_store_products_path(brand_id: @product.brand_id) %></li>
+	<li><%= link_to "Products", admin_store_products_path(brand_id: @product.brand_id, status: :active) %></li>
     <% if @product.id.nil? %>
         <li class="active"><%= @product.name %></li>
     <% else %>
