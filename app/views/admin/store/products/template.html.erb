@@ -1,4 +1,5 @@
-<h2><%= @product.name_with_option %></h2>
+<h2><i class="fa fa-tag"></i> &nbsp;<%= @product.name_with_option %></h2>
+<hr>
 
 <div class="alert alert-danger">
   <b>Warning: </b> The selected fields will be applied to any item that uses this product as template.  Currently there are <b><%= Product.where(template_product_id: @product.id).count %></b> such items.

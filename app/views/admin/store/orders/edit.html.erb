@@ -1,4 +1,4 @@
-<h2>Order #<%= @order.id %></h2>
+<h2><i class="fa fa-shopping-cart"></i> &nbsp;Order #<%= @order.id %></h2>
 
 <%= simple_form_for [:admin, :store, @order] do |f| %>
   <input type="hidden" name="add_more_items" value=""/>
