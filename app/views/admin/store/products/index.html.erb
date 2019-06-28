@@ -31,11 +31,24 @@
       <% end %>
     </select>
   </div>
+  
+  <%
+  if params[:brand_id] == "white-label"
+    active_count = Product.where(active: true, brand_id: nil).count
+    inactive_count = Product.where(active: false, brand_id: nil).count
+  elsif params[:brand_id].present?
+    active_count = Product.where(active: true, brand_id: params[:brand_id]).count
+    inactive_count = Product.where(active: false, brand_id: params[:brand_id]).count
+  else
+    active_count = Product.where(active: true).count
+    inactive_count = Product.where(active: false).count
+  end
+  %>
 
 
   <ul class="nav nav-tabs" style="margin-bottom: 14px;">
-    <li class="<%= "active" if params[:status] == "active" %>"><a href="<%= admin_store_products_path(status: :active)%>">Active</a></li>
-    <li class="<%= "active" if params[:status] == "inactive" %>"><a href="<%= admin_store_products_path(status: :inactive) %>">Inactive</a></li>
+    <li class="<%= "active" if params[:status] == "active" %>"><a href="<%= admin_store_products_path(status: :active, brand_id: params[:brand_id])%>"><%= tab_count("Active", active_count) %></a></li>
+    <li class="<%= "active" if params[:status] == "inactive" %>"><a href="<%= admin_store_products_path(status: :inactive, brand_id: params[:brand_id]) %>"><%= tab_count("Inactive", inactive_count) %></a></li>
   </ul>
 <% end %>
 
