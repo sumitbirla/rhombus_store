@@ -9,8 +9,8 @@ class Admin::Store::ProductsController < Admin::BaseController
     unless q.nil?
       @products = @products.where("name LIKE '%#{q}%' OR item_number = ? OR SKU = ? OR upc = ?", q, q, q) 
     else
-      @products = @products.where(active: true) unless params[:product_type] == "all"
-      @products = @products.where(brand_id: (params[:brand_id].blank? ? nil : params[:brand_id])) unless params[:brand_id] == 'all'
+      @products = @products.where(active: params[:status] == "active") unless params[:status] == "all"
+      @products = @products.where(brand_id: (params[:brand_id] == "white-label" ? nil : params[:brand_id])) unless params[:brand_id].blank?
     end
       
     respond_to do |format|

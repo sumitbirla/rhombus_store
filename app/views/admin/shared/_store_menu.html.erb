@@ -46,7 +46,7 @@
       </li>
     <% end %>
     <% if current_user.has_permission?('Product', 'index')%>
-      <li><%= link_to "Products", admin_store_products_path %></li>
+      <li><%= link_to "Products", admin_store_products_path(status: :active) %></li>
     <% end %>
     <% if current_user.has_permission?('Store Reports', 'index')%>
       <li><%= link_to "Reports", admin_store_reports_path %></li>

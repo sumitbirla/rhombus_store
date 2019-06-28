@@ -5,9 +5,6 @@
     <%= link_to admin_system_categories_path(type: :product), class: 'btn btn-sm btn-default'  do %>
       <i class="fa fa-list-ul"></i> Setup categories
     <% end %>
-    <%= link_to admin_store_products_adjust_prices_path, class: 'btn btn-sm btn-default' do %>
-      <i class="fa fa-dollar"></i> Adjust prices
-    <% end %>
 </div>
 
 <h2><i class="fa fa-tags"></i>&nbsp; Products</h2>
@@ -16,28 +13,32 @@
 <%= render "admin/shared/search_results_header", object: @products %>
 
 <% unless params[:q] %>
-<div class="pull-right" style="margin-bottom: 12px;">
-  <select name="brand_id" class="brand">
-    <option value="">WHITE LABEL</option>
-    <% 
-    brands = Brand.joins(:products)
-                  .select(:id, :name, "COUNT(store_products.id) AS count")
-                  .where("exists (select 1 from store_products where brand_id = store_brands.id)")
-                  .group(:name)
-                  .order(:name)
+  <div class="pull-right">
+    <select name="brand_id" class="brand">
+      <option value="">- All Brands -</option>
+      <option <%= "selected" if params[:brand_id] == "white-label" %> value="white-label">WHITE LABEL</option>
+      <% 
+      brands = Brand.joins(:products)
+                    .select(:id, :name, "COUNT(store_products.id) AS count")
+                    .where("exists (select 1 from store_products where brand_id = store_brands.id)")
+                    .group(:name)
+                    .order(:name)
                   
-    brands = brands.where("store_products.active = ?", true) unless params[:product_type] == "all"
+      brands = brands.where("store_products.active = ?", true) unless params[:product_type] == "all"
                   
-    brands.each do |b| %>
-      <option value="<%= b.id %>" <%= "selected" if params[:brand_id] == b.id.to_s %>><%= b.name %>&nbsp; (<%= b.count %>)</option>
-    <% end %>
-  </select>
-  <select name="product_type" class="product-type">
-    <option value="active">Active Products</option>
-    <option value="all" <%= "selected" if params[:product_type] == "all" %>>All Products</option>
-  </select>
-</div>
+      brands.each do |b| %>
+        <option value="<%= b.id %>" <%= "selected" if params[:brand_id] == b.id.to_s %>><%= b.name %>&nbsp; (<%= b.count %>)</option>
+      <% end %>
+    </select>
+  </div>
+
+
+  <ul class="nav nav-tabs" style="margin-bottom: 14px;">
+    <li class="<%= "active" if params[:status] == "active" %>"><a href="<%= admin_store_products_path(status: :active)%>">Active</a></li>
+    <li class="<%= "active" if params[:status] == "inactive" %>"><a href="<%= admin_store_products_path(status: :inactive) %>">Inactive</a></li>
+  </ul>
 <% end %>
+
 
 <%= will_paginate @products %>
 <table class="table table-striped table-condensed footable">
@@ -69,6 +70,7 @@
 	<% end %>
 </table>
 
+
 <%= render 'admin/shared/table_summary', data: @products %>
 
 
@@ -80,7 +82,7 @@
   <script>
     $(document).ready(function() {
       $(".brand, .product-type").change(function() {
-        window.location = "/admin/store/products?product_type=" + $(".product-type").val() + "&brand_id=" + $(".brand").val();
+        window.location = "/admin/store/products?status=<%= params[:status] %>&brand_id=" + $(".brand").val();
       });
     });
   </script>
