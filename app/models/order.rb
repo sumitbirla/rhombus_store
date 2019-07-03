@@ -498,7 +498,7 @@ class Order < ActiveRecord::Base
   end
   
   def to_s
-    "Order ##{id}"
+    id.to_s
   end
   
   def check_for_errors
