@@ -241,7 +241,7 @@
   <% 
     payments = @order.payments + 
                Payment.where(payable_type: :shipment, payable_id: @order.shipments.collect { |x| x.id }) + 
-               Payment.where(payable_type: "ShipmentItem", payable_id: @order.shipments.collect { |x| x.items.collect(&:id) })
+               Payment.where(payable_type: "ShipmentItem", payable_id: @order.shipments.collect { |x| x.items.collect(&:id) }.flatten)
   %>
   <div class="col-md-6">
     <div class="panel panel-success">
