@@ -234,6 +234,12 @@
     <br><br><b>Note:</b><br>
     <i><%= aff.get_property("Packing Slip Note") %></i>
   <% end %>
+  
+  <% if ["Healthy Breeds", "Amazon.com"].include? @shipment.order.sales_channel %>
+    <div style="text-align: ceanter; margin-top: 40px;">
+      <img src="/img/HB10_reorder_coupon.jpg" width="250" style="padding: 10px; border: dashed 3px #999;">
+    </div>
+  <% end %>
 
   
 </section>
