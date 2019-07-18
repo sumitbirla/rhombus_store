@@ -180,10 +180,10 @@ class Product < ActiveRecord::Base
 			str += "</ol>"
 		end
     
-    extra_properties.each do |prop|
-      next if prop.name.start_with?("Bullet")
-		  str += "<p><b>#{prop.name}:</b><br>#{prop.value}</p>"
-    end
+    #extra_properties.each do |prop|
+    #  next if prop.name.start_with?("Bullet")
+		#  str += "<p><b>#{prop.name}:</b><br>#{prop.value}</p>"
+    #end
     
 		str
 	end
