@@ -181,7 +181,7 @@ class Product < ActiveRecord::Base
 		end
     
     extra_properties.each do |prop|
-      next if prop.name.downcase.start_with?("material")
+      next unless prop.name.downcase.start_with?("material")
 		  str += "<p><b>#{prop.name}:</b><br>#{prop.value}</p>"
     end
     
