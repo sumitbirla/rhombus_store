@@ -175,15 +175,15 @@ class Product < ActiveRecord::Base
 		end
 		
 		if bullets.length > 0
-			str += "<ol>"
+			str += "<ul>"
 			str += bullets.map { |x| "<li>#{x}</li>" }.join
-			str += "</ol>"
+			str += "</ul>"
 		end
     
-    #extra_properties.each do |prop|
-    #  next if prop.name.start_with?("Bullet")
-		#  str += "<p><b>#{prop.name}:</b><br>#{prop.value}</p>"
-    #end
+    extra_properties.each do |prop|
+      next if prop.name.downcase.start_with?("material")
+		  str += "<p><b>#{prop.name}:</b><br>#{prop.value}</p>"
+    end
     
 		str
 	end
