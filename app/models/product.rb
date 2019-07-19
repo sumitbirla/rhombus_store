@@ -51,6 +51,8 @@
 
 class Product < ActiveRecord::Base
   self.table_name = "store_products"
+  
+  before_save :set_group
 	
   belongs_to :brand
   belongs_to :fulfiller, class_name: 'Affiliate', foreign_key: 'fulfiller_id'
@@ -218,6 +220,13 @@ class Product < ActiveRecord::Base
     end
   end
   
+  def set_group
+    self.group = SecureRandom.uuid if group.blank?
+  end
+  
+  def get_variants
+    Product.where(group: group).order("option_sort, option_title")
+  end
   
   # PUNDIT
   def self.policy_class
