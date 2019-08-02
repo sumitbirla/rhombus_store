@@ -135,6 +135,7 @@ class BatchShipJob < ActiveJob::Base
           :email => shipment.order.notify_email
         },
         :from_address => {
+          :name => shipment.ship_from_name,
           :company => shipment.ship_from_company,
           :street1 => shipment.ship_from_street1,
           :city => shipment.ship_from_city,
