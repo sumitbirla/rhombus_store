@@ -13,7 +13,7 @@ class BatchShipJob < ActiveJob::Base
         process_shipment(shp, params)
       rescue => e
         @logger.error e
-        shp.update(batch_status_message: e.message)
+        shp.update(batch_status_message: e.message.truncate(250))
       end
     end
   end
