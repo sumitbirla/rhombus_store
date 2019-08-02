@@ -81,9 +81,9 @@ class BatchShipJob < ActiveJob::Base
       end
     end
     
-    if params[:print_epl]
+    if params[:printer_id]
       shp.update(batch_status_message: "printing label")
-      ShippingLabelJob.perform_now(params[:user_id], shp.id, "epl2")
+      ShippingLabelJob.perform_now(params[:user_id], shp.id, params[:printer_id])
     end
 
     shp.update(batch_status_message: "done")

@@ -82,7 +82,7 @@ class Admin::Store::EasyPostController < Admin::BaseController
       height: shp.package_height.to_f,
       weight: shp.package_weight.to_f,
       require_signature: shp.require_signature,
-      print_epl: params[:print_epl] == "1",
+      printer_id: params[:printer_id],
       send_email: params[:send_email] == "1",
       ship_date: shp.ship_date.to_s,
       user_id: session[:user_id]

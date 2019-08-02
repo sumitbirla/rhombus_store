@@ -113,10 +113,17 @@ packaging_types = [
   </div>
   <%= f.input :ship_date, as: :datepicker, required: true %>
 	<%= f.input :require_signature, as: :boolean, label: 'Signature?' %>
+  
+  <div class="form-group optional">
+    <label class="string optional control-label col-sm-3" for="shipment_dimensions">Label printer</label>
+    <div class="col-sm-9">
+      <%= select_tag(:printer_id, options_from_collection_for_select(Printer.where(preferred_format: ["epl2", "zpl", "pdf"]), :id, :name), prompt: "- do not print -") %>
+      &nbsp; &nbsp; <input type="checkbox" name="send_email" value="1" checked> Email notification 
+    </div>
+  </div>
 		 
   <%= button_tag "Process", :class => "btn btn-success", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
-  <input type="checkbox" name="print_epl" value="1" checked> Print EPL &nbsp; &nbsp;
-  <input type="checkbox" name="send_email" value="1" checked> Email notification &nbsp; &nbsp;
+
 	<span class="label label-warning pull-right"><%= @response[:mode] unless @response.nil? %></span>
 <% end %>
 
