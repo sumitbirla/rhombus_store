@@ -30,8 +30,7 @@ class BatchShipJob < ActiveJob::Base
       packaging_type: params[:packaging],
       package_weight: params[:weight],
       ship_date: params[:ship_date],
-      require_signature: params[:require_signature],
-      fulfilled_by_id: params[:user_id]
+      require_signature: params[:require_signature]
     )
     
     unless params[:package_length] == 0.0
