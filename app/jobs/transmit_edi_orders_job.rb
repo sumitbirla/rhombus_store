@@ -96,6 +96,7 @@ class TransmitEdiOrdersJob < ActiveJob::Base
       end
     end
     
+    system("chown #{fulfiller.slug} #{file_path}")
     @logger.info "Wrote file " + file_path
     
 		csv.close
