@@ -27,17 +27,15 @@ class Admin::Store::ReportsController < Admin::BaseController
   def product_sales_by_sku
     
     sql = <<-EOF
-      select sales_channel, si.product_id, sku, sum(si.quantity), sum(unit_price * si.quantity), CONCAT(p.name, ' ', p.option_title) 
-      from store_shipment_items si, store_shipments s, store_orders o, store_order_items oi, store_products p
-      where si.shipment_id = s.id 
-      and s.order_id = o.id
-      and si.product_id = p.id
-      and o.id = oi.order_id
-      and s.status = 'shipped'
+      select o.sales_channel, p.id, p.item_number, sum(oi.quantity), sum(oi.unit_price * oi.quantity), oi.item_description 
+      from store_orders o, store_order_items oi, store_products p
+      where oi.order_id = o.id
+      and oi.product_id = p.id 
+      and o.status = 'shipped' 
       and o.submitted > '#{@start_date}' and o.submitted < '#{@end_date}'
       and o.sales_channel LIKE '#{@selected_channel}'
       group by #{@group_channel} product_id
-      order by sum(si.quantity) desc;
+      order by sum(oi.quantity) desc;
     EOF
     
     @data = []
