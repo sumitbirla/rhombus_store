@@ -26,7 +26,7 @@
   %>
 	<tr>
 		<td><%= row[0] %></td>
-    <td><%= link_to row[2] + ", " + row[3], admin_store_product_path(row[1]) %> &nbsp;(<%= row[4]%>)</td>
+    <td><%= link_to "#{row[2]}, #{row[3]}", admin_store_product_path(row[1]) %> &nbsp;(<%= row[4]%>)</td>
     <td>
       <% unless row[7].nil? %>
         <%= link_to row[6], edit_admin_store_label_sheet_path(row[7]) %>

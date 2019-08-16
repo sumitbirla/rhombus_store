@@ -28,7 +28,7 @@
   %>
 	<tr class="<%= 'danger' if available == 0 %>">
 		<td><%= row[1] %></td>
-    <td><%= link_to row[2] + ", " + row[3], admin_store_product_path(row[0]) %></td>
+    <td><%= link_to "#{row[2]}, #{row[3]}", admin_store_product_path(row[0]) %></td>
     <td>
       <% unless row[6].nil? %>
         <%= link_to row[5], edit_admin_store_label_sheet_path(row[6]) %>
