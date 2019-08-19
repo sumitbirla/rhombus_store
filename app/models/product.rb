@@ -167,6 +167,8 @@ class Product < ActiveRecord::Base
 	
 	# assuming long description is in plain text, tries to convert to HTML with bullet points
 	def html_description
+    long_description = "" if long_description.nil?
+    
 		paragraphs = long_description.delete("\r").gsub("\n\n", "\n").split("\n")
 		str = paragraphs.map { |x| "<p>#{x}</p>" }.join
 		
