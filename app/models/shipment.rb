@@ -289,7 +289,7 @@ class Shipment < ActiveRecord::Base
 			raise "Item weight not set for #{si.order_item.item_number}" if si.order_item.product.item_weight.nil?
 			weight += si.order_item.product.item_weight * si.quantity
 		end
-		weight
+		weight * 1.1  # account for packaging materials
 	end
   
   def affiliate_shipping_available?
