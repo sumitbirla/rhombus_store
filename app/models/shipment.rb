@@ -282,6 +282,15 @@ class Shipment < ActiveRecord::Base
     
     cost
   end
+	
+	def calculated_weight
+		weight = 0.0
+		items.each do |si|
+			raise "Item weight not set for #{si.order_item.item_number}" if si.order_item.product.item_weight.nil?
+			weight += si.order_item.product.item_weight * si.quantity
+		end
+		weight
+	end
   
   def affiliate_shipping_available?
     order.affiliate && order.affiliate.get_property("Use EasyPost") == "true"

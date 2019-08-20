@@ -116,6 +116,29 @@ packaging_types = [
       <% end %>
       </div>
       
+      <% 
+      msg = nil?
+      begin 
+        if @shipment.package_weight && @shipment.calculated_weight > @shipment.package_weight
+          msg = "Specified weight #{@shipment.package_weight} lb is less than calculated weight #{@shipment.calculated_weight} lb.  Please double-check package contents."
+        end
+      rescue => e
+        msg = e.message
+      end
+        
+      unless msg.blank?
+      %>
+        <script>
+          $(document).ready(function() {
+            alert("<%= msg %>");
+          });
+        </script>
+        <div class="alert alert-danger">
+          <b>Warning:</b> <%= msg %>
+        </div>
+      <% end %>
+      
+      
 		 
       <%= button_tag :class => "btn btn-success", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } do %>
         <i class="fas fa-search-dollar"></i> &nbsp; Get rates
