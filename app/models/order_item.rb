@@ -30,11 +30,14 @@
 
 class OrderItem < ActiveRecord::Base
   self.table_name = "store_order_items"
+  
   belongs_to :order
   belongs_to :product
   belongs_to :daily_deal
+  
   has_one :shipment_item
-	
+	has_many :extra_properties, as: :extra_property, dependent: :destroy
+  
   validates_presence_of :quantity, :unit_price
   #validates :product_id, presence: true, if: daily_deal_id.nil?
   #validates :daily_deal_id, presence: true, if: product_id.nil?

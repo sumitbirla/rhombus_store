@@ -10,31 +10,60 @@
   end
 %>
 
-<span class="order-item-thumbnail hidden-print">
-  <a href="<%= cdn_image_url file_path, 800, 700, 0 %>" data-lightbox="image-1">
-    <img src="<%= cdn_image_url file_path, 50, 50, 2 %>" title="product" height="50"/>
-  </a>
-</span>
+<table>
+  <tr>
+    
+    <td>
+      <span class="order-item-thumbnail hidden-print">
+        <a href="<%= cdn_image_url file_path, 800, 700, 0 %>" data-lightbox="image-1">
+          <img src="<%= cdn_image_url file_path, 50, 50, 2 %>" title="product" height="50"/>
+        </a>
+      </span>
+    </td>
+    
+    <td>
+      <% if order_item.daily_deal_id %>
+        <%= link_to order_item.daily_deal.title, admin_store_daily_deal_path(order_item.daily_deal) %>
+      <% elsif order_item.product_id %>
+        <%= link_to order_item.product.full_name, admin_store_product_path(order_item.product_id) %>
+        <% unless order_item.uploaded_file.nil? %>
+          <% if order_item.uploaded_file.starts_with?("http") %>
+            <span> &nbsp; &nbsp; <a href="<%= order_item.uploaded_file %>"><i class="fa fa-download text-danger"></i></a></span>
+          <% else %>
+            <span> &nbsp; &nbsp; <a target="_new" href="<%= cdn_download_url order_item.uploaded_file %>"><i class="fa fa-download text-danger"></i></a></span>
+          <% end %>
+        <% end %>
+      <% else %>
+        <span class="text-danger"><i class="fa fa-exclamation-circle"></i> <%= order_item.item_description %></span>
+      <% end %>
 
-<% if order_item.daily_deal_id %>
-  <%= link_to order_item.daily_deal.title, admin_store_daily_deal_path(order_item.daily_deal) %>
-<% elsif order_item.product_id %>
-  <%= link_to order_item.product.full_name, admin_store_product_path(order_item.product_id) %>
-  <% unless order_item.uploaded_file.nil? %>
-    <% if order_item.uploaded_file.starts_with?("http") %>
-      <span> &nbsp; &nbsp; <a href="<%= order_item.uploaded_file %>"><i class="fa fa-download text-danger"></i></a></span>
-    <% else %>
-      <span> &nbsp; &nbsp; <a target="_new" href="<%= cdn_download_url order_item.uploaded_file %>"><i class="fa fa-download text-danger"></i></a></span>
-    <% end %>
-  <% end %>
-<% else %>
-  <span class="text-danger"><i class="fa fa-exclamation-circle"></i> <%= order_item.item_description %></span>
-<% end %>
+      <% unless order_item.custom_text.blank? %>
+        &nbsp; (<span><%= order_item.custom_text %></span>)
+      <% end %>
 
-<% unless order_item.custom_text.blank? %>
-  &nbsp; (<span><%= order_item.custom_text %></span>)
-<% end %>
+      <% unless order_item.product.fulfiller %>
+        &nbsp; <span class="text-danger"><i class="fa fa-exclamation-circle"></i> Fulfiller not set for this product</span>
+      <% end %>
 
-<% unless order_item.product.fulfiller %>
-  &nbsp; <span class="text-danger"><i class="fa fa-exclamation-circle"></i> Fulfiller not set for this product</span>
-<% end %>
+      <% if order_item.extra_properties.length > 0 %>
+        <table class="extra-properties">
+        <% order_item.extra_properties.each do |ep| %>
+          <tr>
+            <td><%= ep.name %></td>
+            <td>
+              <% if ep.value.start_with?("http")%>
+                <%= link_to ep.value, ep.value, target: "_new" %>
+              <% else %>
+                <%= ep.value %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+        </table>
+      <% end %>
+    </td>
+    
+  </tr>
+</table>
+    
+

@@ -25,14 +25,17 @@ class Admin::Store::ManifestsController < Admin::BaseController
   
   def create
     manifest = authorize Manifest.new(manifest_params)
-    EasyPost.api_key = Cache.setting(Rails.configuration.domain_id, :shipping, 'EasyPost API Key')
+    # EasyPost.api_key = Cache.setting(Rails.configuration.domain_id, :shipping, 'EasyPost API Key')
+    EasyPost.api_key = "EZAKf450411cc98a4a6eac6f7671d89a0b0cjOAdPcyWzaTCJoSIfcz8mg"
     shipments = Shipment.where(ship_date: manifest.day, carrier: manifest.carrier, status: :shipped, manifest_id: nil)
     
     data = []
     shipment_ids = []
     
-    begin
+    #begin
       shipments.each do |s|
+        next if s.courier_data.blank?
+        
         data << { id: JSON.parse(s.courier_data)["id"] }
         shipment_ids << s.id
       end
@@ -46,9 +49,9 @@ class Admin::Store::ManifestsController < Admin::BaseController
       
       # update shipments
       Shipment.where(id: shipment_ids).update_all(manifest_id: manifest.id)
-    rescue => e
-      flash[:error] = e.message
-    end
+      #rescue => e
+      #flash[:error] = e.message
+      #end
     
     redirect_back(fallback_location: admin_root_path)
   end
