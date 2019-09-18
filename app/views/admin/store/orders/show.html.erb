@@ -3,7 +3,15 @@
   {
       vertical-align: middle;
   }
+  .extra-properties-trigger { cursor: pointer;}
 </style>
+<script>
+  $(document).ready(function() {
+    $(".extra-properties-trigger").click(function() {
+      $(this).siblings("table.extra-properties").toggle();
+    });
+  });
+</script>
 
 <div class="dropdown pull-right">
   
