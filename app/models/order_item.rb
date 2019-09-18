@@ -50,7 +50,7 @@ class OrderItem < ActiveRecord::Base
   end
   
   def personalized?
-    uploaded_file.presence? || custom_text.presence?
+    uploaded_file.present? || custom_text.present?
   end
   
 end
