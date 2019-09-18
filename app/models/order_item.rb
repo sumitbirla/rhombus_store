@@ -49,4 +49,8 @@ class OrderItem < ActiveRecord::Base
                       .sum(:quantity)
   end
   
+  def personalized?
+    uploaded_file.presence? || custom_text.presence?
+  end
+  
 end
