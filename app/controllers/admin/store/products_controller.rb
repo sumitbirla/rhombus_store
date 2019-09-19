@@ -87,7 +87,7 @@ class Admin::Store::ProductsController < Admin::BaseController
     @product = Product.find(params[:id])
     authorize @product, :update?
     
-    ProductCategory.delete_all(product_id: @product.id)
+    ProductCategory.where(product_id: @product.id).delete_all
     category_ids = params[:category_ids] || []
     
     category_ids.each do |id|
@@ -107,7 +107,7 @@ class Admin::Store::ProductsController < Admin::BaseController
     @product = Product.find(params[:id])
     authorize @product, :update?
     
-    ProductCatalog.delete_all(product_id: @product.id)
+    ProductCatalog.where(product_id: @product.id).delete_all
     catalogs = params[:catalogs] || []
     catalogs.each do |c| 
       ProductCatalog.create(product_id: @product.id, 
