@@ -9,8 +9,9 @@
           color:black!important;
           width: 95%!important;
           margin: 0 auto!important;
-          font-family:Arial, Helvetica, sans-serif!important;
-          font-size:11px!important;
+          font-family: Arial;
+          font-size: 0.7em;
+          line-height: 1.4em;
       }
       table {
           width: 100%!important;
@@ -32,12 +33,15 @@
       }
       p {
           font-weight:normal !important;
-          line-height:16px !important;
           margin-top: 0;
       }
+      h1 {
+          font-size:20pt !important;
+          margin-bottom: 8px;
+      }
       h2 {
-          font-size:20px !important;
-          margin-bottom: 0px;
+          font-size:16pt !important;
+          margin-bottom: 4px;
       }
       .boxleft {
           float:left!important;
@@ -74,7 +78,7 @@
             %>
             
             <% if aff %>
-              <h2><%= aff.name %></h2>
+              <h1><%= aff.name %></h1>
               <p> 
                 <% unless aff.phone.blank? %>
                 <strong>Phone:</strong> <%= aff.phone %><br/>
@@ -114,17 +118,7 @@
       </table>
 
       <div class="boxleft">
-        <h2>
-          Billing address            </h2>
-        <p><%= @shipment.order.billing_name %><br/>
-          <%= raw @shipment.order.billing_company + '<br/>' unless @shipment.order.billing_company.blank? %>
-          <%= @shipment.order.billing_street1 %><br/>
-          <%= raw @shipment.order.billing_street2 + '<br/>' unless @shipment.order.billing_street2.blank? %>
-          <%= @shipment.order.billing_city %>, <%= @shipment.order.billing_state %> <%= @shipment.order.billing_zip %></p>
-      </div>
-      <div class="boxright">
-        <h2>
-          Shipping address            </h2>
+        <h2>Ship to:</h2>
         <p><%= @shipment.recipient_name %><br/>
           <%= raw @shipment.recipient_company + '<br/>' unless @shipment.recipient_company.blank? %>
           <%= @shipment.recipient_street1 %><br/>
