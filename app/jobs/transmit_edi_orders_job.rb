@@ -96,7 +96,7 @@ class TransmitEdiOrdersJob < ActiveJob::Base
     				shp.order.contact_phone,
     				"USPS",
     				"", # ship_method
-            website_url + packing_slip_admin_store_shipment_path(shp, digest: digest)
+            "#{website_url}/admin/store/shipments/#{shp.id}/packing_slip?digest=#{digest}"
     			]
         end
 
