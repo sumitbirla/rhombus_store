@@ -44,14 +44,23 @@ class TransmitEdiOrdersJob < ActiveJob::Base
 			"ship_to_country",
 			"ship_to_phone",	
 			"shipper",
-			"ship_method"
+			"ship_method",
+      "packing_slip_url"
 		] 
 		
+    
+    # For packing slip download link
+    token = Cache.setting(Rails.configuration.domain_id, :system, 'Security Token')
+    website_url = Cache.setting(Rails.configuration.domain_id, :system, 'Website URL')
+    
+    
 		csv = CSV.open(file_path, "wb")
 		csv << headers
 		
     shipments.each do |shp|
       @logger.info "Sending #{shp} to #{shp.fulfiller}"
+      
+      digest = Digest::MD5.hexdigest(s.id.to_s + token) 
       
       begin
     		shp.items.each do |si|
@@ -86,7 +95,8 @@ class TransmitEdiOrdersJob < ActiveJob::Base
     				shp.recipient_country,
     				shp.order.contact_phone,
     				"USPS",
-    				"" # ship_method
+    				"", # ship_method
+            website_url + packing_slip_admin_store_shipment_path(shp, digest: digest)
     			]
         end
 
