@@ -60,7 +60,7 @@ class TransmitEdiOrdersJob < ActiveJob::Base
     shipments.each do |shp|
       @logger.info "Sending #{shp} to #{shp.fulfiller}"
       
-      digest = Digest::MD5.hexdigest(s.id.to_s + token) 
+      digest = Digest::MD5.hexdigest(shp.id.to_s + token) 
       
       begin
     		shp.items.each do |si|
