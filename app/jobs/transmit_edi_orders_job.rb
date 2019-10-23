@@ -1,4 +1,5 @@
 require 'csv'
+require 'fileutils'
 
 class TransmitEdiOrdersJob < ActiveJob::Base
   queue_as :default
@@ -44,15 +45,13 @@ class TransmitEdiOrdersJob < ActiveJob::Base
 			"ship_to_country",
 			"ship_to_phone",	
 			"shipper",
-			"ship_method",
-      "packing_slip_url"
+			"ship_method"
 		] 
 		
     
     # For packing slip download link
     token = Cache.setting(Rails.configuration.domain_id, :system, 'Security Token')
     website_url = Cache.setting(Rails.configuration.domain_id, :system, 'Website URL')
-    
     
 		csv = CSV.open(file_path, "wb")
 		csv << headers
@@ -63,6 +62,11 @@ class TransmitEdiOrdersJob < ActiveJob::Base
       digest = Digest::MD5.hexdigest(shp.id.to_s + token) 
       
       begin
+				packing_slip_url = [ "#{website_url}/admin/store/shipments/#{shp.id}/packing_slip?digest=#{digest}" ]
+				FileUtils.mkdir_p("/home/#{fulfiller.slug}/outgoing/packing_slips")
+				
+				PdfDownloadJob.perform_now(packing_slip_url, "/home/#{fulfiller.slug}/outgoing/packing_slips/#{shp}.pdf")
+				
     		shp.items.each do |si|
     			ap = AffiliateProduct.find_by(affiliate_id: shp.fulfiller.id, product_id: si.order_item.product_id)
 			
@@ -94,9 +98,8 @@ class TransmitEdiOrdersJob < ActiveJob::Base
     				shp.recipient_zip,
     				shp.recipient_country,
     				shp.order.contact_phone,
-    				"USPS",
-    				"", # ship_method
-            "#{website_url}/admin/store/shipments/#{shp.id}/packing_slip?digest=#{digest}"
+    				"",
+    				"" # ship_method
     			]
         end
 
