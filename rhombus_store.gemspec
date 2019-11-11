@@ -26,4 +26,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'mail'
   s.add_dependency 'net-scp'
 	s.add_dependency 'shopify'
+  s.add_dependency 'business_time'
 end

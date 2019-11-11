@@ -57,6 +57,7 @@
 require 'net/http'
 require 'uri'
 require 'digest/md5'
+require 'business_time'
 
 class Shipment < ActiveRecord::Base
   include Exportable
@@ -314,7 +315,7 @@ class Shipment < ActiveRecord::Base
         ap = AffiliateProduct.find_by(affiliate_id: fulfilled_by_id, product_id: si.order_item.product_id)
         raise ("Dropshipper listing not found for #{si.order_item.item_number}") if ap.nil?
         
-        return true if created_at + ap.ship_lead_time.days < DateTime.now 
+        return true if ap.ship_lead_time.business_days.after(order.submitted) < DateTime.now 
       end
       
     end
