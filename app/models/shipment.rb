@@ -307,6 +307,22 @@ class Shipment < ActiveRecord::Base
     key
   end
   
+  def is_late?
+    if fulfilled_by_id and ['pending', 'transmitted'].include?(status)
+    
+      items.each do |si|
+        ap = AffiliateProduct.find_by(affiliate_id: fulfilled_by_id, product_id: si.order_item.product_id)
+        raise ("Dropshipper listing not found for #{si.order_item.item_number}") if ap.nil?
+        
+        return true if created_at + ap.ship_lead_time.days < DateTime.now 
+      end
+      
+    end
+    
+    false
+  end
+  
+  
   # PUNDIT
   def self.policy_class
     ApplicationPolicy

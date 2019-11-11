@@ -5,18 +5,13 @@
 <h2>
   <i class="fa fa-truck"></i> &nbsp;Shipments
   <% if current_user.admin? %>
-  <%
-  dropship_category = Category.find_by(slug: 'dropshippers')
-  unless dropship_category.nil? 
-    dropshippers = Affiliate.where(id: AffiliateCategory.select(:affiliate_id).where(category_id: dropship_category.id)) 
-  %>
+  <% dropshippers = Cache.affiliate_list(:dropshippers) %>
   &nbsp; <select id="fulfiller" name="fulfilled_by_id" style="font-size: 14px; vertical-align: middle;">
     <option value="">-- All fulfillers --</option>
     <% dropshippers.each do |aff| %>
       <option value="<%= aff.id %>" <%= 'selected' if params[:fulfilled_by_id] == aff.id.to_s %>><%= aff.name %></option>
     <% end %>
   </select>
-  <% end %>
   <% end %>
 </h2>
 
