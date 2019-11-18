@@ -47,8 +47,8 @@
 
 
   <ul class="nav nav-tabs" style="margin-bottom: 14px;">
-    <li class="<%= "active" if params[:status] == "active" %>"><a href="<%= admin_store_products_path(status: :active, brand_id: params[:brand_id])%>"><%= tab_count("Active", active_count) %></a></li>
-    <li class="<%= "active" if params[:status] == "inactive" %>"><a href="<%= admin_store_products_path(status: :inactive, brand_id: params[:brand_id]) %>"><%= tab_count("Inactive", inactive_count) %></a></li>
+    <li class="<%= "active" if @active %>"><a href="<%= admin_store_products_path(status: :active, brand_id: params[:brand_id])%>"><%= tab_count("Active", active_count) %></a></li>
+    <li class="<%= "active" unless @active %>"><a href="<%= admin_store_products_path(status: :inactive, brand_id: params[:brand_id]) %>"><%= tab_count("Inactive", inactive_count) %></a></li>
   </ul>
 <% end %>
 

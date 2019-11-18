@@ -5,11 +5,16 @@ class Admin::Store::ProductsController < Admin::BaseController
     
     q = params[:q]
     @products = Product.includes(:brand).order(sort_column + " " + sort_direction)
+    if params[:status].blank?
+      @active = true
+    else
+      @active = (params[:status] == "active")
+    end
     
     unless q.nil?
       @products = @products.where("name LIKE '%#{q}%' OR item_number = ? OR SKU = ? OR upc = ?", q, q, q) 
     else
-      @products = @products.where(active: params[:status] == "active") unless params[:status] == "all"
+      @products = @products.where(active: @active)
       @products = @products.where(brand_id: (params[:brand_id] == "white-label" ? nil : params[:brand_id])) unless params[:brand_id].blank?
     end
       
