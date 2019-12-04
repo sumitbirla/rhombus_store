@@ -8,7 +8,7 @@ class TransmitEdiOrdersJob < ActiveJob::Base
   def perform(fulfiller_id)
     @logger = Logger.new(Rails.root.join("log", "transmit_orders.log"))
     
-    shipments = Shipment.where(status: :pending, fulfilled_by_id: fulfiller_id)
+    shipments = Shipment.where(status: :third_party, fulfilled_by_id: fulfiller_id)
     return if shipments.length == 0
     
     fulfiller = Affiliate.find(fulfiller_id)

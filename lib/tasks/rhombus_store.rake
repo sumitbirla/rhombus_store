@@ -14,7 +14,7 @@ namespace :rhombus_store do
         o.update_attribute(:status, :awaiting_shipment)
       rescue => e
         Rails.logger.info e.message
-        o.update_columns(status: :backordered, error_messages: e.message)
+        o.update_columns(status: :error, error_messages: e.message)
       end
     end
       
