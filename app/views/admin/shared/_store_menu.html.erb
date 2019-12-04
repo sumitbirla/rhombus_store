@@ -59,7 +59,7 @@
     <% end %>
     <% if current_user.has_permission?('Shipment', 'index')%>
       <li>
-      <%= link_to admin_store_shipments_path(status: "pending") do %>
+      <%= link_to admin_store_shipments_path(status: "ready_to_ship") do %>
       Shipments
       <% if new_shipments > 0 %>
       	<span class="badge pull-right"><%= new_shipments %></span>

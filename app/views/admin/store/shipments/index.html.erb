@@ -27,7 +27,7 @@
     query = Shipment.group(:status)
     query = query.where(fulfilled_by_id: params[:fulfilled_by_id]) unless params[:fulfilled_by_id].blank?
     shipment_counts = query.count
-    shipment_counts['pending'] = 0 unless shipment_counts.keys.include?('pending')
+    shipment_counts['ready_to_ship'] = 0 unless shipment_counts.keys.include?('ready_to_ship')
     shipment_counts = shipment_counts.sort
   %>
   
