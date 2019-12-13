@@ -14,7 +14,7 @@ module StoreCache
   
   def self.pending_shipments_count
     Rails.cache.fetch(:pending_shipments_count, expires_in: 2.minutes) do 
-      Shipment.where(status: 'pending').count
+      Shipment.where(status: 'ready_to_ship').count
     end
   end
     
