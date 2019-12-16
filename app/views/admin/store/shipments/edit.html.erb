@@ -111,7 +111,7 @@
             <%= f.input :ship_date, as: :datepicker %>
             <%= f.input :ship_cost %>
             <%= f.input :tracking_number %>
-            <%= f.input :status, collection: ['pending', 'ready_to_ship', 'shipped', 'void', 'cancelled', 'payment_required', 'third_party', 'transmitted'] %>
+            <%= f.input :status, collection: ['cancelled', 'partially_shipped', 'payment_required', 'pending', 'ready_to_ship', 'shipped', 'third_party', 'transmitted', 'void'] %>
           </div>
         </div>
 	  
