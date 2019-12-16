@@ -5,6 +5,7 @@
     <td><input type="checkbox" name="shipment_id[]" class="multiselect hidden-xs" value="<%= shipment.id %>"/></td>
   <% end %>
   <td nowrap><%= link_to shipment, admin_store_shipment_path(shipment, status: shipment.status) %></td>
+  <td class="small"><%= shipment.external_name.presence || shipment.order.external_order_name %></td>
   <td><%= shipment.recipient_name %></td>
   <td><%= shipment.recipient_city %>, <%= shipment.recipient_state %></td>
   <td><%= shipment.fulfiller %></td>
