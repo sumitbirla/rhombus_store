@@ -43,7 +43,12 @@ class ShopifyFulfillmentJob < ActiveJob::Base
 		f.tracking_company = shp.carrier
 		
     if f.save
-		  f.complete
+      begin
+		    f.complete
+      rescue => e
+        @logger.error f.errors.full_messages
+        @logger.error e.message
+      end
 		  shp.update_columns(external_id: f.id, external_name: f.name)
     else
       @logger.error f.errors.full_messages
