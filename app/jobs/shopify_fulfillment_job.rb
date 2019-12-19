@@ -40,9 +40,7 @@ class ShopifyFulfillmentJob < ActiveJob::Base
 		end
 		
 		f.tracking_numbers = [ shp.tracking_number ]
-		f.tracking_company = shp.courier_name
-    
-    @logger.debug f.inspect
+		f.tracking_company = shp.carrier
 		
     if f.save
 		  f.complete
