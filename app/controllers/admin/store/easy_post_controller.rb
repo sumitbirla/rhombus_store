@@ -59,7 +59,8 @@ class Admin::Store::EasyPostController < Admin::BaseController
     
     begin
       ep_shipment = EasyPost::Shipment.retrieve(params[:ep_shipment_id])
-      easypost_purchase(shipment, params[:rate_id], ep_shipment)  
+      easypost_purchase(shipment, params[:rate_id], ep_shipment)
+      ShipmentItem.where(shipment_id: shipment.id, special_status: "").update_all(special_status: :shipped)
     rescue => e
       flash[:error] = e.message + params[:ep_shipment_id]
       return redirect_back(fallback_location: admin_root_path)
