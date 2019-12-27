@@ -145,8 +145,6 @@ class Shipment < ActiveRecord::Base
       Order.where(id: order_id).update_all(status: statuses[0])
     elsif statuses.include?("shipped")
       Order.where(id: order_id).update_all(status: "partially_shipped")
-    else
-      Order.where(id: order_id).update_all(status: "awaiting_shipment")
     end
   end
   
