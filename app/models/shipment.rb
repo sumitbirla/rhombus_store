@@ -139,18 +139,14 @@ class Shipment < ActiveRecord::Base
   
   # this callback is executed after shipment is saved
   def update_order
-    if status == "shipped"
-      if order.complete_order_shipped?
-        order.update_column(:status, "shipped")
-      else
-        order.update_column(:status, "partially_shipped")
-      end
-      
-      # OrderShippedJob.perform_later(id)  # performs billing, notification etc.
-    end
+    statuses = Shipment.where(order_id: order_id).distinct(:status).pluck(:status)
     
-    if status == "pending"
-      Order.find(order_id).update_column(:status, "awaiting_shipment")
+    if statuses == [ "shipped" ] || statuses == [ "cancelled" ]
+      Order.where(id: order_id).update_all(status: statuses[0])
+    elsif statuses.include?("shipped")
+      Order.where(id: order_id).update_all(status: "partially_shipped")
+    else
+      Order.where(id: order_id).update_all(status: "awaiting_shipment")
     end
   end
   
