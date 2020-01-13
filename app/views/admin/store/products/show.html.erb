@@ -312,8 +312,10 @@
       <table class="table table-condensed">
         <% @product.group_items.each do |p| %>
             <tr>
-              <td><%= link_to p.item_number, admin_store_product_path(p) %></td>
-              <td><%= p.option_title %></td>
+              <td>
+                <%= link_to p.item_number, admin_store_product_path(p) %><br>
+                <span class="small"><%= p.variant_string %></span>
+              </td>
               <td class="ralign">$<%= p.price %></td>
             </tr>
         <% end %>

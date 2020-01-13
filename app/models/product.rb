@@ -151,6 +151,17 @@ class Product < ActiveRecord::Base
     str
   end
   
+  def variant_string
+    opts = []
+    opts << "#{option_title}"  unless option_title.blank?
+    opts << "#{option2_title}"  unless option2_title.blank?
+    opts << "#{option3_title}"  unless option3_title.blank?
+    
+    str = ""
+    str = opts.join(" / ") if opts.length > 0
+    str
+  end
+  
   def full_name
     str = name_with_option
     str = brand.name + " " + str unless brand.nil?

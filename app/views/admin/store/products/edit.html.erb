@@ -63,10 +63,25 @@
     		  <%= f.input :price %>
     		  <%= f.input :special_price, label: "Sale Price" %>
           <%= f.input :group %>
-    		  <%= f.input :option_title, input_html: { class: 'span8' } %>
-    		  <%= f.input :option_sort %>
           <%= f.input :keywords %>
           <%= f.input :warranty %>
+        </div>
+      </div>
+      
+      <div class="panel panel-default web">
+        <div class="panel-heading">Variants</div>
+        <div class="panel-body">
+          <%= f.input :option_name %>
+    		  <%= f.input :option_title %>
+    		  <%= f.input :option_sort %>
+          <hr>
+          <%= f.input :option2_name %>
+    		  <%= f.input :option2_title %>
+    		  <%= f.input :option2_sort %>
+          <hr>
+          <%= f.input :option3_name %>
+    		  <%= f.input :option3_title %>
+    		  <%= f.input :option3_sort %>
         </div>
       </div>
 		</div>
