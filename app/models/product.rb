@@ -53,7 +53,8 @@ class Product < ActiveRecord::Base
   self.table_name = "store_products"
   
   before_save :set_group
-	
+	before_save :strip_fields
+  
   belongs_to :brand
   belongs_to :fulfiller, class_name: 'Affiliate', foreign_key: 'fulfiller_id'
   belongs_to :label_sheet
@@ -245,6 +246,14 @@ class Product < ActiveRecord::Base
   
   def set_group
     self.group = SecureRandom.uuid if group.blank?
+  end
+  
+  def strip_fields
+    self.name.strip!
+    self.item_number.strip!
+    self.sku.strip! unless self.sku.nil?
+    self.upc.strip! unless self.upc.nil?
+    self.slug.strip! unless self.slug.nil?
   end
   
   def get_variants
