@@ -161,12 +161,12 @@ class Product < ActiveRecord::Base
   
   def variant_string
     opts = []
-    opts << "#{option_title}"  unless option_title.blank?
-    opts << "#{option2_title}"  unless option2_title.blank?
-    opts << "#{option3_title}"  unless option3_title.blank?
+    opts << "#{option_name}: #{option_title}"  unless option_title.blank?
+    opts << "#{option2_name}: #{option2_title}"  unless option2_title.blank?
+    opts << "#{option3_name}: #{option3_title}"  unless option3_title.blank?
     
     str = ""
-    str = opts.join(" / ") if opts.length > 0
+    str = opts.join(", ") if opts.length > 0
     str
   end
   
@@ -254,6 +254,7 @@ class Product < ActiveRecord::Base
     self.sku.strip! unless self.sku.nil?
     self.upc.strip! unless self.upc.nil?
     self.slug.strip! unless self.slug.nil?
+    self.shipping_code = "000" if self.shipping_code.blank?
   end
   
   def get_variants
