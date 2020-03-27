@@ -260,6 +260,16 @@ class Product < ActiveRecord::Base
   def get_variants
     Product.where(group: group).order("option_sort, option_title")
   end
+	
+	def negotiated_price(seller_id)
+		ba = BillingArrangement.find_by(affiliate_id: fulfiller_id, seller_id: seller_id)
+
+		if ba && ba.percent_of_msrp.present?
+			return msrp * 	ba.percent_of_msrp / 100.0
+		else
+			return reseller_price
+		end
+	end
   
   # PUNDIT
   def self.policy_class
