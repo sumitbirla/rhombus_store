@@ -1,7 +1,9 @@
 class ProductShippingRate < ActiveRecord::Base
 	self.table_name = "store_product_shipping_rates"
 	
-	validates_presence_of :code, :destination_country_code, :ship_method, :first_item, :additional_items
+	belongs_to :product
+	validates_presence_of :destination_country_code, :ship_method, :first_item, :additional_items
+	validates_uniqueness_of :destination_country_code, scope: [:product_id, :ship_method]
   
   def get_cost(quantity)
     if quantity == 0

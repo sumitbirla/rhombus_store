@@ -38,7 +38,7 @@
     </tr>
   <%= f.fields_for :shipping_rates do |itemf| %>
     <tr>
-      <td><%= itemf.input_field :destination_country_code %></td>
+      <td><%= itemf.input_field :destination_country_code, as: :string, maxlength: 2, style: "width: 50px;" %></td>
       <td><%= itemf.input_field :ship_method %></td>
       <td><%= itemf.input_field :first_item, class: 'text-center' %></td>
       <td><%= itemf.input_field :second_item, class: 'text-center' %></td>

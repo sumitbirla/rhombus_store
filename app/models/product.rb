@@ -71,13 +71,15 @@ class Product < ActiveRecord::Base
   has_many :label_elements, dependent: :destroy
 	has_many :order_items, :dependent => :restrict_with_exception
 	has_many :affiliate_products, :dependent => :restrict_with_exception
-	has_many :shipping_rates, class_name: "ProductShippingRate", foreign_key: :code, primary_key: :shipping_code
+	has_many :shipping_rates, class_name: "ProductShippingRate"
   
   validates_presence_of :name, :item_number, :product_type, :fulfiller_id
   validates_presence_of :title, :slug, :brand_id, :price, unless: lambda { |x| x.product_type == 'white-label' }
   validates_presence_of :sku, if: :warehoused?
 	validates_uniqueness_of :item_number
 	validates_uniqueness_of :upc, unless: lambda { |x| x.upc.blank? }
+	
+	accepts_nested_attributes_for :shipping_rates, reject_if: proc { |sr| sr['destination_country_code'].blank? }
   
   def to_s
     "#{sku}: #{title}"
