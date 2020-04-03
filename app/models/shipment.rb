@@ -121,7 +121,7 @@ class Shipment < ActiveRecord::Base
     return false if shipment.items.length != items.length
     
     shipment.items.each do |i|
-      if !items.any? { |x| x.product_id == i.product_id && x.quantity == i.quantity }
+      if !items.any? { |x| x.order_item.product_id == i.order_item.product_id && x.quantity == i.quantity }
         return false
       end
     end
