@@ -263,7 +263,7 @@ class Shipment < ActiveRecord::Base
     cost = 0.00
     
     items.each do |i|
-      sr = ProductShippingRate.find_by!(product_id: i.product_id, destination_country_code: recipient_country, ship_method: :standard)
+      sr = ProductShippingRate.find_by!(product_id: i.order_item.product_id, destination_country_code: recipient_country, ship_method: :standard)
 			cost += sr.get_cost(i.quantity)
     end
 
