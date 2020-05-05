@@ -107,12 +107,6 @@ class Shipment < ActiveRecord::Base
 		self.uuid = Rails.configuration.system_prefix + "_shp_" + "#{order_id}_#{sequence}" if uuid.blank?
 	end
   
-  def calculate_invoice_amount
-    subtotal = 0
-    items.each { |item| subtotal += item.quantity * item.order_item.unit_price }
-    subtotal
-  end
-  
   def invoice_posted?
     Payment.exists?(payable_type: :shipment, payable_id: id)
   end
@@ -136,7 +130,6 @@ class Shipment < ActiveRecord::Base
             .order(ship_date: :desc)
             .first
   end
-  
   
   # this callback is executed after shipment is saved
   def update_order
@@ -256,6 +249,13 @@ class Shipment < ActiveRecord::Base
   
   def update_items_hash
     self.items_hash = calculate_items_hash
+  end
+	
+	# cost of goods
+  def calculate_invoice_amount
+    subtotal = 0
+    items.each { |item| subtotal += item.quantity * item.order_item.unit_price }
+    subtotal
   end
   
   # get shipment cost based on store_product_shipping_rates table

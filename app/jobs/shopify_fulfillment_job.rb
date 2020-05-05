@@ -21,8 +21,8 @@ class ShopifyFulfillmentJob < ActiveJob::Base
 		auth = Authorization.find_by(user_id: User.find_by(affiliate_id: affiliate_id).id)
 		
 		ShopifyAPI::Session.setup(api_key: api_key, secret: api_secret)
-		session = ShopifyAPI::Session.new(auth.uid, auth.token)
-		ShopifyAPI::Base.activate_session(session)
+		shopify_session = ShopifyAPI::Session.new(domain: auth.uid, token: auth.token, api_version: Rails.configuration.shopify_api_version)
+		ShopifyAPI::Base.activate_session(shopify_session)
     
 		if shp.external_id.blank?
       # find fulfillment service first

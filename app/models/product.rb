@@ -197,7 +197,7 @@ class Product < ActiveRecord::Base
 		str = paragraphs.map { |x| "<p>#{x}</p>" }.join
 		
 		bullets = []
-		(1..5).each do |x| 
+		(1..10).each do |x| 
 			point = get_property("Bullet #{x}")
 			bullets << point unless point.blank?
 		end
