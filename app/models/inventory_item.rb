@@ -42,8 +42,11 @@ class InventoryItem < ActiveRecord::Base
                          .select("lot, expiration, inventory_location_id, sum(quantity) as quantity")
                          
     available = items.collect { |x| x.quantity }.sum
-    raise "Insufficient inventory for SKU:#{sku}.  Requested: #{count}   available: #{available}" if available < count
-    
+		
+		if available < count
+    	raise InventoryException.new "Insufficient inventory for SKU:#{sku}.  Requested: #{count}   available: #{available}" 
+		end
+		
     ret = []
     remaining = count
     

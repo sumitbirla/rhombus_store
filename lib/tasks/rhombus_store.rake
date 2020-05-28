@@ -12,6 +12,9 @@ namespace :rhombus_store do
       begin
 				o.fulfillers.each { |aff| o.create_fulfillment(aff.id, nil, true) }
         o.update_attribute(:status, :awaiting_shipment)
+			rescue InventoryException => e
+				Rails.logger.error e.message
+				o.update_attribute(:status, :backordered)
       rescue => e
         Rails.logger.info e.message
         o.update_columns(status: :error, error_messages: e.message)
