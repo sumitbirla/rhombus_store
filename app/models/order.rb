@@ -81,8 +81,6 @@ class Order < ActiveRecord::Base
   self.table_name = "store_orders"
   attr_accessor :same_as_shipping
   
-  before_save :check_for_errors
-  
   belongs_to :domain
 	# belongs_to :sales_channel
   belongs_to :user
@@ -501,11 +499,7 @@ class Order < ActiveRecord::Base
     id.to_s
   end
   
-  def check_for_errors
-    self.status = "error" unless error_messages.blank?
-  end
-  
-  
+
   # PUNDIT
   def self.policy_class
     ApplicationPolicy
