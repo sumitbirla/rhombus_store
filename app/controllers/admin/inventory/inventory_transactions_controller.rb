@@ -2,9 +2,16 @@ class Admin::Inventory::InventoryTransactionsController < Admin::BaseController
   
   def index
     authorize InventoryTransaction.new
-    @transactions = InventoryTransaction.includes(:items, :affiliate)
+    @transactions = InventoryTransaction.includes(:affiliate)
+																				.joins(:items)
+																				.group(:inventory_transaction_id)
                                         .order(created_at: :desc)
                                         .paginate(page: params[:page], per_page: @per_page)
+																				.select("inv_transactions.*, sum(inv_items.quantity) as total, count(inv_items.id) as item_count")
+																				
+		@transactions = @transactions.where(affiliate_id: params[:affiliate_id]) if params[:affiliate_id].present?
+		@transactions = @transactions.where(bulk_import: true) if params[:bulk] == "1"
+		@transactions = @transactions.where(archived: true) if params[:archived] == "1"
   end
   
   def new

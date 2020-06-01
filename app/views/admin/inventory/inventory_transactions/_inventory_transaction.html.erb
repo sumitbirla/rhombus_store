@@ -1,8 +1,8 @@
 <% 
   t = inventory_transaction
   actions = [] 
-  actions << 'replenish' if t.items.any? { |x| x.quantity > 0 }
-  actions << 'remove' if t.items.any? { |x| x.quantity < 0 }
+  actions << 'replenish' if t.total > 0
+  actions << 'remove' if t.total < 0
 %>
 
 <tr>
@@ -22,8 +22,8 @@
       - system -
       <% end %>
   </td>
-  <td class="text-center small">- <%= pluralize(t.items.length, "item") %> -</td>
-  <td class="text-center"><%= number_with_delimiter(t.items.sum(:quantity).abs) %></td>
+  <td class="text-right"><%= number_with_delimiter(t.total.abs) %></td>
+  <td class="text-center small">- <%= pluralize(t.item_count, "item") %> -</td>
   <td><%= t.external_id %></td>
 	<td><%= t.responsible_party.presence || '- system -' %></td>
   <td><%= actions.join(" / ") %></td>
