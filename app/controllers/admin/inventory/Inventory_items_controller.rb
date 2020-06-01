@@ -2,8 +2,9 @@ class Admin::Inventory::InventoryItemsController < Admin::BaseController
   
   def index
     @inventory_items = InventoryItem.includes(:inventory_location)
+																		.joins(:inventory_transaction)
+																		.where("inv_transactions.archived = ?", false)
                                     .order(sort_column + ' ' + sort_direction)
-                                    .having("sum(quantity) > 0")
                                     .select("sku, sum(quantity) as quantity, lot, expiration, inventory_location_id")
     
     if params[:group] == 'location'                    

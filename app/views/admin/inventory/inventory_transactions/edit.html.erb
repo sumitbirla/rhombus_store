@@ -1,7 +1,7 @@
 <% dropshippers = Affiliate.joins(:categories).order(:name).where(active: true).where("core_categories.slug IN ('dropshippers', 'suppliers')") %>
 
-<h2>Transaction #<%= @transaction.id %></h2>
-
+<h2><i class="fa fa-boxes"></i>&nbsp; Transaction #<%= @transaction.id %></h2>
+<hr>
 
 <%= simple_form_for [:admin, :inventory, @transaction] do |f| %>
   <input type="hidden" name="add_more_items" value=""/>

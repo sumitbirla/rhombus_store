@@ -6,7 +6,7 @@
     <i class="fa fa-right"></i> Move items
   <% end %>
 </div>
-<h2><i class="fa fa-tags"></i>&nbsp; Inventory Transactions</h2>
+<h2><i class="fa fa-dolly-flatbed"></i>&nbsp; Inventory Transactions</h2>
 <hr>
 
   
@@ -15,15 +15,11 @@
   <%= check_box_tag(:bulk, "1", params[:bulk] == "1") %> Bulk Import &nbsp; &middot; &nbsp;
   <%= check_box_tag(:archived, "1", params[:archived] == "1") %> Archived &nbsp; &middot; &nbsp;
   
-  <% dropshippers = Cache.affiliate_list(:dropshippers) %>
-  <select id="fulfiller" name="affiliate_id" style="font-size: 14px; vertical-align: middle;">
-    <option value="">-- All Affiliates --</option>
-    <% dropshippers.each do |aff| %>
-      <option value="<%= aff.id %>" <%= 'selected' if params[:affiliate_id] == aff.id.to_s %>><%= aff.name %></option>
-    <% end %>
-  </select>
-  <input type="submit" value="filter" style="margin-bottom: 10px;" />
-  <br>
+  <% dropshippers = Affiliate.where(id: InventoryTransaction.where(bulk_import: true).select(:affiliate_id).distinct).order(:name) %>
+  <%= select_tag(:affiliate_id, options_from_collection_for_select(dropshippers, :id, :name), include_blank: "- All Affiliates -") %>
+  
+  <%= submit_tag("filter", style: "margin-bottom: 10px;") %>
+
 <% end %>
 
 <%= will_paginate @transactions %>
@@ -31,7 +27,7 @@
 	<tr>
 		<th>Timestamp</th>
     <th></th>
-    <th>Owner</th>
+    <th>Affiliate</th>
     <th class="text-right">Quantity</th>
 		<th class="text-center">Items</th>
 		<th>Entity</th>
