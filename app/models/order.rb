@@ -494,6 +494,22 @@ class Order < ActiveRecord::Base
     
     cost
   end
+	
+	# check if there is sufficient inventory to fulfill this order in its entirety.
+	def sufficient_inventory?
+		skus = Product.where(id: items.map(&:product_id)).pluck(:sku).uniq
+    
+    skus.each do |sku|
+      qty_required = items.select { |x| x.product.sku == sku }.sum(&:quantity)
+      qty_available = InventoryItem.joins(:inventory_transaction)
+	                         				 .where("inv_transactions.archived" => false)
+													 				 .where(sku: sku)
+	                         				 .sum(:quantity)
+			return false if qty_required > qty_available
+    end
+	
+		true
+	end
   
   def to_s
     id.to_s

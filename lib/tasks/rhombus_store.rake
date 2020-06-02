@@ -10,6 +10,11 @@ namespace :rhombus_store do
 			next if o.items.count == 0
       
       begin
+				unless o.sufficient_inventory?
+					o.update_attribute(:status, :backordered)
+					next
+				end
+				
 				o.fulfillers.each { |aff| o.create_fulfillment(aff.id, nil, true) }
         o.update_attribute(:status, :awaiting_shipment)
 			rescue InventoryException => e
