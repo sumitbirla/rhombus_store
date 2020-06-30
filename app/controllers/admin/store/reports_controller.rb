@@ -127,7 +127,7 @@ class Admin::Store::ReportsController < Admin::BaseController
     sql = <<-EOF
       select date(submitted), count(*), sum(total)
       from store_orders
-      where submitted IS NOT NULL and status in ('shipped', 'completed', 'unshipped', 'submitted')
+      where submitted IS NOT NULL and status in ('shipped', 'completed', 'awaiting_shipment', 'submitted')
       and submitted > '#{@start_date}' and submitted < '#{@end_date}'
       and sales_channel LIKE '#{@selected_channel}'
       group by date(submitted)
