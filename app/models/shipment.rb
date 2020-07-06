@@ -252,23 +252,33 @@ class Shipment < ActiveRecord::Base
   end
 	
 	# cost of goods
-  def calculate_invoice_amount
+  def calculate_seller_cogs
     subtotal = 0
     items.each { |item| subtotal += item.quantity * item.order_item.unit_price }
     subtotal
   end
   
   # get shipment cost based on store_product_shipping_rates table
-  def calculate_shipping_cost
+  def calculate_seller_shipping_fee
     cost = 0.00
     
     items.each do |i|
       sr = ProductShippingRate.find_by!(product_id: i.order_item.product_id, destination_country_code: recipient_country, ship_method: :standard)
 			cost += sr.get_cost(i.quantity)
     end
-
-    cost
+		
+		cost
   end
+	
+	def calculate_seller_transaction_fee
+		ba = BillingArrangement.find_by(affiliate_id: fulfilled_by_id, seller_id: order.affiliate_id)
+    
+		if ba.nil?          
+			order.affiliate.transaction_fee + (calculate_seller_cogs * order.affiliate.transaction_percent / 100.0)
+		else
+			ba.seller_transaction_fee + (calculate_seller_cogs * ba.seller_transaction_percent / 100.0)
+		end
+	end
 	
 	def calculated_weight
 		weight = 0.0
