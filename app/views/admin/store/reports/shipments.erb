@@ -1,0 +1,64 @@
+<style>
+  tfoot td { font-weight: bold;}
+</style>
+<form action="" method="get" class="pull-right well"> 
+  Date range:  &nbsp; <input type="text" class="date-field" name="start_date" value="<%= @start_date %>" style="width: 120px;"/> &nbsp; to &nbsp;
+              <input type="text" class="date-field" name="end_date" value="<%= @end_date %>" style="width: 120px;"/>
+  <button class="btn btn-success btn-sm">Filter</button>
+</form>
+
+<h2>Fulfillment Shipments</h2>
+
+
+<%
+  shipment_statuses = Shipment.distinct.pluck(:status)
+  affiliate_names = @data.map { |x| x["affiliate_name"] }.uniq
+  totals = {}
+%>
+
+<table class="table table-striped table-bordered">
+  <thead>
+  	<tr>
+      <th>Fulfiller</th>
+      <% shipment_statuses.each do |status| %>
+        <th class="text-center"><%= shipment_status(status)%></th>
+      <% end %>
+  	</tr>
+  </thead>
+  <tbody>
+    <% affiliate_names.each do |aff| %>
+  	<tr>
+  		<td><%= aff %></td>
+      <% shipment_statuses.each do |status| 
+        row2 = @data.find { |x| x["affiliate_name"] == aff && x["status"] == status }
+        total = row2 ? row2["total"] : 0
+        totals[status] = 0 if totals[status].nil?
+        totals[status] += total
+      %>
+        <td class="text-center"><%= number_with_delimiter(total) %></td>
+      <% end %>
+  	</tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>Totals:</td>
+      <% shipment_statuses.each do |status| %>
+        <td class="text-center"><%= number_with_delimiter(totals[status]) %></td>
+      <% end %>
+    </tr>
+  </tfoot>
+</table>
+
+
+<% content_for :title do %>
+	Monthly Sales
+<% end %>
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Reports", admin_store_reports_path %></li>
+	<li class="active">Fulfillment Shipments</li>
+<% end %>

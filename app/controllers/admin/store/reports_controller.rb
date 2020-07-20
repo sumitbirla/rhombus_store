@@ -127,7 +127,7 @@ class Admin::Store::ReportsController < Admin::BaseController
     sql = <<-EOF
       select date(submitted), count(*), sum(total)
       from store_orders
-      where submitted IS NOT NULL and status in ('shipped', 'completed', 'awaiting_shipment', 'submitted')
+      where submitted IS NOT NULL
       and submitted > '#{@start_date}' and submitted < '#{@end_date}'
       and sales_channel LIKE '#{@selected_channel}'
       group by date(submitted)
@@ -146,7 +146,7 @@ class Admin::Store::ReportsController < Admin::BaseController
     sql = <<-EOF
       select submitted, count(*), sum(total)
       from store_orders
-      where submitted IS NOT NULL and status in ('shipped', 'completed', 'unshipped', 'submitted')
+      where submitted IS NOT NULL
       and submitted > '#{@start_date}' and submitted < '#{@end_date}'
       and sales_channel LIKE '#{@selected_channel}'
       group by year(submitted), month(submitted)
@@ -288,6 +288,22 @@ class Admin::Store::ReportsController < Admin::BaseController
     @stock = []
     ActiveRecord::Base.connection.execute(sql).each { |row| @stock << row }
     
+  end
+	
+	
+  def shipments
+    
+    sql = <<-EOF
+		select aff.id as affiliate_id, aff.name as affiliate_name, shp.status, count(shp.status) as total
+		from store_shipments shp
+		join core_affiliates aff on aff.id = shp.fulfilled_by_id
+		where shp.created_at > '#{@start_date}' and shp.created_at < '#{@end_date}'
+		group by shp.fulfilled_by_id, shp.status;
+    EOF
+    
+    @data = []
+    ActiveRecord::Base.connection.execute(sql).each(as: :hash) { |row| @data << row } 
+  
   end
   
   
