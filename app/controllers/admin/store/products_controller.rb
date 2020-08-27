@@ -4,7 +4,7 @@ class Admin::Store::ProductsController < Admin::BaseController
     authorize Product.new
     
     q = params[:q]
-    @products = Product.includes(:brand).order(sort_column + " " + sort_direction)
+    @products = Product.order(sort_column + " " + sort_direction)
     if params[:status].blank?
       @active = true
     else
