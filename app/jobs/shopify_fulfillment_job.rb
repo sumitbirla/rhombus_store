@@ -8,7 +8,7 @@ class ShopifyFulfillmentJob < ActiveJob::Base
   #
   # @param shipment [Integer] id of the shipment that has been shipped.
   def perform(shipment_id)
-    @logger = Logger.new(Rails.root.join("log", "tracking.log"))
+    @logger = Journald::Logger.new('stockify/tracking')
     shp = Shipment.find(shipment_id)
     
     @logger.info "Sending tracking information for #{shp} [#{shp.order.external_order_name}] to Shopify"
