@@ -66,7 +66,11 @@
   
   &nbsp; &nbsp; <%= shipment_status(@shipment)%>
   <% if @shipment.invoice_amount %>
-    &nbsp; &nbsp; <span class="label label-success">invoice: <%= number_to_currency(@shipment.invoice_amount) %></span>
+    &nbsp; &nbsp; <span class="label label-danger">invoice: <%= number_to_currency(@shipment.invoice_amount) %></span>
+  <% end %>
+  
+  <% if @shipment.paid %>
+    &nbsp; &nbsp; <span class="label label-success"><i class="fa fa-check"></i> paid</span>
   <% end %>
 </div>
 
