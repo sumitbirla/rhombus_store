@@ -6,35 +6,36 @@
 </h2>
 <div>
   <b>Created: </b> <%= time_ago_in_words(@shipment.created_at) %> ago
-  &nbsp; <span class="label <%= 'label-warning' if @shipment.status == 'pending' %>  <%= 'label-success' if @shipment.status == 'shipped' %>"><%= @shipment.status %></span>
+  &nbsp;
+  <span class="label <%= 'label-warning' if @shipment.status == 'pending' %>  <%= 'label-success' if @shipment.status == 'shipped' %>"><%= @shipment.status %></span>
 </div>
 
 
-<% upc_list = Upc.where(item: @shipment.items.collect { |x| x.item_number })%>
+<% upc_list = Upc.where(item: @shipment.items.collect { |x| x.item_number }) %>
 
 <div class="row">
   <div class="col-md-9">
     <table class="table table-striped table-condensed table-bordered">
+      <tr>
+        <th>Item</th>
+        <th>Description</th>
+        <th class="calign">Qty.</th>
+        <th class="calign">Scanned</th>
+      </tr>
+      <% @shipment.items.each do |item|
+        upc = upc_list.find { |x| x.item == item.item_number } %>
         <tr>
-            <th>Item</th>
-            <th>Description</th>
-            <th class="calign">Qty.</th>
-            <th class="calign">Scanned</th>
+          <td nowrap><%= item.item_number %></td>
+          <td>
+            <%= link_to item.product.name_with_option, admin_store_product_path(item.product_id) %>
+            <% unless item.affiliate_id.nil? %>
+              &nbsp; (<span><%= item.affiliate %></span>)
+            <% end %>
+          </td>
+          <td class="calign"><%= item.quantity %></td>
+          <td class="calign" id="<%= upc.code %>"><%= @scans[upc.code] unless @scans.nil? %></td>
         </tr>
-        <% @shipment.items.each do |item| 
-            upc = upc_list.find { |x| x.item == item.item_number } %>
-            <tr>
-                <td nowrap><%= item.item_number %></td>
-                <td>
-                  <%= link_to item.product.name_with_option, admin_store_product_path(item.product_id) %>
-                  <% unless item.affiliate_id.nil? %>
-                    &nbsp; (<span><%= item.affiliate %></span>)
-                  <% end %>
-                </td>
-                <td class="calign"><%= item.quantity %></td>
-                <td class="calign" id="<%= upc.code %>"><%= @scans[upc.code] unless @scans.nil? %></td>
-            </tr>
-        <% end %>
+      <% end %>
     </table>
   </div>
   <div class="col-md-3">
@@ -42,28 +43,28 @@
       <%= token_tag %>
       <textarea id="upc-list" name="upc_list" rows="20"><%= params["upc_list"] %></textarea><br>
       <button class="btn btn-primary">Crosscheck</button>
-    <form>
+      <form>
   </div>
 </div>
 
 
 <% content_for :title do %>
-    Shipment <%= @shipment.order_id %>-<%= @shipment.sequence %>
+  Shipment <%= @shipment.order_id %>-<%= @shipment.sequence %>
 <% end %>
 
 <% content_for :head do %>
   <script>
-    $(document).ready(function() {
-      
-      $("#upc-list").focus();
-          
-    });
+      $(document).ready(function () {
+
+          $("#upc-list").focus();
+
+      });
   </script>
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">eCommerce</a></li>
-    <li><%= link_to 'Shipments', admin_store_shipments_path %></li>
-    <li class="active"><%= @shipment %></li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to 'Shipments', admin_store_shipments_path %></li>
+  <li class="active"><%= @shipment %></li>
 <% end %>

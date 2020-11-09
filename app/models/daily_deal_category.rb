@@ -11,7 +11,7 @@
 
 class DailyDealCategory < ActiveRecord::Base
   self.table_name = "store_daily_deal_categories"
-  
+
   belongs_to :daily_deal
   belongs_to :category
 end

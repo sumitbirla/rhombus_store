@@ -21,7 +21,7 @@ class ProductAttribute < ActiveRecord::Base
   self.table_name = "store_product_attributes"
   belongs_to :product
   belongs_to :core_attribute, class_name: "Attribute", foreign_key: 'attribute_id'
-  
+
   def to_s
     value
   end

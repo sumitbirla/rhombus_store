@@ -1,61 +1,72 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <title><%= @order.id %> - Receipt</title>
   <style>
       body {
-          background:white !important;
-          color:black!important;
-          width: 95%!important;
-          margin: 0 auto!important;
-          font-family:Arial, Helvetica, sans-serif!important;
-          font-size:10px!important;
+          background: white !important;
+          color: black !important;
+          width: 95% !important;
+          margin: 0 auto !important;
+          font-family: Arial, Helvetica, sans-serif !important;
+          font-size: 10px !important;
       }
+
       table {
-          width: 100%!important;
-          border-collapse:collapse;
+          width: 100% !important;
+          border-collapse: collapse;
       }
-      table td{
+
+      table td {
           aborder: 1px solid #ccc;
-          padding: 5px!important;
+          padding: 5px !important;
       }
+
       table.bordered {
-        border: solid 1px black;
+          border: solid 1px black;
       }
+
       table.bordered th {
-        padding: 4px;
-        border-bottom: solid 1px black;    
+          padding: 4px;
+          border-bottom: solid 1px black;
       }
+
       article {
-          padding: 0px 0!important;
+          padding: 0px 0 !important;
       }
+
       p {
-          font-weight:normal !important;
-          line-height:16px !important;
+          font-weight: normal !important;
+          line-height: 16px !important;
           margin-top: 0;
       }
+
       h2 {
-          font-size:20px !important;
+          font-size: 20px !important;
           margin-bottom: 0px;
       }
+
       .boxleft {
-          float:left!important;
-          width: 32%!important;
-          margin-top:0px !important;
+          float: left !important;
+          width: 32% !important;
+          margin-top: 0px !important;
       }
+
       .boxcenter {
-          float:left!important;
-          width: 32%!important;
-          margin-top:0px !important;
+          float: left !important;
+          width: 32% !important;
+          margin-top: 0px !important;
       }
+
       .boxright {
-          float:left!important;
-          width: 32%!important;
-          margin-top:0px !important;
+          float: left !important;
+          width: 32% !important;
+          margin-top: 0px !important;
       }
-      .textright{
-          text-align:right !important;
+
+      .textright {
+          text-align: right !important;
       }
   </style>
 </head>
@@ -68,16 +79,16 @@
         <tr valign="top">
           <th scope="col" style="text-align:left;">
             <%
-                loc_id = Cache.setting(@order.domain_id, :shipping, "Ship From Location ID")
-                loc = Location.find(loc_id)
-                
-                if loc.pictures.length > 0
+              loc_id = Cache.setting(@order.domain_id, :shipping, "Ship From Location ID")
+              loc = Location.find(loc_id)
+
+              if loc.pictures.length > 0
             %>
-            <h2><img src="<%= cdn_image_url loc.pictures[0].file_path, 250, 60, 0 %>" alt="Logo"></h2>
+              <h2><img src="<%= cdn_image_url loc.pictures[0].file_path, 250, 60, 0 %>" alt="Logo"></h2>
             <% else %>
-            <h2><%= loc.name %></h2>
+              <h2><%= loc.name %></h2>
             <% end %>
-            
+
             <p>
               <%= loc.to_text(skip_country: true, new_line: "<br>").html_safe %>
             </p>
@@ -87,11 +98,11 @@
               <strong>Email:</strong> <%= loc.email %>
             </p>
           </th>
-          <th scope="col" style="text-align:right;"> <h2>RECEIPT</h2>
+          <th scope="col" style="text-align:right;"><h2>RECEIPT</h2>
             <p>
               <strong>Order Date: </strong><%= sysdate @order.submitted %><br>
               <strong>Order ID: </strong> <%= @order.id %><br/>
-              <img src="/barcode?code=<%= @order.id %>" />
+              <img src="/barcode?code=<%= @order.id %>"/>
             </p>
           </th>
         </tr>
@@ -117,17 +128,17 @@
           <%= @order.billing_city %>, <%= @order.billing_state %> <%= @order.billing_zip %></p>
       </div>
       <div class="boxright">
-      <% unless @order.po %>
-        <h2>Payment method:</h2>
-        <p><%= @order.payment_method %><br/>
-        <% if @order.payment_method == "CREDIT_CARD" %>
-          <%= @order.cc_type %>: <%= @order.cc_number %>
+        <% unless @order.po %>
+          <h2>Payment method:</h2>
+          <p><%= @order.payment_method %><br/>
+            <% if @order.payment_method == "CREDIT_CARD" %>
+              <%= @order.cc_type %>: <%= @order.cc_number %>
+            <% end %>
+          </p>
+        <% else %>
+          <h2>Payment terms:</h2>
+          <p><%= @order.payment_method %></p>
         <% end %>
-        </p>
-      <% else %>
-        <h2>Payment terms:</h2>
-        <p><%= @order.payment_method %></p>
-      <% end %>
       </div>
       <div style="clear:both;"></div>
     </header>
@@ -147,7 +158,7 @@
         <td><%= sysdate @order.submitted %></td>
         <td><%= @order.id %></td>
         <td><%= @order.status %></td>
-        <td><%= @order.po ? @order.external_order_id : 'n/a'  %></td>
+        <td><%= @order.po ? @order.external_order_id : 'n/a' %></td>
         <td><%= @order.user ? @order.user.name : @order.shipping_name %></td>
       </tr>
       </tbody>
@@ -165,51 +176,54 @@
       </thead>
       <tbody>
       <% @order.items.each do |item| %>
-          <tr>
-            <td><%= item.item_number.upcase %></td>
-            <td><%= item.item_description %></td>
-            <td align="right" class="textright"><%= number_to_currency(item.unit_price, precision: 4, strip_insignificant_zeros: true) %></td>
-            <td align="right" class="textright"><%= number_with_delimiter(item.quantity) %></td>
-            <td align="right" class="textright"><%= number_to_currency(item.unit_price * item.quantity) %></td>
-          </tr>
+        <tr>
+          <td><%= item.item_number.upcase %></td>
+          <td><%= item.item_description %></td>
+          <td align="right" class="textright"><%= number_to_currency(item.unit_price, precision: 4, strip_insignificant_zeros: true) %></td>
+          <td align="right" class="textright"><%= number_with_delimiter(item.quantity) %></td>
+          <td align="right" class="textright"><%= number_to_currency(item.unit_price * item.quantity) %></td>
+        </tr>
       <% end %>
-      <tr style="height: 20<%= "0" if @order.items.length < 9 %>px;"><td colspan="5"></td></tr>
+      <tr style="height: 20<%= "0" if @order.items.length < 9 %>px;">
+        <td colspan="5"></td>
+      </tr>
       <tr style="border-top: solid 1px black;">
-        <td colspan="4"  align="right" class="textright">Subtotal:</td>
-        <td align="right" class="textright"><%= number_to_currency(@order.subtotal)%></td>
+        <td colspan="4" align="right" class="textright">Subtotal:</td>
+        <td align="right" class="textright"><%= number_to_currency(@order.subtotal) %></td>
       </tr>
       <% if !@order.shipping_method.blank? || @order.shipping_cost > 0.0 %>
-          <tr>
-            <td colspan="4"  align="right" class="textright"><%= @order.shipping_method %>:</td>
-            <td  align="right" class="textright"><%= number_to_currency(@order.shipping_cost) %></td>
-          </tr>
+        <tr>
+          <td colspan="4" align="right" class="textright"><%= @order.shipping_method %>:</td>
+          <td align="right" class="textright"><%= number_to_currency(@order.shipping_cost) %></td>
+        </tr>
       <% end %>
       <% if @order.tax_amount > 0.0 %>
-          <tr>
-            <td colspan="4"  align="right" class="textright">Tax:</td>
-            <td  align="right" class="textright"><%= number_to_currency(@order.tax_amount)%></td>
-          </tr>
+        <tr>
+          <td colspan="4" align="right" class="textright">Tax:</td>
+          <td align="right" class="textright"><%= number_to_currency(@order.tax_amount) %></td>
+        </tr>
       <% end %>
       <% if @order.discount_amount > 0.0 %>
-          <tr>
-            <td colspan="4"  align="right" class="textright">
-              <% unless @order.coupon_id.nil? %>
-                  <i>Coupon: <%= @order.coupon.code %></i> &nbsp; &raquo; &nbsp;
-              <% end %>
-              Discount:
-            </td>
-            <td  align="right" class="textright"><%= number_to_currency(@order.discount_amount * -1.0)%></td>
-          </tr>
+        <tr>
+          <td colspan="4" align="right" class="textright">
+            <% unless @order.coupon_id.nil? %>
+              <i>Coupon: <%= @order.coupon.code %></i> &nbsp; &raquo; &nbsp;
+            <% end %>
+            Discount:
+          </td>
+          <td align="right" class="textright"><%= number_to_currency(@order.discount_amount * -1.0) %></td>
+        </tr>
       <% end %>
       <% if @order.credit_applied > 0.0 %>
-          <tr>
-            <td colspan="4"  align="right" class="textright">
-              <% unless @order.voucher_id.nil? %>
-                  <i>Voucher: <%= @order.voucher.code %></i> &nbsp; &raquo; &nbsp;
-              <% end %>
-              Credit:</td>
-            <td  align="right" class="textright"><%= number_to_currency(@order.credit_applied * -1.0)%></td>
-          </tr>
+        <tr>
+          <td colspan="4" align="right" class="textright">
+            <% unless @order.voucher_id.nil? %>
+              <i>Voucher: <%= @order.voucher.code %></i> &nbsp; &raquo; &nbsp;
+            <% end %>
+            Credit:
+          </td>
+          <td align="right" class="textright"><%= number_to_currency(@order.credit_applied * -1.0) %></td>
+        </tr>
       <% end %>
       <tr>
         <td align="right" class="textright" colspan="4"><b>Total:</b></td>
@@ -220,7 +234,8 @@
   </article>
 
 
-  <div style="display: none; margin-top: 100px; text-align: center; font-style: italic;">Thank you for your business!</div>
+  <div style="display: none; margin-top: 100px; text-align: center; font-style: italic;">Thank you for your business!
+  </div>
 
 </section>
 </body>

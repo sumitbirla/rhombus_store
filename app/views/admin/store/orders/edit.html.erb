@@ -2,10 +2,10 @@
 
 <%= simple_form_for [:admin, :store, @order] do |f| %>
   <input type="hidden" name="add_more_items" value=""/>
-  
-	<%= render 'admin/shared/error_messages', object: f.object %>
-	
-	 <div class="panel panel-info">
+
+  <%= render 'admin/shared/error_messages', object: f.object %>
+
+  <div class="panel panel-info">
     <div class="panel-heading">
       <%= link_to '+ add more items', '#', class: 'add-more-items pull-right' %>
       Items
@@ -20,57 +20,58 @@
           <th style="width: 120px;">Accepted</th>
           <th style="width: 50px;"></th>
         </tr>
-      <%= f.fields_for :items do |itemf| %>
-        <% item = @order.items[itemf.index] %>
-        <tr>
-          <td><%= itemf.input_field :item_number, class: 'item-number' %></td>
-          <td><%= itemf.input_field :item_description, style: 'width: 100%', class: 'item-desc' %></td>
-          <td><%= itemf.input_field :unit_price, class: 'unit-price text-center' %></td>
-          <td><%= itemf.input_field :quantity, class: 'qty text-center' %></td>
-          <td><%= itemf.input_field :quantity_accepted, class: 'text-center' %></td>
-          <td><i class="fa fa-times"></i>
-            <%= itemf.hidden_field :_destroy, class: 'destroy' %>
-            <%= itemf.hidden_field :product_id, class: 'product-id' %>
-            <%= itemf.hidden_field :daily_deal_id, class: 'daily-deal-id' %>
-          </td>
-        </tr>
-      <% end %>
+        <%= f.fields_for :items do |itemf| %>
+          <% item = @order.items[itemf.index] %>
+          <tr>
+            <td><%= itemf.input_field :item_number, class: 'item-number' %></td>
+            <td><%= itemf.input_field :item_description, style: 'width: 100%', class: 'item-desc' %></td>
+            <td><%= itemf.input_field :unit_price, class: 'unit-price text-center' %></td>
+            <td><%= itemf.input_field :quantity, class: 'qty text-center' %></td>
+            <td><%= itemf.input_field :quantity_accepted, class: 'text-center' %></td>
+            <td><i class="fa fa-times"></i>
+              <%= itemf.hidden_field :_destroy, class: 'destroy' %>
+              <%= itemf.hidden_field :product_id, class: 'product-id' %>
+              <%= itemf.hidden_field :daily_deal_id, class: 'daily-deal-id' %>
+            </td>
+          </tr>
+        <% end %>
       </table>
     </div>
   </div>
-  
-  
+
+
   <div class="panel panel-info">
     <div class="panel-heading">Shipping & Billing</div>
     <div class="panel-body">
-		  <div class="col-md-6">
-			  <h4>Shipping address: &nbsp; <a href="#" class="small light copy-address"> &raquo; copy to billing &raquo;</a></h4>
-			  <%= f.input :shipping_name, label: 'Name' %>
-        <%= f.input :shipping_company, label: 'Company'  %>
-			  <%= f.input :shipping_street1, label: 'Street1'  %>
-			  <%= f.input :shipping_street2, label: 'Street2'  %>
-			  <%= f.input :shipping_city, label: 'City'  %>
-			  <%= f.input :shipping_state, label: 'State'  %>
-			  <%= f.input :shipping_zip, label: 'Zip'  %>
-			  <%= f.input :shipping_country, label: 'Country'  %>
-		  </div>
-		  <div class="col-md-6">
-			  <h4>Billing address:</h4>
-			  <%= f.input :billing_name, label: 'Name' %>
+      <div class="col-md-6">
+        <h4>Shipping address: &nbsp; <a href="#" class="small light copy-address"> &raquo; copy to billing &raquo;</a>
+        </h4>
+        <%= f.input :shipping_name, label: 'Name' %>
+        <%= f.input :shipping_company, label: 'Company' %>
+        <%= f.input :shipping_street1, label: 'Street1' %>
+        <%= f.input :shipping_street2, label: 'Street2' %>
+        <%= f.input :shipping_city, label: 'City' %>
+        <%= f.input :shipping_state, label: 'State' %>
+        <%= f.input :shipping_zip, label: 'Zip' %>
+        <%= f.input :shipping_country, label: 'Country' %>
+      </div>
+      <div class="col-md-6">
+        <h4>Billing address:</h4>
+        <%= f.input :billing_name, label: 'Name' %>
         <%= f.input :billing_company, label: 'Company' %>
-			  <%= f.input :billing_street1, label: 'Street1' %>
-			  <%= f.input :billing_street2, label: 'Street2' %>
-			  <%= f.input :billing_city, label: 'City' %>
-			  <%= f.input :billing_state, label: 'State' %>
-			  <%= f.input :billing_zip, label: 'Zip' %>
-			  <%= f.input :billing_country, label: 'Country' %>
-		  </div>
+        <%= f.input :billing_street1, label: 'Street1' %>
+        <%= f.input :billing_street2, label: 'Street2' %>
+        <%= f.input :billing_city, label: 'City' %>
+        <%= f.input :billing_state, label: 'State' %>
+        <%= f.input :billing_zip, label: 'Zip' %>
+        <%= f.input :billing_country, label: 'Country' %>
+      </div>
     </div>
-	</div>
-	
-	
-	<div class="panel panel-info">
-	  <div class="panel-heading">Order Information</div>
+  </div>
+
+
+  <div class="panel panel-info">
+    <div class="panel-heading">Order Information</div>
     <div class="panel-body">
       <div class="col-md-6">
         <%= f.association :domain %>
@@ -84,7 +85,7 @@
         <%= f.input :affiliate_campaign_id %>
         <%= f.input :gift %>
         <%= f.input :contact_phone, label: 'Phone' %>
-        <%= f.input :notify_email, label: 'Email' %>  
+        <%= f.input :notify_email, label: 'Email' %>
       </div>
       <div class="col-md-6">
         <%= f.input :subtotal %>
@@ -92,7 +93,7 @@
         <%= f.input :fb_discount, label: "Facebook" %>
         <%= f.input :credit_applied, label: "Credit" %>
         <%= f.input :tax_rate %>
-        <%= f.input :tax_amount, label: "Tax" %>    
+        <%= f.input :tax_amount, label: "Tax" %>
         <%= f.input :shipping_cost, label: "Shipping" %>
         <div class="form-group decimal optional order_total">
           <label class="decimal optional col-sm-3 control-label" for="order_total">Total</label>
@@ -100,14 +101,14 @@
             <%= f.input_field :total %>  &laquo; <%= link_to "update", "#", class: 'update-total' %>
           </div>
         </div>
-        <%= f.input :customer_note, as: :text, input_html: { rows: 3 }%>
-        <%= f.input :error_messages, as: :text, input_html: { rows: 3 }%>
+        <%= f.input :customer_note, as: :text, input_html: {rows: 3} %>
+        <%= f.input :error_messages, as: :text, input_html: {rows: 3} %>
       </div>
     </div>
   </div>
-  
-	<div class="panel panel-success">
-	  <div class="panel-heading">Purchase Order</div>
+
+  <div class="panel panel-success">
+    <div class="panel-heading">Purchase Order</div>
     <div class="panel-body">
       <div class="col-md-6">
         <%= f.input :submitted, as: "datetimepicker" %>
@@ -115,119 +116,123 @@
         <%= f.input :payment_due, as: "datepicker" %>
         <%= f.input :payment_method %>
       </div>
-      
+
       <div class="col-md-6">
-          <%= f.input :allow_backorder %>
-          <%= f.input :ship_earliest, as: "datepicker" %>
-          <%= f.input :ship_latest, as: "datepicker" %> 
-          <%= f.input :expected_delivery_date, as: "datepicker" %> 
+        <%= f.input :allow_backorder %>
+        <%= f.input :ship_earliest, as: "datepicker" %>
+        <%= f.input :ship_latest, as: "datepicker" %>
+        <%= f.input :expected_delivery_date, as: "datepicker" %>
       </div>
 
     </div>
   </div>
 
-	
-	<div class="form-actions">
-		<%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+
+  <div class="form-actions">
+    <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
     <% if @order.po %>
-      <input type="checkbox" name="update_price_list" value="1" />  Update price list
+      <input type="checkbox" name="update_price_list" value="1"/> Update price list
     <% end %>
-	</div>
+  </div>
 
 <% end %>
 
 
 <%= content_for :title do %>
-	Orders: <%= @order.id %>
+  Orders: <%= @order.id %>
 <% end %>
 
 <% content_for :head do %>
-    <style>
-        .form-inline .form-group { margin: 10px 0; }
-        .fa-times { cursor: pointer; }
-    </style>
-    
-    <script>
-    $(document).ready(function() {
-      
-      $(".fa-times").click(function () {
-        $(this).parent().parent().hide("slow");
-        $(this).siblings(".destroy").val("true");
-        return false;
+  <style>
+      .form-inline .form-group {
+          margin: 10px 0;
+      }
+
+      .fa-times {
+          cursor: pointer;
+      }
+  </style>
+
+  <script>
+      $(document).ready(function () {
+
+          $(".fa-times").click(function () {
+              $(this).parent().parent().hide("slow");
+              $(this).siblings(".destroy").val("true");
+              return false;
+          });
+
+          $(".add-more-items").click(function () {
+              $("input[name='add_more_items']").val(<%= @order.items.length %>);
+              $("form.form-horizontal").submit();
+          });
+
+          $(".update-total").click(function (e) {
+
+              e.preventDefault();
+              var subtotal = 0.0;
+
+              // calculate subtotal first
+              $(".unit-price").each(function () {
+                  if ($(this).is(":visible")) {
+                      var unit_price = parseFloat($(this).val());
+                      var quantity = parseFloat($(this).parent().parent().find(".qty").val());
+
+                      if (!isNaN(unit_price) && !isNaN(quantity))
+                          subtotal += unit_price * quantity;
+                  }
+              });
+
+              var shipping_cost = parseFloat($("#order_shipping_cost").val());
+              var discount_amount = parseFloat($("#order_discount_amount").val());
+              var credit_applied = parseFloat($("#order_credit_applied").val());
+              var fb_discount = parseFloat($("#order_fb_discount").val());
+              var tax_rate = parseFloat($("#order_tax_rate").val());
+              var tax_amount = (subtotal - discount_amount - credit_applied) * tax_rate / 100.0;
+              var total = subtotal + shipping_cost + tax_amount - discount_amount - credit_applied - fb_discount;
+
+              $("#order_subtotal").val(subtotal);
+              $("#order_tax_amount").val(tax_amount.toFixed(2));
+              $("#order_total").val(total.toFixed(2));
+
+          });
+
+
+          $(".item-number").change(function () {
+              var item = $(this);
+
+              $.get('/admin/store/products/item_info?affiliate_id=<%= @order.affiliate_id%>&sku=' + $(this).val(), function (data) {
+
+                  item.parent().parent().find('.item-number').val(data.item_number);
+                  item.parent().parent().find('.product-id').val(data.product_id);
+                  item.parent().parent().find('.item-desc').val(data.description);
+                  item.parent().parent().find('.unit-price').val(data.price);
+                  item.parent().parent().find('.daily-deal-id').val(data.daily_deal_id);
+                  item.parent().parent().find('.qty').val(data.moc);
+
+                  if (data.status == 'ok') {
+                      item.parent().parent().find('.qty').focus();
+                  } else {
+                      item.parent().parent().find('.item-desc').val('ITEM NOT FOUND!');
+                      item.parent().parent().find('.item-id').select();
+                  }
+
+              });
+          });
+
+          $("a.copy-address").click(function () {
+              $("#order_billing_name").val($("#order_shipping_name").val());
+              $("#order_billing_company").val($("#order_shipping_company").val());
+              $("#order_billing_street1").val($("#order_shipping_street1").val());
+              $("#order_billing_street2").val($("#order_shipping_street2").val());
+              $("#order_billing_city").val($("#order_shipping_city").val());
+              $("#order_billing_state").val($("#order_shipping_state").val());
+              $("#order_billing_zip").val($("#order_shipping_zip").val());
+              $("#order_billing_country").val($("#order_shipping_country").val());
+          });
+
       });
-      
-      $(".add-more-items").click(function() {
-        $("input[name='add_more_items']").val(<%= @order.items.length %>);
-        $("form.form-horizontal").submit();
-      });
-      
-      $(".update-total").click(function(e) {
-        
-        e.preventDefault();
-        var subtotal = 0.0;
-        
-        // calculate subtotal first
-        $(".unit-price").each(function() { 
-          if ($(this).is(":visible")) {
-            var unit_price = parseFloat($(this).val());
-            var quantity = parseFloat($(this).parent().parent().find(".qty").val());
-          
-            if (!isNaN(unit_price) && !isNaN(quantity))
-              subtotal += unit_price * quantity; 
-          }
-        });
-        
-        var shipping_cost = parseFloat($("#order_shipping_cost").val());
-        var discount_amount = parseFloat($("#order_discount_amount").val());
-        var credit_applied = parseFloat($("#order_credit_applied").val());
-        var fb_discount = parseFloat($("#order_fb_discount").val());
-        var tax_rate = parseFloat($("#order_tax_rate").val());
-        var tax_amount = (subtotal - discount_amount - credit_applied) * tax_rate / 100.0;
-        var total = subtotal + shipping_cost + tax_amount - discount_amount - credit_applied - fb_discount;
-        
-        $("#order_subtotal").val(subtotal);
-        $("#order_tax_amount").val(tax_amount.toFixed(2));
-        $("#order_total").val(total.toFixed(2));
-        
-      });
-      
-      
-      
-      $(".item-number").change(function() {
-        var item = $(this);
-        
-        $.get('/admin/store/products/item_info?affiliate_id=<%= @order.affiliate_id%>&sku=' + $(this).val(), function(data) {
-          
-          item.parent().parent().find('.item-number').val(data.item_number);
-          item.parent().parent().find('.product-id').val(data.product_id);
-          item.parent().parent().find('.item-desc').val(data.description);
-          item.parent().parent().find('.unit-price').val(data.price);
-          item.parent().parent().find('.daily-deal-id').val(data.daily_deal_id);
-          item.parent().parent().find('.qty').val(data.moc);
-            
-          if (data.status == 'ok') { 
-            item.parent().parent().find('.qty').focus();
-          } else {
-            item.parent().parent().find('.item-desc').val('ITEM NOT FOUND!');
-            item.parent().parent().find('.item-id').select();
-          }
-          
-        });
-      });
-      
-      $("a.copy-address").click(function() {
-        $("#order_billing_name").val($("#order_shipping_name").val());
-        $("#order_billing_company").val($("#order_shipping_company").val());
-        $("#order_billing_street1").val($("#order_shipping_street1").val());
-        $("#order_billing_street2").val($("#order_shipping_street2").val());
-        $("#order_billing_city").val($("#order_shipping_city").val());
-        $("#order_billing_state").val($("#order_shipping_state").val());
-        $("#order_billing_zip").val($("#order_shipping_zip").val());
-        $("#order_billing_country").val($("#order_shipping_country").val());
-      });
-      
-    });
-    </script>
+  </script>
 <% end %>
 
 
@@ -235,12 +240,12 @@
 
 <% content_for :breadcrumbs do %>
   <% prefix = (@order.po ? "Purchase " : "") %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to prefix + 'Orders', admin_store_orders_path(status: "submitted", po: @order.po ? "1" : "0") %></li>
-	<% unless @order.id.nil? %>
-		<li><%= link_to '#' + @order.id.to_s, admin_store_order_path(@order)%></li>
-		<li class="active">edit</li>
-	<% else %>
-		<li class="active">new</li>
-	<% end %>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to prefix + 'Orders', admin_store_orders_path(status: "submitted", po: @order.po ? "1" : "0") %></li>
+  <% unless @order.id.nil? %>
+    <li><%= link_to '#' + @order.id.to_s, admin_store_order_path(@order) %></li>
+    <li class="active">edit</li>
+  <% else %>
+    <li class="active">new</li>
+  <% end %>
 <% end %>

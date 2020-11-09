@@ -4,7 +4,7 @@
 <%= render 'admin/shared/error_messages', object: nil %>
 
 <form action="/admin/store/shipments/new" method="get">
-  <input type="text" name="order_id" value="" />
+  <input type="text" name="order_id" value=""/>
   <button class="btn btn-primary">Go</button>
 </form>
 
@@ -12,22 +12,22 @@
 
 
 <%= content_for :title do %>
-    Shipments
+  Shipments
 <% end %>
 
 <%= content_for :head do %>
-    <script>
-        $(document).ready(function() {
+  <script>
+      $(document).ready(function () {
 
-            $("input[name='order_id']").focus();
+          $("input[name='order_id']").focus();
 
-        })
-    </script>
+      })
+  </script>
 <% end %>
 
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">eCommerce</a></li>
-    <li class="active">Shipments</li>
+  <li><a href="#">eCommerce</a></li>
+  <li class="active">Shipments</li>
 <% end %>

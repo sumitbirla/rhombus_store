@@ -18,7 +18,7 @@ class DailyDealItem < ActiveRecord::Base
   belongs_to :daily_deal
   belongs_to :product
   belongs_to :affiliate
-  
+
   def item_number
     str = ""
     str += product.item_number unless product_id.nil?

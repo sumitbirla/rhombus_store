@@ -1,5 +1,7 @@
 <style>
-    .form-horizontal .control-label { width: 140px; }
+    .form-horizontal .control-label {
+        width: 140px;
+    }
 </style>
 
 <h2><i class="fa fa-money-bill-alt"></i> <%= @coupon.code %></h2>
@@ -7,34 +9,34 @@
 
 <%= simple_form_for [:admin, :store, @coupon] do |f| %>
 
-	<input type="hidden" name="redirect" value="<%= @redirect %>" />
-	<%= render 'admin/shared/error_messages', object: f.object %>
-	
-	
-	<%= f.input :code, input_html: { class: 'short' } %>
-	<%= f.input :start_time, as: :datetimepicker %>
-	<%= f.input :expire_time, as: :datetimepicker %>
-	<%= f.input :description, input_html: { rows: 3 }  %>
-	<%= f.association :product %>
-	<%= f.association :daily_deal %>
-	<%= f.input :free_shipping %>
-	<%= f.input :discount_amount %>
-	<%= f.input :discount_percent %>
-	<%= f.input :min_order_amount %>
-	<%= f.input :max_uses %>
-	<%= f.input :max_per_user %>
-	<%= f.input :times_used %>
-	
-	<div class="form-actions">
-		<%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
-	</div>
+  <input type="hidden" name="redirect" value="<%= @redirect %>"/>
+  <%= render 'admin/shared/error_messages', object: f.object %>
+
+
+  <%= f.input :code, input_html: {class: 'short'} %>
+  <%= f.input :start_time, as: :datetimepicker %>
+  <%= f.input :expire_time, as: :datetimepicker %>
+  <%= f.input :description, input_html: {rows: 3} %>
+  <%= f.association :product %>
+  <%= f.association :daily_deal %>
+  <%= f.input :free_shipping %>
+  <%= f.input :discount_amount %>
+  <%= f.input :discount_percent %>
+  <%= f.input :min_order_amount %>
+  <%= f.input :max_uses %>
+  <%= f.input :max_per_user %>
+  <%= f.input :times_used %>
+
+  <div class="form-actions">
+    <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
+  </div>
 
 <% end %>
 
 
 
 <%= content_for :title do %>
-	Coupons: <%= @coupon.code %>
+  Coupons: <%= @coupon.code %>
 <% end %>
 
 
@@ -42,7 +44,7 @@
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Coupons", admin_store_coupons_path %></li>
-	<li class="active"><%= @coupon.code %></li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Coupons", admin_store_coupons_path %></li>
+  <li class="active"><%= @coupon.code %></li>
 <% end %>

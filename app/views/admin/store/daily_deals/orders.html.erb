@@ -1,133 +1,135 @@
 <div class="pull-right">
 
   <select id="selAction" class="form-control" style="display: inline; width: 70%">
-      <option> - - Select Action - - </option>
-      <option method="get" value="/admin/store/orders/new">New Order</option>
-	    <option method="post" value="/admin/store/orders_create_shipment">Create Shipments</option>
-      <option method="post" value="/admin/store/orders_batch_ship">Batch Ship</option>
-      <option method="post" value="/admin/store/orders_print_receipts">Print Receipts (PDF)</option>
-      <option method="post" value="/admin/store/orders_send_confirmation">Send Confirmation Email</option>
-      <option method="post" value="/admin/store/orders_address_label">Print Address Labels</option>
-      <optgroup label="Change order status to ">
-          <option method="post" value="/admin/store/orders_update_status?status=submitted">Submitted</option>
-          <option method="post" value="/admin/store/orders_update_status?status=completed">Completed</option>
-          <option method="post" value="/admin/store/orders_update_status?status=processing">Processing</option>
-          <option method="post" value="/admin/store/orders_update_status?status=shipped">Shipped</option>
-          <option method="post" value="/admin/store/orders_update_status?status=shipped_by_vendor">Shipped by Vendor</option>
-          <option method="post" value="/admin/store/orders_update_status?status=refunded">Refunded</option>
-          <option method="post" value="/admin/store/orders_update_status?status=cancelled">Cancelled</option>
-      </optgroup>
+    <option> - - Select Action - -</option>
+    <option method="get" value="/admin/store/orders/new">New Order</option>
+    <option method="post" value="/admin/store/orders_create_shipment">Create Shipments</option>
+    <option method="post" value="/admin/store/orders_batch_ship">Batch Ship</option>
+    <option method="post" value="/admin/store/orders_print_receipts">Print Receipts (PDF)</option>
+    <option method="post" value="/admin/store/orders_send_confirmation">Send Confirmation Email</option>
+    <option method="post" value="/admin/store/orders_address_label">Print Address Labels</option>
+    <optgroup label="Change order status to ">
+      <option method="post" value="/admin/store/orders_update_status?status=submitted">Submitted</option>
+      <option method="post" value="/admin/store/orders_update_status?status=completed">Completed</option>
+      <option method="post" value="/admin/store/orders_update_status?status=processing">Processing</option>
+      <option method="post" value="/admin/store/orders_update_status?status=shipped">Shipped</option>
+      <option method="post" value="/admin/store/orders_update_status?status=shipped_by_vendor">Shipped by Vendor
+      </option>
+      <option method="post" value="/admin/store/orders_update_status?status=refunded">Refunded</option>
+      <option method="post" value="/admin/store/orders_update_status?status=cancelled">Cancelled</option>
+    </optgroup>
   </select>
-  <input type="button" class="btn btn-default btn-small" id="btnAction" value="Go" />	  
+  <input type="button" class="btn btn-default btn-small" id="btnAction" value="Go"/>
 </div>
 
 
 <h3><i class="fa fa-star-o"></i>&nbsp; <%= @daily_deal.short_tag_line %></h3>
 <h4><%= @daily_deal.title %></h4>
 <div style="margin-bottom: 20px;">
-  <% 
-    valid_orders = @daily_deal.orders.select { |x| ['submitted', 'shipped', 'shipped_by_vendor'].include?(x.status) } 
+  <%
+    valid_orders = @daily_deal.orders.select { |x| ['submitted', 'shipped', 'shipped_by_vendor'].include?(x.status) }
     valid_sales = 0
     valid_orders.each { |o| valid_sales += o.items.find { |x| x.daily_deal_id == @daily_deal.id }.quantity }
     shipments = Shipment.where(order_id: @daily_deal.orders.map { |o| o.id })
   %>
-  Valid Orders: <%= valid_orders.length %>, 
-  Quantity: <%=valid_sales %>, 
+  Valid Orders: <%= valid_orders.length %>,
+  Quantity: <%= valid_sales %>,
   Sales: <%= number_to_currency valid_orders.sum { |x| x.total } %>
 </div>
 
 
 <form id="frmBatch" action="" method="post">
-	<%= token_tag %>
-<table id="order-table" class="table table-striped table-condensed tablesorter">
-  <thead>
-	<tr>
-		<th><input type="checkbox" id="chkAll" /></th>
-		<th>Order #</th>
-		<th>Date</th>
-		<th>Customer</th>
-		<th>Location</th>
-    <th>Qty</th>
-		<th>Amount</th>
-    <th></th>
-		<th>Status</th>
-	</tr>
-  </thead>
-  <tbody>
-	<% @daily_deal.orders.each do |order| %>
-	<tr>
-		<td><input type="checkbox" name="order_id[]" class="order-chk" value="<%= order.id %>"/></td>
-		<td><%= link_to order.id, admin_store_order_path(order) %>
-      <% if order.items.length > 1 %>
-        <i class="fa fa-cubes"></i>
-      <% end %>
-    </td>
-		<td><%= systime order.submitted if order.submitted%></td>
-		<td>
-			<% if order.user_id.nil? %>
-				<%= order.shipping_name || order.billing_name %>
-			<% else %>
-				<%= link_to order.user, admin_system_user_path(order.user_id) %>
-			<% end %>
-		</td>
-		<td><%= order.shipping_city %>, <%= order.shipping_state %></td>
-    <td><%= order.items.find { |x| x.daily_deal_id == @daily_deal.id }.quantity %></td>
-		<td><%= number_to_currency(order.total) %></td>
-    <td>
-      <% os = shipments.find { |x| x.order_id == order.id }
-        if os %>
-        <%= link_to admin_store_shipment_path(os) do %>
-          <i class="light fa fa-truck"></i>
-        <% end %>
-      <% end%>
-    </td>
-		<td><%= order_status(order) %></td>
-	</tr>
-	<% end %>
-  </tbody>
-</table>
+  <%= token_tag %>
+  <table id="order-table" class="table table-striped table-condensed tablesorter">
+    <thead>
+    <tr>
+      <th><input type="checkbox" id="chkAll"/></th>
+      <th>Order #</th>
+      <th>Date</th>
+      <th>Customer</th>
+      <th>Location</th>
+      <th>Qty</th>
+      <th>Amount</th>
+      <th></th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @daily_deal.orders.each do |order| %>
+      <tr>
+        <td><input type="checkbox" name="order_id[]" class="order-chk" value="<%= order.id %>"/></td>
+        <td><%= link_to order.id, admin_store_order_path(order) %>
+          <% if order.items.length > 1 %>
+            <i class="fa fa-cubes"></i>
+          <% end %>
+        </td>
+        <td><%= systime order.submitted if order.submitted %></td>
+        <td>
+          <% if order.user_id.nil? %>
+            <%= order.shipping_name || order.billing_name %>
+          <% else %>
+            <%= link_to order.user, admin_system_user_path(order.user_id) %>
+          <% end %>
+        </td>
+        <td><%= order.shipping_city %>, <%= order.shipping_state %></td>
+        <td><%= order.items.find { |x| x.daily_deal_id == @daily_deal.id }.quantity %></td>
+        <td><%= number_to_currency(order.total) %></td>
+        <td>
+          <% os = shipments.find { |x| x.order_id == order.id }
+             if os %>
+            <%= link_to admin_store_shipment_path(os) do %>
+              <i class="light fa fa-truck"></i>
+            <% end %>
+          <% end %>
+        </td>
+        <td><%= order_status(order) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
 
 </form>
 
 <div class="table-summary">
-	<%= number_with_delimiter(@daily_deal.orders.length) %> records | <%= link_to 'CSV', orders_admin_store_daily_deal_path(@daily_deal, format: :csv) %>
+  <%= number_with_delimiter(@daily_deal.orders.length) %> records
+  | <%= link_to 'CSV', orders_admin_store_daily_deal_path(@daily_deal, format: :csv) %>
 </div>
 
 
 <% content_for :title do %>
-	<%= @daily_deal.short_tag_line %> Orders
+  <%= @daily_deal.short_tag_line %> Orders
 <% end %>
 
 <% content_for :head do %>
   <link href="/rhombus_store/tablesorter.css" rel="stylesheet" type="text/css">
-  <script type="text/javascript" src="/rhombus_store/jquery.tablesorter.min.js"></script> 
+  <script type="text/javascript" src="/rhombus_store/jquery.tablesorter.min.js"></script>
 
   <script>
-    $(document).ready(function() {
-      
-      $("#btnAction").click(function () {
-        var url = $("#selAction").val();
-        var method = $("#selAction option:selected").attr("method");
-        
-        if (method == "post") {
-          $("#frmBatch").attr("action", url);
-          $("#frmBatch").attr("method", method);
-          $("#frmBatch").submit();
-        } else {
-          window.location = url;
-        }
+      $(document).ready(function () {
+
+          $("#btnAction").click(function () {
+              var url = $("#selAction").val();
+              var method = $("#selAction option:selected").attr("method");
+
+              if (method == "post") {
+                  $("#frmBatch").attr("action", url);
+                  $("#frmBatch").attr("method", method);
+                  $("#frmBatch").submit();
+              } else {
+                  window.location = url;
+              }
+          });
+
+          $("#chkAll").change(function () {
+              if ($(this).prop("checked"))
+                  $(".order-chk").prop("checked", true);
+              else
+                  $(".order-chk").prop("checked", false);
+          });
+
+          $("#order-table").tablesorter();
+
       });
-      
-      $("#chkAll").change(function() {
-        if ($(this).prop("checked"))
-          $(".order-chk").prop("checked", true);
-        else
-          $(".order-chk").prop("checked", false);
-      });
-      
-      $("#order-table").tablesorter(); 
-      
-    });
   </script>
 
 <% end %>
@@ -135,8 +137,8 @@
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
   <li><%= link_to @daily_deal.short_tag_line, admin_store_daily_deal_path(@daily_deal) %>
-	<li class="active">Orders</li>
+  <li class="active">Orders</li>
 <% end %>

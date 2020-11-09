@@ -8,7 +8,7 @@
 
 
 <div class="pull-right hidden-xs">
-    <%= render 'admin/store/orders/group_actions'%>
+  <%= render 'admin/store/orders/group_actions' %>
 </div>
 
 
@@ -18,7 +18,7 @@
     <option value="">-- All sales channels --</option>
     <% Order.where(po: false).select(:sales_channel).distinct.pluck(:sales_channel).each do |sc| %>
       <option value="<%= sc %>" <%= 'selected' if params[:sales_channel] == sc %>><%= sc %></option>
-    <% end%>
+    <% end %>
   </select>
 </h2>
 
@@ -27,36 +27,39 @@
 <%= render "admin/shared/search_results_header", object: @orders %>
 
 <form id="frmBatch" action="" method="post">
-	<%= token_tag %>
+  <%= token_tag %>
   <input type="hidden" name="printer_id" value=""/>
   <% shipments = Shipment.where(order_id: @orders.map { |o| o.id }) %>
-  
+
   <% if params[:q].nil? %>
-  <ul class="nav nav-tabs" style="margin-bottom: 14px;">
-    <% order_counts.each do |status, count|
+    <ul class="nav nav-tabs" style="margin-bottom: 14px;">
+      <% order_counts.each do |status, count|
         alert = (status == 'backordered' && count > 0) %>
-    <li class="<%= "active" if params[:status] == status %>"><a href="<%= admin_store_orders_path(status: status, sales_channel: params[:sales_channel])%>"><%= tab_count(status.titlecase, count, alert) %></a></li>
-    <% end %>
-    <li class="<%= "active" if params[:status].blank? %>"><a href="<%= admin_store_orders_path(sales_channel: params[:sales_channel]) %>">All</a></li>
-  </ul>
+        <li class="<%= "active" if params[:status] == status %>">
+          <a href="<%= admin_store_orders_path(status: status, sales_channel: params[:sales_channel]) %>"><%= tab_count(status.titlecase, count, alert) %></a>
+        </li>
+      <% end %>
+      <li class="<%= "active" if params[:status].blank? %>">
+        <a href="<%= admin_store_orders_path(sales_channel: params[:sales_channel]) %>">All</a></li>
+    </ul>
   <% end %>
-  
+
 
   <%= will_paginate @orders %>
   <table class="table table-striped table-condensed footable">
-  	<tr>
-  		<th><input type="checkbox" id="chkAll" class="hidden-xs"/></th>
-  		<th><%= sortable "store_orders.id", "Order #" %></th>
+    <tr>
+      <th><input type="checkbox" id="chkAll" class="hidden-xs"/></th>
+      <th><%= sortable "store_orders.id", "Order #" %></th>
       <th data-breakpoints="xs">PO / Channel</th>
-  		<th data-breakpoints="xs"><%= sortable "store_orders.submitted", "Submitted" %></th>
-  		<th><%= sortable "store_orders.affiliate_id, store_orders.user_id", "Customer" %></th>
-  		<th data-breakpoints="xs"><%= sortable "store_orders.shipping_city", "Location" %></th>
+      <th data-breakpoints="xs"><%= sortable "store_orders.submitted", "Submitted" %></th>
+      <th><%= sortable "store_orders.affiliate_id, store_orders.user_id", "Customer" %></th>
+      <th data-breakpoints="xs"><%= sortable "store_orders.shipping_city", "Location" %></th>
       <th data-breakpoints="xs"><%= sortable "store_orders.ship_latest", "Ship by" %></th>
       <th class="text-right" data-breakpoints="xs"><%= sortable "store_orders.total", "Total" %></th>
       <th class="hidden-xs"></th>
-  		<th class="text-right">Status</th>
-  	</tr>
-  	<%= render @orders %>
+      <th class="text-right">Status</th>
+    </tr>
+    <%= render @orders %>
   </table>
 
 </form>
@@ -66,24 +69,24 @@
 
 
 <% content_for :title do %>
-	<%= Domain.find(cookies[:domain_id]) %> Orders
+  <%= Domain.find(cookies[:domain_id]) %> Orders
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li class="active">Orders</li>
+  <li><a href="#">eCommerce</a></li>
+  <li class="active">Orders</li>
 <% end %>
 
 
 <% content_for :head do %>
   <script>
-    $(document).ready(function() {
-      
-      $("#sales_channel").change(function() {
-        window.location.href = "/admin/store/orders?status=<%= params[:status] %>&sales_channel=" + $(this).val();      
+      $(document).ready(function () {
+
+          $("#sales_channel").change(function () {
+              window.location.href = "/admin/store/orders?status=<%= params[:status] %>&sales_channel=" + $(this).val();
+          });
+
       });
-      
-    });
   </script>
 <% end %>

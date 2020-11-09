@@ -1,42 +1,44 @@
 <form action="" method="get" class="pull-right well">
-  Sales channel:  &nbsp; <select name="sales_channel">
-    <option value="">-- all channels --</option>
-    <% @sales_channels.each do |ch| %>
-      <option <%= "selected" if @selected_channel == ch %>><%= ch %></option>
-    <% end %> 
-  </select> &nbsp; 
-  Date range:  &nbsp; <input type="text" class="date-field" name="start_date" value="<%= @start_date %>" style="width: 120px;"/> &nbsp; to &nbsp;
-              <input type="text" class="date-field" name="end_date" value="<%= @end_date %>" style="width: 120px;"/>
+  Sales channel: &nbsp; <select name="sales_channel">
+  <option value="">-- all channels --</option>
+  <% @sales_channels.each do |ch| %>
+    <option <%= "selected" if @selected_channel == ch %>><%= ch %></option>
+  <% end %>
+</select> &nbsp;
+  Date range: &nbsp;
+  <input type="text" class="date-field" name="start_date" value="<%= @start_date %>" style="width: 120px;"/> &nbsp;
+  to &nbsp;
+  <input type="text" class="date-field" name="end_date" value="<%= @end_date %>" style="width: 120px;"/>
   <button class="btn btn-success btn-sm">Filter</button>
 </form>
 
 <h2>User Leaderboard</h2>
 
 <%
-qty_total = 0
-amount_total = 0.0
+  qty_total = 0
+  amount_total = 0.0
 %>
 
 <table class="table table-striped">
-	<tr>
-		<th>Customer</th>
+  <tr>
+    <th>Customer</th>
     <th class="text-center">Orders</th>
     <th class="ralign">Revenue</th>
-	</tr>
-  <% @data.each do |row| 
-    qty_total += row[2] 
+  </tr>
+  <% @data.each do |row|
+    qty_total += row[2]
     amount_total += row[3] %>
-	<tr>
-		<td>
-    <% if row[1].nil? %>
-      <%= row[0] %>
-    <% else %>
-      <%= link_to row[0], admin_system_user_path(row[1], q: "orders") %>
-    <% end %>
-    </td>
-		<td class="text-center"><%= row[2] %></td>
-    <td class="ralign"><%= number_to_currency row[3] %></td>
-	</tr>
+    <tr>
+      <td>
+        <% if row[1].nil? %>
+          <%= row[0] %>
+        <% else %>
+          <%= link_to row[0], admin_system_user_path(row[1], q: "orders") %>
+        <% end %>
+      </td>
+      <td class="text-center"><%= row[2] %></td>
+      <td class="ralign"><%= number_to_currency row[3] %></td>
+    </tr>
   <% end %>
   <tr>
     <td colspan="1"></td>
@@ -47,12 +49,12 @@ amount_total = 0.0
 
 
 <% content_for :title do %>
-	User Leaderboard
+  User Leaderboard
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
+  <li><a href="#">eCommerce</a></li>
   <li><%= link_to "Reports", admin_store_reports_path %></li>
-	<li class="active">User Leaderboard</li>
+  <li class="active">User Leaderboard</li>
 <% end %>

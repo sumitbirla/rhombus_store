@@ -7,32 +7,32 @@
 
 <%= will_paginate @brands %>
 <table class="table table-striped table-condensed footable">
-	<tr>
-		<th>Name</th>
+  <tr>
+    <th>Name</th>
     <th>Slug</th>
-		<th class="text-center">Products</th>
-		<th class="actions text-right hidden-xs">&nbsp;</th>
-	</tr>
-	<% @brands.each do |brand| %>
-	<tr>
-		<td><%= link_to brand.name, edit_admin_store_brand_path(brand) %></td>
-    <td><%= brand.slug %></td>
-		<td class="text-right">
-      <% if @counts[brand.id] %>
-        <%= link_to number_with_delimiter(@counts[brand.id]), admin_store_products_path(brand_id: brand.id, product_type: :all) %>
-      <% else %>
-        0
-      <% end %>
-    </td>
-		<td class="text-right actions hidden-xs">
-			<%= link_to "edit", edit_admin_store_brand_path(brand) %> &nbsp;
-			<%= link_to "delete", 
-						  { action: "destroy", id: brand.id }, 
-						  method: :delete, 
-						  data: { confirm: "Are you sure?" } %>
-		</td>
-	</tr>
-	<% end %>
+    <th class="text-center">Products</th>
+    <th class="actions text-right hidden-xs">&nbsp;</th>
+  </tr>
+  <% @brands.each do |brand| %>
+    <tr>
+      <td><%= link_to brand.name, edit_admin_store_brand_path(brand) %></td>
+      <td><%= brand.slug %></td>
+      <td class="text-right">
+        <% if @counts[brand.id] %>
+          <%= link_to number_with_delimiter(@counts[brand.id]), admin_store_products_path(brand_id: brand.id, product_type: :all) %>
+        <% else %>
+          0
+        <% end %>
+      </td>
+      <td class="text-right actions hidden-xs">
+        <%= link_to "edit", edit_admin_store_brand_path(brand) %> &nbsp;
+        <%= link_to "delete",
+                    {action: "destroy", id: brand.id},
+                    method: :delete,
+                    data: {confirm: "Are you sure?"} %>
+      </td>
+    </tr>
+  <% end %>
 </table>
 
 
@@ -44,6 +44,6 @@
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li class="active">Brands</li>
+  <li><a href="#">eCommerce</a></li>
+  <li class="active">Brands</li>
 <% end %>

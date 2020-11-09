@@ -1,5 +1,5 @@
 module OrderHelper
-  
+
   def order_status(order, css = '')
     css_class = css + ' '
 
@@ -19,28 +19,28 @@ module OrderHelper
 
     "<span class='label #{css_class}'>#{order.status}</span>".html_safe
   end
-  
+
   def product_status(product)
     str = ""
     if product.active
-      str += "<span class='label label-success'>active</span> " 
+      str += "<span class='label label-success'>active</span> "
     else
-      str += "<span class='label label-warning'>inactive</span> " 
+      str += "<span class='label label-warning'>inactive</span> "
     end
     str += "<i class='fa fa-eye-slash'></i>" if product.hidden
     str.html_safe
   end
-  
-  
+
+
   def shipment_icons(order)
     str = ''
-    h = { "pending" => "light", "shipped" => "icon-success", "void" => "icon-danger" }
-     
+    h = {"pending" => "light", "shipped" => "icon-success", "void" => "icon-danger"}
+
     order.shipments.slice(0..2).each do |s|
       str += "&nbsp; <a href='#{admin_store_shipment_path(s)}'><i class='#{h[s.status]} fa fa-truck'></i></a>"
     end
-    
+
     str.html_safe
   end
-  
+
 end

@@ -22,23 +22,23 @@
 
 class Coupon < ActiveRecord::Base
   include Exportable
-  
+
   self.table_name = "store_coupons"
   belongs_to :product
   belongs_to :daily_deal
   validates_presence_of :code, :start_time, :expire_time, :description, :max_uses, :max_per_user, :times_used
   validate :amount_xor_percent
-  
+
   # PUNDIT
   def self.policy_class
     ApplicationPolicy
   end
-  
+
   private
 
-      def amount_xor_percent
-        if !(discount_amount.blank? ^ discount_percent.blank?)
-          errors[:base] << "Specify a discount amount or percent, not both"
-        end
-      end
+  def amount_xor_percent
+    if !(discount_amount.blank? ^ discount_percent.blank?)
+      errors[:base] << "Specify a discount amount or percent, not both"
+    end
+  end
 end

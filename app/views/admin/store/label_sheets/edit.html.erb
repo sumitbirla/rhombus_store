@@ -2,84 +2,89 @@
 <hr/>
 
 <style>
-.span5 .control-label { width: 100px; }
-.span5 .controls { margin-left: 110px; }
+    .span5 .control-label {
+        width: 100px;
+    }
+
+    .span5 .controls {
+        margin-left: 110px;
+    }
 </style>
 
 <div class="col-md-5">
-	<h3>Sheet Summary</h3>
-	<%= simple_form_for [:admin, :store, @label_sheet] do |f| %>
-		<%= render 'admin/shared/error_messages', object: f.object %>
+  <h3>Sheet Summary</h3>
+  <%= simple_form_for [:admin, :store, @label_sheet] do |f| %>
+    <%= render 'admin/shared/error_messages', object: f.object %>
 
-		<%= f.input :name, input_html: { class: 'span10' }  %>
-		<%= f.input :width, input_html: { class: 'span4' } %>
-		<%= f.input :height, input_html: { class: 'span4' } %>
-		<%= f.input :dpi, input_html: { class: 'span4' } %>
+    <%= f.input :name, input_html: {class: 'span10'} %>
+    <%= f.input :width, input_html: {class: 'span4'} %>
+    <%= f.input :height, input_html: {class: 'span4'} %>
+    <%= f.input :dpi, input_html: {class: 'span4'} %>
 
-		<%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+    <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
 
-	<% end %>
+  <% end %>
 </div>
 
 <% unless @label_sheet.id.nil? %>
-<div class="col-md-6">
-	<h3>
-		<%= link_to "new area", new_admin_store_label_area_path(label_sheet_id: @label_sheet.id), class: 'btn btn-sm btn-default pull-right' %>
-		Sheet Areas
-	</h3>
-	<table class="table table-condensed table-striped">
-		<tr>
-			<th>Name</th>
-			<th>Origin</th>
-			<th>Dimensions</th>
-			<th>&nbsp;</th>
-		</tr>
-		<% @label_sheet.areas.each do |area| %>
-		<tr>
-			<td><%= area.name %></td>
-			<td>(<%= area.left %>&quot;, <%= area.top %>&quot;)</td>
-			<td><%= area.width %>&quot; x <%= area.height %>&quot;</td>
-			<td>
-				<%= link_to "edit", edit_admin_store_label_area_path(area) %> &nbsp;
-				<%= link_to "delete", 
-							  { controller: 'label_areas', action: "destroy", id: area.id },
-							  method: :delete, 
-							  data: { confirm: "Are you sure?" } %>
-			</td>
-		<% end %>
-	</table>
-</div>
+  <div class="col-md-6">
+    <h3>
+      <%= link_to "new area", new_admin_store_label_area_path(label_sheet_id: @label_sheet.id), class: 'btn btn-sm btn-default pull-right' %>
+      Sheet Areas
+    </h3>
+    <table class="table table-condensed table-striped">
+      <tr>
+        <th>Name</th>
+        <th>Origin</th>
+        <th>Dimensions</th>
+        <th>&nbsp;</th>
+      </tr>
+      <% @label_sheet.areas.each do |area| %>
+        <tr>
+          <td><%= area.name %></td>
+          <td>(<%= area.left %>&quot;, <%= area.top %>&quot;)</td>
+          <td><%= area.width %>&quot; x <%= area.height %>&quot;</td>
+          <td>
+            <%= link_to "edit", edit_admin_store_label_area_path(area) %> &nbsp;
+            <%= link_to "delete",
+                        {controller: 'label_areas', action: "destroy", id: area.id},
+                        method: :delete,
+                        data: {confirm: "Are you sure?"} %>
+          </td>
+      <% end %>
+    </table>
+  </div>
 
-<div class="row" style="clear: left; margin-left: 20px;">
-	<hr/>
-	<h3>Sheet Diagram</h3>
-	
-	<% scale = 50.0 %>
-	<canvas id="canvas" class="label-diagram" width="<%= (@label_sheet.width * scale).to_i %>" height="<%= (@label_sheet.height * scale).to_i %>">
-       
-	    </canvas>
+  <div class="row" style="clear: left; margin-left: 20px;">
+    <hr/>
+    <h3>Sheet Diagram</h3>
 
-	    <script type="text/javascript">
-	        var canvas = document.getElementById('canvas');
-	        var context = canvas.getContext('2d');
-	        context.textAlign = "center";
-	        context.textBaseline = "middle";
+    <% scale = 50.0 %>
+    <canvas id="canvas" class="label-diagram" width="<%= (@label_sheet.width * scale).to_i %>" height="<%= (@label_sheet.height * scale).to_i %>">
 
-			<% @label_sheet.areas.each do |area| 
-			top = (area.top * scale).to_i
-			left = (area.left * scale).to_i
-			width = (area.width * scale).to_i
-			height = (area.height * scale).to_i
-			%>
-        
-	            context.fillStyle = "rgba(255,0,0,0.5)";
-	            context.fillRect(<%= left %>, <%= top %>, <%= width %>, <%= height %>);
-	            context.fillStyle = "rgb(0,0,0)";
-	            context.fillText("<%= area.name %>", <%= left + width/2 %>, <%= top + height/2 %>);
-        
-			<% end %>
-	    </script>
-</div>
+    </canvas>
+
+    <script type="text/javascript">
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+
+        <% @label_sheet.areas.each do |area|
+        top = (area.top * scale).to_i
+        left = (area.left * scale).to_i
+        width = (area.width * scale).to_i
+        height = (area.height * scale).to_i
+        %>
+
+        context.fillStyle = "rgba(255,0,0,0.5)";
+        context.fillRect(<%= left %>, <%= top %>, <%= width %>, <%= height %>);
+        context.fillStyle = "rgb(0,0,0)";
+        context.fillText("<%= area.name %>", <%= left + width/2 %>, <%= top + height/2 %>);
+
+        <% end %>
+    </script>
+  </div>
 
 <% end %>
 
@@ -93,7 +98,7 @@ end %>
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Label Sheets", admin_store_label_sheets_path %></li>
-	<li class="active"><%= @label_sheet.name %></li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Label Sheets", admin_store_label_sheets_path %></li>
+  <li class="active"><%= @label_sheet.name %></li>
 <% end %>

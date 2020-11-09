@@ -1,5 +1,5 @@
 <h2>
-	<%= @catalog.name %>
+  <%= @catalog.name %>
 </h2>
 <hr/>
 
@@ -10,8 +10,8 @@
   <%= f.input :name %>
   <%= f.input :code %>
   <%= f.input :url %>
-  
-  <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
 
 <% end %>
 
@@ -21,7 +21,7 @@
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Catalogs", admin_store_catalogs_path %></li>
-	<li class="active"><%= @catalog.name %></li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Catalogs", admin_store_catalogs_path %></li>
+  <li class="active"><%= @catalog.name %></li>
 <% end %>

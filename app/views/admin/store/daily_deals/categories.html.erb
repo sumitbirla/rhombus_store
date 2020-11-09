@@ -14,40 +14,43 @@
 <br/>
 
 <form action="/admin/store/daily_deals/<%= params[:id] %>/categories" method="post" class="categories">
-	<%= token_tag %>
-	<input type="hidden" name="id" value="<%= params[:id] %>">
-<% 	categories = Category.where(entity_type: :daily_deal)
-	pcats = @daily_deal.categories
-	top_levels = categories.select { |c| c.parent_id == nil } %>
-	<ul>
-	<% top_levels.each do |cat| 
-		children = categories.select { |c| c.parent_id == cat.id } %>
-		<li><input type="checkbox" name="category_ids[]" value="<%= cat.id %>" <%= "checked='checked'" if pcats.include?(cat) %>/> &nbsp; <%= cat.name %>
-		<ul>
-		<% children.each do |child| %>
-			<li><input type="checkbox" name="category_ids[]" value="<%= child.id %>" <%= "checked='checked'" if pcats.include?(child) %>/> &nbsp; <%= child.name %></li>
-		<% end %>
-		</ul>
-		</li>
-	<% end %>
-</ul>
-<div class="form-actions">
-	<button class="btn btn-primary">Update</button>
-</div>
+  <%= token_tag %>
+  <input type="hidden" name="id" value="<%= params[:id] %>">
+  <% categories = Category.where(entity_type: :daily_deal)
+     pcats = @daily_deal.categories
+     top_levels = categories.select { |c| c.parent_id == nil } %>
+  <ul>
+    <% top_levels.each do |cat|
+      children = categories.select { |c| c.parent_id == cat.id } %>
+      <li>
+        <input type="checkbox" name="category_ids[]" value="<%= cat.id %>" <%= "checked='checked'" if pcats.include?(cat) %>/> &nbsp; <%= cat.name %>
+        <ul>
+          <% children.each do |child| %>
+            <li>
+              <input type="checkbox" name="category_ids[]" value="<%= child.id %>" <%= "checked='checked'" if pcats.include?(child) %>/> &nbsp; <%= child.name %>
+            </li>
+          <% end %>
+        </ul>
+      </li>
+    <% end %>
+  </ul>
+  <div class="form-actions">
+    <button class="btn btn-primary">Update</button>
+  </div>
 </form>
 
 
 <% content_for :title do %>
-	Daily Deals: <%= @daily_deal.short_tag_line %>
+  Daily Deals: <%= @daily_deal.short_tag_line %>
 <% end %>
 
 
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
-	<li><%= link_to @daily_deal.short_tag_line, admin_store_daily_deal_path(@daily_deal) %></li>
-	<li class="active">edit</li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
+  <li><%= link_to @daily_deal.short_tag_line, admin_store_daily_deal_path(@daily_deal) %></li>
+  <li class="active">edit</li>
 <% end %>
 

@@ -18,10 +18,10 @@
 
 class InventoryLocation < ActiveRecord::Base
   include Exportable
-  
+
   self.table_name = 'inv_locations'
   validates_presence_of :name
-  
+
   def to_s
     name
   end

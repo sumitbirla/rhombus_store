@@ -1,6 +1,6 @@
-<% 
+<%
   t = inventory_transaction
-  actions = [] 
+  actions = []
   actions << 'replenish' if t.total > 0
   actions << 'remove' if t.total < 0
 %>
@@ -11,27 +11,28 @@
     <% if t.archived %>
       <i class="text-warning fa fa-archive"></i>
     <% end %>
-    
+
     <% if t.bulk_import %>
       <i class="text-success fa fa-file-import"></i>
     <% end %>
   </td>
-  <td><% if t.affiliate %>
+  <td>
+    <% if t.affiliate %>
       <%= link_to t.affiliate.name, admin_system_affiliate_path(t.affiliate) %>
-      <% else %>
+    <% else %>
       - system -
-      <% end %>
+    <% end %>
   </td>
   <td class="text-right"><%= number_with_delimiter(t.total.abs) %></td>
   <td class="text-center small">- <%= pluralize(t.item_count, "item") %> -</td>
   <td><%= t.external_id %></td>
-	<td><%= t.responsible_party.presence || '- system -' %></td>
+  <td><%= t.responsible_party.presence || '- system -' %></td>
   <td><%= actions.join(" / ") %></td>
-	<td class="text-right actions">
-    <%= link_to :edit, edit_admin_inventory_inventory_transaction_path(t) %> &nbsp; 
-		<%= link_to :delete, 
-					  { action: "destroy", id: t.id }, 
-					  method: :delete, 
-					  data: { confirm: "Are you sure? All items items in this transaction will be deleted." } %>
-	</td>
+  <td class="text-right actions">
+    <%= link_to :edit, edit_admin_inventory_inventory_transaction_path(t) %> &nbsp;
+    <%= link_to :delete,
+                {action: "destroy", id: t.id},
+                method: :delete,
+                data: {confirm: "Are you sure? All items items in this transaction will be deleted."} %>
+  </td>
 </tr>

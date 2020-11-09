@@ -1,9 +1,9 @@
 class EasypostController < ApplicationController
-  
+
   def webhook
     Rails.logger.info "EASYPOST WEBHOOK TRIGGERED"
     Rails.logger.info params[:result].inspect
-    
+
     begin
       result = params["result"]
 
@@ -17,8 +17,8 @@ class EasypostController < ApplicationController
     rescue => e
       Rails.logger.error e
     end
-    
+
     head :ok
   end
-  
+
 end

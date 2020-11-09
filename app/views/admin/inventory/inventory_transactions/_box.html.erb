@@ -1,23 +1,23 @@
-  <div class="panel panel-success">
-    <div class="panel-heading">
-      <span class="pull-right"><%= systime inventory_transaction.created_at %></span>
-      Inventory #<%= inventory_transaction.id %>
-    </div>
-    <div class="panel-body">
-      <table class="table table-condensed small light">
-        <tr>
-          <th>Location</th>
-          <th>SKU</th>
-          <th>Name</th>
-          <th class="text-center">Lot #</th>
-          <th class="text-center">Exp.</th>
-          <th class="text-right">Qty.</th>  
-        </tr>
-        <% 
+<div class="panel panel-success">
+  <div class="panel-heading">
+    <span class="pull-right"><%= systime inventory_transaction.created_at %></span>
+    Inventory #<%= inventory_transaction.id %>
+  </div>
+  <div class="panel-body">
+    <table class="table table-condensed small light">
+      <tr>
+        <th>Location</th>
+        <th>SKU</th>
+        <th>Name</th>
+        <th class="text-center">Lot #</th>
+        <th class="text-center">Exp.</th>
+        <th class="text-right">Qty.</th>
+      </tr>
+      <%
         products = Product.where(item_number: inventory_transaction.items.collect(&:sku))
-        inventory_transaction.items.each do |item| 
-			    p = products.find { |p| p.item_number == item.sku }
-		%>
+        inventory_transaction.items.each do |item|
+          p = products.find { |p| p.item_number == item.sku }
+      %>
         <tr>
           <td class="text-center"><%= item.inventory_location ? item.inventory_location.name : ' -' %></td>
           <td><%= item.sku %></td>
@@ -26,13 +26,13 @@
           <td class="text-center"><%= item.formatted_expiration %></td>
           <td class="text-right"><%= number_with_delimiter(item.quantity.abs) %></td>
         </tr>
-        <% end %>
-      </table>
-      <%= link_to "delete",
-                  admin_inventory_inventory_transaction_path(inventory_transaction),
-                  method: :delete,
-                  data: { confirm: "Are you sure? You will need to create a new inventory transaction before shipping this order." }, 
-                  class: 'btn btn-danger btn-xs pull-right' %>
-      <%= link_to "edit", edit_admin_inventory_inventory_transaction_path(inventory_transaction), class: "btn btn-default btn-xs"%>
-    </div>
+      <% end %>
+    </table>
+    <%= link_to "delete",
+                admin_inventory_inventory_transaction_path(inventory_transaction),
+                method: :delete,
+                data: {confirm: "Are you sure? You will need to create a new inventory transaction before shipping this order."},
+                class: 'btn btn-danger btn-xs pull-right' %>
+    <%= link_to "edit", edit_admin_inventory_inventory_transaction_path(inventory_transaction), class: "btn btn-default btn-xs" %>
   </div>
+</div>

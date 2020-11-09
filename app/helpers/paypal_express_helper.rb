@@ -14,8 +14,8 @@ module PaypalExpressHelper
         :subtotal => subtotal,
         :shipping => to_cents(cart.shipping_cost),
         :handling => 0,
-        :tax =>  to_cents(cart.tax_amount),
-        :allow_note =>  true,
+        :tax => to_cents(cart.tax_amount),
+        :allow_note => true,
         :items => items,
     }
   end
@@ -52,8 +52,8 @@ module PaypalExpressHelper
         :subtotal => subtotal,
         :shipping => to_cents(cart.shipping_cost),
         :handling => 0,
-        :tax =>      to_cents(cart.tax_amount),
-        :items =>    items,
+        :tax => to_cents(cart.tax_amount),
+        :items => items,
     }
   end
 
@@ -76,10 +76,10 @@ module PaypalExpressHelper
 
     if cart.discount_amount > 0.0
       items << {
-        :name => "Promo Code Discount",
-        :number => "PromoCode",
-        :quantity => 1,
-        :amount => to_cents(cart.discount_amount) * -1
+          :name => "Promo Code Discount",
+          :number => "PromoCode",
+          :quantity => 1,
+          :amount => to_cents(cart.discount_amount) * -1
       }
     end
 
@@ -97,7 +97,7 @@ module PaypalExpressHelper
 
 
   def to_cents(money)
-    (money*100).round
+    (money * 100).round
   end
 
 end

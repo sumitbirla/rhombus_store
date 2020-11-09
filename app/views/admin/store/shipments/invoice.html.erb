@@ -1,61 +1,72 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <title><%= @shipment %> Invoice</title>
   <style>
       body {
-          background:white !important;
-          color:black!important;
-          width: 95%!important;
-          margin: 0 auto!important;
-          font-family:Arial, Helvetica, sans-serif!important;
-          font-size:10px!important;
+          background: white !important;
+          color: black !important;
+          width: 95% !important;
+          margin: 0 auto !important;
+          font-family: Arial, Helvetica, sans-serif !important;
+          font-size: 10px !important;
       }
+
       table {
-          width: 100%!important;
-          border-collapse:collapse;
+          width: 100% !important;
+          border-collapse: collapse;
       }
-      table td{
+
+      table td {
           aborder: 1px solid #ccc;
-          padding: 5px!important;
+          padding: 5px !important;
       }
+
       table.bordered {
-        border: solid 1px black;
+          border: solid 1px black;
       }
+
       table.bordered th {
-        padding: 4px;
-        border-bottom: solid 1px black;    
+          padding: 4px;
+          border-bottom: solid 1px black;
       }
+
       article {
-          padding: 0px 0!important;
+          padding: 0px 0 !important;
       }
+
       p {
-          font-weight:normal !important;
-          line-height:16px !important;
+          font-weight: normal !important;
+          line-height: 16px !important;
           margin-top: 0;
       }
+
       h2 {
-          font-size:20px !important;
+          font-size: 20px !important;
           margin-bottom: 0px;
       }
+
       .boxleft {
-          float:left!important;
-          width: 32%!important;
-          margin-top:0px !important;
+          float: left !important;
+          width: 32% !important;
+          margin-top: 0px !important;
       }
+
       .boxcenter {
-          float:left!important;
-          width: 32%!important;
-          margin-top:0px !important;
+          float: left !important;
+          width: 32% !important;
+          margin-top: 0px !important;
       }
+
       .boxright {
-          float:left!important;
-          width: 32%!important;
-          margin-top:0px !important;
+          float: left !important;
+          width: 32% !important;
+          margin-top: 0px !important;
       }
-      .textright{
-          text-align:right !important;
+
+      .textright {
+          text-align: right !important;
       }
   </style>
 </head>
@@ -73,16 +84,16 @@
               else
                 loc_id = Cache.setting(@shipment.order.domain_id, :shipping, "Ship From Location ID")
               end
-                
-                loc = Location.find(loc_id)
-                
-                if loc.pictures.length > 0
+
+              loc = Location.find(loc_id)
+
+              if loc.pictures.length > 0
             %>
-            <h2><img src="<%= cdn_image_url loc.pictures[0].file_path, 250, 60, 0 %>" alt="Logo"></h2>
+              <h2><img src="<%= cdn_image_url loc.pictures[0].file_path, 250, 60, 0 %>" alt="Logo"></h2>
             <% else %>
-            <h2><%= loc.name %></h2>
+              <h2><%= loc.name %></h2>
             <% end %>
-            
+
             <p>
               <%= loc.to_text(skip_country: true, new_line: "<br>").html_safe %>
             </p>
@@ -92,9 +103,9 @@
               <strong>Email:</strong> <%= loc.email %>
             </p>
           </th>
-          <th scope="col" style="text-align:right;"> <h2>INVOICE</h2>
+          <th scope="col" style="text-align:right;"><h2>INVOICE</h2>
             <p>
-              
+
               <strong>Invoice Date: </strong>
               <% unless @shipment.ship_date.nil? %>
                 <%= sysdate @shipment.ship_date %>
@@ -102,7 +113,7 @@
                 <%= sysdate DateTime.now %>
               <% end %><br/>
               <strong>Invoice ID: </strong> <%= @shipment %><br/>
-              <img src="/barcode?code=<%= @shipment %>" />
+              <img src="/barcode?code=<%= @shipment %>"/>
             </p>
           </th>
         </tr>
@@ -116,7 +127,8 @@
           <%= raw @shipment.order.billing_company + '<br/>' unless @shipment.order.billing_company.blank? %>
           <%= @shipment.order.billing_street1 %><br/>
           <%= raw @shipment.order.billing_street2 + '<br/>' unless @shipment.order.billing_street2.blank? %>
-          <%= @shipment.order.billing_city %>, <%= @shipment.order.billing_state %> <%= @shipment.order.billing_zip %></p>
+          <%= @shipment.order.billing_city %>, <%= @shipment.order.billing_state %> <%= @shipment.order.billing_zip %>
+        </p>
       </div>
       <div class="boxright">
         <h2> Shipping address</h2>
@@ -127,17 +139,17 @@
           <%= @shipment.recipient_city %>, <%= @shipment.recipient_state %> <%= @shipment.recipient_zip %></p>
       </div>
       <div class="boxright">
-      <% unless @shipment.order.sales_channel == 'Purchase Order' %>
-        <h2>Payment method:</h2>
-        <p><%= @shipment.order.payment_method %><br/>
-        <% if @shipment.order.payment_method == "CREDIT_CARD" %>
-          <%= @shipment.order.cc_type %>: <%= @shipment.order.cc_number %>
+        <% unless @shipment.order.sales_channel == 'Purchase Order' %>
+          <h2>Payment method:</h2>
+          <p><%= @shipment.order.payment_method %><br/>
+            <% if @shipment.order.payment_method == "CREDIT_CARD" %>
+              <%= @shipment.order.cc_type %>: <%= @shipment.order.cc_number %>
+            <% end %>
+          </p>
+        <% else %>
+          <h2>Payment terms:</h2>
+          <p><%= @shipment.order.affiliate.payment_terms unless @shipment.order.affiliate.nil? %></p>
         <% end %>
-        </p>
-      <% else %>
-        <h2>Payment terms:</h2>
-        <p><%= @shipment.order.affiliate.payment_terms unless @shipment.order.affiliate.nil? %></p>
-      <% end %>
       </div>
       <div style="clear:both;"></div>
     </header>
@@ -159,13 +171,13 @@
         <td><%= @shipment.order.status %></td>
         <td><%= @shipment.order.external_order_id if @shipment.order.sales_channel = 'Purchase Order' %></td>
         <td>
-        <% unless @shipment.order.user.nil? || @shipment.order.user.affiliate.nil? %>
-          <%= @shipment.order.user.affiliate.contact_person %> &nbsp; 
-          <%= @shipment.order.user.affiliate.phone %>
-        <% else %>
-          <%= @shipment.order.user.nil? ? @shipment.order.shipping_name : @shipment.order.user.name %></td>
-        <% end %>
-      </tr>
+          <% unless @shipment.order.user.nil? || @shipment.order.user.affiliate.nil? %>
+            <%= @shipment.order.user.affiliate.contact_person %> &nbsp;
+            <%= @shipment.order.user.affiliate.phone %>
+          <% else %>
+            <%= @shipment.order.user.nil? ? @shipment.order.shipping_name : @shipment.order.user.name %></td>
+          <% end %>
+          </tr>
       </tbody>
     </table>
     <br/><br/>
@@ -181,40 +193,43 @@
       </tr>
       </thead>
       <tbody>
-      <% 
-      subtotal = 0.0
-      @shipment.items.each do |item| 
-        subtotal += item.quantity * item.order_item.unit_price unless item.order_item.nil? %>
-      <tr>
-        <td><%= item.order_item.item_number %></td>
-        <td>
-          <% unless item.order_item.daily_deal.nil? %>
-            <%= item.order_item.daily_deal.title %>
-          <% else %>
-            <%= item.order_item.product.full_name %>
-            <% if item.order_item.affiliate_id %>
-              &nbsp; (<%= item.order_item.affiliate %>)
+      <%
+        subtotal = 0.0
+        @shipment.items.each do |item|
+          subtotal += item.quantity * item.order_item.unit_price unless item.order_item.nil? %>
+        <tr>
+          <td><%= item.order_item.item_number %></td>
+          <td>
+            <% unless item.order_item.daily_deal.nil? %>
+              <%= item.order_item.daily_deal.title %>
+            <% else %>
+              <%= item.order_item.product.full_name %>
+              <% if item.order_item.affiliate_id %>
+                &nbsp; (<%= item.order_item.affiliate %>)
+              <% end %>
             <% end %>
-          <% end %>
-        </td>
-        <td align="right" class="textright"><%= number_with_delimiter(item.order_item.quantity) %></td>
-        <td align="right" class="textright"><%= item.quantity unless item.quantity == 0 && !item.special_status.blank? %> <%= item.special_status %></td>
-        <td align="right" class="textright"><%= number_to_currency(item.order_item.unit_price, precision: 4, strip_insignificant_zeros: true) %></td>
-        <td align="right" class="textright"><%= number_to_currency(item.order_item.unit_price * item.quantity) %></td>
-      </tr>
+          </td>
+          <td align="right" class="textright"><%= number_with_delimiter(item.order_item.quantity) %></td>
+          <td align="right" class="textright"><%= item.quantity unless item.quantity == 0 && !item.special_status.blank? %> <%= item.special_status %></td>
+          <td align="right" class="textright"><%= number_to_currency(item.order_item.unit_price, precision: 4, strip_insignificant_zeros: true) %></td>
+          <td align="right" class="textright"><%= number_to_currency(item.order_item.unit_price * item.quantity) %></td>
+        </tr>
       <% end %>
-      <tr style="height: 20<%= "0" if @shipment.items.length < 9 %>px;"><td colspan="6"></td></tr>
+      <tr style="height: 20<%= "0" if @shipment.items.length < 9 %>px;">
+        <td colspan="6"></td>
+      </tr>
       <tr style="border-top: solid 1px black;">
-        <td colspan="5"  align="right" class="textright">Subtotal:</td>
-        <td align="right" class="textright"><%= number_to_currency(subtotal)%></td>
+        <td colspan="5" align="right" class="textright">Subtotal:</td>
+        <td align="right" class="textright"><%= number_to_currency(subtotal) %></td>
       </tr>
       <tr>
-        <td colspan="5"  align="right" class="textright"><%= @shipment.order.shipping_method %>:</td>
-        <td  align="right" class="textright"><%= number_to_currency(@shipment.order.shipping_cost) %></td>
+        <td colspan="5" align="right" class="textright"><%= @shipment.order.shipping_method %>:</td>
+        <td align="right" class="textright"><%= number_to_currency(@shipment.order.shipping_cost) %></td>
       </tr>
       <tr>
         <td align="right" class="textright" colspan="5"><b>Total:</b></td>
-        <td align="right" class="textright"><b><%= number_to_currency(subtotal + @shipment.order.shipping_cost) %></b></td>
+        <td align="right" class="textright"><b><%= number_to_currency(subtotal + @shipment.order.shipping_cost) %></b>
+        </td>
       </tr>
       </tbody>
     </table>

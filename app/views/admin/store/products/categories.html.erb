@@ -2,10 +2,10 @@
 <hr>
 
 <% if @product.template_product_id %>
-<div class="alert alert-info">
-  <b>Note: </b> This product's content is maintained by a template.  Changes made here may be overwritten.
-  <b><%= link_to "Click here to edit template", admin_store_product_path(@product.template_product) %></b>.
-</div>
+  <div class="alert alert-info">
+    <b>Note: </b> This product's content is maintained by a template. Changes made here may be overwritten.
+    <b><%= link_to "Click here to edit template", admin_store_product_path(@product.template_product) %></b>.
+  </div>
 <% end %>
 
 <ul class="nav nav-tabs">
@@ -21,28 +21,31 @@
 
 <br/>
 <form action="/admin/store/products/<%= params[:id] %>/categories" method="post" class="categories">
-	<%= token_tag %>
-	<input type="hidden" name="id" value="<%= params[:id] %>">
-<% 	categories = Category.select("id, name, parent_id").where(entity_type: :product).order(:sort)
-	pcats = @product.categories
-	top_levels = categories.select { |c| c.parent_id == nil } %>
-	<ul>
-	<% top_levels.each do |cat| 
-		children = categories.select { |c| c.parent_id == cat.id } 
-		selected = pcats.find { |c| c.id == cat.id } %>
-		
-		<li><input type="checkbox" name="category_ids[]" value="<%= cat.id %>" <%= "checked='checked'" if selected %>/> &nbsp; <%= cat.name %>
-		<ul>
-		<% children.each do |child| %>
-			<li><input type="checkbox" name="category_ids[]" value="<%= child.id %>" <%= "checked='checked'" if pcats.include?(child) %>/> &nbsp; <%= child.name %></li>
-		<% end %>
-		</ul>
-		</li>
-	<% end %>
-</ul>
-<div class="form-actions">
-	<%= button_tag "Save changes", class: "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ...".html_safe } %>
-</div>
+  <%= token_tag %>
+  <input type="hidden" name="id" value="<%= params[:id] %>">
+  <% categories = Category.select("id, name, parent_id").where(entity_type: :product).order(:sort)
+     pcats = @product.categories
+     top_levels = categories.select { |c| c.parent_id == nil } %>
+  <ul>
+    <% top_levels.each do |cat|
+      children = categories.select { |c| c.parent_id == cat.id }
+      selected = pcats.find { |c| c.id == cat.id } %>
+
+      <li>
+        <input type="checkbox" name="category_ids[]" value="<%= cat.id %>" <%= "checked='checked'" if selected %>/> &nbsp; <%= cat.name %>
+        <ul>
+          <% children.each do |child| %>
+            <li>
+              <input type="checkbox" name="category_ids[]" value="<%= child.id %>" <%= "checked='checked'" if pcats.include?(child) %>/> &nbsp; <%= child.name %>
+            </li>
+          <% end %>
+        </ul>
+      </li>
+    <% end %>
+  </ul>
+  <div class="form-actions">
+    <%= button_tag "Save changes", class: "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ...".html_safe} %>
+  </div>
 </form>
 
 
@@ -52,8 +55,8 @@
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Products", admin_store_products_path(brand_id: @product.brand_id, status: :active) %></li>
-	<li><%= link_to @product.name_with_option, admin_store_product_path(@product)%> </li>
-	<li class="active">edit</li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Products", admin_store_products_path(brand_id: @product.brand_id, status: :active) %></li>
+  <li><%= link_to @product.name_with_option, admin_store_product_path(@product) %> </li>
+  <li class="active">edit</li>
 <% end %>

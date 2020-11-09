@@ -1,8 +1,8 @@
 <h2>
-	<% unless @brand.logo.blank? %>
-	<img src="<%= cdn_image_url @brand.logo, 150, 50, 0 %>" alt="logo" class="pull-right"/>
-	<% end %>
-	<%= @brand.name %>
+  <% unless @brand.logo.blank? %>
+    <img src="<%= cdn_image_url @brand.logo, 150, 50, 0 %>" alt="logo" class="pull-right"/>
+  <% end %>
+  <%= @brand.name %>
 </h2>
 <hr/>
 
@@ -13,28 +13,28 @@
   <%= f.input :name %>
   <%= f.input :slug %>
   <%= f.input :website %>
-  
+
   <%= ckfinder_input(@brand, "logo") %>
   <%= ckeditor_input(@brand, "about") %>
-  
-  <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
 
 <% end %>
 
 
 <% content_for :head do %>
-	<script>
-	$(document).ready(function() {
-		$("#brand_name").blur(function() {   
-	    	var url = $("#brand_slug").val();
-	        if (url == '') {
-	        	url = $("#brand_name").val().toLowerCase().replace('&', '').replace('/', '').replace(' ', '-').replace("'", '').replace(' ', '');
-	            $("#brand_slug").val(url);
-	        }
-	     });
-	});
-	</script>
-  
+  <script>
+      $(document).ready(function () {
+          $("#brand_name").blur(function () {
+              var url = $("#brand_slug").val();
+              if (url == '') {
+                  url = $("#brand_name").val().toLowerCase().replace('&', '').replace('/', '').replace(' ', '-').replace("'", '').replace(' ', '');
+                  $("#brand_slug").val(url);
+              }
+          });
+      });
+  </script>
+
 <% end %>
 
 
@@ -43,7 +43,7 @@
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Brands", admin_store_brands_path %></li>
-	<li class="active"><%= @brand.name %></li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Brands", admin_store_brands_path %></li>
+  <li class="active"><%= @brand.name %></li>
 <% end %>

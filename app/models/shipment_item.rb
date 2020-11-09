@@ -16,14 +16,14 @@
 
 class ShipmentItem < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper
-  
+
   self.table_name = "store_shipment_items"
   attr_accessor :previously_shipped
 
   belongs_to :shipment
   belongs_to :order_item
   belongs_to :inventory_location
-  
+
   def to_s
     "#{order_item.item_number} (#{number_with_delimiter(quantity)})"
   end

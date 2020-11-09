@@ -2,10 +2,10 @@
 <hr>
 
 <% if @product.template_product_id %>
-<div class="alert alert-info">
-  <b>Note: </b> This product's content is maintained by a template.  Changes made here may be overwritten.
-  <b><%= link_to "Click here to edit template", admin_store_product_path(@product.template_product) %></b>.
-</div>
+  <div class="alert alert-info">
+    <b>Note: </b> This product's content is maintained by a template. Changes made here may be overwritten.
+    <b><%= link_to "Click here to edit template", admin_store_product_path(@product.template_product) %></b>.
+  </div>
 <% end %>
 
 <ul class="nav nav-tabs">
@@ -21,9 +21,9 @@
 
 <br/>
 <form action="/admin/store/products/<%= params[:id] %>/catalogs" method="post" class="catalogs">
-	<%= token_tag %>
-	<input type="hidden" name="id" value="<%= params[:id] %>">
-	<table class="table table-striped table-bordered table-condensed">
+  <%= token_tag %>
+  <input type="hidden" name="id" value="<%= params[:id] %>">
+  <table class="table table-striped table-bordered table-condensed">
     <tr>
       <th></th>
       <th>Code</th>
@@ -32,20 +32,25 @@
       <th>Standard Price</th>
       <th>Promotional Price</th>
     </tr>
-	<% Catalog.all.each do |cat| 
+    <% Catalog.all.each do |cat|
       pc = @product.product_catalogs.find { |pc| pc.catalog_id == cat.id } %>
-    <tr>
-      <td><input type="checkbox" name="catalogs[][id]" value="<%= cat.id %>" <%= "checked='checked'" unless pc.nil? %>/></td>
-      <td><%= cat.code %></td>
-      <td><%= cat.name %></td>
-      <td><%= cat.url %></td>
-      <td><input type="text" name="catalogs[][standard_price]" value="<%= pc.nil? ? @product.msrp : pc.standard_price %>"/></td>
-      <td><input type="text" name="catalogs[][promotional_price]" value="<%= pc.promotional_price unless pc.nil? %>"/></td>
-    </tr>
-	<% end %>
+      <tr>
+        <td>
+          <input type="checkbox" name="catalogs[][id]" value="<%= cat.id %>" <%= "checked='checked'" unless pc.nil? %>/>
+        </td>
+        <td><%= cat.code %></td>
+        <td><%= cat.name %></td>
+        <td><%= cat.url %></td>
+        <td>
+          <input type="text" name="catalogs[][standard_price]" value="<%= pc.nil? ? @product.msrp : pc.standard_price %>"/>
+        </td>
+        <td><input type="text" name="catalogs[][promotional_price]" value="<%= pc.promotional_price unless pc.nil? %>"/>
+        </td>
+      </tr>
+    <% end %>
   </table>
-  
-  <%= button_tag "Save changes", class: "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ...".html_safe } %>
+
+  <%= button_tag "Save changes", class: "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ...".html_safe} %>
 </form>
 
 
@@ -55,8 +60,8 @@
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Products", admin_store_products_path(brand_id: @product.brand_id, status: :active) %></li>
-	<li><%= link_to @product.name_with_option, admin_store_product_path(@product)%> </li>
-	<li class="active">edit</li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Products", admin_store_products_path(brand_id: @product.brand_id, status: :active) %></li>
+  <li><%= link_to @product.name_with_option, admin_store_product_path(@product) %> </li>
+  <li class="active">edit</li>
 <% end %>

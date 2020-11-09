@@ -40,7 +40,7 @@
 class DailyDeal < ActiveRecord::Base
   include Exportable
   self.table_name = "store_daily_deals"
-  
+
   belongs_to :affiliate
   belongs_to :region
   has_many :pictures, -> { order 'sort' }, as: :imageable
@@ -51,33 +51,33 @@ class DailyDeal < ActiveRecord::Base
   has_many :external_coupons
   has_many :daily_deal_categories
   has_many :categories, through: :daily_deal_categories
-  
+
   accepts_nested_attributes_for :items, allow_destroy: true, reject_if: lambda { |attrs| attrs['product_id'].blank? }
   accepts_nested_attributes_for :locations
-  
+
   validates_presence_of :deal_type, :slug, :title, :start_time, :end_time, :original_price, :deal_price, :description
   validates_presence_of :short_tag_line, :max_sales, :number_sold, :affiliate_id
   validates_uniqueness_of :slug
-  
+
   def cache_key
     "daily-deal:#{slug}"
   end
-  
+
   def discount_percent
     (100.0 * (original_price - deal_price) / original_price).floor
   end
-  
+
   def to_s
     short_tag_line
   end
-  
+
   def orders
     Order.includes(:items).where.not(status: 'in cart').where(id: OrderItem.where(daily_deal_id: id).pluck(:order_id)).order(submitted: :desc)
   end
-  
+
   # PUNDIT
   def self.policy_class
     ApplicationPolicy
   end
-  
+
 end

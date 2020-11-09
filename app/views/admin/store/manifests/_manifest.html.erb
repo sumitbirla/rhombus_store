@@ -3,18 +3,18 @@
   <td><%= m.day %></td>
   <td><%= m.carrier %></td>
   <td class="text-center">
-  <% if m.status == "open" %>
-    <%= link_to m.shipment_count.to_s, admin_store_shipments_path(carrier: m.carrier, ship_date: m.day, status: :shipped) %>
-  <% else %>
-    <%= link_to m.shipment_count.to_s, admin_store_shipments_path(manifest_id: m.id) %>
-  <% end %>
+    <% if m.status == "open" %>
+      <%= link_to m.shipment_count.to_s, admin_store_shipments_path(carrier: m.carrier, ship_date: m.day, status: :shipped) %>
+    <% else %>
+      <%= link_to m.shipment_count.to_s, admin_store_shipments_path(manifest_id: m.id) %>
+    <% end %>
   </td>
   <td>
-  <% if m.batch_id %>
-    <%= m.batch_id %>
-  <% else %>
-    <span class="light">n/a</span>
-  <% end %>  
+    <% if m.batch_id %>
+      <%= m.batch_id %>
+    <% else %>
+      <span class="light">n/a</span>
+    <% end %>
   </td>
   <td class="text-center"><%= order_status m %></td>
   <td class="actions ralign">
@@ -22,11 +22,11 @@
       <%= form_for [:admin, :store, m] do |f| %>
         <%= f.hidden_field :day %>
         <%= f.hidden_field :carrier %>
-        <button style="display: inline;">create manifest</button> &nbsp; 
+        <button style="display: inline;">create manifest</button> &nbsp;
       <% end %>
     <% else %>
       <% unless m.document_url.nil? %>
-        <%= link_to "print document", admin_system_printers_print_url_path, class: "print-link", url: m.document_url, "print-format" => "pdf" %> &nbsp; 
+        <%= link_to "print document", admin_system_printers_print_url_path, class: "print-link", url: m.document_url, "print-format" => "pdf" %> &nbsp;
       <% end %>
     <% end %>
   </td>

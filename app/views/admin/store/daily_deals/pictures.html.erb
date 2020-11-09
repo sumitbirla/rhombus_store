@@ -13,12 +13,12 @@
 
 
 
-<%= render partial: 'admin/shared/image_list', locals: { object: @daily_deal } %>
+<%= render partial: 'admin/shared/image_list', locals: {object: @daily_deal} %>
 
 
 
 <% content_for :title do %>
-	Daily Deals: <%= @daily_deal.short_tag_line %>
+  Daily Deals: <%= @daily_deal.short_tag_line %>
 <% end %>
 
 
@@ -26,8 +26,8 @@
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
-	<li><%= link_to @daily_deal.short_tag_line, admin_store_daily_deal_path(@daily_deal) %></li>
-	<li class="active">edit</li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
+  <li><%= link_to @daily_deal.short_tag_line, admin_store_daily_deal_path(@daily_deal) %></li>
+  <li class="active">edit</li>
 <% end %>

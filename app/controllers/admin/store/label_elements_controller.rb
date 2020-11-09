@@ -1,11 +1,11 @@
 class Admin::Store::LabelElementsController < Admin::BaseController
-  
+
   def index
     authorize LabelElement.new
     @label_elements = LabelElement.order(created_at: :desc)
-    
+
     respond_to do |format|
-      format.html  { @label_elements = @label_elements.paginate(page: params[:page], per_page: @per_page) }
+      format.html { @label_elements = @label_elements.paginate(page: params[:page], per_page: @per_page) }
       format.csv { send_data LabelElement.to_csv(@label_elements) }
     end
   end
@@ -18,7 +18,7 @@ class Admin::Store::LabelElementsController < Admin::BaseController
 
   def create
     @label_element = authorize LabelElement.new(label_element_params)
-    
+
     if @label_element.save
       unless params[:redirect].blank?
         redirect_to params[:redirect]
@@ -42,7 +42,7 @@ class Admin::Store::LabelElementsController < Admin::BaseController
 
   def update
     @label_element = authorize LabelElement.find(params[:id])
-    
+
     if @label_element.update(label_element_params)
       unless params[:redirect].blank?
         redirect_to params[:redirect]
@@ -60,13 +60,13 @@ class Admin::Store::LabelElementsController < Admin::BaseController
     @label_element.destroy
     redirect_back(fallback_location: admin_root_path)
   end
-  
-  
+
+
   private
-  
-    def label_element_params
-      params.require(:label_element).permit!
-    end
-  
-  
+
+  def label_element_params
+    params.require(:label_element).permit!
+  end
+
+
 end

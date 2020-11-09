@@ -5,35 +5,35 @@
 </div>
 
 <div>
-  For Shipments: 
+  For Shipments:
   <% if @shipments.length > 8 %>
     <%= @shipments.length %> shipments
   <% else %>
     <% @shipments.each do |shp| %>
-      <%= link_to shp.to_s, admin_store_shipment_path(shp) %> <span class="light">/</span> 
+      <%= link_to shp.to_s, admin_store_shipment_path(shp) %> <span class="light">/</span>
     <% end %>
   <% end %>
-  &nbsp; (<%= @items.sum { |x| x[:quantity] }%> items)
+  &nbsp; (<%= @items.sum { |x| x[:quantity] } %> items)
 </div>
 
 <hr>
 
-  <%
-    prev_label = nil
-    @items.each do |item|
-      unless item[:label] == prev_label
+<%
+  prev_label = nil
+  @items.each do |item|
+    unless item[:label] == prev_label
       prev_label = item[:label] %>
-      </table>
-      </form>
-      <form action="/admin/store/shipments/product_labels" method="post">
-        <input type="hidden" name="label" value="<%= item[:label] %>">
-        <% unless item[:label] == "PREPRINTED_ROLL" %>
+    </table>
+    </form>
+    <form action="/admin/store/shipments/product_labels" method="post">
+      <input type="hidden" name="label" value="<%= item[:label] %>">
+      <% unless item[:label] == "PREPRINTED_ROLL" %>
         <div class="pull-right" style="margin-top: 6px;">
-          <%= select_tag(:printer_id, options_from_collection_for_select(Cache.printers.select { |x| x.preferred_format == 'kiaro' }, :id, :name), style: "font-size: 10pt;")%> 
+          <%= select_tag(:printer_id, options_from_collection_for_select(Cache.printers.select { |x| x.preferred_format == 'kiaro' }, :id, :name), style: "font-size: 10pt;") %>
           <button class="btn btn-xs btn-default"><i class="fa fa-print"></i> print all</button>
         </div>
-        <% end %>
-      <h3><%= item[:label] || "- not set -" %></h3> 
+      <% end %>
+      <h3><%= item[:label] || "- not set -" %></h3>
       <table id="item-table" class="table table-striped table-condensed table-bordered" style="margin-bottom: 30px;">
         <tr>
           <th class="col-md-2">Item</th>
@@ -41,38 +41,40 @@
           <th class="col-md-1 text-center">Quantity</th>
           <th class="col-md-1 text-center">&nbsp;</th>
           <th class="col-md-1 text-center">&nbsp;</th>
-        </tr> 
-    <% end %>
+        </tr>
+  <% end %>
   <%
     item_number = item[:item_number]
     preview_path = item[:upload_file_preview].presence || "/images/labels/#{item_number}.jpg"
   %>
-    <tr>
-      <td>
-        <%= item_number %>
-        <% unless item[:uploaded_file].blank? %>    
-          <input type="hidden" name="print_items[][personalized]" value="true">
-          <span class="label label-info pull-right">personalized</span>
-        <% else %>
-          <input type="hidden" name="print_items[][personalized]" value="false">
-        <% end %>
-      </td>
-      <td><%= item[:name] %>, <%= item[:option_title] %></td>
-      <td class="text-center">
-        <input type="hidden" name="print_items[][rendered_file]" value="<%= item[:rendered_file] %>">
-        <input type="hidden" name="print_items[][item_number]" value="<%= item_number %>">
-        <input style="width: 60px; text-align: center;" type="numeric" name="print_items[][quantity]" value="<%= item[:quantity] %>">
-      </td>
-      <td class="text-center">
+  <tr>
+    <td>
+      <%= item_number %>
+      <% unless item[:uploaded_file].blank? %>
+        <input type="hidden" name="print_items[][personalized]" value="true">
+        <span class="label label-info pull-right">personalized</span>
+      <% else %>
+        <input type="hidden" name="print_items[][personalized]" value="false">
+      <% end %>
+    </td>
+    <td><%= item[:name] %>, <%= item[:option_title] %></td>
+    <td class="text-center">
+      <input type="hidden" name="print_items[][rendered_file]" value="<%= item[:rendered_file] %>">
+      <input type="hidden" name="print_items[][item_number]" value="<%= item_number %>">
+      <input style="width: 60px; text-align: center;" type="numeric" name="print_items[][quantity]" value="<%= item[:quantity] %>">
+    </td>
+    <td class="text-center">
       <% if !item[:uploaded_file].blank? && item[:rendered_file].blank? %>
         <span class="text-danger"><i class="fa fa-exclamation-circle"></i> not rendered</span>
       <% else %>
         <a class="print-single" href="#"><i class="fa fa-print"></i> print</a>
       <% end %>
-      </td>
-      <td class="text-center"><a href="<%= cdn_image_url(preview_path, 800, 700, 0) %>" data-lightbox="image-1"><i class="fa fa-image"></i> view</a></td>
-    </tr>
-  <% end %>
+    </td>
+    <td class="text-center">
+      <a href="<%= cdn_image_url(preview_path, 800, 700, 0) %>" data-lightbox="image-1"><i class="fa fa-image"></i> view</a>
+    </td>
+  </tr>
+<% end %>
 
 </table>
 </form>
@@ -80,26 +82,26 @@
 
 
 <%= content_for :title do %>
-    Shipment: Product Labels
+  Shipment: Product Labels
 <% end %>
 
 
 <% content_for :head do %>
   <script>
-    $(document).ready(function() {
-      
-      $(".zero-counts").click(function() {
-        $("input[type='numeric']").val("0");
+      $(document).ready(function () {
+
+          $(".zero-counts").click(function () {
+              $("input[type='numeric']").val("0");
+          });
+
+          $(".print-single").click(function () {
+              var qty = $(this).parent().prev().find("input[type='numeric']").val();
+              $(this).parent().parent().parent().find("input[type='numeric']").val("0");
+              $(this).parent().prev().find("input[type='numeric']").val(qty);
+              $(this).parents("form").submit();
+          });
+
       });
-      
-      $(".print-single").click(function() {
-        var qty = $(this).parent().prev().find("input[type='numeric']").val();
-        $(this).parent().parent().parent().find("input[type='numeric']").val("0");
-        $(this).parent().prev().find("input[type='numeric']").val(qty);
-        $(this).parents("form").submit();
-      }); 
-      
-    });
   </script>
 
 <% end %>
@@ -107,8 +109,8 @@
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">eCommerce</a></li>
-    <li><%= link_to 'Shipments', admin_store_shipments_path(status: :pending) %></li>
-    <li class="active">Product Labels</li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to 'Shipments', admin_store_shipments_path(status: :pending) %></li>
+  <li class="active">Product Labels</li>
 <% end %>
 

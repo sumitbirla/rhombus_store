@@ -1,26 +1,26 @@
 <% po = purchase_order %>
 <tr>
-    <td><input type="checkbox" name="purchase_order_id[]" class="multiselect hidden-xs" value="<%= po.id %>"/></td>
-		<td><%= link_to po.id, admin_inventory_purchase_order_path(po) %></td>
-		<td><%= link_to po.supplier, admin_system_affiliate_path(po.supplier, q: :po) %></td>
-		<td class="text-center"><%= po.issue_date %></td>
-		<td class="text-center">   
-      <% if !['received', 'cancelled'].include?(po.status) && po.due_date < Date.today %>
-        <i class="text-danger fa fa-exclamation-circle"></i> &nbsp;
-      <% end %>
-      <%= po.due_date %>
-    </td>
-    <td class="text-center">
-      <%= number_with_delimiter po.items.collect(&:quantity_received).sum %> / 
-      <%= number_with_delimiter po.items.collect(&:quantity).sum %>
-    </td>
-		<td class="text-right"><%= number_to_currency po.items.collect { |i| i.quantity * (i.unit_price || 0.0) }.sum  %></td>
-		<td class="text-center"><%= po_status(po) %></td>
-		<td class="text-right hidden-xs">
-			<%= link_to "edit", edit_admin_inventory_purchase_order_path(po) %> &nbsp;
-			<%= link_to "delete", 
-						  { action: "destroy", id: po.id }, 
-						  method: :delete, 
-						  data: { confirm: "Are you sure?" } %>
-		</td>
+  <td><input type="checkbox" name="purchase_order_id[]" class="multiselect hidden-xs" value="<%= po.id %>"/></td>
+  <td><%= link_to po.id, admin_inventory_purchase_order_path(po) %></td>
+  <td><%= link_to po.supplier, admin_system_affiliate_path(po.supplier, q: :po) %></td>
+  <td class="text-center"><%= po.issue_date %></td>
+  <td class="text-center">
+    <% if !['received', 'cancelled'].include?(po.status) && po.due_date < Date.today %>
+      <i class="text-danger fa fa-exclamation-circle"></i> &nbsp;
+    <% end %>
+    <%= po.due_date %>
+  </td>
+  <td class="text-center">
+    <%= number_with_delimiter po.items.collect(&:quantity_received).sum %> /
+    <%= number_with_delimiter po.items.collect(&:quantity).sum %>
+  </td>
+  <td class="text-right"><%= number_to_currency po.items.collect { |i| i.quantity * (i.unit_price || 0.0) }.sum %></td>
+  <td class="text-center"><%= po_status(po) %></td>
+  <td class="text-right hidden-xs">
+    <%= link_to "edit", edit_admin_inventory_purchase_order_path(po) %> &nbsp;
+    <%= link_to "delete",
+                {action: "destroy", id: po.id},
+                method: :delete,
+                data: {confirm: "Are you sure?"} %>
+  </td>
 </tr>

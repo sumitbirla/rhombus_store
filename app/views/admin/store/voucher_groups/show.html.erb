@@ -1,61 +1,62 @@
 <form action="/admin/store/voucher_groups/<%= @voucher_group.id %>/vouchers" method="post" class="pull-right">
-	<%= token_tag %>
-	<input type="hidden" name="id" value="<%= @voucher_group.id %>">
-	<input type="text" name="num" placeholder="num vouchers"/ >
-	<input type="text" name="len" placeholder="size" />
-	<button class="btn btn-sm btn-default">Create</button>
+  <%= token_tag %>
+  <input type="hidden" name="id" value="<%= @voucher_group.id %>">
+  <input type="text" name="num" placeholder="num vouchers"/ >
+  <input type="text" name="len" placeholder="size"/>
+  <button class="btn btn-sm btn-default">Create</button>
 </form>
 
 <h2><%= @voucher_group.name %></h2>
-<p>Value: <%= number_to_currency(@voucher_group.value) %>,  &nbsp; Expires: <%= systime @voucher_group.expires %>
+<p>Value: <%= number_to_currency(@voucher_group.value) %>, &nbsp; Expires: <%= systime @voucher_group.expires %>
 <hr/>
 
 
 <% if @voucher_group.vouchers.length > 2 %>
   <% @voucher_group.vouchers.each_slice(@voucher_group.vouchers.length / 2) do |vouchers| %>
-  <div class="col-md-6">
-    <table class="table table-condensed table-striped">
-    	<tr>
-    		<th>Voucher code</th>
-    		<th>Issued</th>
-    		<th>$ Used</th>
-        <th>Last Used</th>
-    		<th>&nbsp;</th>
-    	</tr>
-    	<% vouchers.each do |voucher| %>
-    	<tr>
-    		<td><%= voucher.code %></td>
-    		<td>
-          <% unless voucher.issued %>
-            <%= link_to "issue", issue_admin_store_voucher_path(voucher), class: "light" %>
-          <% else %>
-            <%= tick voucher.issued %>
-          <% end %>
-        </td>
-    		<td class="light"><%= number_to_currency voucher.amount_used %></td>
-    		<td><% unless voucher.amount_used > 0.0 %>
-    			  <span class="light">- never -</span>
-          <% else %>
-            <%= systime voucher.updated_at %>
-          <% end %>
-    		</td>
-        <td>
-          <% unless voucher.amount_used > 0.0 %>
-            <%= link_to "delete", 
-            						  { action: "destroy", controller: "vouchers", id: voucher.id }, 
-            						  method: :delete, 
-            						  data: { confirm: "Are you sure?" } %>
-          <% end %>
-        </td>
-    	<% end %>
-    </table>
-  </div>
+    <div class="col-md-6">
+      <table class="table table-condensed table-striped">
+        <tr>
+          <th>Voucher code</th>
+          <th>Issued</th>
+          <th>$ Used</th>
+          <th>Last Used</th>
+          <th>&nbsp;</th>
+        </tr>
+        <% vouchers.each do |voucher| %>
+          <tr>
+            <td><%= voucher.code %></td>
+            <td>
+              <% unless voucher.issued %>
+                <%= link_to "issue", issue_admin_store_voucher_path(voucher), class: "light" %>
+              <% else %>
+                <%= tick voucher.issued %>
+              <% end %>
+            </td>
+            <td class="light"><%= number_to_currency voucher.amount_used %></td>
+            <td>
+              <% unless voucher.amount_used > 0.0 %>
+                <span class="light">- never -</span>
+              <% else %>
+                <%= systime voucher.updated_at %>
+              <% end %>
+            </td>
+            <td>
+              <% unless voucher.amount_used > 0.0 %>
+                <%= link_to "delete",
+                            {action: "destroy", controller: "vouchers", id: voucher.id},
+                            method: :delete,
+                            data: {confirm: "Are you sure?"} %>
+              <% end %>
+            </td>
+        <% end %>
+      </table>
+    </div>
   <% end %>
 <% end %>
 
 
 <%= content_for :title do %>
-	Vouchers: <%= @voucher_group.name %>
+  Vouchers: <%= @voucher_group.name %>
 <% end %>
 
 
@@ -63,7 +64,7 @@
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Vouchers", admin_store_voucher_groups_path %></li>
-	<li class="active"><%= @voucher_group.name %></li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Vouchers", admin_store_voucher_groups_path %></li>
+  <li class="active"><%= @voucher_group.name %></li>
 <% end %>

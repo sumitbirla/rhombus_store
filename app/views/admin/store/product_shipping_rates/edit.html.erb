@@ -1,28 +1,28 @@
-<h2>Code <%= @product_shipping_rate.code%></h2>
+<h2>Code <%= @product_shipping_rate.code %></h2>
 <hr/>
 
 <%= simple_form_for [:admin, :store, @product_shipping_rate] do |f| %>
 
-	<%= render 'admin/shared/error_messages', object: f.object %>
-	
-	<%= f.input :code %>
+  <%= render 'admin/shared/error_messages', object: f.object %>
+
+  <%= f.input :code %>
   <%= f.input :destination_country_code %>
   <%= f.input :ship_method %>
-	<%= f.input :first_item, input_html: { class: 'span2' }  %>
-	<%= f.input :second_item, input_html: { class: 'span2' } %>
-	<%= f.input :additional_items, input_html: { class: 'span2' } %>
-	
+  <%= f.input :first_item, input_html: {class: 'span2'} %>
+  <%= f.input :second_item, input_html: {class: 'span2'} %>
+  <%= f.input :additional_items, input_html: {class: 'span2'} %>
+
   <hr>
-	<div class="form-actions">
-		<%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
-	</div>
+  <div class="form-actions">
+    <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
+  </div>
 
 <% end %>
 
 
 
 <%= content_for :title do %>
-	Shipping Rates: <%= @product_shipping_rate.code %>
+  Shipping Rates: <%= @product_shipping_rate.code %>
 <% end %>
 
 
@@ -30,7 +30,7 @@
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Shipping Rates", admin_store_product_shipping_rates_path %></li>
-	<li class="active">Code <%= @product_shipping_rate.code %></li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Shipping Rates", admin_store_product_shipping_rates_path %></li>
+  <li class="active">Code <%= @product_shipping_rate.code %></li>
 <% end %>

@@ -21,7 +21,7 @@ class PurchaseOrderItem < ActiveRecord::Base
   self.table_name = "inv_purchase_order_items"
   belongs_to :purchase_order
   validates_presence_of :sku, :quantity, :unit_price
-  
+
   def update_status
     if quantity_received >= quantity
       self.status = 'closed'
@@ -31,5 +31,5 @@ class PurchaseOrderItem < ActiveRecord::Base
       self.status = 'received'
     end
   end
-  
+
 end

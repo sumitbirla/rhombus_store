@@ -3,43 +3,43 @@
     <%= link_to new_admin_store_daily_deal_path, class: 'btn btn-sm btn-default' do %>
       <i class="fa fa-plus"></i> New deal
     <% end %>
-  	<%= link_to admin_system_categories_path(type: :daily_deal), class: 'btn btn-sm btn-default' do %>
+    <%= link_to admin_system_categories_path(type: :daily_deal), class: 'btn btn-sm btn-default' do %>
       <i class="fa fa-list-ul"></i> Setup categories
     <% end %>
   </div>
-	<i class="fa fa-star"></i> Daily Deals
+  <i class="fa fa-star"></i> Daily Deals
 </h2>
 
 <%= will_paginate @daily_deals %>
 <table class="table table-striped table-condensed">
-	<tr>
+  <tr>
     <th>ID</th>
-		<th>Start time</t>
-		<th>Deal</th>
-		<th>Price</th>
-		<th>Sold</th>
-		<th>Status</th>
-		<th class="actions">&nbsp;</th>
-	</tr>
-	<% @daily_deals.each do |deal| %>
-	<tr>
-    <td><%= deal.id %></td>
-		<td><%= systime deal.start_time %></td>
-		<td><%= link_to deal.short_tag_line, admin_store_daily_deal_path(deal) %></td>
-		<td><%= number_to_currency(deal.deal_price) %></td>
-		<td><%= deal.number_sold %></td>
-		<td><%= deal_status(deal)%></td>
-		<td class="actions">
-      <%= link_to "orders", orders_admin_store_daily_deal_path(deal) %> &nbsp;
-			<%= link_to "edit", edit_admin_store_daily_deal_path(deal) %> &nbsp;
-			<%= link_to "delete", 
-						  { action: "destroy", id: deal.id }, 
-						  method: :delete, 
-						  data: { confirm: "Are you sure?" } %>
-			
-		</td>
-	</tr>
-	<% end %>
+    <th>Start time</t>
+    <th>Deal</th>
+    <th>Price</th>
+    <th>Sold</th>
+    <th>Status</th>
+    <th class="actions">&nbsp;</th>
+  </tr>
+  <% @daily_deals.each do |deal| %>
+    <tr>
+      <td><%= deal.id %></td>
+      <td><%= systime deal.start_time %></td>
+      <td><%= link_to deal.short_tag_line, admin_store_daily_deal_path(deal) %></td>
+      <td><%= number_to_currency(deal.deal_price) %></td>
+      <td><%= deal.number_sold %></td>
+      <td><%= deal_status(deal) %></td>
+      <td class="actions">
+        <%= link_to "orders", orders_admin_store_daily_deal_path(deal) %> &nbsp;
+        <%= link_to "edit", edit_admin_store_daily_deal_path(deal) %> &nbsp;
+        <%= link_to "delete",
+                    {action: "destroy", id: deal.id},
+                    method: :delete,
+                    data: {confirm: "Are you sure?"} %>
+
+      </td>
+    </tr>
+  <% end %>
 </table>
 
 <%= render 'admin/shared/table_summary', data: @daily_deals %>
@@ -47,11 +47,11 @@
 
 
 <% content_for :title do %>
-	Daily Deals
+  Daily Deals
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li class="active">Daily Deals</li>
+  <li><a href="#">eCommerce</a></li>
+  <li class="active">Daily Deals</li>
 <% end %>

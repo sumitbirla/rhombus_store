@@ -1,4 +1,4 @@
-<% readonly ||= false  %>
+<% readonly ||= false %>
 
 <tr>
   <% unless readonly %>
@@ -10,11 +10,11 @@
   <td><%= shipment.recipient_city %>, <%= shipment.recipient_state %></td>
   <td><%= shipment.fulfiller %></td>
   <td class="small">
-  <% if shipment.items.length == 1 && shipment.items[0].order_item %>
-    <b><%= shipment.items[0].order_item.item_number %></b> (<%= shipment.items.collect(&:quantity).sum %>)
-  <% else %>
-    - <%= shipment.items.collect(&:quantity).sum %> items -
-  <% end %>
+    <% if shipment.items.length == 1 && shipment.items[0].order_item %>
+      <b><%= shipment.items[0].order_item.item_number %></b> (<%= shipment.items.collect(&:quantity).sum %>)
+    <% else %>
+      - <%= shipment.items.collect(&:quantity).sum %> items -
+    <% end %>
   </td>
   <td><%= time_ago shipment.order.submitted %></td>
   <td><%= shipment.ship_date ? sysdate(shipment.ship_date) : "<span class='light'>-</span>".html_safe %></td>
@@ -24,15 +24,15 @@
       <%= link_to edit_admin_inventory_inventory_transaction_path(shipment.inventory_transaction) do %>
         <i class="light fab fa-dropbox"></i>
       <% end %>
-    <% end%>
+    <% end %>
   </td>
-  <td><%= shipment_status(shipment)%></td>
+  <td><%= shipment_status(shipment) %></td>
   <% unless readonly %>
     <td class="actions ralign hidden-xs">
       <%= link_to "delete",
-                  { action: "destroy", id: shipment.id },
+                  {action: "destroy", id: shipment.id},
                   method: :delete,
-                  data: { confirm: "Are you sure?" } %>
+                  data: {confirm: "Are you sure?"} %>
     </td>
   <% end %>
 </tr>

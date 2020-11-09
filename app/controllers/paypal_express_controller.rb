@@ -22,7 +22,7 @@ class PaypalExpressController < ActionController::Base
 
   def review
     if params[:token].nil?
-      flash[:error] =  'Woops! Something went wrong!'
+      flash[:error] = 'Woops! Something went wrong!'
       return redirect_to cart_path
     end
 
@@ -40,22 +40,22 @@ class PaypalExpressController < ActionController::Base
     end
 
     @cart.assign_attributes({
-      notify_email: gateway_response.email,
-      billing_name: gateway_response.name,
-      shipping_name: gateway_response.address['name'],
-      shipping_company: gateway_response.address['company'],
-      shipping_street1: gateway_response.address['address1'],
-      shipping_street2: gateway_response.address['address2'],
-      shipping_city: gateway_response.address['city'],
-      shipping_state: gateway_response.address['state'],
-      shipping_zip: gateway_response.address['zip'],
-      shipping_country: gateway_response.address['country'],
-      payment_method: 'PAYPAL',
-      paypal_token: gateway_response.token,
-      paypal_payer_id: gateway_response.payer_id,
-      sales_channel: Cache.setting(1, :system, 'Website Name')
-    })
-    
+                                notify_email: gateway_response.email,
+                                billing_name: gateway_response.name,
+                                shipping_name: gateway_response.address['name'],
+                                shipping_company: gateway_response.address['company'],
+                                shipping_street1: gateway_response.address['address1'],
+                                shipping_street2: gateway_response.address['address2'],
+                                shipping_city: gateway_response.address['city'],
+                                shipping_state: gateway_response.address['state'],
+                                shipping_zip: gateway_response.address['zip'],
+                                shipping_country: gateway_response.address['country'],
+                                payment_method: 'PAYPAL',
+                                paypal_token: gateway_response.token,
+                                paypal_payer_id: gateway_response.payer_id,
+                                sales_channel: Cache.setting(1, :system, 'Website Name')
+                            })
+
     update_totals(@cart)
 
     # check if there is a user associated with this email address
@@ -71,11 +71,11 @@ class PaypalExpressController < ActionController::Base
 
   private
 
-    def assigns_gateway
-      @gateway ||= PaypalExpressGateway.new(
-          :login => Cache.setting(1, 'eCommerce', 'PayPal API Username'),
-          :password => Cache.setting(1, 'eCommerce', 'PayPal API Password'),
-          :signature => Cache.setting(1, 'eCommerce', 'PayPal Signature'),
-      )
-    end
+  def assigns_gateway
+    @gateway ||= PaypalExpressGateway.new(
+        :login => Cache.setting(1, 'eCommerce', 'PayPal API Username'),
+        :password => Cache.setting(1, 'eCommerce', 'PayPal API Password'),
+        :signature => Cache.setting(1, 'eCommerce', 'PayPal Signature'),
+    )
+  end
 end

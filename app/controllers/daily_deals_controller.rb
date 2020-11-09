@@ -4,7 +4,7 @@ class DailyDealsController < ApplicationController
     @deal_submission = DealSubmission.new
     @deal_submission.locations.build
   end
-  
+
   def create_submission
     @deal_submission = DealSubmission.new(deal_submission_params)
     if @deal_submission.save
@@ -14,11 +14,11 @@ class DailyDealsController < ApplicationController
       render 'new'
     end
   end
-  
+
   def show_submission
     @deal_submission = DealSubmission.find_by(params[:id])
   end
-  
+
   def index
     @daily_deals = StoreCache.active_deals
   end
@@ -26,19 +26,19 @@ class DailyDealsController < ApplicationController
   def show
     @daily_deal = DailyDeal.find_by(slug: params[:slug])
   end
-  
+
   def email
     @daily_deal = DailyDeal.find_by(uuid: params[:uuid])
-    
+
     respond_to do |format|
       format.html { render 'email', layout: nil }
       format.text
     end
   end
-  
+
   private
-  
-    def deal_submission_params
-      params.require(:deal_submission).permit!
-    end
+
+  def deal_submission_params
+    params.require(:deal_submission).permit!
+  end
 end

@@ -1,17 +1,17 @@
 <div class="pull-right hidden-xs">
-  <%= render 'admin/store/shipments/group_actions'%>	  
+  <%= render 'admin/store/shipments/group_actions' %>
 </div>
 
 <h2>
   <i class="fa fa-truck"></i> &nbsp;Shipments
   <% if current_user.admin? %>
-  <% dropshippers = Cache.affiliate_list(:dropshippers) %>
-  &nbsp; <select id="fulfiller" name="fulfilled_by_id" style="font-size: 14px; vertical-align: middle;">
-    <option value="">-- All fulfillers --</option>
-    <% dropshippers.each do |aff| %>
-      <option value="<%= aff.id %>" <%= 'selected' if params[:fulfilled_by_id] == aff.id.to_s %>><%= aff.name %></option>
-    <% end %>
-  </select>
+    <% dropshippers = Cache.affiliate_list(:dropshippers) %>
+    &nbsp; <select id="fulfiller" name="fulfilled_by_id" style="font-size: 14px; vertical-align: middle;">
+  <option value="">-- All fulfillers --</option>
+  <% dropshippers.each do |aff| %>
+    <option value="<%= aff.id %>" <%= 'selected' if params[:fulfilled_by_id] == aff.id.to_s %>><%= aff.name %></option>
+  <% end %>
+</select>
   <% end %>
 </h2>
 
@@ -20,9 +20,9 @@
 <%= render "admin/shared/search_results_header", object: @shipments %>
 
 <form id="frmBatch" action="" method="post">
-	<%= token_tag %>
+  <%= token_tag %>
   <input type="hidden" name="printer_id" value=""/>
-  
+
   <%
     query = Shipment.group(:status)
     query = query.where(fulfilled_by_id: params[:fulfilled_by_id]) unless params[:fulfilled_by_id].blank?
@@ -30,18 +30,21 @@
     shipment_counts['ready_to_ship'] = 0 unless shipment_counts.keys.include?('ready_to_ship')
     shipment_counts = shipment_counts.sort
   %>
-  
+
   <ul class="nav nav-tabs" style="margin-bottom: 14px;">
-  <% shipment_counts.each do |status, count| %>
-    <li class="<%= "active" if params[:status] == status %>"><a href="<%= admin_store_shipments_path(status: status, fulfilled_by_id: params[:fulfilled_by_id])%>"><%= tab_count(status.titlecase, count)%></a></li>
-  <% end %>
-  <li class="<%= "active" if params[:status].blank? %>"><a href="<%= admin_store_shipments_path(fulfilled_by_id: params[:fulfilled_by_id]) %>">All</a></li>
+    <% shipment_counts.each do |status, count| %>
+      <li class="<%= "active" if params[:status] == status %>">
+        <a href="<%= admin_store_shipments_path(status: status, fulfilled_by_id: params[:fulfilled_by_id]) %>"><%= tab_count(status.titlecase, count) %></a>
+      </li>
+    <% end %>
+    <li class="<%= "active" if params[:status].blank? %>">
+      <a href="<%= admin_store_shipments_path(fulfilled_by_id: params[:fulfilled_by_id]) %>">All</a></li>
   </ul>
-	
+
   <%= will_paginate @shipments %>
   <table class="table table-striped table-condensed footable">
     <tr>
-  	  <th><input type="checkbox" id="chkAll" class="hidden-xs" /></th>
+      <th><input type="checkbox" id="chkAll" class="hidden-xs"/></th>
       <th data-breakpoints="xs"><%= sortable "store_shipments.order_id", "ID" %></th>
       <th>REF</th>
       <th><%= sortable "store_orders.shipping_name", "Ship to" %></th>
@@ -51,7 +54,7 @@
       <th data-breakpoints="xs"><%= sortable "store_orders.submitted", "Age" %></th>
       <th data-breakpoints="xs">Shipped</th>
       <th data-breakpoints="xs">Method</th>
-      <th class="hidden-xs" ></th>
+      <th class="hidden-xs"></th>
       <th>Status</th>
       <th class="actions hidden-xs">&nbsp;</th>
     </tr>
@@ -63,26 +66,26 @@
 
 
 <% content_for :title do %>
-    Shipments
+  Shipments
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">eCommerce</a></li>
-    <li class="active">Shipments</li>
+  <li><a href="#">eCommerce</a></li>
+  <li class="active">Shipments</li>
 <% end %>
 
 
 <% content_for :head do %>
   <script>
-    $(document).ready(function() {
-      
-      $("#master-search").val("shp ");
-      
-      $("#fulfiller").change(function() {
-        window.location.href = "/admin/store/shipments?status=<%= params[:status] %>&fulfilled_by_id=" + $(this).val();      
+      $(document).ready(function () {
+
+          $("#master-search").val("shp ");
+
+          $("#fulfiller").change(function () {
+              window.location.href = "/admin/store/shipments?status=<%= params[:status] %>&fulfilled_by_id=" + $(this).val();
+          });
+
       });
-      
-    });
   </script>
 <% end %>

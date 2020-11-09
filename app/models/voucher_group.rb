@@ -14,7 +14,7 @@ class VoucherGroup < ActiveRecord::Base
   include Exportable
   self.table_name = "store_voucher_groups"
   has_many :vouchers
-  
+
   # PUNDIT
   def self.policy_class
     ApplicationPolicy

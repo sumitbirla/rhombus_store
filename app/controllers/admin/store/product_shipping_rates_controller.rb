@@ -1,10 +1,10 @@
 class Admin::Store::ProductShippingRatesController < Admin::BaseController
-  
+
   def index
     @product_shipping_rates = ProductShippingRate.order(:code)
-    
+
     respond_to do |format|
-      format.html  { @product_shipping_rates = @product_shipping_rates.paginate(page: params[:page], per_page: @per_page) }
+      format.html { @product_shipping_rates = @product_shipping_rates.paginate(page: params[:page], per_page: @per_page) }
       format.csv { send_data ProductShippingRate.to_csv(@product_shipping_rates) }
     end
   end
@@ -34,7 +34,7 @@ class Admin::Store::ProductShippingRatesController < Admin::BaseController
 
   def update
     @product_shipping_rate = ProductShippingRate.find(params[:id])
-    
+
     if @product_shipping_rate.update(product_shipping_rate_params)
       redirect_to action: 'index', notice: 'Shipping Option was successfully updated.'
     else
@@ -47,11 +47,11 @@ class Admin::Store::ProductShippingRatesController < Admin::BaseController
     @product_shipping_rate.destroy
     redirect_to action: 'index', notice: 'Shipping Option has been deleted.'
   end
-  
-  
+
+
   private
-  
-    def product_shipping_rate_params
-      params.require(:product_shipping_rate).permit!
-    end
+
+  def product_shipping_rate_params
+    params.require(:product_shipping_rate).permit!
+  end
 end

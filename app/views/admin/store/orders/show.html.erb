@@ -1,20 +1,22 @@
 <style>
-  .table tbody>tr.vert-align>td
-  {
-      vertical-align: middle;
-  }
-  .extra-properties-trigger { cursor: pointer;}
+    .table tbody > tr.vert-align > td {
+        vertical-align: middle;
+    }
+
+    .extra-properties-trigger {
+        cursor: pointer;
+    }
 </style>
 <script>
-  $(document).ready(function() {
-    $(".extra-properties-trigger").click(function() {
-      $(this).siblings("table.extra-properties").toggle();
+    $(document).ready(function () {
+        $(".extra-properties-trigger").click(function () {
+            $(this).siblings("table.extra-properties").toggle();
+        });
     });
-  });
 </script>
 
 <div class="dropdown pull-right">
-  
+
   <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
     <i class="icon-hand-right"></i> Select Action
     <span class="caret"></span>
@@ -44,7 +46,8 @@
 </div>
 
 
-<h2><% if @order.po %>
+<h2>
+  <% if @order.po %>
     <i class="fa fa-file-text-o"></i>
   <% else %>
     <i class="fa fa-shopping-cart"></i>
@@ -59,90 +62,92 @@
   <% unless @order.submitted.nil? %>
     <b>Submitted: </b> <%= time_ago_in_words(@order.submitted) %> ago
   <% end %>
-  
+
   <% unless @order.user_id.nil? %>
-    &nbsp; &nbsp; <i class="fa fa-user"></i> <%= link_to @order.user.name, admin_system_user_path(@order.user, q: :orders) %>
+    &nbsp; &nbsp;
+    <i class="fa fa-user"></i> <%= link_to @order.user.name, admin_system_user_path(@order.user, q: :orders) %>
   <% end %>
-  
+
   <% unless @order.affiliate_campaign_id.nil?
-     ac = AffiliateCampaign.find(@order.affiliate_campaign_id)
-     unless ac.nil? %>
-      &nbsp; &nbsp; <i class="fa fa-building"></i> <%= link_to ac.affiliate.name, admin_system_affiliate_path(ac.affiliate) %>
+       ac = AffiliateCampaign.find(@order.affiliate_campaign_id)
+       unless ac.nil? %>
+      &nbsp; &nbsp;
+      <i class="fa fa-building"></i> <%= link_to ac.affiliate.name, admin_system_affiliate_path(ac.affiliate) %>
     <% end %>
   <% end %>
 
   <% unless @order.external_order_id.blank? %>
-      &nbsp; &nbsp; [ 
-      <% if @order.affiliate %>
-        <%= link_to @order.affiliate.name, admin_system_affiliate_path(@order.affiliate) %>
-      <% else %>
-        <%= @order.sales_channel %>
-      <% end %>
-      : <%= @order.external_order_name.presence || @order.external_order_id %> ]
+    &nbsp; &nbsp; [
+    <% if @order.affiliate %>
+      <%= link_to @order.affiliate.name, admin_system_affiliate_path(@order.affiliate) %>
+    <% else %>
+      <%= @order.sales_channel %>
+    <% end %>
+    : <%= @order.external_order_name.presence || @order.external_order_id %> ]
   <% end %>
 
   &nbsp; <%= order_status(@order, 'large') %> <%= "<i class='icon-gift'></i>".html_safe if @order.gift %>
 </div>
 
 <% unless @order.ship_earliest.nil? || ["shipped", "cancelled"].include?(@order.status) || @order.status == "error" %>
-<div class="alert alert-warning" style="margin-top: 20px;">
+  <div class="alert alert-warning" style="margin-top: 20px;">
     <i class="fa fa-truck"></i> &nbsp; <b>Ship window:</b> <%= @order.ship_earliest %> &rarr; <%= @order.ship_latest %>
-    
+
     <% unless @order.expected_delivery_date.nil? %>
-        &nbsp; &nbsp; &nbsp; &nbsp; <b>Expected delivery: </b> <%= @order.expected_delivery_date %>
+      &nbsp; &nbsp; &nbsp; &nbsp; <b>Expected delivery: </b> <%= @order.expected_delivery_date %>
     <% end %>
-</div>
+  </div>
 <% end %>
 
 <hr style="margin: 15px 0 20px 0;"/>
 
 <% unless @order.error_messages.blank? %>
-<div class="alert alert-danger" style="margin-top: 20px;">
-  <ul>
-  <% @order.error_messages.split("\n").each do |err| %>
-    <li><i class="fa fa-exclamation-triangle"></i> <%= err %></li>
-  <% end%>
-  </ul>
-</div>
+  <div class="alert alert-danger" style="margin-top: 20px;">
+    <ul>
+      <% @order.error_messages.split("\n").each do |err| %>
+        <li><i class="fa fa-exclamation-triangle"></i> <%= err %></li>
+      <% end %>
+    </ul>
+  </div>
 <% end %>
 
 <div class="row">
 
   <div class="col-md-4">
-      <div class="panel panel-info">
-        <div class="panel-heading">Shipping Information</div>
-        <div class="panel-body">
-          <% unless @order.shipping_name.blank? %>
-            <%= raw @order.shipping_company + '<br/>' unless @order.shipping_company.blank? %>
-            <%= @order.shipping_name %><br/>
-            <%= @order.shipping_street1 %><br/>
-            <%= raw @order.shipping_street2 + '<br/>' unless @order.shipping_street2.blank? %>
-            <%= @order.shipping_city %>, <%= @order.shipping_state %> <%= @order.shipping_zip %><br/>
-            <%= Country.find_country_by_alpha2(@order.shipping_country) %>
-          <% else %>
-              N/A
-          <% end %>
-        </div>
+    <div class="panel panel-info">
+      <div class="panel-heading">Shipping Information</div>
+      <div class="panel-body">
+        <% unless @order.shipping_name.blank? %>
+          <%= raw @order.shipping_company + '<br/>' unless @order.shipping_company.blank? %>
+          <%= @order.shipping_name %><br/>
+          <%= @order.shipping_street1 %><br/>
+          <%= raw @order.shipping_street2 + '<br/>' unless @order.shipping_street2.blank? %>
+          <%= @order.shipping_city %>, <%= @order.shipping_state %> <%= @order.shipping_zip %><br/>
+          <%= Country.find_country_by_alpha2(@order.shipping_country) %>
+        <% else %>
+          N/A
+        <% end %>
       </div>
+    </div>
   </div>
 
 
   <div class="col-md-4">
-      <div class="panel panel-info">
-        <div class="panel-heading">Billing Information</div>
-        <div class="panel-body">
-          <% unless @order.billing_street1.blank? %>
-            <%= @order.billing_name %><br/>
-            <%= raw @order.billing_company + '<br/>' unless @order.billing_company.blank? %>
-            <%= @order.billing_street1 %><br/>
-            <%= raw @order.billing_street2 + '<br/>' unless @order.billing_street2.blank? %>
-            <%= @order.billing_city %>, <%= @order.billing_state %> <%= @order.billing_zip %><br/>
-            <%= Country.find_country_by_alpha2(@order.billing_country) %>
-          <% else %>
-            N/A
-          <% end %>
-        </div>
+    <div class="panel panel-info">
+      <div class="panel-heading">Billing Information</div>
+      <div class="panel-body">
+        <% unless @order.billing_street1.blank? %>
+          <%= @order.billing_name %><br/>
+          <%= raw @order.billing_company + '<br/>' unless @order.billing_company.blank? %>
+          <%= @order.billing_street1 %><br/>
+          <%= raw @order.billing_street2 + '<br/>' unless @order.billing_street2.blank? %>
+          <%= @order.billing_city %>, <%= @order.billing_state %> <%= @order.billing_zip %><br/>
+          <%= Country.find_country_by_alpha2(@order.billing_country) %>
+        <% else %>
+          N/A
+        <% end %>
       </div>
+    </div>
   </div>
 
 
@@ -151,21 +156,21 @@
       <div class="panel-heading">Payment & Contact</div>
       <div class="panel-body">
         <% if @order.payment_method == 'CREDIT_CARD' && !@order.cc_type.blank? %>
-            <code>
-              <%= @order.cc_type.upcase %>: &nbsp;<%= @order.cc_number %> -
-              <%= @order.cc_expiration_month %>/<%= @order.cc_expiration_year %>
-            </code>
+          <code>
+            <%= @order.cc_type.upcase %>: &nbsp;<%= @order.cc_number %> -
+            <%= @order.cc_expiration_month %>/<%= @order.cc_expiration_year %>
+          </code>
         <% else %>
-            <%= @order.sales_channel unless @order.po %>
-            <%= @order.payment_method %>
+          <%= @order.sales_channel unless @order.po %>
+          <%= @order.payment_method %>
         <% end %>
 
         <br/> <br/>
         <% unless @order.contact_phone.nil? %>
-            <a href="tel:<%= @order.contact_phone %>"><%= number_to_phone(@order.contact_phone.gsub(/\D/, ''), area_code: true) %></a><br/>
+          <a href="tel:<%= @order.contact_phone %>"><%= number_to_phone(@order.contact_phone.gsub(/\D/, ''), area_code: true) %></a><br/>
         <% end %>
         <% unless @order.notify_email.nil? %>
-            <%= mail_to @order.notify_email %>
+          <%= mail_to @order.notify_email %>
         <% end %>
       </div>
     </div>
@@ -184,162 +189,164 @@
     <th class="text-right">Subtotal:</th>
   </tr>
   <% @order.items.each do |item| %>
-      <tr class="vert-align">
-        <td nowrap><%= item.item_number %></td>
-        <td style="padding: 0"><%= render item %></td>
-        <td class="text-right"><%= number_to_currency(item.unit_price, precision: 4, strip_insignificant_zeros: true)%></td>
-        <td class="text-right"><%= number_with_delimiter(item.quantity) %></td>
-        <td class="text-right"><%= number_with_delimiter(item.quantity_accepted) %></td>
-        <td class="text-right"><%= number_to_currency(item.quantity * item.unit_price) %></td>
-      </tr>
+    <tr class="vert-align">
+      <td nowrap><%= item.item_number %></td>
+      <td style="padding: 0"><%= render item %></td>
+      <td class="text-right"><%= number_to_currency(item.unit_price, precision: 4, strip_insignificant_zeros: true) %></td>
+      <td class="text-right"><%= number_with_delimiter(item.quantity) %></td>
+      <td class="text-right"><%= number_with_delimiter(item.quantity_accepted) %></td>
+      <td class="text-right"><%= number_to_currency(item.quantity * item.unit_price) %></td>
+    </tr>
   <% end %>
   <tr>
     <td colspan="5" class="ralign dark-border">Subtotal:</td>
-    <td class="ralign dark-border"><%= number_to_currency(@order.subtotal)%></td>
+    <td class="ralign dark-border"><%= number_to_currency(@order.subtotal) %></td>
   </tr>
   <% if !@order.shipping_method.blank? || @order.shipping_cost > 0.0 %>
-      <tr>
-        <td colspan="5" class="ralign"><%= @order.shipping_method.titlecase %>:</td>
-        <td class="ralign"><%= number_to_currency(@order.shipping_cost) %></td>
-      </tr>
+    <tr>
+      <td colspan="5" class="ralign"><%= @order.shipping_method.titlecase %>:</td>
+      <td class="ralign"><%= number_to_currency(@order.shipping_cost) %></td>
+    </tr>
   <% end %>
   <% if @order.tax_amount > 0.0 %>
-      <tr>
-        <td colspan="5" class="ralign">Tax:</td>
-        <td class="ralign"><%= number_to_currency(@order.tax_amount)%></td>
-      </tr>
+    <tr>
+      <td colspan="5" class="ralign">Tax:</td>
+      <td class="ralign"><%= number_to_currency(@order.tax_amount) %></td>
+    </tr>
   <% end %>
   <% if @order.discount_amount > 0.0 %>
-      <tr>
-        <td colspan="5" class="ralign">
-          <% unless @order.coupon.nil? %>
-              <i>Coupon: <%= link_to @order.coupon.code, edit_admin_store_coupon_path(@order.coupon) %></i> &nbsp; &raquo; &nbsp;
-          <% end %>
-          Discount:
-        </td>
-        <td class="ralign"><%= number_to_currency(@order.discount_amount * -1.0)%></td>
-      </tr>
+    <tr>
+      <td colspan="5" class="ralign">
+        <% unless @order.coupon.nil? %>
+          <i>Coupon: <%= link_to @order.coupon.code, edit_admin_store_coupon_path(@order.coupon) %></i> &nbsp; &raquo; &nbsp;
+        <% end %>
+        Discount:
+      </td>
+      <td class="ralign"><%= number_to_currency(@order.discount_amount * -1.0) %></td>
+    </tr>
   <% end %>
   <% if @order.credit_applied > 0.0 %>
-      <tr>
-        <td colspan="5" class="ralign">
-          <% unless @order.voucher.nil? %>
-              <i>Voucher: <%= link_to @order.voucher.code, admin_store_voucher_group_path(@order.voucher.voucher_group_id) %></i> &nbsp; &raquo; &nbsp;
-          <% end %>
-          Credit:</td>
-        <td class="ralign"><%= number_to_currency(@order.credit_applied * -1.0)%></td>
-      </tr>
+    <tr>
+      <td colspan="5" class="ralign">
+        <% unless @order.voucher.nil? %>
+          <i>Voucher: <%= link_to @order.voucher.code, admin_store_voucher_group_path(@order.voucher.voucher_group_id) %></i> &nbsp; &raquo; &nbsp;
+        <% end %>
+        Credit:
+      </td>
+      <td class="ralign"><%= number_to_currency(@order.credit_applied * -1.0) %></td>
+    </tr>
   <% end %>
   <tr>
     <td colspan="5" class="ralign"><b>Total:</b></td>
-    <td class="ralign"><b><%= number_to_currency(@order.total)%></b></td>
+    <td class="ralign"><b><%= number_to_currency(@order.total) %></b></td>
   </tr>
 </table>
 
 <% unless @order.customer_note.blank? %>
-    <div style="margin-bottom: 20px;">
-      <i class="icon-comment-alt" style="font-size: 1.8em; float: left; margin-right: 10px;"></i> <b>Customer note: </b></br>
-      <%= @order.customer_note %>
-    </div>
+  <div style="margin-bottom: 20px;">
+    <i class="icon-comment-alt" style="font-size: 1.8em; float: left; margin-right: 10px;"></i>
+    <b>Customer note: </b></br>
+    <%= @order.customer_note %>
+  </div>
 <% end %>
 
 <br/>
 
 <div class="row">
-  <% 
-    payments = @order.payments + 
-               Payment.where(payable_type: :shipment, payable_id: @order.shipments.collect { |x| x.id }) + 
-               Payment.where(payable_type: "ShipmentItem", payable_id: @order.shipments.collect { |x| x.items.collect(&:id) }.flatten)
+  <%
+    payments = @order.payments +
+        Payment.where(payable_type: :shipment, payable_id: @order.shipments.collect { |x| x.id }) +
+        Payment.where(payable_type: "ShipmentItem", payable_id: @order.shipments.collect { |x| x.items.collect(&:id) }.flatten)
   %>
   <div class="col-md-6">
     <div class="panel panel-success">
       <div class="panel-heading">
-        <b class="pull-right">Balance: <%= number_to_currency(payments.sum(&:amount))%></b>
+        <b class="pull-right">Balance: <%= number_to_currency(payments.sum(&:amount)) %></b>
         Payments
       </div>
       <div class="panel-body">
         <table class="table table-condensed">
-        <% payments.each do |pmt| %>
-          <tr>
-            <td><%= link_to number_to_currency(pmt.amount, negative_format: "(%u%n)"), admin_billing_payment_path(pmt) %></td>
-            <td><%= link_to link_to_user_or_affiliate(pmt) %></td>
-            <td><%= pmt.payable %></td>
-            <td><%= pmt.memo %></td>
-            <td><%= sysdate pmt.created_at %></td>
-          </tr>
-        <% end %>
+          <% payments.each do |pmt| %>
+            <tr>
+              <td><%= link_to number_to_currency(pmt.amount, negative_format: "(%u%n)"), admin_billing_payment_path(pmt) %></td>
+              <td><%= link_to link_to_user_or_affiliate(pmt) %></td>
+              <td><%= pmt.payable %></td>
+              <td><%= pmt.memo %></td>
+              <td><%= sysdate pmt.created_at %></td>
+            </tr>
+          <% end %>
         </table>
-        
+
         <%= link_to "New payment", new_admin_billing_payment_path(order_id: @order.id, redirect: request.original_fullpath), class: 'btn btn-sm btn-default' %>
       </div>
     </div>
   </div>
-  
+
   <div class="col-md-6">
     <div class="panel panel-info">
       <div class="panel-heading"><%= @order.shipments.length == 0 ? 'Inventory Required' : 'Shipments' %></div>
       <div class="panel-body">
         <table class="table table-condensed">
-        <% @order.shipments.each do |shipment| %>
-          <tr>
-            <td><%= shipment.fulfiller.code %></td>
-            <td nowrap><%= link_to shipment.to_s, admin_store_shipment_path(shipment) %></td>
-            <td class="small">
-              <%= shipment.ship_method.blank? ? '- unavl -' : shipment.ship_method %><br/>
-              <%= shipment.tracking_number %>
-            </td>
-            <td class="light"><%= systime shipment.created_at %></td>
-            <td><%= shipment_status(shipment)%></td>
-            <td class="text-right">
-              <%= link_to "x", { controller: 'shipments', action: "destroy", id: shipment.id },
-                          method: :delete,
-                          data: { confirm: "Are you sure you want to delete shipment #{shipment}?" } unless shipment.status == 'shipped' %>
-            </td>
-          </tr>
-        <% end %>
-        </table>
-        
-        
-        <% @order.fulfillers.each do |aff| %>
-          <%= link_to "Create #{aff.code} shipment", new_admin_store_shipment_path(order_id: @order.id, fulfiller_id: aff.id), class: 'btn btn-default btn-xs pull-right' %>
-        <%
-          next if @order.shipment_created?(aff.id)
-          quantities = OrderItem.where(order_id: @order.id)
-                                  .joins(:product)
-                                  .where("store_products.fulfiller_id = ?", aff.id)
-                                  .order("store_products.sku")
-                                  .group("store_products.sku")
-                                  .sum(:quantity_accepted) 
-          products = Product.where(item_number: quantities.keys)
-                            .select(:id, :name, :option_title, :item_number)
-          inventories = InventoryItem.joins(:inventory_transaction)
-                                     .where("inv_transactions.archived" => false)
-                                     .where(sku: quantities.keys)
-                                     .group(:sku)
-                                     .sum(:quantity)
-        %>
-        
-        
-        <table class="table table-condensed table-bordered light">
-          <caption class="text-left"><b><%= aff.name %></b></caption>
-          <% quantities.each do |sku, quantity_accepted| 
-              p = products.find { |x| x.item_number == sku } 
-              p = @order.items.find { |x| x.product.sku == sku }.product if p.nil?
-              avl = inventories[sku] || 0 %>
-          <tr class="<%= 'text-danger' if avl < quantity_accepted %>">
-            <td nowrap><%= sku %></td>
-            <td><%= p.name_with_option %></td>
-            <td class="text-right">req: <%= number_with_delimiter quantity_accepted %></td>
-            <td class="text-right">avl: <%= number_with_delimiter avl %></td>
-          </tr>
+          <% @order.shipments.each do |shipment| %>
+            <tr>
+              <td><%= shipment.fulfiller.code %></td>
+              <td nowrap><%= link_to shipment.to_s, admin_store_shipment_path(shipment) %></td>
+              <td class="small">
+                <%= shipment.ship_method.blank? ? '- unavl -' : shipment.ship_method %><br/>
+                <%= shipment.tracking_number %>
+              </td>
+              <td class="light"><%= systime shipment.created_at %></td>
+              <td><%= shipment_status(shipment) %></td>
+              <td class="text-right">
+                <%= link_to "x", {controller: 'shipments', action: "destroy", id: shipment.id},
+                            method: :delete,
+                            data: {confirm: "Are you sure you want to delete shipment #{shipment}?"} unless shipment.status == 'shipped' %>
+              </td>
+            </tr>
           <% end %>
         </table>
-        <hr>
+
+
+        <% @order.fulfillers.each do |aff| %>
+          <%= link_to "Create #{aff.code} shipment", new_admin_store_shipment_path(order_id: @order.id, fulfiller_id: aff.id), class: 'btn btn-default btn-xs pull-right' %>
+          <%
+            next if @order.shipment_created?(aff.id)
+            quantities = OrderItem.where(order_id: @order.id)
+                .joins(:product)
+                .where("store_products.fulfiller_id = ?", aff.id)
+                .order("store_products.sku")
+                .group("store_products.sku")
+                .sum(:quantity_accepted)
+            products = Product.where(item_number: quantities.keys)
+                .select(:id, :name, :option_title, :item_number)
+            inventories = InventoryItem.joins(:inventory_transaction)
+                .where("inv_transactions.archived" => false)
+                .where(sku: quantities.keys)
+                .group(:sku)
+                .sum(:quantity)
+          %>
+
+
+          <table class="table table-condensed table-bordered light">
+            <caption class="text-left"><b><%= aff.name %></b></caption>
+            <% quantities.each do |sku, quantity_accepted|
+              p = products.find { |x| x.item_number == sku }
+              p = @order.items.find { |x| x.product.sku == sku }.product if p.nil?
+              avl = inventories[sku] || 0 %>
+              <tr class="<%= 'text-danger' if avl < quantity_accepted %>">
+                <td nowrap><%= sku %></td>
+                <td><%= p.name_with_option %></td>
+                <td class="text-right">req: <%= number_with_delimiter quantity_accepted %></td>
+                <td class="text-right">avl: <%= number_with_delimiter avl %></td>
+              </tr>
+            <% end %>
+          </table>
+          <hr>
         <% end %>
-        
+
       </div>
     </div>
-    
+
   </div>
 </div>
 
@@ -355,36 +362,37 @@
     <th>Comment</th>
   </tr>
   <% @order.history.each do |item| %>
-      <tr>
-        <td><%= systime item.created_at %></td>
-        <td class="small light">
-          <% unless item.user_id.nil? %>
-            <%= link_to item.user.name, admin_system_user_path(item.user) %>
-          <% else %>
-            system
-          <% end %>
-        </td>
-        <td><b><%= item.system_name %></b> &nbsp; <%= item.event_type %></td>
-        <td><%= number_to_currency(item.amount) unless item.amount.nil? %></td>
-        <td>
-          <% if item.event_type == 'shipment_created' %>
-              <%= link_to "view", admin_store_shipment_path(item.identifier) %>
-          <% elsif item.event_type == 'package_shipped' %>
-              <a href="<%= tracking_url(item.system_name + ":" + item.identifier) %>" target="_new">track</a>
-          <% end %>
-        </td>
-        <td>
-          <%= item.comment %> 
-          <%= item.identifier if item.event_type == 'package_shipped' %>
-        </td>
-      </tr>
+    <tr>
+      <td><%= systime item.created_at %></td>
+      <td class="small light">
+        <% unless item.user_id.nil? %>
+          <%= link_to item.user.name, admin_system_user_path(item.user) %>
+        <% else %>
+          system
+        <% end %>
+      </td>
+      <td><b><%= item.system_name %></b> &nbsp; <%= item.event_type %></td>
+      <td><%= number_to_currency(item.amount) unless item.amount.nil? %></td>
+      <td>
+        <% if item.event_type == 'shipment_created' %>
+          <%= link_to "view", admin_store_shipment_path(item.identifier) %>
+        <% elsif item.event_type == 'package_shipped' %>
+          <a href="<%= tracking_url(item.system_name + ":" + item.identifier) %>" target="_new">track</a>
+        <% end %>
+      </td>
+      <td>
+        <%= item.comment %>
+        <%= item.identifier if item.event_type == 'package_shipped' %>
+      </td>
+    </tr>
   <% end %>
   <tr>
     <% unless @order.submitted.nil? %>
       <td><%= systime @order.submitted %></td>
     <% end %>
-    <td><% unless @order.user_id.nil? %>
-          <%= link_to @order.user.name, admin_system_user_path(@order.user), class: 'small' %>
+    <td>
+      <% unless @order.user_id.nil? %>
+        <%= link_to @order.user.name, admin_system_user_path(@order.user), class: 'small' %>
       <% end %></td>
     <td><b>Rhombus</b> &nbsp; order_created</td>
     <td><%= number_to_currency(@order.total) %></td>
@@ -395,20 +403,20 @@
 
 
 <form id="frmBatch" action="" method="post">
-	<%= token_tag %>
+  <%= token_tag %>
   <input type="hidden" name="printer_id" value=""/>
   <input type="hidden" name="order_id[]" value="<%= @order.id %>"/>
 </form>
 
 
 <% content_for :title do %>
-	Orders: <%= @order.id %>
+  Orders: <%= @order.id %>
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "#{@order.status.titlecase} orders", admin_store_orders_path(status: @order.status) %></li>
-	<li class="active">#<%= @order.id %></li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "#{@order.status.titlecase} orders", admin_store_orders_path(status: @order.status) %></li>
+  <li class="active">#<%= @order.id %></li>
 <% end %>
 

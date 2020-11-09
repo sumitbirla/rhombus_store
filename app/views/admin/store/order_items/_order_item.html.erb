@@ -2,7 +2,7 @@
   if order_item.upload_file_preview.present?
     file_path = order_item.upload_file_preview
   elsif order_item.daily_deal && order_item.daily_deal.pictures.any?
-  	file_path = order_item.daily_deal.pictures[0].file_path
+    file_path = order_item.daily_deal.pictures[0].file_path
   elsif order_item.product && order_item.product.pictures.any?
     file_path = order_item.product.pictures[0].file_path
   else
@@ -12,7 +12,7 @@
 
 <table>
   <tr>
-    
+
     <td>
       <span class="order-item-thumbnail hidden-print">
         <a href="<%= cdn_image_url file_path, 800, 700, 0 %>" data-lightbox="image-1">
@@ -20,7 +20,7 @@
         </a>
       </span>
     </td>
-    
+
     <td>
       <% if order_item.daily_deal_id %>
         <%= link_to order_item.daily_deal.title, admin_store_daily_deal_path(order_item.daily_deal) %>
@@ -40,34 +40,35 @@
       <% if order_item.custom_text.present? %>
         &nbsp; (<span><%= order_item.custom_text %></span>)
       <% end %>
-      
+
       <% if order_item.rendered_file.present? %>
         &nbsp; <a target="_new" href="<%= cdn_download_url order_item.rendered_file %>"><i class="far fa-image"></i></a>
       <% end %>
 
       <% unless order_item.product.fulfiller %>
-        &nbsp; <span class="text-danger"><i class="fa fa-exclamation-circle"></i> Fulfiller not set for this product</span>
+        &nbsp;
+        <span class="text-danger"><i class="fa fa-exclamation-circle"></i> Fulfiller not set for this product</span>
       <% end %>
 
       <% if order_item.extra_properties.any? %>
         &nbsp; <i class="far fa-plus-square extra-properties-trigger"></i>
         <table class="extra-properties" style="display: none;">
-        <% order_item.extra_properties.each do |ep| %>
-          <tr>
-            <td><%= ep.name %></td>
-            <td>
-              <% if ep.value.start_with?("http")%>
-                <%= link_to ep.value, ep.value, target: "_new" %>
-              <% else %>
-                <%= ep.value %>
-              <% end %>
-            </td>
-          </tr>
-        <% end %>
+          <% order_item.extra_properties.each do |ep| %>
+            <tr>
+              <td><%= ep.name %></td>
+              <td>
+                <% if ep.value.start_with?("http") %>
+                  <%= link_to ep.value, ep.value, target: "_new" %>
+                <% else %>
+                  <%= ep.value %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
         </table>
       <% end %>
     </td>
-    
+
   </tr>
 </table>
     

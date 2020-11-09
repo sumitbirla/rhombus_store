@@ -1,52 +1,54 @@
 <style>
-.dimensions input { width: 60px; }
+    .dimensions input {
+        width: 60px;
+    }
 </style>
 
 <%
-   dropship_category = Category.find_by(slug: 'dropshippers')
-   dropshippers = Affiliate.where(id: AffiliateCategory.select(:affiliate_id).where(category_id: dropship_category.id)) unless dropship_category.nil?
+  dropship_category = Category.find_by(slug: 'dropshippers')
+  dropshippers = Affiliate.where(id: AffiliateCategory.select(:affiliate_id).where(category_id: dropship_category.id)) unless dropship_category.nil?
 
-   supplier_category = Category.find_by(slug: 'suppliers')
-   suppliers = Affiliate.where(id: AffiliateCategory.select(:affiliate_id).where(category_id: supplier_category.id)) unless supplier_category.nil?
+  supplier_category = Category.find_by(slug: 'suppliers')
+  suppliers = Affiliate.where(id: AffiliateCategory.select(:affiliate_id).where(category_id: supplier_category.id)) unless supplier_category.nil?
 %>
 
 <h2><i class="fa fa-tag"></i> &nbsp;<%= @product.name_with_option %></h2>
 <hr>
 
 <% if @product.template_product_id %>
-<div class="alert alert-info">
-  <b>Note: </b> This product's content is maintained by a template.  Changes made here may be overwritten.
-  <b><%= link_to "Click here to edit template", admin_store_product_path(@product.template_product) %></b>.
-</div>
+  <div class="alert alert-info">
+    <b>Note: </b> This product's content is maintained by a template. Changes made here may be overwritten.
+    <b><%= link_to "Click here to edit template", admin_store_product_path(@product.template_product) %></b>.
+  </div>
 <% end %>
 
 <%= simple_form_for [:admin, :store, @product] do |f| %>
 
   <% unless @product.id.nil? %>
-  <ul class="nav nav-tabs" style="margin-bottom: 20px;">
-    <li class="active"><a href="#">Summary</a></li>
-    <li><%= link_to "Pictures", pictures_admin_store_product_path(@product) %></a></li>
-    <li><%= link_to "Categories", categories_admin_store_product_path(@product) %></li>
-    <li><%= link_to "Coupons", coupons_admin_store_product_path(@product) %></li>
-    <li><%= link_to "Extra Properties", extra_properties_admin_store_product_path(@product) %></li>
-    <li><%= link_to "Label Elements", label_elements_admin_store_product_path(@product) %></li>
-    <li><%= link_to "Shipping Rates", shipping_rates_admin_store_product_path(@product) %></li>
-    <li><%= link_to "Catalogs", catalogs_admin_store_product_path(@product) %></li>
-  </ul>
+    <ul class="nav nav-tabs" style="margin-bottom: 20px;">
+      <li class="active"><a href="#">Summary</a></li>
+      <li><%= link_to "Pictures", pictures_admin_store_product_path(@product) %></a></li>
+      <li><%= link_to "Categories", categories_admin_store_product_path(@product) %></li>
+      <li><%= link_to "Coupons", coupons_admin_store_product_path(@product) %></li>
+      <li><%= link_to "Extra Properties", extra_properties_admin_store_product_path(@product) %></li>
+      <li><%= link_to "Label Elements", label_elements_admin_store_product_path(@product) %></li>
+      <li><%= link_to "Shipping Rates", shipping_rates_admin_store_product_path(@product) %></li>
+      <li><%= link_to "Catalogs", catalogs_admin_store_product_path(@product) %></li>
+    </ul>
   <% end %>
-	
-	<%= render 'admin/shared/error_messages', object: f.object %>
+
+  <%= render 'admin/shared/error_messages', object: f.object %>
 
   <div class="row">
-		<div class="col-md-7">
+    <div class="col-md-7">
       <div class="panel panel-default">
         <div class="panel-heading"><b>Basic Information</b></div>
         <div class="panel-body">
           <%= f.input :template_product_id, collection: Product.where(template: true), prompt: '- do not use a template -', label_method: :to_s %>
-    		  <%= f.input :item_number, label: 'Item #' %>
+          <%= f.input :item_number, label: 'Item #' %>
           <%= f.input :name %>
-    		  <%= f.input :product_type, as: :select, collection: ['stock', 'on-demand', '3PL', 'white-label' ], label: 'Type' %>
-    		  <%= f.input :brand_id, collection: Brand.order(:name).all %>
+          <%= f.input :product_type, as: :select, collection: ['stock', 'on-demand', '3PL', 'white-label'], label: 'Type' %>
+          <%= f.input :brand_id, collection: Brand.order(:name).all %>
           <%= f.input :upc, label: 'UPC' %>
           <%= f.input :harmonized_code %>
           <%= f.input :retail_map, label: 'Retail MAP' %>
@@ -55,39 +57,39 @@
           <%= f.input :shipping_code %>
         </div>
       </div>
-      
+
       <div class="panel panel-default web">
         <div class="panel-heading">Web</div>
         <div class="panel-body">
-    		  <%= f.input :title %>
-    		  <%= f.input :slug %>
-    		  <%= f.input :price %>
-    		  <%= f.input :special_price, label: "Sale Price" %>
+          <%= f.input :title %>
+          <%= f.input :slug %>
+          <%= f.input :price %>
+          <%= f.input :special_price, label: "Sale Price" %>
           <%= f.input :group %>
           <%= f.input :keywords %>
           <%= f.input :warranty %>
         </div>
       </div>
-      
+
       <div class="panel panel-default web">
         <div class="panel-heading">Variants</div>
         <div class="panel-body">
           <%= f.input :option_name %>
-    		  <%= f.input :option_title %>
-    		  <%= f.input :option_sort %>
+          <%= f.input :option_title %>
+          <%= f.input :option_sort %>
           <hr>
           <%= f.input :option2_name %>
-    		  <%= f.input :option2_title %>
-    		  <%= f.input :option2_sort %>
+          <%= f.input :option2_title %>
+          <%= f.input :option2_sort %>
           <hr>
           <%= f.input :option3_name %>
-    		  <%= f.input :option3_title %>
-    		  <%= f.input :option3_sort %>
+          <%= f.input :option3_title %>
+          <%= f.input :option3_sort %>
         </div>
       </div>
-		</div>
-		
-		<div class="col-md-5">
+    </div>
+
+    <div class="col-md-5">
       <div class="panel panel-default options-panel">
         <div class="panel-heading">Options</div>
         <div class="panel-body">
@@ -125,9 +127,9 @@
           <div class="form-group string optional dimensions">
             <label class="string optional col-sm-3 control-label" for="item_dimensions">Item Size (in.)</label>
             <div class="dimensions col-sm-9">
-              <%= f.input_field :item_length %> x 
-              <%= f.input_field :item_width  %> x 
-              <%= f.input_field :item_height  %>
+              <%= f.input_field :item_length %> x
+              <%= f.input_field :item_width %> x
+              <%= f.input_field :item_height %>
             </div>
           </div>
           <%= f.input :item_weight, label: 'Weight' %>
@@ -136,28 +138,28 @@
           <div class="form-group string optional dimensions">
             <label class="string optional col-sm-3 control-label" for="case_dimensions">Case Size (in.)</label>
             <div class="dimensions col-sm-9">
-              <%= f.input_field :case_length %> x 
-              <%= f.input_field :case_width  %> x 
-              <%= f.input_field :case_height  %>
+              <%= f.input_field :case_length %> x
+              <%= f.input_field :case_width %> x
+              <%= f.input_field :case_height %>
             </div>
           </div>
           <%= f.input :case_weight, label: 'Weight' %>
           <%= f.input :case_quantity %>
         </div>
       </div>
-		</div>
+    </div>
   </div>
 
-	<div class="row web">
+  <div class="row web">
     <h4>Short Description</h4>
-  	<%= f.input_field :short_description, class: "form-control text", rows: 4  %>
+    <%= f.input_field :short_description, class: "form-control text", rows: 4 %>
     <br>
     <h4>Long Description</h4>
-  	<%= ckeditor_input_field(@product, "long_description") %>
+    <%= ckeditor_input_field(@product, "long_description") %>
   </div>
-  
+
   <br>
-  <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
 
 <% end %>
 
@@ -167,34 +169,34 @@
 
 
 <% content_for :head do %>
-<script>
-  $(document).ready(function() {
-    
-    $("#product_product_type").on('change', function() {
-      if ($(this).val() == 'white-label') {
-        $(".product_brand_id").hide();
-        $(".product_upc").hide();
-      } else {
-        $(".product_brand_id").show();
-        $(".product_upc").show();
-      }
-    });
-    
-    $("#product_product_type").trigger('change');
-  });
-</script>
+  <script>
+      $(document).ready(function () {
+
+          $("#product_product_type").on('change', function () {
+              if ($(this).val() == 'white-label') {
+                  $(".product_brand_id").hide();
+                  $(".product_upc").hide();
+              } else {
+                  $(".product_brand_id").show();
+                  $(".product_upc").show();
+              }
+          });
+
+          $("#product_product_type").trigger('change');
+      });
+  </script>
 <% end %>
 
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Products", admin_store_products_path(brand_id: @product.brand_id, status: :active) %></li>
-    <% if @product.id.nil? %>
-        <li class="active"><%= @product.name %></li>
-    <% else %>
-        <li><%= link_to @product.name_with_option, admin_store_product_path(@product)%> </li>
-        <li class="active">edit</li>
-    <% end %>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Products", admin_store_products_path(brand_id: @product.brand_id, status: :active) %></li>
+  <% if @product.id.nil? %>
+    <li class="active"><%= @product.name %></li>
+  <% else %>
+    <li><%= link_to @product.name_with_option, admin_store_product_path(@product) %> </li>
+    <li class="active">edit</li>
+  <% end %>
 
 <% end %>

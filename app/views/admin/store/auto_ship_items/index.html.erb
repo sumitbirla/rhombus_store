@@ -1,6 +1,6 @@
 <div class="pull-right">
   <% unless params[:q] %>
-    <%= select_tag(:status, options_for_select(AutoShipItem.distinct(:status).pluck(:status), @selected_status)) %> &nbsp; 
+    <%= select_tag(:status, options_for_select(AutoShipItem.distinct(:status).pluck(:status), @selected_status)) %> &nbsp;
   <% end %>
   <%= link_to new_admin_store_auto_ship_item_path, class: 'btn btn-sm btn-default' do %>
     <i class="fa fa-plus"></i> New autoship item
@@ -12,18 +12,18 @@
 
 <%= will_paginate @auto_ship_items %>
 <table class="table table-striped table-condensed table-sortable footable">
-	<tr>
+  <tr>
     <th data-breakpoints="xs"><%= sortable "store_auto_ship_items.id", "ID" %></th>
-		<th><%= sortable "core_users.name", "User" %></th>
-		<th><%= sortable "item_number" %></th>
-		<th data-breakpoints="xs"><%= sortable "description" %></th>
+    <th><%= sortable "core_users.name", "User" %></th>
+    <th><%= sortable "item_number" %></th>
+    <th data-breakpoints="xs"><%= sortable "description" %></th>
     <th data-breakpoints="xs" class="text-center"><%= sortable "quantity" %></th>
     <th class="text-center"><%= sortable :days, "frequency" %></th>
     <th data-breakpoints="xs" class="text-center"><%= sortable "last_shipped" %></th>
     <th data-breakpoints="xs" class="text-center"><%= sortable "next_ship_date" %></th>
     <th class="text-center"><%= sortable "status" %></th>
-		<th data-breakpoints="xs" class="actions">&nbsp;</th>
-	</tr>
+    <th data-breakpoints="xs" class="actions">&nbsp;</th>
+  </tr>
   <%= render @auto_ship_items %>
 </table>
 
@@ -31,23 +31,23 @@
 
 
 <% content_for :title do %>
-	Autoship Items
+  Autoship Items
 <% end %>
 
 
 <% content_for :head do %>
   <script>
-    $(document).ready(function() {
-      $("#status").change(function() {
-        window.location = "/admin/store/auto_ship_items?status=" + $(this).val();
+      $(document).ready(function () {
+          $("#status").change(function () {
+              window.location = "/admin/store/auto_ship_items?status=" + $(this).val();
+          });
       });
-    });
   </script>
 <% end %>
 
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li class="active">Autoship Items</li>
+  <li><a href="#">eCommerce</a></li>
+  <li class="active">Autoship Items</li>
 <% end %>

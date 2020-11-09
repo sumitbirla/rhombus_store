@@ -2,54 +2,54 @@
 
 
 <table class="table table-striped">
-	<tr>
-		<th>Report</th>
-		<th>Description</th>
-	</tr>
-	<tr>
-		<td><%= link_to 'Product Leaderboard', admin_store_reports_product_sales_by_sku_path %></td>
-		<td>Quanity of each product sold</td>
-	</tr>
-	<tr>
-		<td><%= link_to 'User Leaderboard', admin_store_reports_user_leaderboard_path %></td>
-		<td>Orders placed by each customer</td>
-	</tr>
-	<tr>
-		<td><%= link_to 'Purchase Frequency', admin_store_reports_purchase_frequency_path %></td>
-		<td>How many people ordered 'n' times</td>
-	</tr>
-	<tr>
-		<td>Order Volume - 
-      <%= link_to "daily", admin_store_reports_daily_sales_path %>, 
+  <tr>
+    <th>Report</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><%= link_to 'Product Leaderboard', admin_store_reports_product_sales_by_sku_path %></td>
+    <td>Quanity of each product sold</td>
+  </tr>
+  <tr>
+    <td><%= link_to 'User Leaderboard', admin_store_reports_user_leaderboard_path %></td>
+    <td>Orders placed by each customer</td>
+  </tr>
+  <tr>
+    <td><%= link_to 'Purchase Frequency', admin_store_reports_purchase_frequency_path %></td>
+    <td>How many people ordered 'n' times</td>
+  </tr>
+  <tr>
+    <td>Order Volume -
+      <%= link_to "daily", admin_store_reports_daily_sales_path %>,
       <%= link_to "monthly", admin_store_reports_monthly_sales_path %>
     </td>
-		<td>Number of orders per day</td>
-	</tr>
-	<tr>
-		<td><%= link_to "Fulfillment Report", admin_store_reports_shipments_path %> </td>
-		<td>Reports of dropshipper activity</td>
-	</tr>
-	<tr>
-		<td><%= link_to "Current Stock", admin_store_reports_current_stock_path %> </td>
-		<td>Items that are currently in stock and their value</td>
-	</tr>
-	<tr>
-		<td><%= link_to "Pending Fulfillment", admin_store_reports_pending_fulfillment_path %> </td>
-		<td>Items that need to be fulfilled currently</td>
-	</tr>
-	<tr>
-		<td><%= link_to "Sales Trend", admin_store_reports_sales_trend_path %> </td>
-		<td>Sales trend of each product</td>
-	</tr>
+    <td>Number of orders per day</td>
+  </tr>
+  <tr>
+    <td><%= link_to "Fulfillment Report", admin_store_reports_shipments_path %> </td>
+    <td>Reports of dropshipper activity</td>
+  </tr>
+  <tr>
+    <td><%= link_to "Current Stock", admin_store_reports_current_stock_path %> </td>
+    <td>Items that are currently in stock and their value</td>
+  </tr>
+  <tr>
+    <td><%= link_to "Pending Fulfillment", admin_store_reports_pending_fulfillment_path %> </td>
+    <td>Items that need to be fulfilled currently</td>
+  </tr>
+  <tr>
+    <td><%= link_to "Sales Trend", admin_store_reports_sales_trend_path %> </td>
+    <td>Sales trend of each product</td>
+  </tr>
 </table>
 
 
 <% content_for :title do %>
-	Reports
+  Reports
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li class="active">Reports</li>
+  <li><a href="#">eCommerce</a></li>
+  <li class="active">Reports</li>
 <% end %>

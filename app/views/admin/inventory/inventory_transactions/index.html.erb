@@ -9,33 +9,33 @@
 <h2><i class="fa fa-dolly-flatbed"></i>&nbsp; Inventory Transactions</h2>
 <hr>
 
-  
+
 <%= form_with(url: "/admin/inventory/inventory_transactions", method: "get", class: "pull-right") do %>
 
   <%= check_box_tag(:bulk, "1", params[:bulk] == "1") %> Bulk Import &nbsp; &middot; &nbsp;
   <%= check_box_tag(:archived, "1", params[:archived] == "1") %> Archived &nbsp; &middot; &nbsp;
-  
+
   <% dropshippers = Affiliate.where(id: InventoryTransaction.where(bulk_import: true).select(:affiliate_id).distinct).order(:name) %>
   <%= select_tag(:affiliate_id, options_from_collection_for_select(dropshippers, :id, :name), include_blank: "- All Affiliates -") %>
-  
+
   <%= submit_tag("filter", style: "margin-bottom: 10px;") %>
 
 <% end %>
 
 <%= will_paginate @transactions %>
 <table class="table table-striped table-condensed">
-	<tr>
-		<th>Timestamp</th>
+  <tr>
+    <th>Timestamp</th>
     <th></th>
     <th>Affiliate</th>
     <th class="text-right">Quantity</th>
-		<th class="text-center">Items</th>
-		<th>Entity</th>
+    <th class="text-center">Items</th>
+    <th>Entity</th>
     <th>Entered by</th>
     <th>Action</th>
     <th></th>
-	</tr>
-	<%= render @transactions %>
+  </tr>
+  <%= render @transactions %>
 </table>
 
 
@@ -43,11 +43,11 @@
 
 
 <% content_for :title do %>
-	Inventory Items
+  Inventory Items
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">Inventory</a></li>
-	<li class="active">Items</li>
+  <li><a href="#">Inventory</a></li>
+  <li class="active">Items</li>
 <% end %>

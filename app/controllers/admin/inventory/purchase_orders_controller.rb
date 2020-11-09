@@ -1,14 +1,14 @@
 class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
   # ['new', 'release', 'change_order', 'received', 'cancelled', 'closed']
-  
+
   def index
     authorize PurchaseOrder.new
     @purchase_orders = PurchaseOrder.includes(:items)
-                                    .joins(:supplier)
-                                    .order(sort_column + " " + sort_direction)
-                                    .paginate(page: params[:page], per_page: @per_page)
-                                    
-    @purchase_orders = @purchase_orders.where(status: params[:status]) unless params[:status].blank?                             
+                           .joins(:supplier)
+                           .order(sort_column + " " + sort_direction)
+                           .paginate(page: params[:page], per_page: @per_page)
+
+    @purchase_orders = @purchase_orders.where(status: params[:status]) unless params[:status].blank?
     @purchase_orders = @purchase_orders.where(id: params[:q]) unless params[:q].nil?
   end
 
@@ -20,13 +20,13 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
 
   def create
     @purchase_order = authorize PurchaseOrder.new(purchase_order_params)
-    
+
     unless params[:add_more_items].blank?
-      count = params[:add_more_items].to_i - @purchase_order.items.length + 10 
+      count = params[:add_more_items].to_i - @purchase_order.items.length + 10
       count.times { @purchase_order.items.build }
       return render 'edit'
     end
-    
+
     if @purchase_order.save
       flash[:notice] = 'PurchaseOrder was successfully created.'
       redirect_to admin_inventory_purchase_order_path(@purchase_order)
@@ -47,13 +47,13 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
   def update
     @purchase_order = authorize PurchaseOrder.find(params[:id])
     @purchase_order.assign_attributes(purchase_order_params)
-    
+
     unless params[:add_more_items].blank?
-      count = params[:add_more_items].to_i - @purchase_order.items.length + 5 
+      count = params[:add_more_items].to_i - @purchase_order.items.length + 5
       count.times { @purchase_order.items.build }
       return render 'edit'
     end
-    
+
     if @purchase_order.save
       flash[:notice] = 'PurchaseOrder was successfully updated.'
       redirect_to admin_inventory_purchase_order_path(@purchase_order)
@@ -65,26 +65,26 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
   def destroy
     @purchase_order = authorize PurchaseOrder.find(params[:id])
     @purchase_order.destroy
-    
+
     redirect_to action: 'index', notice: 'PurchaseOrder has been deleted.'
   end
-  
+
   def items
     @purchase_order = PurchaseOrder.find(params[:id])
   end
-  
+
   def update_items
-    
+
     @purchase_order = PurchaseOrder.includes(:items).find(params[:id])
-    
+
     params.each do |key, val|
-      
+
       tokens = key.split('-')
       next unless tokens.length == 2 || val.blank?
-      
+
       item_number = tokens[1].to_i
       item = @purchase_order.items.find { |i| i.id == item_number }
-      
+
       case tokens[0]
       when 'qty'
         item.quantity = val.to_i
@@ -97,17 +97,17 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
       when 'recv'
         item.quantity_received += val.to_i
       end
-      
+
       item.save
     end
-    
+
     redirect_to admin_inventory_purchase_order_path(@purchase_order)
   end
-  
+
   def receiving
     @purchase_order = PurchaseOrder.find(params[:id])
   end
-  
+
   def update_receiving
     @purchase_order = PurchaseOrder.find(params[:id])
     transaction_id = Adjustment.maximum('transaction_id') || 0
@@ -118,21 +118,21 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
     PurchaseOrder.transaction do
       params.each do |key, val|
         tokens = key.split('-')
-        
+
         next unless tokens.length == 2
         next unless tokens[0] == 'recv'
         next if val.blank?
-      
+
         qty = val.to_i
         next if qty == 0
-      
+
         item_number = tokens[1].to_i
         item = @purchase_order.items.find { |i| i.id == item_number }
-      
+
         item.increment!(:quantity_received, val.to_i)
         Adjustment.create transaction_id: transaction_id, user_id: current_user.id,
-                 purchase_order_id: @purchase_order.id, sku: item.sku, quantity: qty
-                 
+                          purchase_order_id: @purchase_order.id, sku: item.sku, quantity: qty
+
         update_count += 1
       end
     end
@@ -141,7 +141,7 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
       flash[:notice] = 'No updates made.'
       return redirect_back(fallback_location: admin_root_path)
     end
-    
+
     # check if purchase order status needs to be updated
     if @purchase_order.items.any? { |i| i.quantity_received < i.quantity }
       @purchase_order.status = 'partially_received'
@@ -149,37 +149,37 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
       @purchase_order.status = 'received'
     end
     @purchase_order.save
-    
-    
+
+
     flash[:notice] = "#{update_count} items updated. Inventory transaction ID is #{transaction_id}."
     redirect_to admin_inventory_purchase_order_path(@purchase_order)
   end
-  
+
   def print
     @purchase_order = PurchaseOrder.find(params[:id])
     render 'print', layout: nil
   end
-  
+
   def print_batch
     urls = ''
     token = Cache.setting(Rails.configuration.domain_id, :system, 'Security Token')
     website_url = Cache.setting(Rails.configuration.domain_id, :system, 'Website URL')
-    
+
     PurchaseOrder.where(id: params[:purchase_order_id]).each do |po|
-      digest = Digest::MD5.hexdigest(po.id.to_s + token) 
-      urls += " " + website_url + print_admin_inventory_purchase_order_path(po, digest: digest) 
-      
+      digest = Digest::MD5.hexdigest(po.id.to_s + token)
+      urls += " " + website_url + print_admin_inventory_purchase_order_path(po, digest: digest)
+
       # LOG
     end
-    
+
     output_file = "/tmp/#{SecureRandom.hex(6)}.pdf"
     ret = system("wkhtmltopdf -q -s Letter #{urls} #{output_file}")
-    
+
     unless File.exists?(output_file)
       flash[:error] = "Unable to generate PDF [Debug: #{$?}]"
       return redirect_back(fallback_location: admin_root_path)
     end
-    
+
     if params[:printer_id].blank?
       send_file output_file
     else
@@ -189,34 +189,34 @@ class Admin::Inventory::PurchaseOrdersController < Admin::BaseController
       redirect_back(fallback_location: admin_root_path)
     end
   end
-  
+
   # used when releasing or closing PO
   def set_status
     po = PurchaseOrder.find(params[:id])
     po.update(status: params[:status])
     redirect_back(fallback_location: admin_root_path)
   end
-  
+
   # batch updates
   def update_status
     count = PurchaseOrder.where(id: params[:purchase_order_id]).update_all(status: params[:status])
     flash[:info] = "Status of #{count} purchase order(s) updated to '#{params[:status]}'"
-    
+
     redirect_back(fallback_location: admin_root_path)
   end
-  
-  
-  private
-  
-    def purchase_order_params
-      params.require(:purchase_order).permit!
-    end
-  
-    def sort_column
-      params[:sort] || "id"
-    end
 
-    def sort_direction
-      %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
-    end
+
+  private
+
+  def purchase_order_params
+    params.require(:purchase_order).permit!
+  end
+
+  def sort_column
+    params[:sort] || "id"
+  end
+
+  def sort_direction
+    %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
+  end
 end

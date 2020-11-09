@@ -5,43 +5,43 @@
 
 <table id="sales-trend-table" class="table table-condensed tablesorter">
   <thead>
-  	<tr>
-      <th>SKU</th>
-      <th>Item</th>
-      <th>Trend</th>
-      <th>last 6 mo.</th>
-      <th>last 3 mo.</th>
-      <th>last 1 mo.</th>
-      <th>last 2 wk.</th>
-      <th>last 1 wk.</th>
-      <th class="text-center" style="width: 100px;">Stock</th>
-  	</tr>
+  <tr>
+    <th>SKU</th>
+    <th>Item</th>
+    <th>Trend</th>
+    <th>last 6 mo.</th>
+    <th>last 3 mo.</th>
+    <th>last 1 mo.</th>
+    <th>last 2 wk.</th>
+    <th>last 1 wk.</th>
+    <th class="text-center" style="width: 100px;">Stock</th>
+  </tr>
   </thead>
   <tbody>
-    <% @data_6mo.each do |r| 
-        mo3 = @data_3mo.find { |x| x[0] == r[0] }
-        mo1 = @data_1mo.find { |x| x[0] == r[0] }
-        wk2 = @data_2wk.find { |x| x[0] == r[0] }
-        wk1 = @data_1wk.find { |x| x[0] == r[0] }
-        stock = @stock.find { |x| x[0] == r[0] }
-      
-        mo3 = mo3.nil? ? 0 : mo3[1]
-        mo1 = mo1.nil? ? 0 : mo1[1]
-        wk2 = wk2.nil? ? 0 : wk2[1]
-        wk1 = wk1.nil? ? 0 : wk1[1]
-        stock = stock.nil? ? 0 : stock[1]
-      
-        data_points = [ 
-          r[3] / 24,
-          mo3 / 12,
-          mo1 / 4,
-          wk2 / 2,
-          wk1 ]
-      %>
+  <% @data_6mo.each do |r|
+    mo3 = @data_3mo.find { |x| x[0] == r[0] }
+    mo1 = @data_1mo.find { |x| x[0] == r[0] }
+    wk2 = @data_2wk.find { |x| x[0] == r[0] }
+    wk1 = @data_1wk.find { |x| x[0] == r[0] }
+    stock = @stock.find { |x| x[0] == r[0] }
+
+    mo3 = mo3.nil? ? 0 : mo3[1]
+    mo1 = mo1.nil? ? 0 : mo1[1]
+    wk2 = wk2.nil? ? 0 : wk2[1]
+    wk1 = wk1.nil? ? 0 : wk1[1]
+    stock = stock.nil? ? 0 : stock[1]
+
+    data_points = [
+        r[3] / 24,
+        mo3 / 12,
+        mo1 / 4,
+        wk2 / 2,
+        wk1]
+  %>
     <tr>
       <td><%= link_to r[1], admin_store_product_path(r[0]) %></td>
       <td><%= r[2] %></td>
-      <td><span class="inlinesparkline"><%= data_points.join(",")%></span></td>
+      <td><span class="inlinesparkline"><%= data_points.join(",") %></span></td>
       <td class="text-right"><%= r[3] %></td>
       <td class="text-right"><%= mo3 %></td>
       <td class="text-right"><%= mo1 %></td>
@@ -49,7 +49,7 @@
       <td class="text-right"><%= wk1 %></td>
       <td class="text-right" style="background-color: <%= (stock > mo1) || (mo1 == 0) ? "rgb(217, 237, 247);" : "rgb(242, 222, 222);" %>"><%= stock %></td>
     </tr>
-    <% end %>
+  <% end %>
   </tbody>
   <tfooter>
     <tr>
@@ -66,26 +66,26 @@
 
 
 <% content_for :title do %>
-	Sales Trend
+  Sales Trend
 <% end %>
 
 <% content_for :head do %>
   <link href="/rhombus_store/tablesorter.css" rel="stylesheet" type="text/css">
   <script src="/rhombus_store/jquery.tablesorter.min.js"></script>
-  <script src="/rhombus_store/jquery.sparkline.min.js"></script> 
+  <script src="/rhombus_store/jquery.sparkline.min.js"></script>
 
   <script>
-    $(document).ready(function() {
-      $("#sales-trend-table").tablesorter(); 
-      $('.inlinesparkline').sparkline('html', { width: '50px' });
-    });
+      $(document).ready(function () {
+          $("#sales-trend-table").tablesorter();
+          $('.inlinesparkline').sparkline('html', {width: '50px'});
+      });
   </script>
 
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
+  <li><a href="#">eCommerce</a></li>
   <li><%= link_to "Reports", admin_store_reports_path %></li>
-	<li class="active">Sales Trend</li>
+  <li class="active">Sales Trend</li>
 <% end %>

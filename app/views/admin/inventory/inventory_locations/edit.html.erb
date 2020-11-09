@@ -4,18 +4,18 @@
 
 <%= simple_form_for [:admin, :inventory, @inventory_location] do |f| %>
 
-	<%= render 'admin/shared/error_messages', object: f.object %>
-	
+  <%= render 'admin/shared/error_messages', object: f.object %>
+
   <div class="row">
-    
+
     <div class="col-md-7">
-    	<%= f.input :name %>
+      <%= f.input :name %>
       <%= f.input :depth %>
       <%= f.input :width %>
       <%= f.input :height %>
-    	<%= f.input :notes, as: :text, input_html: { rows: 4 }  %>
-	  </div>
-  
+      <%= f.input :notes, as: :text, input_html: {rows: 4} %>
+    </div>
+
     <div class="col-md-5">
       <div class="panel panel-default options-panel">
         <div class="panel-heading">Flags</div>
@@ -29,16 +29,16 @@
         </div>
       </div>
     </div>
-    
+
   </div>
-  <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
-  
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
+
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">Inventory</a></li>
-	<li><%= link_to "Locations", admin_inventory_inventory_locations_path %></li>
-	<li class="active"><%= @inventory_location %></li>
+  <li><a href="#">Inventory</a></li>
+  <li><%= link_to "Locations", admin_inventory_inventory_locations_path %></li>
+  <li class="active"><%= @inventory_location %></li>
 <% end %>
 

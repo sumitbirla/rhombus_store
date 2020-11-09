@@ -13,16 +13,16 @@
 
 class Brand < ActiveRecord::Base
   include Exportable
-  
+
   self.table_name = "store_brands"
   has_many :products, :dependent => :restrict_with_exception
   validates_presence_of :name
   validates_uniqueness_of :name
-  
+
   def to_s
     name
   end
-  
+
   # PUNDIT
   def self.policy_class
     ApplicationPolicy

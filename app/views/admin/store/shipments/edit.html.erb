@@ -3,181 +3,189 @@
 <%= render 'admin/shared/error_messages', object: @shipment %>
 
 <%= simple_form_for [:admin, :store, @shipment] do |f| %>
-    <%= f.hidden_field :order_id %>
-    <%= f.hidden_field :sequence %>
-    <%= f.hidden_field :status %>
+  <%= f.hidden_field :order_id %>
+  <%= f.hidden_field :sequence %>
+  <%= f.hidden_field :status %>
 
-    <table class="table table-striped table-condensed table-bordered">
-      <tr>
-        <th>Item</th>
-        <th>Description</th>
-        <th class="calign">Ordered</th>
-        <th class="calign">In stock</th>
-        <th class="calign">Ship Qty</th>
-        <th class="calign">Special Status</th>
-        <th>&nbsp;</th>
-      </tr>
-      <%= f.simple_fields_for :items do |itemf| %>
-        <% 
-        item = @shipment.items[itemf.index] 
+  <table class="table table-striped table-condensed table-bordered">
+    <tr>
+      <th>Item</th>
+      <th>Description</th>
+      <th class="calign">Ordered</th>
+      <th class="calign">In stock</th>
+      <th class="calign">Ship Qty</th>
+      <th class="calign">Special Status</th>
+      <th>&nbsp;</th>
+    </tr>
+    <%= f.simple_fields_for :items do |itemf| %>
+      <%
+        item = @shipment.items[itemf.index]
         avl = item.quantity
         if @shipment.inventory_transaction.nil?
           avl = InventoryItem.joins(:inventory_transaction)
-                             .where("inv_transactions.archived" => false)
-                             .where(sku: item.order_item.product.sku)
-                             .sum(:quantity) 
+              .where("inv_transactions.archived" => false)
+              .where(sku: item.order_item.product.sku)
+              .sum(:quantity)
         end
-        %>
-          <tr class="<%= 'danger' if avl < item.quantity %>">
-            <td nowrap>
-              <%= itemf.hidden_field :order_item_id %>
-              <%= item.order_item.item_number %></td>
-            <td><%= link_to item.order_item.product.full_name, admin_store_product_path(item.order_item.product_id) %></td>
-            <td class="calign"><%= number_with_delimiter(item.order_item.quantity) %></td>
-            <td class="calign"><%= number_with_delimiter(avl) %></td>
-            <td class="calign"><%= itemf.number_field :quantity, unit_price: (item.order_item ? item.order_item.unit_price : '0.0'), class: "item-qty", style: 'width: 80px; text-align: center;' %></td>
-            <td class="calign"><%= itemf.text_field :special_status %></td>
-            <td><i class="fa fa-times light"></i><%= itemf.hidden_field :_destroy, class: 'destroy' %></td>
-          </tr>
-      <% end %>
-    </table>
+      %>
+      <tr class="<%= 'danger' if avl < item.quantity %>">
+        <td nowrap>
+          <%= itemf.hidden_field :order_item_id %>
+          <%= item.order_item.item_number %></td>
+        <td><%= link_to item.order_item.product.full_name, admin_store_product_path(item.order_item.product_id) %></td>
+        <td class="calign"><%= number_with_delimiter(item.order_item.quantity) %></td>
+        <td class="calign"><%= number_with_delimiter(avl) %></td>
+        <td class="calign"><%= itemf.number_field :quantity, unit_price: (item.order_item ? item.order_item.unit_price : '0.0'), class: "item-qty", style: 'width: 80px; text-align: center;' %></td>
+        <td class="calign"><%= itemf.text_field :special_status %></td>
+        <td><i class="fa fa-times light"></i><%= itemf.hidden_field :_destroy, class: 'destroy' %></td>
+      </tr>
+    <% end %>
+  </table>
 
 
-    <div class="row">
+  <div class="row">
 
-      <div class="col-md-6">
-        <div class="panel panel-primary">
-          <div class="panel-heading">Ship From:</div>
-          <div class="panel-body">
-            <%= f.input :ship_from_name, label: 'Name' %>
-            <%= f.input :ship_from_company, label: 'Company' %>
-            <%= f.input :ship_from_street1, label: 'Street 1' %>
-            <%= f.input :ship_from_street2, label: 'Street 2' %>
-            <%= f.input :ship_from_city, label: 'City' %>
-            <%= f.input :ship_from_state, label: 'State' %>
-            <%= f.input :ship_from_zip, label: 'Zipcode' %>
-            <%= f.input :ship_from_country, label: 'Country' %>
-          </div>
+    <div class="col-md-6">
+      <div class="panel panel-primary">
+        <div class="panel-heading">Ship From:</div>
+        <div class="panel-body">
+          <%= f.input :ship_from_name, label: 'Name' %>
+          <%= f.input :ship_from_company, label: 'Company' %>
+          <%= f.input :ship_from_street1, label: 'Street 1' %>
+          <%= f.input :ship_from_street2, label: 'Street 2' %>
+          <%= f.input :ship_from_city, label: 'City' %>
+          <%= f.input :ship_from_state, label: 'State' %>
+          <%= f.input :ship_from_zip, label: 'Zipcode' %>
+          <%= f.input :ship_from_country, label: 'Country' %>
         </div>
-
-        <div class="panel panel-primary">
-          <div class="panel-heading">Shipper Contact:</div>
-          <div class="panel-body">
-            <%= f.input :ship_from_email, label: 'Email' %>
-            <%= f.input :ship_from_phone, label: 'Phone' %>
-            <%= f.input :notes, input_html: { class: '', rows: 2 } %>
-          </div>
-        </div>
-        
-        <div class="panel panel-success">
-          <div class="panel-heading"><%= link_to "update", "#", class: 'update-invoice pull-right' %>Invoice</div>
-          <div class="panel-body">
-            <%= f.input :external_id %>
-            <%= f.input :external_name %>
-            <%= f.input :billing_processed%>
-            <%= f.input :invoice_amount%>
-            <%= f.input :paid %>
-          </div>
-        </div>
-
       </div>
 
-      <div class="col-md-6">
-        
-		<div class="panel panel-primary">
-          <div class="panel-heading">Recipient Address:</div>
-          <div class="panel-body">
-            <%= f.input :recipient_name, label: 'Recipient' %>
-            <%= f.input :recipient_company, label: 'Company' %>
-            <%= f.input :recipient_street1, label: 'Street 1' %>
-            <%= f.input :recipient_street2, label: 'Street 2' %>
-            <%= f.input :recipient_city, label: 'City' %>
-            <%= f.input :recipient_state, label: 'State' %>
-            <%= f.input :recipient_zip, label: 'Zipcode' %>
-            <%= f.input :recipient_country, label: 'Country' %>
-          </div>
+      <div class="panel panel-primary">
+        <div class="panel-heading">Shipper Contact:</div>
+        <div class="panel-body">
+          <%= f.input :ship_from_email, label: 'Email' %>
+          <%= f.input :ship_from_phone, label: 'Phone' %>
+          <%= f.input :notes, input_html: {class: '', rows: 2} %>
         </div>
-      	
-        <div class="panel panel-success">
-          <div class="panel-heading">Shipment Details:</div>
-          <div class="panel-body">
-            <% 
-              dropship_category = Category.find_by(slug: 'dropshippers')
-              dropshippers = Affiliate.where(id: AffiliateCategory.select(:affiliate_id).where(category_id: dropship_category.id)) unless dropship_category.nil? 
-            %>
-            <%= f.input :affiliate_shipping_account, label: "Aff. acct." %>
-            <%= f.input :fulfilled_by_id, collection: dropshippers %>
-            <%= f.input :carrier, collection: ["USPS", "FedEx", "UPS"] %>
-            <%= f.input :ship_method %>
-            <%= f.input :ship_date, as: :datepicker %>
-            <%= f.input :ship_cost %>
-            <%= f.input :tracking_number %>
-            <%= f.input :status, collection: ['cancelled', 'partially_shipped', 'payment_required', 'pending', 'ready_to_ship', 'shipped', 'third_party', 'transmitted', 'void'] %>
-          </div>
+      </div>
+
+      <div class="panel panel-success">
+        <div class="panel-heading"><%= link_to "update", "#", class: 'update-invoice pull-right' %>Invoice</div>
+        <div class="panel-body">
+          <%= f.input :external_id %>
+          <%= f.input :external_name %>
+          <%= f.input :billing_processed %>
+          <%= f.input :invoice_amount %>
+          <%= f.input :paid %>
         </div>
-	  
-	  </div>
+      </div>
 
     </div>
 
-    <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
-    &nbsp; &nbsp; <%= f.input_field :skip_inventory, as: :boolean %> skip inventory
+    <div class="col-md-6">
+
+      <div class="panel panel-primary">
+        <div class="panel-heading">Recipient Address:</div>
+        <div class="panel-body">
+          <%= f.input :recipient_name, label: 'Recipient' %>
+          <%= f.input :recipient_company, label: 'Company' %>
+          <%= f.input :recipient_street1, label: 'Street 1' %>
+          <%= f.input :recipient_street2, label: 'Street 2' %>
+          <%= f.input :recipient_city, label: 'City' %>
+          <%= f.input :recipient_state, label: 'State' %>
+          <%= f.input :recipient_zip, label: 'Zipcode' %>
+          <%= f.input :recipient_country, label: 'Country' %>
+        </div>
+      </div>
+
+      <div class="panel panel-success">
+        <div class="panel-heading">Shipment Details:</div>
+        <div class="panel-body">
+          <%
+            dropship_category = Category.find_by(slug: 'dropshippers')
+            dropshippers = Affiliate.where(id: AffiliateCategory.select(:affiliate_id).where(category_id: dropship_category.id)) unless dropship_category.nil?
+          %>
+          <%= f.input :affiliate_shipping_account, label: "Aff. acct." %>
+          <%= f.input :fulfilled_by_id, collection: dropshippers %>
+          <%= f.input :carrier, collection: ["USPS", "FedEx", "UPS"] %>
+          <%= f.input :ship_method %>
+          <%= f.input :ship_date, as: :datepicker %>
+          <%= f.input :ship_cost %>
+          <%= f.input :tracking_number %>
+          <%= f.input :status, collection: ['cancelled', 'partially_shipped', 'payment_required', 'pending', 'ready_to_ship', 'shipped', 'third_party', 'transmitted', 'void'] %>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
+  &nbsp; &nbsp; <%= f.input_field :skip_inventory, as: :boolean %> skip inventory
 
 <% end %>
 
 
 
 <% content_for :title do %>
-    Shipment <%= @shipment.order_id %>-<%= @shipment.sequence %>
+  Shipment <%= @shipment.order_id %>-<%= @shipment.sequence %>
 <% end %>
 
 
 <% content_for :head do %>
-    <style>
-        .form-inline .form-group { margin: 10px 0; }
-        .fa-times { cursor: pointer; }
-        .bold { font-weight: bold; }
-    </style>
-    
-    <script>
-      $(document).ready(function() {
-        $("#master-search").val("shp ");
-        
-        $(".update-invoice").click(function(e) {
-          
-          e.preventDefault();
-          var total = 0.0;
-      
-          $(".item-qty").each(function() {  
-              var unit_price = parseFloat($(this).attr("unit_price"));
-              var quantity = parseFloat($(this).val());
-        
-              if (!isNaN(unit_price) && !isNaN(quantity))
-                total += unit_price * quantity; 
+  <style>
+      .form-inline .form-group {
+          margin: 10px 0;
+      }
+
+      .fa-times {
+          cursor: pointer;
+      }
+
+      .bold {
+          font-weight: bold;
+      }
+  </style>
+
+  <script>
+      $(document).ready(function () {
+          $("#master-search").val("shp ");
+
+          $(".update-invoice").click(function (e) {
+
+              e.preventDefault();
+              var total = 0.0;
+
+              $(".item-qty").each(function () {
+                  var unit_price = parseFloat($(this).attr("unit_price"));
+                  var quantity = parseFloat($(this).val());
+
+                  if (!isNaN(unit_price) && !isNaN(quantity))
+                      total += unit_price * quantity;
+              });
+
+              $("#shipment_invoice_amount").val(total.toFixed(2));
           });
-      
-          $("#shipment_invoice_amount").val(total.toFixed(2));
-        });
-        
-        
-        $(".fa-times").click(function () {
-          $(this).parent().parent().hide("slow");
-          $(this).siblings(".destroy").val("true");
-          return false;
-        });
-        
+
+
+          $(".fa-times").click(function () {
+              $(this).parent().parent().hide("slow");
+              $(this).siblings(".destroy").val("true");
+              return false;
+          });
+
       });
-    </script>
+  </script>
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">eCommerce</a></li>
-    <li><%= link_to 'Shipments', admin_store_shipments_path %></li>
-	<% unless @shipment.id.nil? %>
-    <li><%= link_to @shipment.to_s, admin_store_shipment_path(@shipment.id)%></li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to 'Shipments', admin_store_shipments_path %></li>
+  <% unless @shipment.id.nil? %>
+    <li><%= link_to @shipment.to_s, admin_store_shipment_path(@shipment.id) %></li>
     <li class="active">edit</li>
-	<% else %>
-		<li class="active">new</li>
-	<% end %>
+  <% else %>
+    <li class="active">new</li>
+  <% end %>
 <% end %>

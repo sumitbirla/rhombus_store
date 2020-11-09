@@ -1,31 +1,31 @@
-	<tr>
-		<td><input type="checkbox" name="order_id[]" class="multiselect hidden-xs" value="<%= order.id %>"/></td>
-		<td>
-      <%= link_to order.id, admin_store_order_path(order) %>
-      <% if order.auto_ship %>
-        &nbsp; <i class="fa text-success fa-refresh"></i>
-      <% end %>
-      <% if order.po %>
-        &nbsp; <i class="fa text-danger fa-file-text-o"></i>
-      <% end %>
-    </td>
-    <td>
-      <% if order.affiliate %>
-        <%= link_to order.affiliate.code.presence || "[#{order.affiliate_id}]", admin_system_affiliate_path(order.affiliate_id) %>&nbsp;
-      <% end %>
-      <%= order.external_order_name.presence || order.external_order_id.presence || order.sales_channel %>
-    </td>
-		<td><%= systime(order.submitted) if order.submitted%></td>
-		<td>
-			<% if order.user %>
-				<%= link_to order.user, admin_system_user_path(order.user_id) %>
-      <% else %>
-        <%= order.shipping_name.presence || order.billing_name %>
-			<% end %>
-		</td>
-		<td><%= order.shipping_city %>, <%= order.shipping_state %></td>
-    <td><%= order.ship_latest %></td>
-		<td class="text-right"><%= number_to_currency(order.total) %></td>
-    <td class="text-right hidden-xs"><%= shipment_icons(order) %></td>
-		<td class="text-right"><%= order_status(order) %></td>
-	</tr>
+<tr>
+  <td><input type="checkbox" name="order_id[]" class="multiselect hidden-xs" value="<%= order.id %>"/></td>
+  <td>
+    <%= link_to order.id, admin_store_order_path(order) %>
+    <% if order.auto_ship %>
+      &nbsp; <i class="fa text-success fa-refresh"></i>
+    <% end %>
+    <% if order.po %>
+      &nbsp; <i class="fa text-danger fa-file-text-o"></i>
+    <% end %>
+  </td>
+  <td>
+    <% if order.affiliate %>
+      <%= link_to order.affiliate.code.presence || "[#{order.affiliate_id}]", admin_system_affiliate_path(order.affiliate_id) %>&nbsp;
+    <% end %>
+    <%= order.external_order_name.presence || order.external_order_id.presence || order.sales_channel %>
+  </td>
+  <td><%= systime(order.submitted) if order.submitted %></td>
+  <td>
+    <% if order.user %>
+      <%= link_to order.user, admin_system_user_path(order.user_id) %>
+    <% else %>
+      <%= order.shipping_name.presence || order.billing_name %>
+    <% end %>
+  </td>
+  <td><%= order.shipping_city %>, <%= order.shipping_state %></td>
+  <td><%= order.ship_latest %></td>
+  <td class="text-right"><%= number_to_currency(order.total) %></td>
+  <td class="text-right hidden-xs"><%= shipment_icons(order) %></td>
+  <td class="text-right"><%= order_status(order) %></td>
+</tr>

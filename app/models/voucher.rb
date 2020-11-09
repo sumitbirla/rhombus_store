@@ -16,7 +16,7 @@ class Voucher < ActiveRecord::Base
   self.table_name = "store_vouchers"
   belongs_to :voucher_group
   validates_presence_of :code, :voucher_group_id
-  
+
   # PUNDIT
   def self.policy_class
     ApplicationPolicy

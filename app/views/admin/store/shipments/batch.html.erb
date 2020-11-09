@@ -1,90 +1,90 @@
-<% 
-packaging_types = [ 
-	'YOUR PACKAGING',
-	'-------------------------',
-	'Card',
-	'Letter',
-	'Flat',
-	'Parcel',
-	'LargeParcel',
-	'IrregularParcel',
-	'FlatRateEnvelope',
-	'FlatRateLegalEnvelope',
-	'FlatRatePaddedEnvelope',
-	'FlatRateGiftCardEnvelope',
-	'FlatRateWindowEnvelope',
-	'FlatRateCardboardEnvelope',
-	'SmallFlatRateEnvelope',
-	'SmallFlatRateBox',
-	'MediumFlatRateBox',
-	'LargeFlatRateBox',
-	'RegionalRateBoxA',
-	'RegionalRateBoxB',
-	'RegionalRateBoxC',
-	'LargeFlatRateBoardGameBox',
-	'-------------------------',
-	'FedExEnvelope',
-	'FedExBox',
-	'FedExPak',
-	'FedExTube',
-	'FedEx10kgBox',
-	'FedEx25kgBox',
-	'-------------------------', 
-	'UPSLetter',
-	'UPSExpressBox',
-	'UPS25kgBox',
-	'UPS10kgBox',
-	'Tube',
-	'Pak',
-	'Pallet',
-	'SmallExpressBox',
-	'MediumExpressBox',
-	'LargeExpressBox' ]
-  
+<%
+  packaging_types = [
+      'YOUR PACKAGING',
+      '-------------------------',
+      'Card',
+      'Letter',
+      'Flat',
+      'Parcel',
+      'LargeParcel',
+      'IrregularParcel',
+      'FlatRateEnvelope',
+      'FlatRateLegalEnvelope',
+      'FlatRatePaddedEnvelope',
+      'FlatRateGiftCardEnvelope',
+      'FlatRateWindowEnvelope',
+      'FlatRateCardboardEnvelope',
+      'SmallFlatRateEnvelope',
+      'SmallFlatRateBox',
+      'MediumFlatRateBox',
+      'LargeFlatRateBox',
+      'RegionalRateBoxA',
+      'RegionalRateBoxB',
+      'RegionalRateBoxC',
+      'LargeFlatRateBoardGameBox',
+      '-------------------------',
+      'FedExEnvelope',
+      'FedExBox',
+      'FedExPak',
+      'FedExTube',
+      'FedEx10kgBox',
+      'FedEx25kgBox',
+      '-------------------------',
+      'UPSLetter',
+      'UPSExpressBox',
+      'UPS25kgBox',
+      'UPS10kgBox',
+      'Tube',
+      'Pak',
+      'Pallet',
+      'SmallExpressBox',
+      'MediumExpressBox',
+      'LargeExpressBox']
+
   service_types = [
-    'USPS',
-    '-------------------------',
-    'First',
-    'Priority',
-    'Express',
-    'ParcelSelect',
-    'LibraryMail',
-    'MediaMail',
-    'CriticalMail',
-    'FirstClassMailInternational',
-    'FirstClassPackageInternationalService',
-    'PriorityMailInternational',
-    'ExpressMailInternational',
-    '-------------------------', 
-    'UPS',
-    '-------------------------',
-    'Ground',
-    'UPSStandard',
-    'UPSSaver',
-    'Express',
-    'ExpressPlus',
-    'Expedited',
-    'NextDayAir',
-    'NextDayAirSaver',
-    'NextDayAirEarlyAM',
-    '2ndDayAir',
-    '2ndDayAirAM',
-    '3DaySelect',
-    '-------------------------',
-    'FedEx',
-    '-------------------------',
-    'FEDEX_GROUND',
-    'FEDEX_2_DAY',
-    'FEDEX_2_DAY_AM',
-    'FEDEX_EXPRESS_SAVER',
-    'STANDARD_OVERNIGHT',
-    'FIRST_OVERNIGHT',
-    'PRIORITY_OVERNIGHT',
-    'INTERNATIONAL_ECONOMY',
-    'INTERNATIONAL_FIRST',
-    'INTERNATIONAL_PRIORITY',
-    'GROUND_HOME_DELIVERY',
-    'SMART_POST',
+      'USPS',
+      '-------------------------',
+      'First',
+      'Priority',
+      'Express',
+      'ParcelSelect',
+      'LibraryMail',
+      'MediaMail',
+      'CriticalMail',
+      'FirstClassMailInternational',
+      'FirstClassPackageInternationalService',
+      'PriorityMailInternational',
+      'ExpressMailInternational',
+      '-------------------------',
+      'UPS',
+      '-------------------------',
+      'Ground',
+      'UPSStandard',
+      'UPSSaver',
+      'Express',
+      'ExpressPlus',
+      'Expedited',
+      'NextDayAir',
+      'NextDayAirSaver',
+      'NextDayAirEarlyAM',
+      '2ndDayAir',
+      '2ndDayAirAM',
+      '3DaySelect',
+      '-------------------------',
+      'FedEx',
+      '-------------------------',
+      'FEDEX_GROUND',
+      'FEDEX_2_DAY',
+      'FEDEX_2_DAY_AM',
+      'FEDEX_EXPRESS_SAVER',
+      'STANDARD_OVERNIGHT',
+      'FIRST_OVERNIGHT',
+      'PRIORITY_OVERNIGHT',
+      'INTERNATIONAL_ECONOMY',
+      'INTERNATIONAL_FIRST',
+      'INTERNATIONAL_PRIORITY',
+      'GROUND_HOME_DELIVERY',
+      'SMART_POST',
   ]
 %>
 
@@ -112,19 +112,19 @@ packaging_types = [
     </div>
   </div>
   <%= f.input :ship_date, as: :datepicker, required: true %>
-	<%= f.input :require_signature, as: :boolean, label: 'Signature?' %>
-  
+  <%= f.input :require_signature, as: :boolean, label: 'Signature?' %>
+
   <div class="form-group optional">
     <label class="string optional control-label col-sm-3" for="shipment_dimensions">Label printer</label>
     <div class="col-sm-9">
       <%= select_tag(:printer_id, options_from_collection_for_select(Printer.where(preferred_format: ["epl2", "zpl", "pdf"]), :id, :name), prompt: "- do not print -") %>
-      &nbsp; &nbsp; <input type="checkbox" name="send_email" value="1" checked> Email notification 
+      &nbsp; &nbsp; <input type="checkbox" name="send_email" value="1" checked> Email notification
     </div>
   </div>
-		 
-  <%= button_tag "Process", :class => "btn btn-success", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
 
-	<span class="label label-warning pull-right"><%= @response[:mode] unless @response.nil? %></span>
+  <%= button_tag "Process", :class => "btn btn-success", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
+
+  <span class="label label-warning pull-right"><%= @response[:mode] unless @response.nil? %></span>
 <% end %>
 
 
@@ -140,7 +140,7 @@ packaging_types = [
     <th></th>
     <th>Status</th>
   </tr>
-  <%= render partial: 'shipment', collection: @shipments, locals: { readonly: true } %>
+  <%= render partial: 'shipment', collection: @shipments, locals: {readonly: true} %>
 </table>
 
 
@@ -150,26 +150,42 @@ packaging_types = [
 <% end %>
 
 <% content_for :head do %>
-    <style>
-        .dimensions .numeric { width: 45px; text-align: center;}
-        .add-on { background-color: #dfeaef; color: #666; text-shadow: none; font-weight: normal; display: inline-block; width: 120px; margin-bottom: 4px; }
-        th { background-color: #ddd; padding: 0; }
-    </style>
-    <script>
-        $(document).ready(function() {
+  <style>
+      .dimensions .numeric {
+          width: 45px;
+          text-align: center;
+      }
 
-						$('#shipment_packaging_type').change(function() {
-							if ($(this).val() == 'YOUR PACKAGING') {
-								//$('.shipment_package_weight').show();
-								$('.shipment_dimensions').show();
-							} else {
-								//$('.shipment_package_weight').hide();
-								$('.shipment_dimensions').hide();
-							}
-						});
+      .add-on {
+          background-color: #dfeaef;
+          color: #666;
+          text-shadow: none;
+          font-weight: normal;
+          display: inline-block;
+          width: 120px;
+          margin-bottom: 4px;
+      }
 
-        });
-    </script>
+      th {
+          background-color: #ddd;
+          padding: 0;
+      }
+  </style>
+  <script>
+      $(document).ready(function () {
+
+          $('#shipment_packaging_type').change(function () {
+              if ($(this).val() == 'YOUR PACKAGING') {
+                  //$('.shipment_package_weight').show();
+                  $('.shipment_dimensions').show();
+              } else {
+                  //$('.shipment_package_weight').hide();
+                  $('.shipment_dimensions').hide();
+              }
+          });
+
+      });
+  </script>
 <% end %>
 
 

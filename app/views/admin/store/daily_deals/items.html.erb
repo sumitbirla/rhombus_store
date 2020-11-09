@@ -14,13 +14,13 @@
 
 
 
-<%= simple_form_for @daily_deal, url: "/admin/store/daily_deals/#{@daily_deal.id}/items", method: :post, html: { class: 'form-inline' } do |f| %>
+<%= simple_form_for @daily_deal, url: "/admin/store/daily_deals/#{@daily_deal.id}/items", method: :post, html: {class: 'form-inline'} do |f| %>
   <input type="hidden" name="add_more_items" value=""/>
-  
-	<%= render 'admin/shared/error_messages', object: f.object %>
-	
-	<table class="table table-condensed table-striped">
-		<tr>
+
+  <%= render 'admin/shared/error_messages', object: f.object %>
+
+  <table class="table table-condensed table-striped">
+    <tr>
       <th style="width: 200px;">Item</th>
       <th>Description</th>
       <th style="width: 130px;">Unit Cost</th>
@@ -29,31 +29,31 @@
     </tr>
     <%= f.fields_for :items do |itemf| %>
       <% item = @daily_deal.items[itemf.index] %>
-    <tr>
-      <td>
-        <% unless item.product.nil? %>
-          <%= item.item_number %>
-        <% else %>
-          <%= text_field_tag :item_number, item.item_number, class: 'item-id' %>
-        <% end %>
-      </td>
-      <td>
-        <span class="item-desc"><%= item.product.name_with_option unless item.product.nil? %></span>
-        <span class="light affiliate-name"> &nbsp; &nbsp; <%= item.affiliate unless item.affiliate.nil? %></span>
-      </td>
-      <td><%= itemf.input_field :unit_cost, class: 'unit-price' %></td>
-      <td><%= itemf.input_field :quantity, class: 'qty' %></td>
-      <td><i class="fa fa-times"></i>
-        <%= itemf.hidden_field :_destroy, class: 'destroy' %>
-        <%= itemf.hidden_field :product_id, class: 'product-id' %>
-        <%= itemf.hidden_field :affiliate_id, class: 'affiliate-id' %>
-        <%= itemf.hidden_field :variation, class: 'variation' %>
-      </td>
-    </tr>
+      <tr>
+        <td>
+          <% unless item.product.nil? %>
+            <%= item.item_number %>
+          <% else %>
+            <%= text_field_tag :item_number, item.item_number, class: 'item-id' %>
+          <% end %>
+        </td>
+        <td>
+          <span class="item-desc"><%= item.product.name_with_option unless item.product.nil? %></span>
+          <span class="light affiliate-name"> &nbsp; &nbsp; <%= item.affiliate unless item.affiliate.nil? %></span>
+        </td>
+        <td><%= itemf.input_field :unit_cost, class: 'unit-price' %></td>
+        <td><%= itemf.input_field :quantity, class: 'qty' %></td>
+        <td><i class="fa fa-times"></i>
+          <%= itemf.hidden_field :_destroy, class: 'destroy' %>
+          <%= itemf.hidden_field :product_id, class: 'product-id' %>
+          <%= itemf.hidden_field :affiliate_id, class: 'affiliate-id' %>
+          <%= itemf.hidden_field :variation, class: 'variation' %>
+        </td>
+      </tr>
     <% end %>
   </table>
 
-	<%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
 
 <% end %>
 
@@ -63,61 +63,66 @@
 <% end %>
 
 <% content_for :head do %>
-    <style>
-        .form-inline .form-group { margin: 10px 0; }
-        .fa-times { cursor: pointer; }
-    </style>
-    
-    <script>
-    $(document).ready(function() {
-      
-      $(".fa-times").click(function () {
-        $(this).parent().parent().hide("slow");
-        $(this).siblings(".destroy").val("true");
-        return false;
-      });
-      
-      $(".add-more-items").click(function() {
-        $("input[name='add_more_items']").val(<%= @daily_deal.items.length + 2 %>);
-        $("form.form-inline").submit();
-      });
-      
-      
-      $(".item-id").change(function() {
-        var item = $(this);
-        
-        $.get('/admin/store/products/item_info?sku=' + $(this).val(), function(data) {
+  <style>
+      .form-inline .form-group {
+          margin: 10px 0;
+      }
 
-          item.parent().parent().find('.product-id').val(data.product_id);
-          item.parent().parent().find('.affiliate-id').val(data.affiliate_id);
-          item.parent().parent().find('.affiliate-name').html(data.affiliate_name || '');
-          item.parent().parent().find('.variation').val(data.variation);
-          item.parent().parent().find('.item-desc').html(data.description);
-          item.parent().parent().find('.unit-price').val(data.dealer_price);
-            
-          if (data.status == 'ok') { 
-            item.parent().parent().find('.qty').focus();
-          } else {
-            item.parent().parent().find('.item-desc').val('ITEM NOT FOUND!');
-            item.parent().parent().find('.item-id').select();
-          }
-          
-        });
+      .fa-times {
+          cursor: pointer;
+      }
+  </style>
+
+  <script>
+      $(document).ready(function () {
+
+          $(".fa-times").click(function () {
+              $(this).parent().parent().hide("slow");
+              $(this).siblings(".destroy").val("true");
+              return false;
+          });
+
+          $(".add-more-items").click(function () {
+              $("input[name='add_more_items']").val(<%= @daily_deal.items.length + 2 %>);
+              $("form.form-inline").submit();
+          });
+
+
+          $(".item-id").change(function () {
+              var item = $(this);
+
+              $.get('/admin/store/products/item_info?sku=' + $(this).val(), function (data) {
+
+                  item.parent().parent().find('.product-id').val(data.product_id);
+                  item.parent().parent().find('.affiliate-id').val(data.affiliate_id);
+                  item.parent().parent().find('.affiliate-name').html(data.affiliate_name || '');
+                  item.parent().parent().find('.variation').val(data.variation);
+                  item.parent().parent().find('.item-desc').html(data.description);
+                  item.parent().parent().find('.unit-price').val(data.dealer_price);
+
+                  if (data.status == 'ok') {
+                      item.parent().parent().find('.qty').focus();
+                  } else {
+                      item.parent().parent().find('.item-desc').val('ITEM NOT FOUND!');
+                      item.parent().parent().find('.item-id').select();
+                  }
+
+              });
+          });
+
       });
-      
-    });
-    </script>
+  </script>
 <% end %>
 
 
 <% content_for :title do %>
-	Daily Deals: <%= @daily_deal.short_tag_line %>
+  Daily Deals: <%= @daily_deal.short_tag_line %>
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
-	<li><%= link_to @daily_deal.short_tag_line, admin_store_daily_deal_path(@daily_deal) %></li>
-	<li class="active">edit</li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
+  <li><%= link_to @daily_deal.short_tag_line, admin_store_daily_deal_path(@daily_deal) %></li>
+  <li class="active">edit</li>
 <% end %>

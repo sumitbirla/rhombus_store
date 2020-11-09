@@ -1,21 +1,24 @@
-  <select id="selAction" class="form-control" style="display: inline; width: 75%">
-    <option> - - Select Action - - </option>
-	  <option method="get" value="<%= admin_store_shipments_choose_order_path %>">New shipment</option>
-    <option method="get" value="/admin/store/shipments_batch">Batch ship</option>
-    <option method="post" value="/admin/store/shipments_packing_slip_batch" print-dialog="true" print-format="pdf">Packing slips (PDF)</option>
-    <option method="get" value="/admin/store/shipments/product_labels">Product labels (selected)</option>
-    <option method="get" value="/admin/store/shipments/product_labels_pending">Product labels (all pending)</option>
-    <option method="get" value="<%= admin_store_manifests_path %>">Manifest</option>
-    <optgroup label="Change order status to ">
-        <option method="post" value="/admin/store/shipments_update_status?status=cancelled">Cancelled</option>
-        <option method="post" value="/admin/store/shipments_update_status?status=partially_shipped">Partially Shipped</option>
-        <option method="post" value="/admin/store/shipments_update_status?status=payment_required">Payment Required</option>
-        <option method="post" value="/admin/store/shipments_update_status?status=pending">Pending</option>
-        <option method="post" value="/admin/store/shipments_update_status?status=ready_to_ship">Ready to ship</option>
-        <option method="post" value="/admin/store/shipments_update_status?status=shipped">Shipped</option>
-        <option method="post" value="/admin/store/shipments_update_status?status=third_party">Third Party</option>
-        <option method="post" value="/admin/store/shipments_update_status?status=transmitted">Transmitted</option>
-        <option method="post" value="/admin/store/shipments_update_status?status=void">Void</option>
-    </optgroup>
-  </select>
-  <input type="button" class="btn btn-default btn-small" id="btnAction" value="Go" />
+<select id="selAction" class="form-control" style="display: inline; width: 75%">
+  <option> - - Select Action - -</option>
+  <option method="get" value="<%= admin_store_shipments_choose_order_path %>">New shipment</option>
+  <option method="get" value="/admin/store/shipments_batch">Batch ship</option>
+  <option method="post" value="/admin/store/shipments_packing_slip_batch" print-dialog="true" print-format="pdf">Packing
+    slips (PDF)
+  </option>
+  <option method="get" value="/admin/store/shipments/product_labels">Product labels (selected)</option>
+  <option method="get" value="/admin/store/shipments/product_labels_pending">Product labels (all pending)</option>
+  <option method="get" value="<%= admin_store_manifests_path %>">Manifest</option>
+  <optgroup label="Change order status to ">
+    <option method="post" value="/admin/store/shipments_update_status?status=cancelled">Cancelled</option>
+    <option method="post" value="/admin/store/shipments_update_status?status=partially_shipped">Partially Shipped
+    </option>
+    <option method="post" value="/admin/store/shipments_update_status?status=payment_required">Payment Required</option>
+    <option method="post" value="/admin/store/shipments_update_status?status=pending">Pending</option>
+    <option method="post" value="/admin/store/shipments_update_status?status=ready_to_ship">Ready to ship</option>
+    <option method="post" value="/admin/store/shipments_update_status?status=shipped">Shipped</option>
+    <option method="post" value="/admin/store/shipments_update_status?status=third_party">Third Party</option>
+    <option method="post" value="/admin/store/shipments_update_status?status=transmitted">Transmitted</option>
+    <option method="post" value="/admin/store/shipments_update_status?status=void">Void</option>
+  </optgroup>
+</select>
+<input type="button" class="btn btn-default btn-small" id="btnAction" value="Go"/>

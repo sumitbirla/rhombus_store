@@ -4,11 +4,11 @@ module CartHelper
     # daily_deals have their own shipping rules
     order.shipping_cost = order.deal_items.sum { |x| x.daily_deal.shipping_cost * x.quantity }
     order.shipping_method = nil
-    
+
     options = ShippingOption.where("domain_id = ? and max_order_amount >= ? and min_order_amount <= ? and active = ?", order.domain_id, order.subtotal, order.subtotal, true)
     if options.length > 0
       selected_option = options.min_by { |x| x.base_cost }
-      
+
       # apply shipping cost if > 0 only if there are non-deal items
       if selected_option.base_cost > 0.0 && order.non_deal_items.length > 0
         order.shipping_cost += selected_option.base_cost
@@ -24,12 +24,12 @@ module CartHelper
   def apply_tax(order)
     order.tax_rate = 0.0
     order.tax_amount = 0.0
-    
+
     # Do not add tax to tax_exempt customers
     if order.user && order.user.affiliate && order.user.affiliate.tax_exempt
       return
     end
-    
+
     zip = ZipCode.find_by(code: order.shipping_zip)
     unless zip.nil?
       # determine tax
@@ -47,7 +47,7 @@ module CartHelper
     order.credit_applied = 0.0
     order.subtotal = 0.0
     order.items.each { |i| order.subtotal += i.quantity.to_d * i.unit_price }
-    
+
     if order.shipping_country == 'US'
       apply_shipping(order)
     end
@@ -65,7 +65,7 @@ module CartHelper
       voucher = order.voucher
       order.credit_applied = voucher.voucher_group.value
     end
-    
+
     apply_tax(order)
 
     # grand total

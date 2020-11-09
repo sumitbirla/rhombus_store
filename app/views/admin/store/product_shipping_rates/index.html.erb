@@ -6,33 +6,33 @@
 
 <%= will_paginate @product_shipping_rates %>
 <table class="table table-striped table-condensed">
-	<tr>
-		<th>Code</th>
-		<th>Destination</th>
-		<th>Ship Method</th>
-		<th class="text-center">1<sup>st</sup> Item</th>
-		<th class="text-center">2<sup>nd</sup> Item</th>
-		<th class="text-center">Each Additional.</th>
-		<th class="actions">&nbsp;</th>
-	</tr>
-	<% @product_shipping_rates.each do |rate| 
-      c = Country[rate.destination_country_code] %>
-	<tr>
-		<td><%= rate.code %></td>
-		<td><%= c.emoji_flag %> <%= c %></td>
-		<td><%= rate.ship_method %></td>
-		<td class="text-center"><%= number_to_currency rate.first_item %></td>
-		<td class="text-center"><%= number_to_currency rate.second_item %></td>
-		<td class="text-center"><%= number_to_currency rate.additional_items %></td>
-		<td class="actions text-right">
-			<%= link_to "edit", edit_admin_store_product_shipping_rate_path(rate) %> &nbsp;
-			<%= link_to "delete", 
-						  { action: "destroy", id: rate.id }, 
-						  method: :delete, 
-						  data: { confirm: "Are you sure?" } %>
-		</td>
-	</tr>
-	<% end %>
+  <tr>
+    <th>Code</th>
+    <th>Destination</th>
+    <th>Ship Method</th>
+    <th class="text-center">1<sup>st</sup> Item</th>
+    <th class="text-center">2<sup>nd</sup> Item</th>
+    <th class="text-center">Each Additional.</th>
+    <th class="actions">&nbsp;</th>
+  </tr>
+  <% @product_shipping_rates.each do |rate|
+    c = Country[rate.destination_country_code] %>
+    <tr>
+      <td><%= rate.code %></td>
+      <td><%= c.emoji_flag %> <%= c %></td>
+      <td><%= rate.ship_method %></td>
+      <td class="text-center"><%= number_to_currency rate.first_item %></td>
+      <td class="text-center"><%= number_to_currency rate.second_item %></td>
+      <td class="text-center"><%= number_to_currency rate.additional_items %></td>
+      <td class="actions text-right">
+        <%= link_to "edit", edit_admin_store_product_shipping_rate_path(rate) %> &nbsp;
+        <%= link_to "delete",
+                    {action: "destroy", id: rate.id},
+                    method: :delete,
+                    data: {confirm: "Are you sure?"} %>
+      </td>
+    </tr>
+  <% end %>
 </table>
 
 <%= render 'admin/shared/table_summary', data: @product_shipping_rates %>
@@ -44,6 +44,6 @@
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li class="active">Shipping Rates</li>
+  <li><a href="#">eCommerce</a></li>
+  <li class="active">Shipping Rates</li>
 <% end %>

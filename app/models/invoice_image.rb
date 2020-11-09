@@ -12,7 +12,7 @@ class InvoiceImage < ActiveRecord::Base
   self.table_name = "store_invoice_images"
   has_many :pictures, -> { order :sort }, as: :imageable
   belongs_to :domain
-  
+
   # PUNDIT
   def self.policy_class
     ApplicationPolicy

@@ -4,34 +4,34 @@
 
 <%= simple_form_for [:admin, :inventory, @inventory_item] do |f| %>
 
-	<%= render 'admin/shared/error_messages', object: f.object %>
-	
+  <%= render 'admin/shared/error_messages', object: f.object %>
+
   <div class="row">
-    
+
     <div class="col-md-7">
       <%= f.input :inventoriable_type %>
-    	<%= f.input :inventoriable_id, label: "ID"%>
+      <%= f.input :inventoriable_id, label: "ID" %>
       <%= f.association :inventory_location %>
       <%= f.input :quantity %>
       <%= f.input :lot %>
       <%= f.input :expiration, as: :datepicker %>
-    	<%= f.input :cost %>
+      <%= f.input :cost %>
       <%= f.input :transaction_type %>
-    	<%= f.input :transaction_id, label: "ID" %>
+      <%= f.input :transaction_id, label: "ID" %>
       <% if @inventory_item.persisted? %>
         <%= f.association :user, label: "Entered by" %>
       <% end %>
-	  </div>
+    </div>
 
   </div>
-  <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
-  
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
+
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">Inventory</a></li>
-	<li><%= link_to "Items", admin_inventory_inventory_items_path %></li>
-	<li class="active"><%= @inventory_item %></li>
+  <li><a href="#">Inventory</a></li>
+  <li><%= link_to "Items", admin_inventory_inventory_items_path %></li>
+  <li class="active"><%= @inventory_item %></li>
 <% end %>
 

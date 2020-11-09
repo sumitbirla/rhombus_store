@@ -1,29 +1,29 @@
 <h2><%= @daily_deal.short_tag_line %></h2>
 
 <% unless @daily_deal.id.nil? %>
-<ul class="nav nav-tabs" style="margin-bottom: 20px;">
-  <li class="active"><a href="#">Summary</a></li>
-  <li><%= link_to "Pictures", pictures_admin_store_daily_deal_path(@daily_deal) %></a></li>
-  <li><%= link_to "Categories", categories_admin_store_daily_deal_path(@daily_deal) %></li>
-  <li><%= link_to "Coupons", coupons_admin_store_daily_deal_path(@daily_deal) %></li>
-  <li><%= link_to "Deal Items", items_admin_store_daily_deal_path(@daily_deal) %></li>
-  <li><%= link_to "Locations", locations_admin_store_daily_deal_path(@daily_deal) %></li>
-  <li><%= link_to "External Coupons", external_coupons_admin_store_daily_deal_path(@daily_deal) %></li>
-</ul>
+  <ul class="nav nav-tabs" style="margin-bottom: 20px;">
+    <li class="active"><a href="#">Summary</a></li>
+    <li><%= link_to "Pictures", pictures_admin_store_daily_deal_path(@daily_deal) %></a></li>
+    <li><%= link_to "Categories", categories_admin_store_daily_deal_path(@daily_deal) %></li>
+    <li><%= link_to "Coupons", coupons_admin_store_daily_deal_path(@daily_deal) %></li>
+    <li><%= link_to "Deal Items", items_admin_store_daily_deal_path(@daily_deal) %></li>
+    <li><%= link_to "Locations", locations_admin_store_daily_deal_path(@daily_deal) %></li>
+    <li><%= link_to "External Coupons", external_coupons_admin_store_daily_deal_path(@daily_deal) %></li>
+  </ul>
 <% end %>
 
 
 <%= render 'admin/shared/error_messages', object: @daily_deal %>
 
-<%= simple_form_for [:admin, :store, @daily_deal], html:  { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
+<%= simple_form_for [:admin, :store, @daily_deal], html: {class: 'form-horizontal'}, wrapper: :horizontal_form do |f| %>
   <%= f.input :facebook_posts, as: :hidden %>
   <%= f.input :facebook_clicks, as: :hidden %>
-  
+
   <%= f.input :deal_type, as: :select, collection: ['product', 'voucher', 'coupon code'] %>
   <%= f.input :slug %>
   <%= f.input :short_tag_line %>
-  <%= f.input :title, as: :text, input_html: { rows: 2 } %>
-  <%= f.input :theme, as: :select, collection: ['default']%>
+  <%= f.input :title, as: :text, input_html: {rows: 2} %>
+  <%= f.input :theme, as: :select, collection: ['default'] %>
   <%= f.input :active %>
   <%= f.input :affiliate_id, collection: Cache.affiliate_list('marketing-partners') %>
   <%= f.input :affiliate_remittance %>
@@ -43,29 +43,29 @@
   <%= f.input :featured %>
   <%= f.input :fb_discount, label: "Facebook Discount" %>
   <%= ckeditor_input(@daily_deal, "description") %>
-  <%= f.input :conditions, as: :text, input_html: { rows: 6 } %>
-  <%= f.input :redemption_instructions, as: :text, input_html: { rows: 6 } %>
-  <%= f.input :order_specifications, as: :text, input_html: { rows: 6 } %>
-  
+  <%= f.input :conditions, as: :text, input_html: {rows: 6} %>
+  <%= f.input :redemption_instructions, as: :text, input_html: {rows: 6} %>
+  <%= f.input :order_specifications, as: :text, input_html: {rows: 6} %>
+
   <div class="form-actions">
-  	<%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+    <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
   </div>
-  
+
 <% end %>
 
 
 <% content_for :title do %>
-	Daily Deals: <%= @daily_deal.short_tag_line %>
+  Daily Deals: <%= @daily_deal.short_tag_line %>
 <% end %>
 
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Daily Deals", admin_store_daily_deals_path %></li>
   <% if @daily_deal.persisted? %>
-	  <li><%= link_to @daily_deal.short_tag_line, admin_store_daily_deal_path(@daily_deal) %></li>
-	  <li class="active">edit</li>
+    <li><%= link_to @daily_deal.short_tag_line, admin_store_daily_deal_path(@daily_deal) %></li>
+    <li class="active">edit</li>
   <% else %>
     <li class="active"><%= @daily_deal.short_tag_line %></li>
   <% end %>

@@ -1,8 +1,8 @@
 module PurchaseOrderHelper
-  
+
   def po_status(po, css = '')
     css_class = css + ' '
-    
+
     if po.status == 'new'
       css_class += 'label-warning'
     elsif ['late', 'canceled'].include?(po.status)
@@ -16,13 +16,13 @@ module PurchaseOrderHelper
     else
       css_class += 'label-primary'
     end
-    
+
     "<span class='label #{css_class}'>#{po.status}</span>".html_safe
   end
-  
+
   def poi_status(poi, css = '')
     css_class = css + ' '
-    
+
     if poi.status == 'received'
       css_class += 'label-success'
     elsif poi.status == 'closed'
@@ -32,9 +32,9 @@ module PurchaseOrderHelper
     else
       css_class += 'label-warning'
     end
-    
+
     "<span class='label #{css_class}'>#{poi.status}</span>".html_safe
   end
-  
-  
+
+
 end

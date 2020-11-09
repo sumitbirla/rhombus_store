@@ -1,16 +1,16 @@
-<% 
+<%
   item = inventory_item
   p = Product.find_by(sku: item.sku)
   if p
 %>
-	<tr>
-		<td><%= link_to p.sku, admin_store_product_path(p) %></td>
-		<td><%= p.name_with_option %></td>
+  <tr>
+    <td><%= link_to p.sku, admin_store_product_path(p) %></td>
+    <td><%= p.name_with_option %></td>
     <% unless params[:group].blank? %>
-  		<td><%= item.inventory_location %></td>
+      <td><%= item.inventory_location %></td>
       <td><%= item.lot %></td>
-  		<td class="text-center"><%= item.formatted_expiration %></td>
+      <td class="text-center"><%= item.formatted_expiration %></td>
     <% end %>
     <td class="text-right"><%= number_with_delimiter item.quantity %></td>
-	</tr>
+  </tr>
 <% end %>

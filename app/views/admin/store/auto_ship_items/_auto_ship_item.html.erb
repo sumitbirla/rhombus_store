@@ -1,19 +1,19 @@
 <% as = auto_ship_item %>
-	<tr>
-    <td><%= as.id %></td>
-		<td><%= link_to as.user.name, admin_system_user_path(as.user) %></td>
-		<td><%= link_to as.product.item_number, admin_store_product_path(as.product_id) %></td>
-		<td><%= as.product.name_with_option %></td>
-    <td class="text-center"><%= as.quantity %></td>
-    <td class="text-center"><%= as.days %> days</td>
-    <td class="text-center"><%= as.last_shipped %></td>
-    <td class="text-center"><%= as.next_ship_date %></td>
-    <td class="text-center"><%= auto_ship_status(as) %></td>
-		<td class="actions">
-			<%= link_to "edit", edit_admin_store_auto_ship_item_path(as) %> &nbsp;
-			<%= link_to "delete", 
-						  { controller: "admin/store/auto_ship_items", action: "destroy", id: as.id }, 
-						  method: :delete, 
-						  data: { confirm: "Are you sure?" } %>
-		</td>
-	</tr>
+<tr>
+  <td><%= as.id %></td>
+  <td><%= link_to as.user.name, admin_system_user_path(as.user) %></td>
+  <td><%= link_to as.product.item_number, admin_store_product_path(as.product_id) %></td>
+  <td><%= as.product.name_with_option %></td>
+  <td class="text-center"><%= as.quantity %></td>
+  <td class="text-center"><%= as.days %> days</td>
+  <td class="text-center"><%= as.last_shipped %></td>
+  <td class="text-center"><%= as.next_ship_date %></td>
+  <td class="text-center"><%= auto_ship_status(as) %></td>
+  <td class="actions">
+    <%= link_to "edit", edit_admin_store_auto_ship_item_path(as) %> &nbsp;
+    <%= link_to "delete",
+                {controller: "admin/store/auto_ship_items", action: "destroy", id: as.id},
+                method: :delete,
+                data: {confirm: "Are you sure?"} %>
+  </td>
+</tr>

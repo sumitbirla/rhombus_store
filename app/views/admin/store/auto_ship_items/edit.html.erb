@@ -11,9 +11,9 @@
   <%= f.input :days %>
   <%= f.input :last_shipped, as: :datepicker %>
   <%= f.input :next_ship_date, as: :datepicker %>
-  <%= f.input :status, collection: [:active, :billing_failed, :product_discontinued, :cancelled ]%>
-  
-  <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+  <%= f.input :status, collection: [:active, :billing_failed, :product_discontinued, :cancelled] %>
+
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
 
 <% end %>
 
@@ -21,14 +21,14 @@
 
 
 <% content_for :title do %>
-	Autoship Item
+  Autoship Item
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Autoship Items", admin_store_auto_ship_items_path %></li>
-	<li class="active">edit</li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Autoship Items", admin_store_auto_ship_items_path %></li>
+  <li class="active">edit</li>
 <% end %>
 
 

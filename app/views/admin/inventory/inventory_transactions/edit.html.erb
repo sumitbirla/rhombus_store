@@ -6,10 +6,10 @@
 <%= simple_form_for [:admin, :inventory, @transaction] do |f| %>
   <input type="hidden" name="add_more_items" value=""/>
 
-	<%= render 'admin/shared/error_messages', object: f.object %>
+  <%= render 'admin/shared/error_messages', object: f.object %>
 
   <div class="row" style="margin-left: 0;">
-    
+
     <div class="col-md-6">
       <%= f.input :external_id %>
       <%= f.input :affiliate_id, collection: dropshippers %>
@@ -17,29 +17,29 @@
       <%= f.input :bulk_import %>
       <%= f.input :archived %>
     </div>
-    
+
     <div class="col-md-6">
-  	<table class="table table-bordered table-condensed summary">
-  		<tr>
-  			<td class="key">External ID: </td>
-  			<td><%= @transaction.external_id.presence || 'manual' %></td>
-  		</tr>
-      <% unless @transaction.created_at.nil? %>
-  		<tr class="key">
-  			<td>Transaction time: </td>
-  			<td><%= systime @transaction.created_at %></td>
-  		</tr>
-      <% end %>
-  		<tr>
-  			<td class="key">Created by: </td>
-  			<td><%= @transaction.responsible_party.presence || '- system -' %></td>
-  		</tr>
-  	</table>
+      <table class="table table-bordered table-condensed summary">
+        <tr>
+          <td class="key">External ID:</td>
+          <td><%= @transaction.external_id.presence || 'manual' %></td>
+        </tr>
+        <% unless @transaction.created_at.nil? %>
+          <tr class="key">
+            <td>Transaction time:</td>
+            <td><%= systime @transaction.created_at %></td>
+          </tr>
+        <% end %>
+        <tr>
+          <td class="key">Created by:</td>
+          <td><%= @transaction.responsible_party.presence || '- system -' %></td>
+        </tr>
+      </table>
     </div>
   </div>
 
 
-	 <div class="panel panel-info">
+  <div class="panel panel-info">
     <div class="panel-heading">
       <%= link_to '+ add more items', '#', class: 'add-more-items pull-right' %>
       Items
@@ -51,96 +51,101 @@
           <th>Description</th>
           <th>Quantity</th>
           <th>Location</th>
-          <th >Lot #</th>
+          <th>Lot #</th>
           <th>Expiration</th>
           <th></th>
         </tr>
-      <%= f.simple_fields_for :items do |itemf| %>
-         <% 
-           item = @transaction.items[itemf.index] 
-           p = Product.find_by(item_number: item.sku) unless item.sku.blank?
-         %>
-        <tr>
-          <td><%= itemf.input_field :sku, class: "item-id", placeholder: 'Item # or UPC' %></td>
-          <td class="item-desc"><%= p.name_with_option unless p.nil? %></td>
-          <td><%= itemf.input_field :quantity, class: "text-right qty" %></td>
-          <td><%= itemf.input_field :inventory_location_id, collection: InventoryLocation.order(:name) %></td>
-          <td><%= itemf.input_field :lot %></td>
-          <td><%= itemf.input_field :expiration, class: "text-center" , placeholder: 'YYMM' %></td>
-          <td>
-            <i class="fa fa-times"></i>
-            <%= itemf.hidden_field :_destroy, class: 'destroy' %>
-          </td>
-        </tr>
-      <% end %>
+        <%= f.simple_fields_for :items do |itemf| %>
+          <%
+            item = @transaction.items[itemf.index]
+            p = Product.find_by(item_number: item.sku) unless item.sku.blank?
+          %>
+          <tr>
+            <td><%= itemf.input_field :sku, class: "item-id", placeholder: 'Item # or UPC' %></td>
+            <td class="item-desc"><%= p.name_with_option unless p.nil? %></td>
+            <td><%= itemf.input_field :quantity, class: "text-right qty" %></td>
+            <td><%= itemf.input_field :inventory_location_id, collection: InventoryLocation.order(:name) %></td>
+            <td><%= itemf.input_field :lot %></td>
+            <td><%= itemf.input_field :expiration, class: "text-center", placeholder: 'YYMM' %></td>
+            <td>
+              <i class="fa fa-times"></i>
+              <%= itemf.hidden_field :_destroy, class: 'destroy' %>
+            </td>
+          </tr>
+        <% end %>
       </table>
     </div>
   </div>
-	
-	<div class="form-actions">
-		<%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
-	</div>
+
+  <div class="form-actions">
+    <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
+  </div>
 
 <% end %>
 
 
 <%= content_for :title do %>
-	Inventory Transaction: <%= @transaction.id %>
+  Inventory Transaction: <%= @transaction.id %>
 <% end %>
 
 <% content_for :head do %>
-    <style>
-        .form-inline .form-group { margin: 10px 0; }
-        .fa-times { cursor: pointer; }
-    </style>
-    
-    <script>
-    $(document).ready(function() {
-      
-      $(".fa-times").click(function () {
-        $(this).parent().parent().hide("slow");
-        $(this).siblings(".destroy").val("true");
-        return false;
-      });
-      
-      $(".add-more-items").click(function() {
-        $("input[name='add_more_items']").val(<%= @transaction.items.length %>);
-        $("form.form-horizontal").submit();
-      });
+  <style>
+      .form-inline .form-group {
+          margin: 10px 0;
+      }
 
-      $(".item-id").on("change", function() {
-        var item = $(this);
-        if (item.val() == '') {
-          item.parent().parent().find('.item-desc').html('');
-          item.parent().parent().find('.item-id').html('');
-          item.parent().parent().find('.qty').html('');
-          return;
-        }
-        
-        $.get('/admin/store/products/item_info?sku=' + $(this).val(), function(data) {
-          
-          item.parent().parent().find('.item-desc').html(data.description);
-           
-          if (data.status == 'ok') { 
-            // item.parent().parent().find('.item-id').val(data.sku);
-            item.parent().parent().find('.qty').focus();
-          } else {
-            item.parent().parent().find('.item-desc').html('ITEM NOT FOUND!');
-            item.parent().parent().find('.item-id').select();
-          }
-          
-        });
+      .fa-times {
+          cursor: pointer;
+      }
+  </style>
+
+  <script>
+      $(document).ready(function () {
+
+          $(".fa-times").click(function () {
+              $(this).parent().parent().hide("slow");
+              $(this).siblings(".destroy").val("true");
+              return false;
+          });
+
+          $(".add-more-items").click(function () {
+              $("input[name='add_more_items']").val(<%= @transaction.items.length %>);
+              $("form.form-horizontal").submit();
+          });
+
+          $(".item-id").on("change", function () {
+              var item = $(this);
+              if (item.val() == '') {
+                  item.parent().parent().find('.item-desc').html('');
+                  item.parent().parent().find('.item-id').html('');
+                  item.parent().parent().find('.qty').html('');
+                  return;
+              }
+
+              $.get('/admin/store/products/item_info?sku=' + $(this).val(), function (data) {
+
+                  item.parent().parent().find('.item-desc').html(data.description);
+
+                  if (data.status == 'ok') {
+                      // item.parent().parent().find('.item-id').val(data.sku);
+                      item.parent().parent().find('.qty').focus();
+                  } else {
+                      item.parent().parent().find('.item-desc').html('ITEM NOT FOUND!');
+                      item.parent().parent().find('.item-id').select();
+                  }
+
+              });
+          });
+
+          $(".item-id").keypress(function (e) {
+              if (e.which == 13) {
+                  e.preventDefault();
+                  return $(e.target).blur();
+              }
+          });
+
       });
-      
-      $(".item-id").keypress(function(e) {
-        if(e.which == 13) {
-          e.preventDefault();
-          return $(e.target).blur();
-        }
-      });
-      
-    });
-    </script>
+  </script>
 <% end %>
 
 
@@ -148,6 +153,6 @@
 
 <% content_for :breadcrumbs do %>
   <li><a href="#">Invenotry</a></li>
-	<li><%= link_to "Inventory Transactions", admin_inventory_inventory_transactions_path %></li>
-	<li class="active">edit</li>
+  <li><%= link_to "Inventory Transactions", admin_inventory_inventory_transactions_path %></li>
+  <li class="active">edit</li>
 <% end %>

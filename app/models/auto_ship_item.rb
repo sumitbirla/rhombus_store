@@ -20,14 +20,14 @@
 
 class AutoShipItem < ActiveRecord::Base
   include Exportable
-  
+
   self.table_name = "store_auto_ship_items"
   belongs_to :user
   belongs_to :product
 
   validates_presence_of :user_id, :product_id, :quantity, :days, :next_ship_date, :status
   validates_numericality_of :quantity, greater_than: 0
-  
+
   # PUNDIT
   def self.policy_class
     ApplicationPolicy

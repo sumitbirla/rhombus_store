@@ -1,32 +1,32 @@
 <h2>Current Stock</h2>
 
 <table class="table table-striped table-condensed">
-	<tr>
-		<th>SKU</th>
-		<th>Description</th>
+  <tr>
+    <th>SKU</th>
+    <th>Description</th>
     <th class="ralign">Qty In Stock</th>
     <th class="ralign">Location</th>
-	</tr>
-  <% @data.each do |row| 
-      pname = row[:name]
-      pname += ", " + row[:option_title] unless row[:option_title].blank? %>
-	<tr>
-		<td><%= row[:sku] %></td>
-		<td><%= link_to pname, admin_store_product_path(id: row[:product_id]) %></td>
-    <td class="ralign"><%= number_with_delimiter row[:quantity] %></td>
-    <td class="ralign"><%= row[:location] %></td>
-	</tr>
+  </tr>
+  <% @data.each do |row|
+    pname = row[:name]
+    pname += ", " + row[:option_title] unless row[:option_title].blank? %>
+    <tr>
+      <td><%= row[:sku] %></td>
+      <td><%= link_to pname, admin_store_product_path(id: row[:product_id]) %></td>
+      <td class="ralign"><%= number_with_delimiter row[:quantity] %></td>
+      <td class="ralign"><%= row[:location] %></td>
+    </tr>
   <% end %>
 </table>
 
 
 <% content_for :title do %>
-	Current Stock
+  Current Stock
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
+  <li><a href="#">eCommerce</a></li>
   <li><%= link_to "Reports", admin_store_reports_path %></li>
-	<li class="active">Current Stock</li>
+  <li class="active">Current Stock</li>
 <% end %>

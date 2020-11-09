@@ -1,12 +1,13 @@
 <form action="" method="get" class="pull-right well">
   <input type="hidden" name="product_id" value="<%= params[:product_id] %>">
-  Sales channel:  &nbsp; <select name="sales_channel">
-    <option value="">-- all channels --</option>
-    <% @sales_channels.each do |ch| %>
-      <option <%= "selected" if @selected_channel == ch %>><%= ch %></option>
-    <% end %> 
-  </select> &nbsp; 
-  Date range:  &nbsp; <input type="text" class="date-field" name="start_date" value="<%= @start_date %>">  &nbsp; to &nbsp;
-              <input type="text" class="date-field" name="end_date" value="<%= @end_date %>" />
+  Sales channel: &nbsp; <select name="sales_channel">
+  <option value="">-- all channels --</option>
+  <% @sales_channels.each do |ch| %>
+    <option <%= "selected" if @selected_channel == ch %>><%= ch %></option>
+  <% end %>
+</select> &nbsp;
+  Date range: &nbsp; <input type="text" class="date-field" name="start_date" value="<%= @start_date %>"> &nbsp;
+  to &nbsp;
+  <input type="text" class="date-field" name="end_date" value="<%= @end_date %>"/>
   <button class="btn btn-success btn-sm">Filter</button>
 </form>

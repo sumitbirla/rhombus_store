@@ -1,21 +1,21 @@
 <h2><%= @voucher_group.name %></h2>
 <hr/>
 
-<%= simple_form_for [:admin, :store, @voucher_group ],html: { class: 'form-horizontal col-md-6' }, wrapper: :horizontal_form do |f| %>
+<%= simple_form_for [:admin, :store, @voucher_group], html: {class: 'form-horizontal col-md-6'}, wrapper: :horizontal_form do |f| %>
 
-	<%= render 'admin/shared/error_messages', object: f.object %>
-	
-	<%= f.input :name %>
-	<%= f.input :value %>
-	<%= f.input :expires, as: :datetimepicker %>
-	
-	<%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+  <%= render 'admin/shared/error_messages', object: f.object %>
+
+  <%= f.input :name %>
+  <%= f.input :value %>
+  <%= f.input :expires, as: :datetimepicker %>
+
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
 
 <% end %>
 
 
 <% content_for :title do %>
-	Vouchers: <%= @voucher_group.name %>
+  Vouchers: <%= @voucher_group.name %>
 <% end %>
 
 
@@ -23,7 +23,7 @@
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Voucher Groups", admin_store_voucher_groups_path %></li>
-	<li class="active"><%= @voucher_group.name %></li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Voucher Groups", admin_store_voucher_groups_path %></li>
+  <li class="active"><%= @voucher_group.name %></li>
 <% end %>

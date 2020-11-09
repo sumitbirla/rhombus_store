@@ -1,4 +1,4 @@
-<%= render 'admin/shared/report_filter'%>
+<%= render 'admin/shared/report_filter' %>
 
 <h2>Product Leaderboard</h2>
 
@@ -12,37 +12,37 @@
 
 
 <table class="table table-striped">
-	<tr>
+  <tr>
     <% unless params[:sales_channel].blank? %>
-		<th>Sales Channel</th>
+      <th>Sales Channel</th>
     <% end %>
-		<th>Item</th>
+    <th>Item</th>
     <th>Title</th>
     <th class="text-right">Qty Sold</th>
     <th class="text-right">Revenue</th>
-	</tr>
-  <% @data.each do |row|  %>
-	<tr>
-    <% unless params[:sales_channel].blank? %>
-		<td><%= row[0] %></td>
-    <% end %>
-		<td><%= link_to row[2], admin_store_product_path(row[1]) %></td>
-    <td><%= row[5] %></td>
-    <td class="text-right"><%= number_with_delimiter row[3] %></td>
-    <td class="text-right"><%= number_to_currency row[4] %></td>
-	</tr>
+  </tr>
+  <% @data.each do |row| %>
+    <tr>
+      <% unless params[:sales_channel].blank? %>
+        <td><%= row[0] %></td>
+      <% end %>
+      <td><%= link_to row[2], admin_store_product_path(row[1]) %></td>
+      <td><%= row[5] %></td>
+      <td class="text-right"><%= number_with_delimiter row[3] %></td>
+      <td class="text-right"><%= number_to_currency row[4] %></td>
+    </tr>
   <% end %>
 </table>
 
 
 
 <%= content_for :title do %>
-	Product Sales
+  Product Sales
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
+  <li><a href="#">eCommerce</a></li>
   <li><%= link_to "Reports", admin_store_reports_path %></li>
-	<li class="active">Product Sales</li>
+  <li class="active">Product Sales</li>
 <% end %>

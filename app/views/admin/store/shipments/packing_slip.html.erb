@@ -1,65 +1,77 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <title><%= @shipment %> Packing Slip</title>
   <style>
       body {
-          background:white !important;
-          color:black!important;
-          width: 95%!important;
-          margin: 0 auto!important;
+          background: white !important;
+          color: black !important;
+          width: 95% !important;
+          margin: 0 auto !important;
           font-family: Arial;
           font-size: 0.8em;
           line-height: 1.4em;
       }
+
       table {
-          width: 100%!important;
-          border-collapse:collapse;
+          width: 100% !important;
+          border-collapse: collapse;
       }
-      table td{
+
+      table td {
           aborder: 1px solid #ccc;
-          padding: 5px!important;
+          padding: 5px !important;
       }
+
       table.bordered, table.bordered td {
-        border: solid 1px black;
+          border: solid 1px black;
       }
+
       table.bordered th {
-        padding: 4px;
-        border-bottom: solid 1px black;    
+          padding: 4px;
+          border-bottom: solid 1px black;
       }
+
       article {
-          padding: 0px 0!important;
+          padding: 0px 0 !important;
       }
+
       p {
-          font-weight:normal !important;
+          font-weight: normal !important;
           margin-top: 0;
       }
+
       h1 {
-          font-size:20pt !important;
+          font-size: 20pt !important;
           margin-bottom: 8px;
       }
+
       h2 {
-          font-size:16pt !important;
+          font-size: 16pt !important;
           margin-bottom: 4px;
       }
+
       .boxleft {
-          float:left!important;
-          width: 32%!important;
-          margin-top:0px !important;
+          float: left !important;
+          width: 32% !important;
+          margin-top: 0px !important;
       }
+
       .boxcenter {
-          float:left!important;
-          width: 32%!important;
-          margin-top:0px !important;
+          float: left !important;
+          width: 32% !important;
+          margin-top: 0px !important;
       }
+
       .boxright {
-          float:left!important;
-          width: 32%!important;
-          margin-top:0px !important;
+          float: left !important;
+          width: 32% !important;
+          margin-top: 0px !important;
       }
-      .textright{
-          text-align:right !important;
+
+      .textright {
+          text-align: right !important;
       }
   </style>
 </head>
@@ -71,23 +83,23 @@
         <thead>
         <tr valign="top">
           <th scope="col" style="text-align:left;">
-            <% 
+            <%
               loc_id = Cache.setting(@shipment.order.domain_id, :shipping, "Ship From Location ID")
               loc = Location.find(loc_id)
               aff = @shipment.order.affiliate
             %>
-            
+
             <% if aff %>
               <h1><%= aff.name %></h1>
-              <p> 
+              <p>
                 <% unless aff.phone.blank? %>
-                <strong>Phone:</strong> <%= aff.phone %><br/>
+                  <strong>Phone:</strong> <%= aff.phone %><br/>
                 <% end %>
                 <% unless aff.email.blank? %>
-                <strong>Email:</strong> <%= aff.email %><br/>
+                  <strong>Email:</strong> <%= aff.email %><br/>
                 <% end %>
                 <% unless aff.website.blank? %>
-                <strong>Web:</strong> <%= aff.website %><br/>
+                  <strong>Web:</strong> <%= aff.website %><br/>
                 <% end %>
               </p>
             <% elsif loc.pictures.length > 0 %>
@@ -99,18 +111,18 @@
               </p>
               <p>
                 <% unless loc.website.blank? %>
-                <strong>Web:</strong> <%= loc.website %><br/>
+                  <strong>Web:</strong> <%= loc.website %><br/>
                 <% end %>
                 <strong>Phone:</strong> <%= loc.phone %><br/>
                 <strong>Email:</strong> <%= loc.email %>
               </p>
             <% end %>
-            
+
           </th>
-          <th scope="col" style="text-align:right;"> <h2>PACKING SLIP</h2>
+          <th scope="col" style="text-align:right;"><h2>PACKING SLIP</h2>
             <p>
               <strong>Shipment ID: </strong> <%= @shipment %><br>
-              <img src="/barcode?code=<%= @shipment %>" />
+              <img src="/barcode?code=<%= @shipment %>"/>
             </p>
           </th>
         </tr>
@@ -156,24 +168,26 @@
       </tr>
       </thead>
       <tbody>
-      <% @shipment.items.each do |item| 
-          next if item.order_item.nil? || (item.quantity == 0 && item.special_status.blank?) 
-          item_number = item.order_item.item_number 
-          
-          if @shipment.fulfiller
-            ap = AffiliateProduct.find_by(product_id: item.order_item.product_id, affiliate_id: @shipment.fulfilled_by_id)
-            item_number = ap.item_number unless ap.nil?
-          end
+      <% @shipment.items.each do |item|
+        next if item.order_item.nil? || (item.quantity == 0 && item.special_status.blank?)
+        item_number = item.order_item.item_number
+
+        if @shipment.fulfiller
+          ap = AffiliateProduct.find_by(product_id: item.order_item.product_id, affiliate_id: @shipment.fulfilled_by_id)
+          item_number = ap.item_number unless ap.nil?
+        end
       %>
-      <tr>
-        <td nowrap><%= item_number %></td>
-        <td><%= item.order_item.product.upc %></td>
-        <td><%= item.order_item.product.full_name %></td>
-        <td align="right" class="textright"><%= item.order_item.daily_deal_id.nil? ? item.order_item.quantity : item.quantity %></td>
-        <td align="right" class="textright"><%= item.quantity unless item.quantity == 0 && !item.special_status.blank? %> <%= item.special_status %></td>
-      </tr>
+        <tr>
+          <td nowrap><%= item_number %></td>
+          <td><%= item.order_item.product.upc %></td>
+          <td><%= item.order_item.product.full_name %></td>
+          <td align="right" class="textright"><%= item.order_item.daily_deal_id.nil? ? item.order_item.quantity : item.quantity %></td>
+          <td align="right" class="textright"><%= item.quantity unless item.quantity == 0 && !item.special_status.blank? %> <%= item.special_status %></td>
+        </tr>
       <% end %>
-      <tr style="height: 10<%= "0" if @shipment.items.length < 9 %>px;"><td colspan="5"></td></tr>
+      <tr style="height: 10<%= "0" if @shipment.items.length < 9 %>px;">
+        <td colspan="5"></td>
+      </tr>
       <tr style="border-top: solid 1px black;">
         <td align="right" class="textright" colspan="4"><b>Total Items</b></td>
         <td align="right" class="textright"><b><%= @shipment.items.sum(:quantity) %></b></td>
@@ -181,8 +195,8 @@
       </tbody>
     </table>
   </article>
-  
-  
+
+
   <% unless @shipment.inventory_transaction.nil? %>
     <section style="width: 300px; margin-top: 40px; float:right; margin-left: 40px;">
       <table style="border: 1px solid #999; color: #999; padding: 10px;">
@@ -191,51 +205,51 @@
           <th style="text-align:left;">SKU</th>
           <th style="text-align:center;">Lot #</th>
           <th style="text-align:center;">Exp.</th>
-          <th style="text-align:right;">Qty.</th>  
+          <th style="text-align:right;">Qty.</th>
         </tr>
         <% @shipment.inventory_transaction.items.each do |item| %>
-        <tr>
-          <td style="text-align:left;"><%= item.inventory_location_id.nil? ? '-' : item.inventory_location.name %></td>
-          <td style="text-align:left;"><%= item.sku %></td>
-          <td style="text-align:center;"><%= item.lot.presence || '-' %></td>
-          <td style="text-align:center;"><%= item.formatted_expiration %></td>
-          <td style="text-align:right;"><%= number_with_delimiter(item.quantity.abs) %></td>
-        </tr>
+          <tr>
+            <td style="text-align:left;"><%= item.inventory_location_id.nil? ? '-' : item.inventory_location.name %></td>
+            <td style="text-align:left;"><%= item.sku %></td>
+            <td style="text-align:center;"><%= item.lot.presence || '-' %></td>
+            <td style="text-align:center;"><%= item.formatted_expiration %></td>
+            <td style="text-align:right;"><%= number_with_delimiter(item.quantity.abs) %></td>
+          </tr>
         <% end %>
-        <% if @shipment.status == 'pending' 
-            s = @shipment.similar_shipment
-            unless s.nil? %>
+        <% if @shipment.status == 'pending'
+             s = @shipment.similar_shipment
+             unless s.nil? %>
             <tr>
               <td colspan="5" style="border-top: solid 1px #999">
                 <b>Suggested:</b>
-                Box: <%= s.package_length %>" x <%= s.package_width %>" x <%= s.package_height %>"   &nbsp; &nbsp; 
+                Box: <%= s.package_length %>" x <%= s.package_width %>" x <%= s.package_height %>" &nbsp; &nbsp;
                 Weight:  <%= s.package_weight %> lbs.
               </td>
             </tr>
-            <% end %>
+          <% end %>
         <% end %>
       </table>
     </section>
   <% end %>
-  
+
 
   <% unless @shipment.notes.blank? %>
     <br><br><b>Comment:</b><br>
     <%= @shipment.notes %>
   <% end %>
-  
+
   <% if aff && !aff.get_property("Packing Slip Note").blank? %>
     <br><br><b>Note:</b><br>
     <i><%= aff.get_property("Packing Slip Note") %></i>
   <% end %>
-  
+
   <% if ["Healthy Breeds", "Amazon.com"].include? @shipment.order.sales_channel %>
     <div style="text-align: ceanter; margin-top: 40px;">
       <img src="/img/HB10_reorder_coupon.jpg" width="250" style="padding: 10px; border: dashed 3px #999;">
     </div>
   <% end %>
 
-  
+
 </section>
 
 

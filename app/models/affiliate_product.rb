@@ -24,22 +24,22 @@
 
 class AffiliateProduct < ActiveRecord::Base
   include Exportable
-  
+
   self.table_name = "store_affiliate_products"
   belongs_to :affiliate
   belongs_to :product
   has_many :affiliate_categories
   has_many :categories, -> { order :sort }, through: :affiliate_categories
-  validates :product_id, uniqueness: { scope: :affiliate_id }
-  
+  validates :product_id, uniqueness: {scope: :affiliate_id}
+
   def current_price
     sale_price || price || product.special_price || product.price
   end
-  
+
   def sale?
     [sale_price, product.special_price].include?(current_price)
   end
-  
+
   # PUNDIT
   def self.policy_class
     ApplicationPolicy

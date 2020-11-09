@@ -5,7 +5,7 @@
 
   <%= f.hidden_field :affiliate_id %>
   <%= f.input :product_id %>
-  <%= f.input :title, as: :text, input_html: { rows: 2 } %>
+  <%= f.input :title, as: :text, input_html: {rows: 2} %>
   <%= f.input :item_number %>
   <%= f.input :price %>
   <%= f.input :sale_price %>
@@ -16,25 +16,25 @@
   <%= f.input :category1 %>
   <%= f.input :category2 %>
   <%= f.input :category3 %>
-  <%= f.input :description, as: :text, input_html: { rows: 15 } %>
+  <%= f.input :description, as: :text, input_html: {rows: 15} %>
   <%= f.input :data %>
   <%= f.input :images %>
-  
-  <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
 
 <% end %>
 
 
 <% content_for :title do %>
-	<%= @affiliate_product.affiliate.name %>
+  <%= @affiliate_product.affiliate.name %>
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">System</a></li>
-	<li><%= link_to "Affiliates", admin_system_affiliates_path %></li>
-	<li><%= link_to @affiliate_product.affiliate.name, admin_system_affiliate_path(@affiliate_product.affiliate_id) %></li>
-	<li class="active">edit</li>
+  <li><a href="#">System</a></li>
+  <li><%= link_to "Affiliates", admin_system_affiliates_path %></li>
+  <li><%= link_to @affiliate_product.affiliate.name, admin_system_affiliate_path(@affiliate_product.affiliate_id) %></li>
+  <li class="active">edit</li>
 <% end %>
 
 
