@@ -51,6 +51,7 @@
 
 class Product < ActiveRecord::Base
   self.table_name = "store_products"
+  acts_as_taggable_on :tags, :collections
 
   before_save :set_group
   before_save :strip_fields

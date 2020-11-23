@@ -79,10 +79,11 @@ class Order < ActiveRecord::Base
   include Exportable
 
   self.table_name = "store_orders"
+  acts_as_taggable_on :tags
+
   attr_accessor :same_as_shipping
 
   belongs_to :domain
-  # belongs_to :sales_channel
   belongs_to :user
   belongs_to :affiliate
   belongs_to :affiliate_campaign
@@ -97,11 +98,15 @@ class Order < ActiveRecord::Base
   has_many :payments, as: :payable, dependent: :destroy
   has_many :logs, as: :loggable, dependent: :destroy
   has_many :pictures, -> { order :sort }, as: :imageable, dependent: :destroy # used for product personalization
+  has_many :extra_properties, -> { order "sort, name" }, as: :extra_property, dependent: :destroy
 
   accepts_nested_attributes_for :items, reject_if: lambda { |x| x['product_id'].blank? && x['daily_deal_id'].blank? }, allow_destroy: true
 
+  # Either email or phone number must be present
+  validates_presence_of :notify_email, unless: ->(order){ order.contact_phone.present? }
+  validates_presence_of :contact_phone, unless: ->(order){ order.notify_email.present? }
+
   validates_presence_of :shipping_name, :shipping_street1, :shipping_city, :shipping_state, :shipping_zip, :shipping_country
-  validates_presence_of :contact_phone, :notify_email
   validates_presence_of :billing_name, :billing_street1, :billing_city, :billing_state, :billing_zip, :billing_country, if: :billing_address_required?
   validates_presence_of :cc_type, :cc_number, :cc_expiration_month, :cc_expiration_year, :cc_code, if: :paid_with_card?
   validates_presence_of :affiliate_id, :external_order_id, if: :po
