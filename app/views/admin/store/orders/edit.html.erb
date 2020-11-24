@@ -77,6 +77,7 @@
         <%= f.association :domain %>
         <%= f.input :status, as: :select, collection: Order.valid_statuses %>
         <%= f.input :sales_channel %>
+        <%= f.input :tag_list, as: :tags %>
         <%= f.input :external_order_id, label: "Ext. ID" %>
         <%= f.input :external_order_name, label: "Ext. Name" %>
         <%= f.association :user %>

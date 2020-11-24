@@ -89,15 +89,8 @@
   &nbsp; <%= order_status(@order, 'large') %> <%= "<i class='icon-gift'></i>".html_safe if @order.gift %>
 </div>
 
-<% unless @order.ship_earliest.nil? || ["shipped", "cancelled"].include?(@order.status) || @order.status == "error" %>
-  <div class="alert alert-warning" style="margin-top: 20px;">
-    <i class="fa fa-truck"></i> &nbsp; <b>Ship window:</b> <%= @order.ship_earliest %> &rarr; <%= @order.ship_latest %>
+<%= tag_list @order %>
 
-    <% unless @order.expected_delivery_date.nil? %>
-      &nbsp; &nbsp; &nbsp; &nbsp; <b>Expected delivery: </b> <%= @order.expected_delivery_date %>
-    <% end %>
-  </div>
-<% end %>
 
 <hr style="margin: 15px 0 20px 0;"/>
 

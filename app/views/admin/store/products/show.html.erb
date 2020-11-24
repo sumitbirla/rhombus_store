@@ -20,7 +20,7 @@
 </div>
 <h2><i class="fa fa-tags"></i>&nbsp; <%= @product.name_with_option %></h2>
 <h4>Item #: <%= @product.item_number %></h4>
-
+<%= tag_list @product %>
 <% if @product.template_product_id %>
   <div class="alert alert-info">
     <b>Note: </b> This product's content is maintained by a template. Changes made here may be overwritten.
