@@ -1,7 +1,8 @@
 <h2>
-  <span class="pull-right light"><i class="fa fa-clock-o"> <%= systime DateTime.now %></i></span>
+  <span class="pull-right light"><i class="far fa-clock"> <%= systime DateTime.now %></i></span>
   Sales Trend
 </h2>
+<hr>
 
 <table id="sales-trend-table" class="table table-condensed tablesorter">
   <thead>
@@ -65,9 +66,7 @@
 </table>
 
 
-<% content_for :title do %>
-  Sales Trend
-<% end %>
+<% content_for :title, "Sales Trends" %>
 
 <% content_for :head do %>
   <link href="/rhombus_store/tablesorter.css" rel="stylesheet" type="text/css">

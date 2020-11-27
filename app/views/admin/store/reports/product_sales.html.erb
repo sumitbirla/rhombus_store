@@ -1,9 +1,8 @@
-<%= render 'admin/shared/report_filter' %>
-
 <h2>Product Leaderboard</h2>
-
+<%= render 'admin/shared/report_filter' %>
 <b>Total sold: <%= number_with_delimiter @data.sum { |x| x[3] } %></b><br>
-<b>Total revenue: <%= number_to_currency @data.sum { |x| x[5] } %></b><br><br>
+<b>Total revenue: <%= number_to_currency @data.sum { |x| x[5] } %></b>
+<hr>
 
 <ul class="nav nav-tabs">
   <li role="presentation"><a href="/admin/store/reports/product_sales_by_sku">By SKU</a></li>

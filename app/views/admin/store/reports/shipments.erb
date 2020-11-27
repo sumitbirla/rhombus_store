@@ -3,7 +3,7 @@
         font-weight: bold;
     }
 </style>
-<form action="" method="get" class="pull-right well">
+<form action="" method="get" class="pull-right">
   Date range: &nbsp;
   <input type="text" class="date-field" name="start_date" value="<%= @start_date %>" style="width: 120px;"/> &nbsp;
   to &nbsp;
@@ -11,8 +11,8 @@
   <button class="btn btn-success btn-sm">Filter</button>
 </form>
 
-<h2>Fulfillment Shipments</h2>
-
+<h2>Dropshipper Stats</h2>
+<hr>
 
 <%
   shipment_statuses = Shipment.distinct.pluck(:status)
@@ -55,11 +55,7 @@
 </table>
 
 
-<% content_for :title do %>
-  Monthly Sales
-<% end %>
-
-
+<% content_for :title, "Dropshipper Stats" %>
 
 <% content_for :breadcrumbs do %>
   <li><a href="#">eCommerce</a></li>

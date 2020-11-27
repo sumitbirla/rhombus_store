@@ -1,18 +1,6 @@
-<form action="" method="get" class="pull-right well">
-  Sales channel: &nbsp; <select name="sales_channel">
-  <option value="">-- all channels --</option>
-  <% @sales_channels.each do |ch| %>
-    <option <%= "selected" if @selected_channel == ch %>><%= ch %></option>
-  <% end %>
-</select> &nbsp;
-  Date range: &nbsp;
-  <input type="text" class="date-field" name="start_date" value="<%= @start_date %>" style="width: 120px;"/> &nbsp;
-  to &nbsp;
-  <input type="text" class="date-field" name="end_date" value="<%= @end_date %>" style="width: 120px;"/>
-  <button class="btn btn-success btn-sm">Filter</button>
-</form>
-
+<%= render 'admin/shared/report_filter' %>
 <h2>Purchase Frequency</h2>
+<hr>
 
 <%
   orders_total = 0
@@ -39,10 +27,7 @@
 </table>
 
 
-<% content_for :title do %>
-  Purchase Frequency
-<% end %>
-
+<% content_for :title, "Purchase Frequency" %>
 
 <% content_for :breadcrumbs do %>
   <li><a href="#">eCommerce</a></li>

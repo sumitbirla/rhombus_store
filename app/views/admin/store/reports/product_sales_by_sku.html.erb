@@ -1,15 +1,6 @@
 <%= render 'admin/shared/report_filter' %>
-
-<h2>Product Leaderboard</h2>
-
-<b>Total sold: <%= number_with_delimiter @data.sum { |x| x[3] } %></b><br><br>
-
-<ul class="nav nav-tabs">
-  <li role="presentation" class="active"><a href="#">By SKU</a></li>
-  <li role="presentation"><a href="/admin/store/reports/product_sales">By Label</a></li>
-  <li role="presentation"><a href="/admin/store/reports/product_sales_by_affiliate">By Affiliate</a></li>
-</ul>
-
+<h2>Best Sellers</h2>
+<hr>
 
 <table class="table table-striped">
   <tr>
@@ -34,12 +25,7 @@
   <% end %>
 </table>
 
-
-
-<%= content_for :title do %>
-  Product Sales
-<% end %>
-
+<% content_for :title, "Best Sellers" %>
 
 <% content_for :breadcrumbs do %>
   <li><a href="#">eCommerce</a></li>

@@ -1,27 +1,13 @@
-<form action="" method="get" class="pull-right well">
-  Sales channel: &nbsp; <select name="sales_channel">
-  <option value="">-- all channels --</option>
-  <% @sales_channels.each do |ch| %>
-    <option <%= "selected" if @selected_channel == ch %>><%= ch %></option>
-  <% end %>
-</select> &nbsp;
-  Date range: &nbsp;
-  <input type="text" class="date-field" name="start_date" value="<%= @start_date %>" style="width: 120px;"/> &nbsp;
-  to &nbsp;
-  <input type="text" class="date-field" name="end_date" value="<%= @end_date %>" style="width: 120px;"/>
-  <button class="btn btn-success btn-sm">Filter</button>
-</form>
-
-<h2>Monthly Sales</h2>
+<%= render 'admin/shared/report_filter' %>
+<h2><i class="fa fa-chart-line"></i> Monthly Sales</h2>
+<hr>
 
 <div id="graph"></div>
-
 
 <%
   qty_total = 0
   amount_total = 0.0
 %>
-
 <table class="table table-striped">
   <tr>
     <th>Month</th>
@@ -33,8 +19,8 @@
     amount_total += row[2] %>
     <tr>
       <td><%= row[0].strftime("%B, %Y") %></td>
-      <td class="ralign"><%= number_with_delimiter row[1] %></td>
-      <td class="ralign"><%= number_to_currency row[2] %></td>
+      <td class="ralign"><%= number_with_delimiter(row[1]) %></td>
+      <td class="ralign"><%= number_to_currency(row[2]) %></td>
     </tr>
   <% end %>
   <tr>
@@ -45,10 +31,7 @@
 </table>
 
 
-<% content_for :title do %>
-  Monthly Sales
-<% end %>
-
+<% content_for :title, "Monthly Sales" %>
 
 <% content_for :head do %>
   <script src="//cdn5.io/rhombus/sb-admin-2/js/plugins/flot/jquery.flot.min.js"></script>
@@ -102,7 +85,6 @@
       }
   </style>
 <% end %>
-
 
 <% content_for :breadcrumbs do %>
   <li><a href="#">eCommerce</a></li>
