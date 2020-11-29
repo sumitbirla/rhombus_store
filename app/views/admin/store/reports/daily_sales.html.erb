@@ -59,8 +59,8 @@
       $(document).ready(function () {
 
           $.plot("#graph", [
-              {data: orders, label: "Orders", lines: {show: true, fill: true}, points: {show: true}},
-              {data: revenue, label: "Revenue $", yaxis: 2, lines: {show: true, fill: true}, points: {show: true}}
+              {data: orders, label: "Orders", lines: {show: true, fill: true}, points: {show: false}},
+              {data: revenue, label: "Revenue $", yaxis: 2, lines: {show: true, fill: true}, points: {show: false}}
           ], {
               xaxes: [{mode: "time"}],
               yaxes: [{
