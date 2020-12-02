@@ -1,0 +1,33 @@
+
+
+<h2><i class="fa fa-exclamation-triangle"></i> Delayed Shipments</h2>
+<hr>
+
+<table class="table table-bordered table-responsive-sm table-hover table-condensed w-100">
+  <tr>
+    <th>Order#</th>
+    <th>Shipment#</th>
+    <th>Ship to</th>
+    <th>Destination</th>
+    <th>Fulfiller</th>
+    <th>Items</th>
+    <th>Age</th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th>Status</th>
+  </tr>
+  <%= render partial: "admin/store/shipments/shipment", collection: @late_shipments, locals: { readonly: true } %>
+</table>
+
+<div class="table-summary">
+  <%= pluralize(@late_shipments.count, "shipment") %>
+</div>
+
+<% content_for :title, "Delayed Shipments" %>
+
+<% content_for :breadcrumbs do %>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Reports", admin_store_reports_path %></li>
+  <li class="active">Delayed Shipments</li>
+<% end %>

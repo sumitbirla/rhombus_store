@@ -106,7 +106,7 @@ class Order < ActiveRecord::Base
   validates_presence_of :notify_email, unless: ->(order){ order.contact_phone.present? }
   validates_presence_of :contact_phone, unless: ->(order){ order.notify_email.present? }
 
-  validates_presence_of :shipping_name, :shipping_street1, :shipping_city, :shipping_state, :shipping_zip, :shipping_country
+  validates_presence_of :shipping_name, :shipping_street1, :shipping_city, :shipping_state, :shipping_zip, :shipping_country, if: :shipping_address_required?
   validates_presence_of :billing_name, :billing_street1, :billing_city, :billing_state, :billing_zip, :billing_country, if: :billing_address_required?
   validates_presence_of :cc_type, :cc_number, :cc_expiration_month, :cc_expiration_year, :cc_code, if: :paid_with_card?
   validates_presence_of :affiliate_id, :external_order_id, if: :po
@@ -130,6 +130,10 @@ class Order < ActiveRecord::Base
 
   def billing_address_required?
     same_as_shipping == '0' && paid_with_card?
+  end
+
+  def shipping_address_required?
+    false
   end
 
   def credit_card

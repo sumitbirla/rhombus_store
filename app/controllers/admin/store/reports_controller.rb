@@ -288,6 +288,21 @@ class Admin::Store::ReportsController < Admin::BaseController
     ActiveRecord::Base.connection.execute(sql).each(as: :hash) { |row| @data << row }
   end
 
+  # Report showing overdue shipments
+  def delayed_shipments
+    @late_shipments = []
+    shipments = Shipment.joins(:order)
+                    .includes(:items, :order)
+                    .where(status: [:ready_to_ship, :transmitted])
+                    .where.not(fulfilled_by_id: nil)
+                    .order(:fulfilled_by_id)
+
+    shipments.each do |s|
+      next unless s.is_late?
+      @late_shipments << s
+    end
+  end
+
   # Set default paramters for all reports.  Date range defaults to last 1 year
   def set_report_params
     @sales_channels = Order.distinct(:sales_channel).pluck(:sales_channel)
