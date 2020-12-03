@@ -8,7 +8,6 @@ require 'uri'
 
 
 class Admin::Store::ShipmentsController < Admin::BaseController
-
   skip_before_action :verify_authenticity_token, only: :label_print, raise: false
 
   def index
@@ -47,7 +46,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     end
   end
 
-
   def new
     # check if order id was passed in?
     return redirect_to action: 'choose_order' if params[:order_id].nil?
@@ -69,7 +67,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @shipment.invoice_amount = @order.total if @shipment.sequence == 1
     render 'edit'
   end
-
 
   def create
     @shipment = authorize Shipment.new(shipment_params)
@@ -121,7 +118,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     redirect_back(fallback_location: admin_root_path)
   end
 
-
   def packing_slip
     @shipment = Shipment.includes(:items, [items: :order_item]).find(params[:id])
     render 'packing_slip', layout: false
@@ -147,7 +143,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     shipment = Shipment.find(params[:id])
     send_data shipment.label_data, type: shipment.label_format
   end
-
 
   def label
     return render text: :ok
@@ -180,7 +175,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     send_data label_data, filename: shipment.to_s + "." + params[:format]
   end
 
-
   def void_label
     shipment = Shipment.find(params[:id])
     EasyPost.api_key = shipment.easy_post_api_key
@@ -199,7 +193,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   end
 
   def product_labels_pending
-    @shipments = Shipment.where(status: :pending)
+    @shipments = Shipment.where(status: :ready_to_ship)
 
     sql = <<-EOF
       select si.shipment_id, si.id as shipment_item_id, sheet.name as label, oi.item_number, p.name, p.option_title, 
@@ -244,7 +238,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     @items = []
     ActiveRecord::Base.connection.execute(sql).each(as: :hash) { |row| @items << row.with_indifferent_access }
   end
-
 
   # Print one size of labels
   def label_print
@@ -336,7 +329,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     redirect_back(fallback_location: admin_root_path)
   end
 
-
   def packing_slip_batch
     if params[:shipment_id].blank?
       flash[:error] = "No shipments selected. Please check at least one."
@@ -371,7 +363,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
       redirect_back(fallback_location: admin_root_path)
     end
   end
-
 
   def shipping_label_batch
     if params[:printer_id].blank?
@@ -413,7 +404,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     redirect_back(fallback_location: admin_root_path)
   end
 
-
   def update_status
     authorize Shipment.new, :update?
     shipments = Shipment.where(id: params[:shipment_id]).where.not(status: params[:status])
@@ -428,7 +418,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     redirect_back(fallback_location: admin_root_path)
   end
 
-
   def email_confirmation
     shipment = Shipment.find(params[:id])
 
@@ -441,7 +430,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
     redirect_back(fallback_location: admin_root_path)
   end
-
 
   def batch
     if params[:shipment_id].blank?
@@ -468,7 +456,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     end
   end
 
-
   def auto_batch
     @shipments = Shipment.where(status: :pending, items_hash: params[:items_hash])
     @batch = Shipment.new(ship_date: Date.today, items_hash: params[:items_hash])
@@ -484,7 +471,6 @@ class Admin::Store::ShipmentsController < Admin::BaseController
 
     render 'batch'
   end
-
 
   def scan
     @shipment = Shipment.includes(:items, [items: :product], [items: :affiliate]).find(params[:id])
@@ -532,5 +518,4 @@ class Admin::Store::ShipmentsController < Admin::BaseController
   def sort_direction
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
   end
-
 end

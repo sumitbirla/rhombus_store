@@ -1,12 +1,14 @@
-<form action="" method="get" class="pull-right">
+<form action="" method="get">
   <input type="hidden" name="product_id" value="<%= params[:product_id] %>">
-  Sales channel: &nbsp; <select name="sales_channel">
-  <option value="">-- all channels --</option>
-  <% @sales_channels.each do |ch| %>
-    <option <%= "selected" if @selected_channel == ch %>><%= ch %></option>
-  <% end %>
-</select> &nbsp;
-  Date range: &nbsp; <input type="text" class="date-field" name="start_date" value="<%= @start_date %>"> &nbsp;
+
+  Sales channel: &nbsp;
+  <%= select_tag(:sales_channel, options_for_select(@sales_channels, @selected_channel), prompt: "-- all channels --") %>
+  &middot;
+  Affiliate:
+  <%= select_tag(:affiliate_id, options_from_collection_for_select(Cache.affiliate_list(:dropshippers), :id, :name, params[:affiliate_id]), prompt: "-- all affiliates --") %>
+  &middot;
+  Date range: &nbsp;
+  <input type="text" class="date-field" name="start_date" value="<%= @start_date %>"> &nbsp;
   to &nbsp;
   <input type="text" class="date-field" name="end_date" value="<%= @end_date %>"/>
   <button class="btn btn-success btn-sm">Filter</button>

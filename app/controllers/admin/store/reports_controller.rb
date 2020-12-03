@@ -118,13 +118,14 @@ class Admin::Store::ReportsController < Admin::BaseController
   # Number of orders places each day in the given date range
   def daily_sales
     sql = <<-EOF
-      select date(submitted), count(*), sum(total)
-      from store_orders
-      where submitted IS NOT NULL
-      and submitted > '#{@start_date}' and submitted < '#{@end_date}'
-      and sales_channel LIKE '#{@selected_channel}'
-      group by date(submitted)
-      order by date(submitted) desc;
+      select date(shp.created_at), count(*), sum(o.total)
+      from store_shipments shp
+      join store_orders o on o.id = shp.order_id
+      where shp.created_at > '#{@start_date}' and shp.created_at < '#{@end_date}'
+      and o.sales_channel LIKE '#{@selected_channel}'
+      #{"and shp.fulfilled_by_id=" + params[:affiliate_id] if params[:affiliate_id].present?}
+      group by date(shp.created_at)
+      order by date(shp.created_at) desc;
     EOF
 
     @data = []
@@ -134,13 +135,14 @@ class Admin::Store::ReportsController < Admin::BaseController
   # Number of orders places each month in the given date range
   def monthly_sales
     sql = <<-EOF
-      select submitted, count(*), sum(total)
-      from store_orders
-      where submitted IS NOT NULL
-      and submitted > '#{@start_date}' and submitted < '#{@end_date}'
-      and sales_channel LIKE '#{@selected_channel}'
-      group by year(submitted), month(submitted)
-      order by date(submitted) desc;
+      select shp.created_at, count(*), sum(o.total)
+      from store_shipments shp
+      join store_orders o on o.id = shp.order_id
+      where shp.created_at > '#{@start_date}' and shp.created_at < '#{@end_date}'
+      and o.sales_channel LIKE '#{@selected_channel}'
+      #{"and shp.fulfilled_by_id=" + params[:affiliate_id] if params[:affiliate_id].present?}
+      group by year(shp.created_at), month(shp.created_at)
+      order by date(shp.created_at) desc;
     EOF
 
     @data = []
