@@ -315,7 +315,7 @@ class Admin::Store::ReportsController < Admin::BaseController
       @group_channel = "sales_channel, "
     end
 
-    @start_date = params[:start_date] || 1.year.ago.strftime("%Y-%m-%d")
+    @start_date = params[:start_date] || 2.years.ago.strftime("%Y-%m-%d")
     @end_date = params[:end_date] || 1.day.from_now.strftime("%Y-%m-%d")
   end
 end

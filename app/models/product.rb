@@ -87,7 +87,6 @@ class Product < ActiveRecord::Base
   end
 
   def self.to_csv(list, opts = {})
-
     CSV.generate do |csv|
       base_cols = ["item_number",
                    "upc",
@@ -150,10 +149,7 @@ class Product < ActiveRecord::Base
         x.extra_properties.each { |prop| h += [prop.name, prop.value] }
         csv << h
       end
-
-
     end
-
   end
 
   def name_with_option
