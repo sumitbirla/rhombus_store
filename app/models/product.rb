@@ -160,9 +160,9 @@ class Product < ActiveRecord::Base
 
   def variant_string
     opts = []
-    opts << "#{option_name}: #{option_title}" unless option_title.blank?
-    opts << "#{option2_name}: #{option2_title}" unless option2_title.blank?
-    opts << "#{option3_name}: #{option3_title}" unless option3_title.blank?
+    opts << "#{option_name.downcase}: #{option_title}" unless option_title.blank?
+    opts << "#{option2_name.downcase}: #{option2_title}" unless option2_title.blank?
+    opts << "#{option3_name.downcase}: #{option3_title}" unless option3_title.blank?
 
     str = ""
     str = opts.join(", ") if opts.length > 0
@@ -171,8 +171,9 @@ class Product < ActiveRecord::Base
 
   def full_name
     str = name_with_option
-    str = brand.name + " " + str unless brand.nil?
-    str
+    str = brand.name + " - " + str unless brand.nil?
+    str += "&nbsp; (#{variant_string})" unless variant_string.blank?
+    str.html_safe
   end
 
   # get items have the same group attribute as this product
