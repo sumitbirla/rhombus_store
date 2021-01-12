@@ -69,13 +69,10 @@
     <th data-breakpoints="xs" class="ralign"><%= sortable "msrp", "MSRP" %></th>
     <th class="actions hidden-xs">&nbsp;</th>
   </tr>
-  <% @products.each do |product|
-    variant_desc = product.variant_string
-    variant_desc = "( #{variant_desc} )" unless variant_desc.blank?
-  %>
+  <% @products.each do |product| %>
     <tr>
       <td><%= link_to product.item_number, admin_store_product_path(product) %></td>
-      <td><%= product.name %> &nbsp; <span class="small"><%= variant_desc %></span></td>
+      <td><%= product.full_name %></td>
       <td><%= product.product_type %></td>
       <td><%= product_status(product) %></td>
       <td class="ralign"><%= number_to_currency product.msrp %></td>

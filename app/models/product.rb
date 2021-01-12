@@ -160,9 +160,9 @@ class Product < ActiveRecord::Base
 
   def variant_string
     opts = []
-    opts << "#{option_name.downcase}: #{option_title}" unless option_title.blank?
-    opts << "#{option2_name.downcase}: #{option2_title}" unless option2_title.blank?
-    opts << "#{option3_name.downcase}: #{option3_title}" unless option3_title.blank?
+    opts << "#{option_name&.downcase}: #{option_title}" unless option_title.blank?
+    opts << "#{option2_name&.downcase}: #{option2_title}" unless option2_title.blank?
+    opts << "#{option3_name&.downcase}: #{option3_title}" unless option3_title.blank?
 
     str = ""
     str = opts.join(", ") if opts.length > 0
