@@ -60,8 +60,6 @@ require 'digest/md5'
 require 'business_time'
 
 class Shipment < ActiveRecord::Base
-  include Exportable
-
   self.table_name = "store_shipments"
 
   before_save :update_items_hash, :set_uuid
@@ -101,6 +99,91 @@ class Shipment < ActiveRecord::Base
 
   def to_s
     "#{order_id}-#{sequence}"
+  end
+
+
+  def self.to_csv(list, opts = {})
+    # For packing slip download link
+    token = Cache.setting(Rails.configuration.domain_id, :system, 'Security Token')
+    website_url = Cache.setting(Rails.configuration.domain_id, :system, 'Website URL')
+
+    CSV.generate do |csv|
+      base_cols = [
+          "customer_number",
+          "po_number",
+          "order_date",
+          "requested_ship_date",
+          "item_number",
+          "item_description",
+          "quantity",
+          "item_amount",
+          "extended_value",
+          "affiliate_id",
+          "affiliate_order_number",
+          "ship_from_name",
+          "ship_from_address1",
+          "ship_from_address2",
+          "ship_from_city",
+          "ship_from_state",
+          "ship_from_zip",
+          "ship_from_country",
+          "ship_from_phone",
+          "ship_to_name",
+          "ship_to_address1",
+          "ship_to_address2",
+          "ship_to_city",
+          "ship_to_state",
+          "ship_to_zip",
+          "ship_to_country",
+          "ship_to_phone",
+          "shipper",
+          "ship_method",
+          "packing_slip_url"
+      ]
+
+      csv << base_cols
+
+      list.each do |shp|
+        digest = Digest::MD5.hexdigest(shp.id.to_s + token)
+
+        shp.items.each do |si|
+          ap = AffiliateProduct.find_by(affiliate_id: shp.fulfiller.id, product_id: si.order_item.product_id)
+
+          csv << [
+              "Stock on Demand",
+              shp.to_s,
+              shp.order.submitted.to_date,
+              shp.order.submitted.to_date,
+              ap.item_number,
+              ap.product.title,
+              si.quantity,
+              ap.price, # item_amount
+              si.quantity * ap.price, # extended_value
+              shp.order.affiliate.code.presence || "STOCKIFY",
+              shp.order.external_order_name,
+              shp.order.affiliate.name,
+              shp.fulfiller.street1,
+              shp.fulfiller.street2,
+              shp.fulfiller.city,
+              shp.fulfiller.state,
+              shp.fulfiller.zip,
+              shp.fulfiller.country,
+              shp.fulfiller.phone,
+              shp.recipient_name,
+              shp.recipient_street1,
+              shp.recipient_street2,
+              shp.recipient_city,
+              shp.recipient_state,
+              shp.recipient_zip,
+              shp.recipient_country,
+              shp.order.contact_phone,
+              "",
+              "", # ship_method
+              "#{website_url}/admin/store/shipments/#{shp.id}/packing_slip?digest=#{digest}"
+          ]
+        end
+      end
+    end
   end
 
   def set_uuid

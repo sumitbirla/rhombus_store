@@ -347,6 +347,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     end
 
     output_file = "/tmp/#{SecureRandom.hex(6)}.pdf"
+    Rails.logger.debug("wkhtmltopdf -q -s Letter --dpi 300 #{urls} #{output_file}")
     ret = system("wkhtmltopdf -q -s Letter --dpi 300 #{urls} #{output_file}")
 
     unless File.exists?(output_file)
