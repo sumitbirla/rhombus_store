@@ -25,7 +25,7 @@ class InventoryTransaction < ActiveRecord::Base
   # @return [InventoryTransaction] the newly instantiated object.  Not persisted to database
   #
   def self.parse(affiliate_id, lines)
-    aff = Affiliate.find!(affiliate_id)
+    aff = Affiliate.find(affiliate_id)
     valid_item_numbers = AffiliateProduct.where(affiliate_id: aff.id).pluck(:item_number)
     skus = Set.new(valid_item_numbers)
     tran = InventoryTransaction.new(affiliate_id: aff.id, bulk_import: true)
