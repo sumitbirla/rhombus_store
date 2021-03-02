@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: store_catalogs
+#
+#  id         :integer          not null, primary key
+#  code       :string(255)      not null
+#  name       :string(255)      not null
+#  url        :string(255)
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 class Catalog < ActiveRecord::Base
   include Exportable
 

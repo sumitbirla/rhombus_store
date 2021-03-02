@@ -3,12 +3,16 @@
 # Table name: store_vouchers
 #
 #  id               :integer          not null, primary key
-#  voucher_group_id :integer          not null
+#  amount_used      :decimal(10, 2)   default(0.0), not null
 #  code             :string(255)      not null
 #  issued           :boolean
-#  amount_used      :decimal(10, 2)   default(0.0), not null
 #  created_at       :datetime
 #  updated_at       :datetime
+#  voucher_group_id :integer          not null
+#
+# Indexes
+#
+#  index_vouchers_on_voucher_group_id  (voucher_group_id)
 #
 
 class Voucher < ActiveRecord::Base

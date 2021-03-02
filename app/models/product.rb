@@ -3,50 +3,74 @@
 # Table name: store_products
 #
 #  id                   :integer          not null, primary key
-#  name                 :string(255)      not null
-#  group                :string(255)
-#  product_type         :string(255)      default(""), not null
-#  slug                 :string(255)
-#  brand_id             :integer
-#  item_number          :string(255)      default(""), not null
-#  upc                  :string(255)
-#  sku                  :string(255)
 #  active               :boolean          default(TRUE), not null
-#  title                :string(255)
-#  option_title         :string(255)
-#  option_sort          :integer
-#  retail_map           :decimal(10, 2)
-#  price                :decimal(10, 2)
-#  msrp                 :decimal(10, 2)
-#  special_price        :decimal(10, 2)
-#  free_shipping        :boolean          default(FALSE), not null
-#  tax_exempt           :boolean          default(FALSE), not null
-#  hidden               :boolean          default(FALSE), not null
-#  featured             :boolean          default(FALSE), not null
+#  affiliate_only       :boolean          default(FALSE), not null
 #  auto_ship            :boolean          default(FALSE), not null
-#  affiliate_only       :boolean
-#  require_image_upload :boolean          default(FALSE), not null
-#  short_description    :text(65535)
-#  long_description     :text(65535)
-#  keywords             :string(255)
-#  warranty             :string(255)
-#  fulfiller_id         :integer
-#  label_sheet_id       :integer
-#  item_length          :decimal(10, 3)
-#  item_width           :decimal(10, 3)
-#  item_height          :decimal(10, 3)
-#  item_weight          :decimal(10, 3)
-#  case_length          :decimal(10, 3)
-#  case_width           :decimal(10, 3)
 #  case_height          :decimal(10, 3)
-#  case_weight          :decimal(10, 3)
+#  case_length          :decimal(10, 3)
 #  case_quantity        :integer
+#  case_weight          :decimal(10, 3)
+#  case_width           :decimal(10, 3)
 #  country_of_origin    :string(255)
-#  low_threshold        :integer
-#  item_availability    :date
+#  featured             :boolean          default(FALSE), not null
+#  free_shipping        :boolean          default(FALSE), not null
+#  group                :string(255)
 #  harmonized_code      :string(255)
+#  hidden               :boolean          default(FALSE), not null
+#  item_availability    :date
+#  item_height          :decimal(10, 3)
+#  item_length          :decimal(10, 3)
+#  item_number          :string(255)      not null
+#  item_weight          :decimal(10, 3)
+#  item_width           :decimal(10, 3)
+#  keywords             :string(1024)
+#  label_file           :string(255)
+#  long_description     :text(16777215)
+#  low_threshold        :integer
+#  msrp                 :decimal(10, 2)
+#  name                 :string(255)      not null
+#  option2_name         :string(255)
+#  option2_sort         :integer
+#  option2_title        :string(255)
+#  option3_name         :string(255)
+#  option3_sort         :integer
+#  option3_title        :string(255)
+#  option_name          :string(255)
+#  option_sort          :integer
+#  option_title         :string(255)
+#  price                :decimal(10, 2)
+#  product_type         :string(255)      default(""), not null
+#  require_image_upload :boolean          default(FALSE), not null
+#  reseller_price       :decimal(10, 2)
+#  retail_map           :decimal(10, 2)
+#  same_variant_images  :boolean          default(FALSE), not null
+#  shipping_code        :string(255)
+#  short_description    :text(16777215)
+#  sku                  :string(255)
+#  slug                 :string(255)
+#  special_price        :decimal(10, 2)
+#  tax_exempt           :boolean          default(FALSE), not null
+#  template             :boolean          default(FALSE), not null
+#  title                :string(255)
+#  upc                  :string(255)
+#  warranty             :string(255)
 #  created_at           :datetime
 #  updated_at           :datetime
+#  brand_id             :integer
+#  fulfiller_id         :integer          not null
+#  label_sheet_id       :integer
+#  template_product_id  :integer
+#
+# Indexes
+#
+#  fulfiller_id                            (fulfiller_id)
+#  index_products_on_brand_id              (brand_id)
+#  index_store_products_on_label_sheet_id  (label_sheet_id)
+#
+# Foreign Keys
+#
+#  fk_products_brand_id   (brand_id => store_brands.id)
+#  store_products_ibfk_1  (fulfiller_id => core_affiliates.id)
 #
 
 class Product < ActiveRecord::Base

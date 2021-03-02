@@ -3,68 +3,78 @@
 # Table name: store_orders
 #
 #  id                     :integer          not null, primary key
-#  batch_id               :integer
-#  domain_id              :integer          not null
-#  external_order_id      :string(255)
-#  sales_channel          :string(255)
-#  user_id                :integer
-#  affiliate_id           :integer
-#  financial_status       :string(255)
-#  fulfillment_status     :string(255)
-#  cart_key               :string(255)      default(""), not null
-#  affiliate_campaign_id  :integer
-#  referred_by            :integer
-#  coupon_id              :integer
-#  voucher_id             :integer
-#  combined               :boolean          default(FALSE), not null
-#  gift                   :boolean          default(FALSE), not null
+#  allow_backorder        :boolean          default(FALSE), not null
 #  auto_ship              :boolean          default(FALSE), not null
-#  tax_amount             :decimal(10, 2)   default(0.0), not null
-#  tax_rate               :decimal(5, 2)    default(0.0), not null
-#  shipping_cost          :decimal(6, 2)    default(0.0), not null
-#  shipping_method        :string(255)
-#  discount_amount        :decimal(10, 2)   default(0.0), not null
-#  credit_applied         :decimal(10, 2)   default(0.0), not null
-#  subtotal               :decimal(10, 2)   default(0.0), not null
-#  total                  :decimal(10, 2)   default(0.0), not null
-#  status                 :string(255)      not null
-#  submitted              :datetime
-#  shipping_name          :string(255)
-#  shipping_company       :string(255)
-#  shipping_street1       :string(255)
-#  shipping_street2       :string(255)
-#  shipping_city          :string(255)
-#  shipping_state         :string(255)
-#  shipping_zip           :string(255)
-#  shipping_country       :string(255)
-#  billing_name           :string(255)
+#  billing_city           :string(255)
 #  billing_company        :string(255)
+#  billing_country        :string(255)
+#  billing_name           :string(255)
+#  billing_state          :string(255)
 #  billing_street1        :string(255)
 #  billing_street2        :string(255)
-#  billing_city           :string(255)
-#  billing_state          :string(255)
 #  billing_zip            :string(255)
-#  billing_country        :string(255)
-#  customer_note          :text(65535)
-#  notify_email           :string(255)
-#  contact_phone          :string(255)
-#  payment_due            :date
-#  payment_method         :string(255)      default("")
-#  po                     :boolean          default(FALSE), not null
-#  allow_backorder        :boolean          default(FALSE), not null
-#  ship_earliest          :date
-#  ship_latest            :date
-#  cc_type                :string(255)
-#  cc_number              :string(255)
+#  cart_key               :string(255)      default(""), not null
 #  cc_code                :string(255)
 #  cc_expiration_month    :integer
 #  cc_expiration_year     :integer
-#  paypal_token           :string(255)
-#  paypal_payer_id        :string(255)
-#  fb_discount            :decimal(5, 2)    default(0.0), not null
+#  cc_number              :string(255)
+#  cc_type                :string(255)
+#  combined               :boolean          default(FALSE), not null
+#  contact_phone          :string(255)
+#  credit_applied         :decimal(10, 2)   default(0.0), not null
+#  customer_note          :text(65535)
+#  discount_amount        :decimal(10, 2)   default(0.0), not null
+#  error_messages         :text(65535)
 #  expected_delivery_date :date
+#  external_order_name    :string(255)
+#  fb_discount            :decimal(5, 2)    default(0.0), not null
+#  financial_status       :string(255)
+#  fulfillment_status     :string(255)
+#  gift                   :boolean          default(FALSE), not null
+#  notify_email           :string(255)
+#  payment_due            :date
+#  payment_method         :string(255)      default("")
+#  paypal_token           :string(255)
+#  po                     :boolean          default(FALSE), not null
+#  received               :datetime
+#  referred_by            :integer
+#  sales_channel          :string(255)
+#  ship_earliest          :date
+#  ship_latest            :date
+#  shipping_city          :string(255)
+#  shipping_company       :string(255)
+#  shipping_cost          :decimal(6, 2)    default(0.0), not null
+#  shipping_country       :string(255)
+#  shipping_method        :string(255)
+#  shipping_name          :string(255)
+#  shipping_state         :string(255)
+#  shipping_street1       :string(255)
+#  shipping_street2       :string(255)
+#  shipping_zip           :string(255)
+#  shopify_data           :json
+#  status                 :string(255)      not null
+#  submitted              :datetime
+#  subtotal               :decimal(10, 2)   default(0.0), not null
+#  tax_amount             :decimal(10, 2)   default(0.0), not null
+#  tax_rate               :decimal(5, 2)    default(0.0), not null
+#  total                  :decimal(10, 2)   default(0.0), not null
 #  created_at             :datetime
 #  updated_at             :datetime
+#  affiliate_campaign_id  :integer
+#  affiliate_id           :integer
+#  batch_id               :integer
+#  coupon_id              :integer
+#  domain_id              :integer          not null
+#  external_order_id      :string(255)
+#  paypal_payer_id        :string(255)
+#  user_id                :integer
+#  voucher_id             :integer
+#
+# Indexes
+#
+#  index_orders_on_coupon_id   (coupon_id)
+#  index_orders_on_user_id     (user_id)
+#  index_orders_on_voucher_id  (voucher_id)
 #
 
 

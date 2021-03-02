@@ -3,17 +3,21 @@
 # Table name: store_order_history
 #
 #  id          :integer          not null, primary key
-#  order_id    :integer          not null
-#  user_id     :integer
-#  event_type  :string(255)      default(""), not null
 #  amount      :decimal(10, 2)
-#  system_name :string(255)      not null
-#  identifier  :string(255)
 #  comment     :string(255)
 #  data1       :binary(65535)
 #  data2       :binary(65535)
+#  event_type  :string(255)      default(""), not null
+#  identifier  :string(255)
+#  system_name :string(255)      not null
 #  created_at  :datetime
 #  updated_at  :datetime
+#  order_id    :integer          not null
+#  user_id     :integer
+#
+# Indexes
+#
+#  index_order_histories_on_order_id  (order_id)
 #
 
 class OrderHistory < ActiveRecord::Base

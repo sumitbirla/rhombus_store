@@ -3,12 +3,19 @@
 # Table name: inv_transactions
 #
 #  id                :integer          not null, primary key
-#  user_id           :integer
-#  shipment_id       :integer
-#  purchase_order_id :integer
+#  archived          :boolean          default(FALSE), not null
+#  bulk_import       :boolean          default(FALSE), not null
 #  notes             :text(65535)
+#  responsible_party :string(255)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  affiliate_id      :integer
+#  external_id       :string(255)
+#
+# Indexes
+#
+#  affiliate_id  (affiliate_id)
+#  external_id   (external_id)
 #
 
 class InventoryTransaction < ActiveRecord::Base

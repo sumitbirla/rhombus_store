@@ -3,8 +3,12 @@
 # Table name: store_product_categories
 #
 #  id          :integer          not null, primary key
-#  product_id  :integer          not null
 #  category_id :integer          not null
+#  product_id  :integer          not null
+#
+# Indexes
+#
+#  product_id  (product_id,category_id) UNIQUE
 #
 
 class ProductCategory < ActiveRecord::Base

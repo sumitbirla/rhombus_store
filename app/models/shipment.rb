@@ -2,56 +2,77 @@
 #
 # Table name: store_shipments
 #
-#  id                   :integer          not null, primary key
-#  order_id             :integer
-#  sequence             :integer          not null
-#  fulfilled_by_id      :integer
-#  invoice_amount       :decimal(10, 2)   default(0.0), not null
-#  status               :string(255)      not null
-#  ship_from_company    :string(255)      default(""), not null
-#  ship_from_street1    :string(255)      default(""), not null
-#  ship_from_street2    :string(255)
-#  ship_from_city       :string(255)      default(""), not null
-#  ship_from_state      :string(255)      default(""), not null
-#  ship_from_zip        :string(255)      default(""), not null
-#  ship_from_country    :string(255)      default(""), not null
-#  ship_from_email      :string(255)
-#  ship_from_phone      :string(255)
-#  recipient_name       :string(255)      not null
-#  recipient_company    :string(255)
-#  recipient_street1    :string(255)      not null
-#  recipient_street2    :string(255)
-#  recipient_city       :string(255)      not null
-#  recipient_state      :string(255)
-#  recipient_zip        :string(255)      not null
-#  recipient_country    :string(255)      not null
-#  carrier              :string(255)
-#  ship_method          :string(255)
-#  tracking_number      :string(255)
-#  ship_date            :date
-#  ship_cost            :decimal(6, 2)
-#  package_length       :decimal(6, 2)
-#  package_width        :decimal(6, 2)
-#  package_height       :decimal(6, 2)
-#  package_weight       :decimal(6, 2)
-#  notes                :text(65535)
-#  packaging_type       :string(255)
-#  require_signature    :boolean
-#  insurance            :decimal(8, 2)    default(0.0), not null
-#  drop_off_type        :string(255)
-#  label_data           :binary(16777215)
-#  label_format         :string(255)
-#  courier_name         :string(255)
-#  courier_data         :text(16777215)
-#  fulfiller_notified   :boolean          default(FALSE), not null
-#  inventory_updated    :boolean          default(FALSE), not null
-#  batch_status         :string(255)
-#  batch_status_message :string(255)
-#  manifest_id          :integer
-#  third_party_billing  :boolean          default(FALSE), not null
-#  items_hash           :string(32)
-#  created_at           :datetime
-#  updated_at           :datetime
+#  id                         :integer          not null, primary key
+#  affiliate_shipping_account :boolean          default(FALSE), not null
+#  batch_status               :string(255)
+#  batch_status_message       :string(255)
+#  billing_processed          :boolean          default(FALSE), not null
+#  carrier                    :string(255)
+#  courier_data               :text(16777215)
+#  courier_name               :string(255)
+#  drop_off_type              :string(255)
+#  external_name              :string(255)
+#  fulfiller_notified         :boolean          default(FALSE), not null
+#  insurance                  :decimal(8, 2)    default(0.0), not null
+#  inventory_updated          :boolean          default(FALSE), not null
+#  invoice_amount             :decimal(10, 2)
+#  items_hash                 :string(32)
+#  label_data                 :binary(16777215)
+#  label_format               :string(255)
+#  notes                      :text(65535)
+#  package_height             :decimal(6, 2)
+#  package_length             :decimal(6, 2)
+#  package_weight             :decimal(6, 2)
+#  package_width              :decimal(6, 2)
+#  packaging_type             :string(255)
+#  paid                       :boolean          default(FALSE), not null
+#  recipient_city             :string(255)      not null
+#  recipient_company          :string(255)
+#  recipient_country          :string(255)      not null
+#  recipient_name             :string(255)      not null
+#  recipient_state            :string(255)
+#  recipient_street1          :string(255)      not null
+#  recipient_street2          :string(255)
+#  recipient_zip              :string(255)      not null
+#  require_signature          :boolean
+#  seller_cogs                :decimal(10, 2)
+#  seller_shipping_fee        :decimal(10, 2)
+#  seller_transaction_fee     :decimal(10, 2)
+#  sequence                   :integer          not null
+#  ship_cost                  :decimal(6, 2)
+#  ship_date                  :date
+#  ship_from_city             :string(255)      default(""), not null
+#  ship_from_company          :string(255)      default(""), not null
+#  ship_from_country          :string(255)      default(""), not null
+#  ship_from_email            :string(255)
+#  ship_from_name             :string(255)
+#  ship_from_phone            :string(255)
+#  ship_from_state            :string(255)      default(""), not null
+#  ship_from_street1          :string(255)      default(""), not null
+#  ship_from_street2          :string(255)
+#  ship_from_zip              :string(255)      default(""), not null
+#  ship_method                :string(255)
+#  status                     :string(255)      not null
+#  third_party_billing        :boolean          default(FALSE), not null
+#  tracking_number            :string(255)
+#  tracking_uploaded_at       :datetime
+#  uuid                       :string(255)
+#  created_at                 :datetime
+#  updated_at                 :datetime
+#  external_id                :string(255)
+#  fulfilled_by_id            :integer          not null
+#  manifest_id                :integer
+#  order_id                   :integer
+#
+# Indexes
+#
+#  fulfilled_by_id              (fulfilled_by_id)
+#  index_shipments_on_order_id  (order_id)
+#  status                       (status)
+#
+# Foreign Keys
+#
+#  store_shipments_ibfk_1  (fulfilled_by_id => core_affiliates.id)
 #
 
 require 'net/http'

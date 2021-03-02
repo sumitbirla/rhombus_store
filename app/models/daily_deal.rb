@@ -3,38 +3,42 @@
 # Table name: store_daily_deals
 #
 #  id                         :integer          not null, primary key
-#  affiliate_id               :integer
-#  affiliate_remittance       :decimal(8, 2)
-#  affiliate_paid             :boolean          not null
-#  deal_type                  :string(255)      default(""), not null
-#  slug                       :string(255)      not null
-#  title                      :string(255)      not null
-#  start_time                 :datetime         not null
-#  end_time                   :datetime         not null
-#  voucher_expiration         :datetime
-#  original_price             :decimal(8, 2)    not null
-#  deal_price                 :decimal(8, 2)    not null
-#  shipping_cost              :decimal(6, 2)    default(0.0), not null
-#  conditions                 :text(65535)
-#  description                :text(65535)      not null
-#  short_tag_line             :string(255)      not null
-#  redemption_instructions    :text(65535)
-#  order_specifications       :text(65535)
-#  theme                      :string(255)
-#  max_sales                  :integer
-#  max_per_user               :integer
-#  number_sold                :integer          not null
-#  countdown_mode             :boolean          not null
-#  sales_before_showing_count :integer
 #  active                     :boolean          not null
-#  featured                   :boolean          not null
+#  affiliate_paid             :boolean          not null
+#  affiliate_remittance       :decimal(8, 2)
 #  allow_photo_upload         :boolean          not null
-#  facebook_posts             :integer          not null
+#  conditions                 :text(65535)
+#  countdown_mode             :boolean          not null
+#  deal_price                 :decimal(8, 2)    not null
+#  deal_type                  :string(255)      default(""), not null
+#  description                :text(65535)      not null
+#  end_time                   :datetime         not null
 #  facebook_clicks            :integer          not null
+#  facebook_posts             :integer          not null
 #  fb_discount                :decimal(5, 2)    default(0.0), not null
+#  featured                   :boolean          not null
+#  max_per_user               :integer
+#  max_sales                  :integer
+#  number_sold                :integer          not null
+#  order_specifications       :text(65535)
+#  original_price             :decimal(8, 2)    not null
+#  redemption_instructions    :text(65535)
+#  sales_before_showing_count :integer
+#  shipping_cost              :decimal(6, 2)    default(0.0), not null
+#  short_tag_line             :string(255)      not null
+#  slug                       :string(255)      not null
+#  start_time                 :datetime         not null
+#  theme                      :string(255)
+#  title                      :string(255)      not null
+#  uuid                       :string(255)      not null
+#  voucher_expiration         :datetime
 #  created_at                 :datetime
 #  updated_at                 :datetime
-#  uuid                       :string(255)      not null
+#  affiliate_id               :integer
+#
+# Indexes
+#
+#  index_daily_deals_on_affiliate_id  (affiliate_id)
 #
 
 class DailyDeal < ActiveRecord::Base

@@ -1,3 +1,22 @@
+# == Schema Information
+#
+# Table name: store_product_shipping_rates
+#
+#  id                       :integer          not null, primary key
+#  additional_items         :decimal(6, 2)    not null
+#  code                     :string(16)       default(""), not null
+#  destination_country_code :string(2)        default(""), not null
+#  first_item               :decimal(6, 2)    not null
+#  second_item              :decimal(6, 2)    not null
+#  ship_method              :string(32)       default(""), not null
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  product_id               :integer          not null
+#
+# Indexes
+#
+#  product_id  (product_id,destination_country_code,ship_method) UNIQUE
+#
 class ProductShippingRate < ActiveRecord::Base
   self.table_name = "store_product_shipping_rates"
 

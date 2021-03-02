@@ -3,14 +3,20 @@
 # Table name: store_daily_deal_items
 #
 #  id            :integer          not null, primary key
-#  daily_deal_id :integer          not null
-#  product_id    :integer          not null
-#  affiliate_id  :integer
-#  variation     :string(255)
-#  unit_cost     :decimal(8, 2)    not null
 #  quantity      :integer          not null
+#  unit_cost     :decimal(8, 2)    not null
+#  variation     :string(255)
 #  created_at    :datetime
 #  updated_at    :datetime
+#  affiliate_id  :integer
+#  daily_deal_id :integer          not null
+#  product_id    :integer          not null
+#
+# Indexes
+#
+#  index_daily_deal_items_on_daily_deal_id       (daily_deal_id)
+#  index_daily_deal_items_on_product_id          (product_id)
+#  index_store_daily_deal_items_on_affiliate_id  (affiliate_id)
 #
 
 class DailyDealItem < ActiveRecord::Base

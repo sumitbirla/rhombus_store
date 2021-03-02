@@ -3,17 +3,22 @@
 # Table name: inv_purchase_orders
 #
 #  id            :integer          not null, primary key
-#  affiliate_id  :integer
-#  supplier_id   :integer
-#  status        :string(255)
-#  issue_date    :date
 #  due_date      :date
-#  ship_method   :string(255)
+#  issue_date    :date
+#  notes         :text(65535)
 #  payment_terms :string(255)
+#  ship_method   :string(255)
 #  ship_to       :string(255)
+#  status        :string(255)
+#  uuid          :string(255)
 #  created_at    :datetime
 #  updated_at    :datetime
-#  notes         :text(65535)
+#  affiliate_id  :integer
+#  supplier_id   :integer
+#
+# Indexes
+#
+#  index_store_purchase_orders_on_affiliate_id  (affiliate_id)
 #
 
 class PurchaseOrder < ActiveRecord::Base

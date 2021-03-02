@@ -3,11 +3,15 @@
 # Table name: store_external_coupons
 #
 #  id            :integer          not null, primary key
-#  daily_deal_id :integer          not null
-#  code          :string(255)      not null
 #  allocated     :boolean          not null
+#  code          :string(255)      not null
 #  created_at    :datetime
 #  updated_at    :datetime
+#  daily_deal_id :integer          not null
+#
+# Indexes
+#
+#  index_external_coupons_on_daily_deal_id  (daily_deal_id)
 #
 
 class ExternalCoupon < ActiveRecord::Base

@@ -3,15 +3,20 @@
 # Table name: inv_items
 #
 #  id                       :integer          not null, primary key
-#  inventory_transaction_id :integer          not null
-#  sku                      :string(255)      not null
-#  inventory_location_id    :integer          not null
-#  quantity                 :integer          not null
-#  lot                      :string(255)
-#  expiration               :integer
 #  cost                     :decimal(8, 2)
+#  expiration               :integer
+#  lot                      :string(255)
+#  quantity                 :integer          not null
+#  sku                      :string(255)      not null
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
+#  inventory_location_id    :integer
+#  inventory_transaction_id :integer          not null
+#
+# Indexes
+#
+#  inventory_transaction_id  (inventory_transaction_id)
+#  sku                       (sku)
 #
 
 class InventoryItem < ActiveRecord::Base

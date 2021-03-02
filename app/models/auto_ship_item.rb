@@ -3,19 +3,24 @@
 # Table name: store_auto_ship_items
 #
 #  id             :integer          not null, primary key
-#  user_id        :integer          not null
-#  item_number    :string(255)      not null
-#  product_id     :integer          not null
-#  affiliate_id   :integer
-#  variation      :string(255)
-#  description    :string(255)      not null
-#  quantity       :integer          not null
 #  days           :integer          default(30), not null
 #  last_shipped   :date
 #  next_ship_date :date
+#  quantity       :integer          not null
 #  status         :string(255)      not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  product_id     :integer          not null
+#  user_id        :integer          not null
+#
+# Indexes
+#
+#  index_store_auto_ship_items_on_product_id  (product_id)
+#  index_store_auto_ship_items_on_user_id     (user_id)
+#
+# Foreign Keys
+#
+#  fk_auto_ship_items_product_id  (product_id => store_products.id)
 #
 
 class AutoShipItem < ActiveRecord::Base

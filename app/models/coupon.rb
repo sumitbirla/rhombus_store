@@ -5,19 +5,23 @@
 #  id               :integer          not null, primary key
 #  code             :string(255)      not null
 #  description      :text(65535)
-#  product_id       :integer
-#  daily_deal_id    :integer
-#  free_shipping    :boolean
 #  discount_amount  :decimal(10, 2)
 #  discount_percent :decimal(5, 2)
-#  min_order_amount :decimal(10, 2)
-#  max_uses         :integer
-#  max_per_user     :integer
-#  times_used       :integer          not null
-#  start_time       :datetime         not null
 #  expire_time      :datetime         not null
+#  free_shipping    :boolean
+#  max_per_user     :integer
+#  max_uses         :integer
+#  min_order_amount :decimal(10, 2)
+#  start_time       :datetime         not null
+#  times_used       :integer          not null
 #  created_at       :datetime
 #  updated_at       :datetime
+#  daily_deal_id    :integer
+#  product_id       :integer
+#
+# Indexes
+#
+#  index_coupons_on_product_id  (product_id)
 #
 
 class Coupon < ActiveRecord::Base
