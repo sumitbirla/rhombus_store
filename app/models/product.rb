@@ -194,7 +194,7 @@ class Product < ActiveRecord::Base
   end
 
   def full_name
-    str = name_with_option
+    str = name
     str = brand.name + " - " + str unless brand.nil?
     str += "&nbsp; (#{variant_string})" unless variant_string.blank?
     str.html_safe
