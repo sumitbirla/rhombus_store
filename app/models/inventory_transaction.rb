@@ -49,7 +49,7 @@ class InventoryTransaction < ActiveRecord::Base
       row = line.split(/\t|,/).map(&:strip) # split by comma or tab
 
       if !skus.include?(row[0])
-        tran.errors.add(:base, "Line #{index}: Item number '#{row[0]}' not found.") unless index == 0
+        # tran.errors.add(:base, "Line #{index}: Item number '#{row[0]}' not found.") unless index == 0
         next
       end
 
