@@ -80,9 +80,8 @@
   <article>
     <header>
       <table class="no-border" cellspacing="0" cellpadding="0" border="0">
-        <thead>
         <tr valign="top">
-          <th scope="col" style="text-align:left;">
+          <td scope="col" style="text-align:left;">
             <%
               loc_id = Cache.setting(@shipment.order.domain_id, :shipping, "Ship From Location ID")
               loc = Location.find(loc_id)
@@ -91,15 +90,14 @@
 
             <% if aff %>
               <h1><%= aff.name %></h1>
-              <p>
+              <%= aff.address_as_text(skip_country: true, delimiter: "<br>") %>
+
+              <p style="margin-top: 5px;">
                 <% unless aff.phone.blank? %>
                   <strong>Phone:</strong> <%= aff.phone %><br/>
                 <% end %>
                 <% unless aff.email.blank? %>
                   <strong>Email:</strong> <%= aff.email %><br/>
-                <% end %>
-                <% unless aff.website.blank? %>
-                  <strong>Web:</strong> <%= aff.website %><br/>
                 <% end %>
               </p>
             <% elsif loc.pictures.length > 0 %>
@@ -118,15 +116,14 @@
               </p>
             <% end %>
 
-          </th>
-          <th scope="col" style="text-align:right;"><h2>PACKING SLIP</h2>
+          </td>
+          <td scope="col" style="text-align:right;"><h2>PACKING SLIP</h2>
             <p>
               <strong>Shipment ID: </strong> <%= @shipment %><br>
               <img src="/barcode?code=<%= @shipment %>"/>
             </p>
-          </th>
+          </td>
         </tr>
-        </thead>
       </table>
 
       <div class="boxleft">
