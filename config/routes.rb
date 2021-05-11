@@ -95,6 +95,7 @@ Rails.application.routes.draw do
       get 'reports/daily_sales'
       get 'reports/monthly_sales'
       get 'reports/delayed_shipments'
+      get 'reports/dropshipper_performance'
 			get 'reports/shipments'
       get 'reports/sales_trend'
       get 'reports/pending_fulfillment'

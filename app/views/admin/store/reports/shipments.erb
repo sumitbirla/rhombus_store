@@ -16,7 +16,7 @@
 
 <%
   shipment_statuses = Shipment.distinct.pluck(:status)
-  affiliate_names = @data.map { |x| x["affiliate_name"] }.uniq
+  affiliate_names = @data.map { |x| x["affiliate_name"] }.uniq.sort
   totals = {}
 %>
 

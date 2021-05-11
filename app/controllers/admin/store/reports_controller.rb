@@ -305,6 +305,13 @@ class Admin::Store::ReportsController < Admin::BaseController
     end
   end
 
+  # Report showing how each dropshipper is performing
+  def dropshipper_performance
+    @dropshippers = Affiliate.where(id: Shipment.distinct(:fulfilled_by_id).pluck(:fulfilled_by_id))
+        .select(:id, :name)
+        .order(:name)
+  end
+
   # Set default paramters for all reports.  Date range defaults to last 1 year
   def set_report_params
     @sales_channels = Order.distinct(:sales_channel).pluck(:sales_channel)
