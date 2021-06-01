@@ -1,0 +1,76 @@
+<style>
+    tfoot td {
+        font-weight: bold;
+    }
+</style>
+<form action="" method="get" class="pull-right">
+  Date range: &nbsp;
+  <input type="text" class="date-field" name="start_date" value="<%= @start_date %>" style="width: 120px;"/> &nbsp;
+  to &nbsp;
+  <input type="text" class="date-field" name="end_date" value="<%= @end_date %>" style="width: 120px;"/>
+  <button class="btn btn-success btn-sm">Filter</button>
+</form>
+
+<h2><i class="fas fa-tachometer-alt"></i> Dropshipper Performance</h2>
+<hr>
+<h4><i class="far fa-clock"></i> <%= Date.parse(@start_date).strftime("%d-%^b-%C") %> &nbsp; &rarr; &nbsp;
+  <%= Date.parse(@end_date).strftime("%d-%^b-%C") %></h4>
+
+<table class="table table-bordered table-responsive-sm table-hover table-condensed w-100 tablesorter" id="dropship-performance-table" >
+  <thead>
+  <tr>
+    <th>Affiliate</th>
+    <th class="text-center">Total Orders</th>
+    <th class="text-center">Shipped</th>
+    <th class="text-center">Cancelled</th>
+    <th class="text-center">Avg. Tracking Delay</th>
+    <th class="text-center">Total COGS</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @dropshippers.each do |aff|
+    base_query = Shipment.where(fulfilled_by_id: aff.id)
+        .where("store_shipments.created_at > ?", @start_date)
+        .where("store_shipments.created_at <= ?", @end_date)
+
+    total_orders = base_query.count
+
+    next if total_orders < 10
+    shipped_orders = base_query.where(status: :shipped).count
+    cancelled_orders = base_query.where(status: :cancelled).count
+    tracking_delay_days = base_query.average("DATEDIFF(store_shipments.tracking_uploaded_at, store_shipments.created_at)")
+    total_cogs = base_query.joins(:order).sum("store_orders.subtotal")
+  %>
+  <tr>
+    <td><%= aff.name %></td>
+    <td class="text-right"><%= number_with_delimiter(total_orders) %></td>
+    <td class="text-right"><%= number_with_delimiter(shipped_orders) %></td>
+    <td class="text-right"><%= number_with_delimiter(cancelled_orders) %></td>
+    <td class="text-right"><%= pluralize(tracking_delay_days.round, "day") %></td>
+    <td class="text-right"><%= number_to_currency(total_cogs) %></td>
+  </tr>
+  <% end %>
+  </tbody>
+</table>
+
+
+<% content_for :title, "Dropshipper Performance" %>
+
+<% content_for :breadcrumbs do %>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Reports", admin_store_reports_path %></li>
+  <li class="active">Dropshipper Performance</li>
+<% end %>
+
+<% content_for :head do %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.default.min.css" integrity="sha512-wghhOJkjQX0Lh3NSWvNKeZ0ZpNn+SPVXX1Qyc9OCaogADktxrBiBdKGDoqVUOyhStvMBmJQ8ZdMHiR3wuEq8+w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js" integrity="sha512-qzgd5cYSZcosqpzpn7zF2ZId8f/8CHmFKZ8j7mU4OUXTNRd5g+ZHBPsgKEwoqxCtdQvExE5LprwwPAgoicguNg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script>
+      $(document).ready(function () {
+          $("#dropship-performance-table").tablesorter({
+              theme : 'default'
+          });
+      });
+  </script>
+<% end %>
