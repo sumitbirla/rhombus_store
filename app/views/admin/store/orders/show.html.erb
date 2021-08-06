@@ -197,7 +197,7 @@
   </tr>
   <% if !@order.shipping_method.blank? || @order.shipping_cost > 0.0 %>
     <tr>
-      <td colspan="5" class="ralign"><%= @order.shipping_method.titlecase %>:</td>
+      <td colspan="5" class="ralign"><%= @order.shipping_method&.titlecase %>:</td>
       <td class="ralign"><%= number_to_currency(@order.shipping_cost) %></td>
     </tr>
   <% end %>
