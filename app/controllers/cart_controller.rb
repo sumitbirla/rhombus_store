@@ -2,14 +2,11 @@ require 'easypost'
 require 'awesome_print'
 
 class CartController < ApplicationController
-
   include CartHelper
   include PaypalExpressHelper
   include ActionView::Helpers::NumberHelper
 
-  force_ssl if Rails.env.production?
   layout 'single_column'
-
 
   def load_or_create_order
     key = cookies[:cart]
