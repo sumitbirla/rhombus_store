@@ -84,6 +84,7 @@ class Product < ActiveRecord::Base
   belongs_to :fulfiller, class_name: 'Affiliate', foreign_key: 'fulfiller_id'
   belongs_to :label_sheet
   belongs_to :template_product, class_name: 'Product'
+  belongs_to :inventory_view, foreign_key: :sku
 
   has_many :pictures, -> { order :sort }, as: :imageable, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
