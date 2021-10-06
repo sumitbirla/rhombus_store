@@ -225,18 +225,18 @@ class Product < ActiveRecord::Base
       bullets << point unless point.blank?
     end
 
+    str += "\n<!--product-details-->\n"
     if bullets.length > 0
       str += "<ul>"
       str += bullets.map { |x| "<li>#{x}</li>" }.join
       str += "</ul>"
     end
 
-    extra_properties.each do |prop|
-      next unless prop.name.downcase.start_with?("material")
-      str += "<p><b>#{prop.name}:</b><br>#{prop.value}</p>"
-    end
+    str += "\n<!--sizing-->\n"
+    str += get_property("sizing info")
 
-    str
+    str += "\n<!--care-instructions-->\n"
+    str += "<p>" + get_property("Care Instructions") + "</p>"
   end
 
   def cache_key
