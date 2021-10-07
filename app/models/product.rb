@@ -219,13 +219,14 @@ class Product < ActiveRecord::Base
 
     str = paragraphs.map { |x| "<p>#{x}</p>" }.join
 
+    str += "\n<!--product-details-->\n"
     bullets = []
+
     (1..10).each do |x|
       point = get_property("Bullet #{x}")
       bullets << point unless point.blank?
     end
 
-    str += "\n<!--product-details-->\n"
     if bullets.length > 0
       str += "<ul>"
       str += bullets.map { |x| "<li>#{x}</li>" }.join
