@@ -249,12 +249,12 @@ class Product < ActiveRecord::Base
   end
 
   def get_property(name)
-    a = extra_properties.find { |x| x.name == name }
+    a = extra_properties.find { |x| x.name.casecmp?(name) }
     a.nil? ? "" : a.value
   end
 
   def set_property(name, value)
-    a = extra_properties.find { |x| x.name == name }
+    a = extra_properties.find { |x| x.name.casecmp?(name) }
     if [true, false].include? value
       value = (value ? "Yes" : "No")
     end
