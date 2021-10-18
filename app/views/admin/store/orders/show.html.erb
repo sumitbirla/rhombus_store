@@ -158,13 +158,21 @@
           <%= @order.payment_method %>
         <% end %>
 
-        <br/> <br/>
         <% unless @order.contact_phone.nil? %>
           <a href="tel:<%= @order.contact_phone %>"><%= number_to_phone(@order.contact_phone.gsub(/\D/, ''), area_code: true) %></a><br/>
         <% end %>
         <% unless @order.notify_email.nil? %>
           <%= mail_to @order.notify_email %>
         <% end %>
+
+        <table class="table table-condensed table-bordered light">
+          <% @order.extra_properties.each do |ep| %>
+            <tr>
+              <td nowrap><%= ep.name %></td>
+              <td><%= ep.value %></td>
+            </tr>
+          <% end %>
+        </table>
       </div>
     </div>
   </div>
