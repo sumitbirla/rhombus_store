@@ -111,6 +111,7 @@ class Order < ActiveRecord::Base
   has_many :extra_properties, -> { order "sort, name" }, as: :extra_property, dependent: :destroy
 
   accepts_nested_attributes_for :items, reject_if: lambda { |x| x['product_id'].blank? && x['daily_deal_id'].blank? }, allow_destroy: true
+  accepts_nested_attributes_for :extra_properties, reject_if: lambda { |x| x['name'].blank? && x['value'].blank? }, allow_destroy: true
 
   # Either email or phone number must be present
   validates_presence_of :notify_email, unless: ->(order){ order.contact_phone.present? }

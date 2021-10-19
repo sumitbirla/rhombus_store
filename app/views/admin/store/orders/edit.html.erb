@@ -108,6 +108,32 @@
     </div>
   </div>
 
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      Extra Properties
+    </div>
+    <div class="panel-body">
+      <table class="table">
+        <tr>
+          <th>Name</th>
+          <th>Value</th>
+
+          <th style="width: 50px;"></th>
+        </tr>
+        <%= f.fields_for :extra_properties do |ep| %>
+          <tr>
+            <td><%= ep.input_field :name, style: "width: 90%" %></td>
+            <td><%= ep.input_field :value, style: "width: 90%" %></td>
+            <td><i class="fa fa-times"></i>
+              <%= ep.hidden_field :_destroy, class: 'destroy' %>
+              <%= ep.hidden_field :extra_property_id, class: 'extra-property-id' %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+
   <div class="panel panel-success">
     <div class="panel-heading">Purchase Order</div>
     <div class="panel-body">

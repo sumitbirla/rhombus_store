@@ -96,6 +96,7 @@ class Admin::Store::OrdersController < Admin::BaseController
   def edit
     @order = authorize Order.find(params[:id])
     2.times { @order.items.build }
+    2.times { @order.extra_properties.build }
   end
 
   def update
