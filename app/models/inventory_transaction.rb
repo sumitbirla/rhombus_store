@@ -39,9 +39,9 @@ class InventoryTransaction < ActiveRecord::Base
 
     # If a file has more lines than expected, i.e. more than the products in database
     # then log an error
-    if lines.length > skus.length + 10000
+    if lines.length > skus.length + 50000
       tran.errors.add(:base, "Too many records (#{lines.length}) in file, skipped parsing.")
-      return
+      return tran
     end
 
     lines.each_with_index do |line, index|
