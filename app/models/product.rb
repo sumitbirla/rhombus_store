@@ -284,7 +284,7 @@ class Product < ActiveRecord::Base
   end
 
   def get_variants
-    Product.where(group: group).order("option_sort, option_title")
+    Product.where(group: group).order("option_sort, id")
   end
 
   def negotiated_price(seller_id)
