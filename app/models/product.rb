@@ -77,6 +77,8 @@ class Product < ActiveRecord::Base
   self.table_name = "store_products"
   acts_as_taggable_on :tags, :collections
 
+  attr_accessor :variants, :store_ap   # to speed up loading in SODA UI
+
   before_save :set_group
   before_save :strip_fields
 
