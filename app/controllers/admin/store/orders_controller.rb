@@ -23,7 +23,6 @@ class Admin::Store::OrdersController < Admin::BaseController
       format.html { @orders = @orders.includes(:user, :affiliate, :shipments).paginate(page: params[:page], per_page: @per_page) }
       format.csv { send_data Order.to_csv(@orders, skip_cols: ['cart_key', 'paypal_token']) }
     end
-
   end
 
   def new

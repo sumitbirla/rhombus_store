@@ -63,19 +63,31 @@
 <table class="table table-striped table-condensed footable">
   <tr>
     <th data-breakpoints="xs"><%= sortable "item_number", "Item" %></th>
+    <th><%= sortable "brand" %></th>
     <th><%= sortable "title" %></th>
-    <th data-breakpoints="xs"><%= sortable "product_type", "Type" %></th>
-    <th><%= sortable "active", "Status" %></th>
+    <th data-breakpoints="xs">Fulfiller</th>
     <th data-breakpoints="xs" class="ralign"><%= sortable "msrp", "MSRP" %></th>
+    <th  class="text-right" data-breakpoints="xs">Inventory</th>
     <th class="actions hidden-xs">&nbsp;</th>
   </tr>
   <% @products.each do |product| %>
     <tr>
       <td><%= link_to product.item_number, admin_store_product_path(product) %></td>
-      <td><%= product.full_name %></td>
-      <td><%= product.product_type %></td>
-      <td><%= product_status(product) %></td>
-      <td class="ralign"><%= number_to_currency product.msrp %></td>
+      <td><%= product.brand %></td>
+      <td>
+        <%= product.name %>
+        <% if product.option_count > 1 %>
+          <span class="light">&middot; <%= product.option_count %> variants</span>
+        <% end %>
+      </td>
+      <td><%= link_to "#{product.fulfiller}", admin_system_affiliate_path(product.fulfiller_id) %></td>
+      <td class="text-right">
+        <%= number_to_currency(product.min_msrp) %>
+        <% if product.option_count > 1 && product.min_msrp != product.max_msrp %>
+          - <%= number_to_currency(product.max_msrp) %>
+        <% end %>
+      </td>
+      <td class="text-right"><%= number_with_delimiter(product.inventory_count.presence || '-') %></td>
       <td class="actions text-right hidden-xs">
         <%= link_to "edit", edit_admin_store_product_path(product) %> &nbsp;
         <%= link_to "delete",
