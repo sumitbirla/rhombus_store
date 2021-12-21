@@ -46,7 +46,7 @@
     <td class="text-right"><%= number_with_delimiter(total_orders) %></td>
     <td class="text-right"><%= number_with_delimiter(shipped_orders) %></td>
     <td class="text-right"><%= number_with_delimiter(cancelled_orders) %></td>
-    <td class="text-right"><%= pluralize(tracking_delay_days.round, "day") %></td>
+    <td class="text-right"><%= pluralize((tracking_delay_days.presence || 0).round, "day") %></td>
     <td class="text-right"><%= number_to_currency(total_cogs) %></td>
   </tr>
   <% end %>
