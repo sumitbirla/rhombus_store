@@ -113,18 +113,10 @@
 
   <div class="col-md-4">
     <table class="table table-condensed table-bordered summary">
-      <tr>
-        <td>Seller COGS</td>
-        <td><%= number_to_currency(@shipment.seller_cogs) %></td>
-      </tr>
-      <tr>
-        <td>Seller Shipping Fee</td>
-        <td><%= number_to_currency(@shipment.seller_shipping_fee) %></td>
-      </tr>
-      <tr>
-        <td>Seller Transaction Free</td>
-        <td><%= number_to_currency(@shipment.seller_transaction_fee) %></td>
-      </tr>
+      <%= obj_property(@shipment, :seller_cogs) %>
+      <%= obj_property(@shipment, :seller_shipping_fee) %>
+      <%= obj_property(@shipment, :seller_transaction_fee) %>
+      <%= obj_property(@shipment, :fulfiller_external_id) %>
     </table>
   </div>
 
