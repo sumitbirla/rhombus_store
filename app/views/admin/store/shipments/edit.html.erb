@@ -1,5 +1,5 @@
 <h2><i class="fa fa-truck"></i> Shipment #<%= @shipment.order_id %>-<%= @shipment.sequence %></h2>
-
+<hr>
 <%= render 'admin/shared/error_messages', object: @shipment %>
 
 <%= simple_form_for [:admin, :store, @shipment] do |f| %>
