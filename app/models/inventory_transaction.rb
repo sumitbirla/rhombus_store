@@ -42,14 +42,14 @@ class InventoryTransaction < ActiveRecord::Base
       line.gsub!("\t\t", "\t") # delete any instances of multiple tabs
       row = line.split(/\t|,/).map(&:strip) # split by comma or tab
 
-      if index <= 10 && !AffiliateProduct.exists?(affiliate_id: affiliate_id, item_number: row[0])
+      if index < 100 && !AffiliateProduct.exists?(affiliate_id: affiliate_id, item_number: row[0])
         # tran.errors.add(:base, "Line #{index}: Item number '#{row[0]}' not found.") unless index == 0
         next
       end
 
       # if no valid SKU's are found in the first 10 rows,  assume file is bad and return
-      if index > 10 && items.empty?
-        tran.errors.add(:base, "Inventory doesn't appear to have valid item_numbers (first 10 rows analysed).")
+      if index >= 100 && items.empty?
+        tran.errors.add(:base, "Inventory doesn't appear to have valid item_numbers (first #{index} rows analysed).")
         return tran
       end
 
