@@ -5,6 +5,8 @@ class Admin::Store::ProductsController < Admin::BaseController
 
     q = params[:q]
     @products = Product.includes(:fulfiller, :brand)
+                       .group("store_products.group")
+                       .select("SUM(calculated_inventory) as inventory_count, COUNT(id) as option_count, max(msrp) as max_msrp, min(msrp) as min_msrp, store_products.*")
                        .order(sort_column + " " + sort_direction)
 
     if params[:status].blank?
@@ -16,7 +18,6 @@ class Admin::Store::ProductsController < Admin::BaseController
     unless q.blank?
       @products = @products.where("name LIKE '%#{q}%' OR item_number = ? OR SKU = ? OR upc = ?", q, q, q)
     else
-      @products = @products.group("store_products.group").select("SUM(calculated_inventory) as inventory_count, COUNT(id) as option_count, max(msrp) as max_msrp, min(msrp) as min_msrp, store_products.*")
       @products = @products.where(active: @active)
       @products = @products.where(brand_id: (params[:brand_id] == "white-label" ? nil : params[:brand_id])) unless params[:brand_id].blank?
     end

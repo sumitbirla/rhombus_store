@@ -236,7 +236,7 @@ class Product < ActiveRecord::Base
     end
 
     str += "\n<!--sizing-->\n"
-    str += get_property("sizing info")
+    str += get_property("Sizing Info")
 
     str += "\n<!--care-instructions-->\n"
     str += "<p>" + get_property("Care Instructions") + "</p>"
