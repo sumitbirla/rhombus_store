@@ -39,8 +39,9 @@ class InventoryTransaction < ActiveRecord::Base
 
     # Parse each line for SKU and quantity and build a transaction object
     lines.each_with_index do |line, index|
-      line.gsub!("\t\t", "\t") # delete any instances of multiple tabs
-      row = line.split(/\t|,/).map(&:strip) # split by comma or tab
+      line.gsub!("\t\t", "\t")                    # delete any instances of multiple tabs
+      row = line.split(/\t|,/).map(&:strip)       # split by comma or tab
+      next if (row.length == 0 || row[0].blank?)  # skip any empty lines
 
       if index < 100 && !AffiliateProduct.exists?(affiliate_id: affiliate_id, item_number: row[0])
         # tran.errors.add(:base, "Line #{index}: Item number '#{row[0]}' not found.") unless index == 0
