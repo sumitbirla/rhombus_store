@@ -19,7 +19,8 @@ class Admin::Store::ProductsController < Admin::BaseController
       @products = @products.where("name LIKE '%#{q}%' OR item_number = ? OR SKU = ? OR upc = ?", q, q, q)
     else
       @products = @products.where(active: @active)
-      @products = @products.where(brand_id: (params[:brand_id] == "white-label" ? nil : params[:brand_id])) unless params[:brand_id].blank?
+      @products = @products.where(brand_id: params[:brand_id]) unless params[:brand_id].blank?
+      @products = @products.where(fulfiller_id: params[:fulfiller_id]) unless params[:fulfiller_id].blank?
     end
 
     respond_to do |format|

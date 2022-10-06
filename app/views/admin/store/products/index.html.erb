@@ -14,21 +14,18 @@
 
 <% unless params[:q] %>
   <div class="pull-right">
-    <select name="brand_id" class="brand">
-      <option value="">- All Brands -</option>
-      <option <%= "selected" if params[:brand_id] == "white-label" %> value="white-label">WHITE LABEL</option>
+    <select name="fulfiller_id" class="fulfiller">
+      <option value="">- Any Fulfiller -</option>
       <%
-        brands = Brand.joins(:products)
+        fulfillers = Affiliate.where(id: Product.distinct(:fulfiller_id).pluck(:fulfiller_id))
+            .joins("JOIN store_products ON store_products.fulfiller_id = core_affiliates.id")
             .select(:id, :name, "COUNT(store_products.id) AS count")
-            .where("exists (select 1 from store_products where brand_id = store_brands.id)")
             .group(:name)
             .order(:name)
 
-        brands = brands.where("store_products.active = ?", true) unless params[:product_type] == "all"
-
-        brands.each do |b| %>
-        <option value="<%= b.id %>" <%= "selected" if params[:brand_id] == b.id.to_s %>><%= b.name %>&nbsp;
-          (<%= b.count %>)
+        fulfillers.each do |f| %>
+        <option value="<%= f.id %>" <%= "selected" if params[:fulfiller_id] == f.id.to_s %>><%= f.name %>&nbsp;
+          (<%= f.count %>)
         </option>
       <% end %>
     </select>
@@ -66,7 +63,7 @@
     <th><%= sortable "brand" %></th>
     <th><%= sortable "title" %></th>
     <th data-breakpoints="xs">Fulfiller</th>
-    <th data-breakpoints="xs" class="ralign"><%= sortable "msrp", "MSRP" %></th>
+    <th data-breakpoints="xs" class="text-center"><%= sortable "msrp", "MSRP" %></th>
     <th  class="text-right" data-breakpoints="xs">Inventory</th>
     <th class="actions hidden-xs">&nbsp;</th>
   </tr>
@@ -81,7 +78,7 @@
         <% end %>
       </td>
       <td><%= link_to "#{product.fulfiller}", admin_system_affiliate_path(product.fulfiller_id) %></td>
-      <td class="text-right">
+      <td class="text-center">
         <%= number_to_currency(product.min_msrp) %>
         <% if product.option_count > 1 && product.min_msrp != product.max_msrp %>
           - <%= number_to_currency(product.max_msrp) %>
@@ -110,8 +107,8 @@
 <% content_for :head do %>
   <script>
       $(document).ready(function () {
-          $(".brand, .product-type").change(function () {
-              window.location = "/admin/store/products?status=<%= params[:status] %>&brand_id=" + $(".brand").val();
+          $(".fulfiller, .product-type").change(function () {
+              window.location = "/admin/store/products?status=<%= params[:status] %>&fulfiller_id=" + $(".fulfiller").val();
           });
       });
   </script>
