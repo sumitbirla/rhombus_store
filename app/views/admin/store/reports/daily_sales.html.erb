@@ -36,8 +36,8 @@
 <% content_for :title, "Daily Sales" %>
 
 <% content_for :head do %>
-  <script src="//cdn5.io/rhombus/sb-admin-2/js/plugins/flot/jquery.flot.min.js"></script>
-  <script src="//cdn5.io/rhombus/sb-admin-2/js/plugins/flot/jquery.flot.time.min.js"></script>
+  <script src="<%= cdn_url "/rhombus/sb-admin-2/js/plugins/flot/jquery.flot.min.js" %>"></script>
+  <script src="<%= cdn_url "/rhombus/sb-admin-2/js/plugins/flot/jquery.flot.time.min.js" %>"></script>
   <script>
 
       var orders = [
