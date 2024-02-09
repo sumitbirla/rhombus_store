@@ -10,10 +10,12 @@ namespace :rhombus_store do
 			next if o.items.count == 0
       
       begin
-				unless o.sufficient_inventory?
-					o.update_attribute(:status, :backordered)
-					next
-				end
+        if Setting.get(o.domain_id, :shipping, "Skip Inventory Checks") != "true"
+				  unless o.sufficient_inventory?
+					  o.update_attribute(:status, :backordered)
+					  next
+          end
+        end
 				
 				o.fulfillers.each { |aff| o.create_fulfillment(aff.id, nil, true) }
         o.update_attribute(:status, :awaiting_shipment)
