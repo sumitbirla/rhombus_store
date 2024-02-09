@@ -148,7 +148,6 @@ class Order < ActiveRecord::Base
   end
 
   def credit_card
-
     credit_card = ActiveMerchant::Billing::CreditCard.new(
         :brand => cc_type,
         :number => cc_number,
@@ -294,12 +293,10 @@ class Order < ActiveRecord::Base
       # NO_BILLING
       self.update_columns(status: 'submitted', submitted: Time.now)
     end
-
   end
 
   # create shipment for the order.  doesn't take inventory into consideration currently
   def create_fulfillment(fulfiller_id, user_id, save_to_db = true)
-
     raise "There are no items in this order" if total_items == 0
 
     seq = 1
@@ -332,7 +329,6 @@ class Order < ActiveRecord::Base
 
     # build the shipment items                
     items.each do |item|
-
       # regular order item, not a daily deal
       if item.product_id
         next if item.product.fulfiller_id != aff.id
@@ -341,7 +337,6 @@ class Order < ActiveRecord::Base
                              quantity: item.quantity_accepted - item.quantity_shipped)
 
       elsif item.daily_deal_id
-
         if item.custom_text.blank?
           item.daily_deal.items.each do |di|
             shipment.items.build(order_item_id: item.id,
@@ -352,9 +347,7 @@ class Order < ActiveRecord::Base
           p = Product.find_by(item_number: item.custom_text.split(":").first)
           shipment.items.build(order_item_id: item.id, quantity: item.quantity)
         end
-
       end
-
     end
 
     if save_to_db && shipment.save!
@@ -368,7 +361,6 @@ class Order < ActiveRecord::Base
 
   # create shipment for the order.  doesn't take inventory into consideration currently
   def create_shipment(user_id, save_to_db = true)
-
     raise "There are no items in this order" if total_items == 0
 
     seq = 1
@@ -407,7 +399,6 @@ class Order < ActiveRecord::Base
 
     # build the shipment items                
     items.each do |item|
-
       # regular order item, not a daily deal
       if item.product_id
         shipment.items.build(order_item_id: item.id,
@@ -425,9 +416,7 @@ class Order < ActiveRecord::Base
           p = Product.find_by(item_number: item.custom_text.split(":").first)
           shipment.items.build(order_item_id: item.id, quantity: item.quantity)
         end
-
       end
-
     end
 
     if save_to_db && shipment.save!
@@ -441,13 +430,11 @@ class Order < ActiveRecord::Base
   # when an affiliate places a PO,  this method updates the store_affiliate_product listings with 
   # prices specified on this order.   New entries created if they don't already exist.
   def update_price_list
-
     items.each do |i|
       ap = AffiliateProduct.find_or_initialize_by(affiliate_id: affiliate_id, product_id: i.product_id)
       ap.price = i.unit_price
       ap.save
     end
-
   end
 
   # check to see if shipments (status 'shipped') contain all items orders
@@ -541,5 +528,4 @@ class Order < ActiveRecord::Base
   def self.policy_class
     ApplicationPolicy
   end
-
 end

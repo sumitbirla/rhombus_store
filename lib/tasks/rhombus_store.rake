@@ -1,9 +1,7 @@
 namespace :rhombus_store do
-  
-  
+
   desc "Create shipments (or mark as backordered) for newly submitted orders"
-  task create_shipments: :environment do 
-    
+  task create_shipments: :environment do
     Order.where(status: [:backordered, :submitted]).order(:submitted).each do |o|
   	  next if Setting.get(o.domain_id, :shipping, "Auto Create Shipment") != "true"
       next if o.shipments.count > 0
@@ -27,7 +25,6 @@ namespace :rhombus_store do
         o.update_columns(status: :error, error_messages: e.message)
       end
     end
-      
   end
   
   
@@ -51,7 +48,6 @@ namespace :rhombus_store do
   
   
   def create_order(asi_list, user_id)
-    
     prev_order = Order.where(status: :shipped, user_id: user_id).last
     if prev_order.nil?
       AutoShipItem.where(user_id: user_id).update_all(status: :missing_order)
@@ -104,7 +100,6 @@ namespace :rhombus_store do
     end
 
     @logger.info "New order ##{new_order.id} created."
-    
   end
   
   
@@ -125,7 +120,6 @@ namespace :rhombus_store do
     shipments.each do |s|
       
     end
-    
   end
   
   
@@ -140,7 +134,6 @@ namespace :rhombus_store do
 	
   desc "Reset shipment hashes"
   task reset_shipment_hashes: :environment do
-		
     Shipment.select(:id)
 						.includes(items: { order_item: :product })
 						.find_in_batches do |group|
@@ -157,7 +150,5 @@ namespace :rhombus_store do
 				
 			end
 		end
-		
   end
-
 end
