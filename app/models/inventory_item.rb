@@ -27,13 +27,11 @@ class InventoryItem < ActiveRecord::Base
 
 
   def self.to_csv(list, opts = {})
-
     CSV.generate do |csv|
       cols = [:sku, :lot, :expiration, :location]
       csv << cols
       list.each { |x| csv << [x.sku, x.lot, x.formatted_expiration, x.inventory_location.name] }
     end
-
   end
 
 

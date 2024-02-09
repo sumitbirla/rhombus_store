@@ -319,10 +319,15 @@ class Shipment < ActiveRecord::Base
 
   # called by after_create filter
   def save_inventory_transaction
-    tran = new_inventory_transaction
-    tran.external_id = uuid
-    tran.affiliate_id = fulfilled_by_id
-    tran.save
+    begin
+      tran = new_inventory_transaction
+      tran.external_id = uuid
+      tran.affiliate_id = fulfilled_by_id
+      tran.save
+    rescue => e
+      Rails.logger.error e.message
+      Rails.logger.error "Inventory Transaction for Shipment[#{id}] not created due to error!"
+    end
   end
 
   # creates a new transaction without saving to DB
