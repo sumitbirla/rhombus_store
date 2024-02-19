@@ -350,7 +350,7 @@ class Admin::Store::ShipmentsController < Admin::BaseController
     Rails.logger.debug("wkhtmltopdf -q -s Letter --dpi 300 #{urls} #{output_file}")
     ret = system("wkhtmltopdf -q -s Letter --dpi 300 #{urls} #{output_file}")
 
-    unless File.exists?(output_file)
+    unless File.exist?(output_file)
       flash[:error] = "Unable to generate PDF [Debug: #{$?}]"
       return redirect_back(fallback_location: admin_root_path)
     end

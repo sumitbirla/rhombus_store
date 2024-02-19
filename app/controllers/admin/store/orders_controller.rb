@@ -200,7 +200,7 @@ class Admin::Store::OrdersController < Admin::BaseController
     output_file = "/tmp/#{SecureRandom.hex(6)}.pdf"
     ret = system("wkhtmltopdf -q -s Letter #{urls} #{output_file}")
 
-    unless File.exists?(output_file)
+    unless File.exist?(output_file)
       flash[:error] = "Unable to generate PDF [Debug: #{$?}]"
       return redirect_back(fallback_location: admin_root_path)
     end
